@@ -1,0 +1,53 @@
+name: Build (API)
+on:
+  push: 
+    paths:
+      - 'noty-api/**'
+  pull_request:
+    paths:
+      - 'noty-api/**'
+      
+jobs:
+  build:
+    name: Build API
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache Gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/noty-android/.gradle/caches/
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+        
+      - name: Cache Gradle wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/noty-android/.gradle/wrapper/
+          key: cache-clean-wrapper-${{ runner.os }}-${{ matrix.jdk }}
+
+      - name: Grant Permission to Execute
+        run: chmod +x gradlew
+        working-directory: noty-api    
+
+      - name: 🏗 Build with Gradle 🛠️
+        run: ./gradlew build --stacktrace
+        working-directory: noty-api    
+
+      - name: Generate Test report 📈
+        run: ./gradlew codeCoverageReport
+        working-directory: noty-api    
+
+      - name: Upload Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports-api
+          path: noty-api/**/reports  

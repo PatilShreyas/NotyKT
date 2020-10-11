@@ -1,0 +1,49 @@
+name: Build (Android)
+on:
+  push: 
+    paths:
+      - 'noty-android/**'
+  pull_request:
+    paths:
+      - 'noty-android/**'
+
+jobs:
+  build:
+    name: Build Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set up JDK 12
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12
+
+      - name: Cache Gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/noty-android/.gradle/caches/
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+        
+      - name: Cache Gradle wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/noty-android/.gradle/wrapper/
+          key: cache-clean-wrapper-${{ runner.os }}-${{ matrix.jdk }}
+
+      - name: Grant Permission to Execute
+        run: chmod +x gradlew
+        working-directory: noty-android
+
+      - name: 🏗 Build with Gradle 🛠️
+        run: ./gradlew build --stacktrace
+        working-directory: noty-android
+
+      - name: 🚀 Upload APK 📱
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: noty-android/**/*.apk

@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright 2020 Shreyas Patil
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Noty</string>
+
+    <string name="text_welcome">Welcome to Noty!</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="text_login">Login</string>
+    <string name="text_registration">New User Registration</string>
+    <string name="text_register">Register</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="text_noty_icon">Noty Icon</string>
+
+    <!-- Action Menu -->
+    <string name="menu_ui_mode">Light/Dark Mode</string>
+    <string name="menu_remove_favourite">Remove from favourite</string>
+    <string name="menu_favourite">Favourite</string>
+    <string name="menu_delete">Delete</string>
+    <string name="hint_field_title">Title</string>
+    <string name="hint_field_note">Write note here…</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_about">About</string>
+</resources>
