@@ -19,7 +19,7 @@ buildscript {
         kotlinVersion = "1.4.10"
         ktlintVersion = "9.3.0"
         coroutinesVersion = "1.3.9"
-        ktorVersion = "1.4.0"
+        ktorVersion = "1.4.1"
         exposedVersion = "0.27.1"
         postgresVersion = "42.2.16"
         logbackVersion = "1.2.3"
