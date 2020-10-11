@@ -1,0 +1,39 @@
+apply plugin: 'application'
+
+group 'dev.shreyaspatil.noty.application'
+version '0.1.0'
+mainClassName = "io.ktor.server.netty.EngineMain"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+    maven { url 'https://kotlin.bintray.com/ktor' }
+}
+
+dependencies {
+    // Data module
+    implementation project(":data")
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+
+    // Ktor
+    implementation "io.ktor:ktor-server-netty:$ktorVersion"
+    implementation "io.ktor:ktor-server-core:$ktorVersion"
+    implementation "io.ktor:ktor-auth:$ktorVersion"
+    implementation "io.ktor:ktor-auth-jwt:$ktorVersion"
+    implementation "io.ktor:ktor-jackson:$ktorVersion"
+
+    // Logging
+    implementation "ch.qos.logback:logback-classic:$logbackVersion"
+
+    // Testing
+    testImplementation "io.ktor:ktor-server-tests:$ktorVersion"
+    testImplementation "org.testcontainers:testcontainers:$testContainerVersion"
+    testImplementation "org.testcontainers:postgresql:$testContainerVersion"
+}
+
+task stage {
+    dependsOn installDist
+}
