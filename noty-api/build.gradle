@@ -44,7 +44,7 @@ buildscript {
 apply plugin: 'kotlin'
 apply plugin: 'jacoco'
 
-version "0.1"
+version "0.1.0"
 group "dev.shreyaspatil.noty"
 
 repositories {
@@ -125,4 +125,3 @@ task codeCoverageReport(type: JacocoReport) {
         csv.enabled false
     }
 }
-
