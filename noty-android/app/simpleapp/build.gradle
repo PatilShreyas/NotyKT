@@ -109,7 +109,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     // Testing
-    testImplementation "junit:junit:4.13"
+    testImplementation "junit:junit:4.13.1"
 
     // Android Testing
     androidTestImplementation "androidx.test.ext:junit:1.1.1"
