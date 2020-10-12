@@ -30,7 +30,7 @@
             app:destination="@id/notesFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -54,7 +54,7 @@
             app:destination="@id/notesFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/noteDetailFragment"

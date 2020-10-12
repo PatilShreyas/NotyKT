@@ -14,8 +14,10 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <bool name="lightNavEnabled">true</bool>
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
@@ -31,9 +33,15 @@
 
         <item name="colorOnBackground">@color/onBackground</item>
 
-        <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="actionBarTheme">@style/ActionBarStyle</item>
 
-        <item name="fontFamily">@font/open_sans</item>
+        <item name="fontFamily">@font/gilroy_regular</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/background</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">@bool/lightNavEnabled</item>
+        <item name="android:navigationBarColor" tools:targetApi="o">@color/background</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">@bool/lightNavEnabled
+        </item>
     </style>
 </resources>

@@ -46,8 +46,8 @@
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="21dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="@dimen/dimen_small"
                     android:fontFamily="cursive"
