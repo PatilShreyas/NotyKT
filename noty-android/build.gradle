@@ -17,10 +17,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    apply from: 'dependencies.gradle'
-    ext {
-        kotlin_version = '1.4.10'
-    }
+    apply from: 'config.gradle'
     repositories {
         google()
         jcenter()
@@ -37,7 +34,7 @@ buildscript {
     }
 }
 
-apply from: 'dependencies.gradle'
+apply from: 'config.gradle'
 
 allprojects {
     repositories {
