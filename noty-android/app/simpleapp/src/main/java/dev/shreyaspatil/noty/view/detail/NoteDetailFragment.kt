@@ -15,6 +15,7 @@
  */
 
 package dev.shreyaspatil.noty.view.detail
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
