@@ -747,7 +747,7 @@ ij_xml_line_comment_at_first_column = true
 ij_xml_use_custom_settings = true
 
 [{*.kt, *.kts}]
-disabled_rules = no-wildcard-imports
+disabled_rules = no-wildcard-imports, import-ordering
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false

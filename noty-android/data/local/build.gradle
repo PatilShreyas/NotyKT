@@ -60,7 +60,7 @@ dependencies {
 
     // Room
     api "androidx.room:room-runtime:$roomVersion"
-    api 'androidx.legacy:legacy-support-v4:1.0.0'
+    api "androidx.legacy:legacy-support-v4:$legacySupportVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     api "androidx.room:room-ktx:$roomVersion"
 
