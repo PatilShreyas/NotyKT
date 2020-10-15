@@ -21,7 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
@@ -54,8 +56,19 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
     }
 
     private fun observeAddNoteResult() {
-        viewModel.addNoteState.observe(viewLifecycleOwner) {
-            // TODO Do something here
+        viewModel.addNoteState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    findNavController().navigateUp()
+                }
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                }
+            }
         }
     }
 

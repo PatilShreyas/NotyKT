@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.view.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -32,9 +33,9 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.content_note_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -88,11 +89,15 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             updateNoteState.observe(viewLifecycleOwner) { viewState ->
                 when (viewState) {
                     is ViewState.Loading -> {
-                        // TODO Show Loading
+                        binding.progressBar.show()
                     }
-                    is ViewState.Success -> findNavController().navigateUp()
+                    is ViewState.Success -> {
+                        binding.progressBar.hide()
+                        findNavController().navigateUp()
+                    }
                     is ViewState.Failed -> {
-                        // TODO Show error message
+                        binding.progressBar.hide()
+                        activity?.toast("Error ${viewState.message}")
                     }
                 }
             }
@@ -100,11 +105,14 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             deleteNoteState.observe(viewLifecycleOwner) { viewState ->
                 when (viewState) {
                     is ViewState.Loading -> {
-                        // TODO Show Loading
+                        binding.progressBar.show()
                     }
-                    is ViewState.Success -> findNavController().navigateUp()
+                    is ViewState.Success -> {
+                        binding.progressBar.hide()
+                        findNavController().navigateUp()
+                    }
                     is ViewState.Failed -> {
-                        // TODO Show error message
+                        binding.progressBar.hide()
                     }
                 }
             }
@@ -124,7 +132,26 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_delete -> viewModel.deleteNote()
+            R.id.action_share -> shareToOthers()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    // Share notes via Intent
+    private fun shareToOthers() {
+        val title = fieldTitle.text.toString()
+        val note = fieldNote.text.toString()
+        val notes = title.plus("\n").plus(note)
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, notes)
+            putExtra(Intent.EXTRA_TITLE, title)
+
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

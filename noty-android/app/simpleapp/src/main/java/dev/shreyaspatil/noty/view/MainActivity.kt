@@ -18,9 +18,11 @@ package dev.shreyaspatil.noty.view
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.asLiveData
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -31,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.databinding.MainActivityBinding
+import kotlinx.android.synthetic.main.main_activity.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,6 +53,8 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
+
+        visibilityNavElements(navHostFragment.navController)
 
         with(navHostFragment.navController) {
             appBarConfiguration = AppBarConfiguration(graph)
@@ -76,4 +81,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment)
         .navigateUp(appBarConfiguration)
+
+
+    private fun visibilityNavElements(navController: NavController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment -> topAppBar.visibility = View.GONE
+                R.id.registerFragment -> topAppBar.visibility = View.GONE
+                else -> topAppBar.visibility = View.VISIBLE
+            }
+        }
+    }
 }

@@ -35,8 +35,6 @@
 
         <item name="actionBarTheme">@style/ActionBarStyle</item>
 
-        <item name="fontFamily">@font/gilroy_regular</item>
-
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/background</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">@bool/lightNavEnabled</item>
@@ -44,4 +42,9 @@
         <item name="android:windowLightNavigationBar" tools:ignore="NewApi">@bool/lightNavEnabled
         </item>
     </style>
+
+    <style name="ProgressBarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/primaryColor</item>
+    </style>
+
 </resources>

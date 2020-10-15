@@ -31,6 +31,11 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -39,7 +44,9 @@
         tools:layout="@layout/home_fragment">
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
@@ -54,6 +61,11 @@
             app:destination="@id/notesFragment"
             app:launchSingleTop="true"
             app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/registerFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -72,12 +84,6 @@
         android:label="notes_fragment"
         tools:layout="@layout/notes_fragment">
         <action
-            android:id="@+id/action_notesFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_notesFragment_to_addNoteFragment"
             app:destination="@id/addNoteFragment" />
         <action
@@ -88,6 +94,11 @@
                 android:defaultValue="null"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_notesFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/notesFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/addNoteFragment"

@@ -92,10 +92,16 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> {
+                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    notesListAdapter.submitList(it.data)
                 }
-                is ViewState.Success -> notesListAdapter.submitList(it.data)
-                is ViewState.Failed -> Log.e(javaClass.simpleName, it.message)
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                    Log.e(javaClass.simpleName, it.message)
+                    activity?.toast("Error ${it.message}")
+                }
             }
         }
     }
@@ -113,7 +119,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun logout() {
-        findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToHomeFragment())
+        findNavController().navigate(R.id.action_notesFragment_to_loginFragment)
     }
 
     override fun getViewBinding(

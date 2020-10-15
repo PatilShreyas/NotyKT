@@ -22,7 +22,8 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
@@ -38,19 +39,18 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:contentDescription="@string/text_noty_icon"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/icon" />
+                    android:src="@drawable/ic_noty_logo" />
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    android:layout_width="48dp"
-                    android:layout_height="21dp"
+                    android:layout_width="@dimen/dimen_48"
+                    android:layout_height="@dimen/dimen_24"
                     android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/dimen_small"
-                    android:fontFamily="cursive"
+                    android:layout_marginStart="@dimen/dimen_8"
+                    android:fontFamily="@font/gilroy_semibold"
                     android:text="@string/app_name" />
             </LinearLayout>
         </com.google.android.material.appbar.MaterialToolbar>

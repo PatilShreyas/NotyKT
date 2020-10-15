@@ -16,23 +16,28 @@
   -->
 
 <resources>
-    <color name="primaryColor">#FFFFFF</color>
-    <color name="primaryLightColor">#63ccff</color>
-    <color name="primaryDarkColor">#006db3</color>
+
+    <color name="primaryColor">#7885FF</color>
+    <color name="primaryLightColor">#f3f3f9</color>
+    <color name="primaryDarkColor">#cccccc</color>
 
     <color name="secondaryColor">#7885FF</color>
     <color name="secondaryLightColor">#7885FF</color>
     <color name="secondaryDarkColor">#7885FF</color>
 
     <color name="background">#FFFFFF</color>
-
     <color name="onPrimary">#FFFFFF</color>
+
     <color name="onSecondary">#000000</color>
     <color name="onBackground">#000000</color>
 
     <color name="statusBarColor">#FFFFFF</color>
     <color name="actionBarColor">#FFFFFF</color>
-
-
     <color name="error">#B00020</color>
+
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
+
+    <color name="defaultWhite">#ffffff</color>
+
 </resources>

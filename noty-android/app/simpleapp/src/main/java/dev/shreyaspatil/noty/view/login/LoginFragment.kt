@@ -46,18 +46,25 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
         viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is ViewState.Loading -> {
-                    // TODO Show loading progress
+                    binding.progressBar.show()
                 }
-                is ViewState.Success -> onAuthSuccess()
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    onAuthSuccess()
+                }
                 is ViewState.Failed -> {
-                    // TODO Show error message
+                    binding.progressBar.hide()
+                    activity?.toast("Error ${viewState.message}")
                 }
             }
         }
     }
 
     private fun initViews() {
-        binding.buttonRegister.setOnClickListener { onRegisterClicked() }
+        binding.buttonLogin.setOnClickListener { onRegisterClicked() }
+        binding.textSignUpButton.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
     }
 
     private fun onRegisterClicked() {
