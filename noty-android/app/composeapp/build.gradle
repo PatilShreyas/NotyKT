@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
-apply plugin: 'dagger.hilt.android.plugin'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
 
 android {
     compileSdkVersion ProjectConfig.compileSdkVersion
@@ -35,12 +33,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures {
-        viewBinding {
-            enabled true
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -54,59 +46,39 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = '1.8'
+        useIR = true
     }
-}
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = "1.8"
+    buildFeatures {
+        compose true
     }
-}
 
-kapt {
-    correctErrorTypes true
+    composeOptions {
+        kotlinCompilerExtensionVersion composeVersion
+        kotlinCompilerVersion kotlinVersion
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
 
-    // Core Module
-    implementation project(":core")
-
-    // ViewModel Module
-    implementation project(":viewmodel")
-
-    // Coroutines (Android)
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     // Android
+    implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
-
-    // Jetpack DataStore
-    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
-
-    // JetPack Security
-    implementation "androidx.security:security-crypto:$securityCryptoVersion"
-
-    // Dagger + Hilt
-    implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
-
-    // Assisted Inject
-    compileOnly 'com.squareup.inject:assisted-inject-annotations-dagger2:0.6.0'
-    kapt 'com.squareup.inject:assisted-inject-processor-dagger2:0.6.0'
-
-    // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
 
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+    // Compose
+    implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.material:material:$composeVersion"
+    implementation "androidx.ui:ui-tooling:$composeVersion"
+
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
