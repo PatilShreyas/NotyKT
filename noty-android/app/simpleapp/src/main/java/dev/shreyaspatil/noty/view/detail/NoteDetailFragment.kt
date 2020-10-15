@@ -15,7 +15,6 @@
  */
 
 package dev.shreyaspatil.noty.view.detail
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -136,7 +135,6 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     // Share notes via Intent
     private fun shareToOthers() {

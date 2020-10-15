@@ -69,7 +69,6 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
