@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 /app/src/main/gen/dev/shreyaspatil/noty/BuildConfig.java
+/.idea/
