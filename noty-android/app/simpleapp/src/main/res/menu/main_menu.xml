@@ -19,13 +19,13 @@
     <item
         android:id="@+id/action_dark_mode"
         android:enabled="true"
-        android:icon="@drawable/ic_night"
+        android:icon="@drawable/ic_day"
         android:title="@string/menu_ui_mode"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_light_mode"
         android:enabled="true"
-        android:icon="@drawable/ic_day"
+        android:icon="@drawable/ic_night"
         android:title="@string/menu_ui_mode"
         app:showAsAction="ifRoom" />
 
