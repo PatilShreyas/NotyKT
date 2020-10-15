@@ -35,6 +35,8 @@ import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NotesFragmentBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -100,7 +102,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 is ViewState.Failed -> {
                     binding.progressBar.hide()
                     Log.e(javaClass.simpleName, it.message)
-                    activity?.toast("Error ${it.message}")
+                    toast("Error ${it.message}")
                 }
             }
         }

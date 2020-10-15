@@ -28,6 +28,8 @@
     <string name="text_register">Register</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="text_noty_icon">Noty Icon</string>
+    <string name="share_message">\"%s\" by %s. \nVisit: https://github.com/PatilShreyas/NotyKT</string>
+
 
     <!-- Action Menu -->
     <string name="menu_ui_mode">Light/Dark Mode</string>

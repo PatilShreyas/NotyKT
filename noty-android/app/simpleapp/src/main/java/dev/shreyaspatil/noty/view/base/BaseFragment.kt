@@ -16,12 +16,10 @@
 
 package dev.shreyaspatil.noty.view.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -46,6 +44,11 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
     protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
 
+    fun toast(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+
     fun hideActionBar() {
         (activity as AppCompatActivity).supportActionBar?.hide()
     }
@@ -54,20 +57,6 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.show()
     }
 
-    // progress show
-    fun ProgressBar.show() {
-        visibility = View.VISIBLE
-    }
-
-    // progress hide
-    fun ProgressBar.hide() {
-        visibility = View.GONE
-    }
-
-    //  to call toast
-    fun Context.toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
 
     override fun onDestroy() {
         super.onDestroy()

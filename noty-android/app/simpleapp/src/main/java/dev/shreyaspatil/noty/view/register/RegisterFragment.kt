@@ -26,6 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.RegisterFragmentBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,7 +56,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
                 }
                 is ViewState.Failed -> {
                     binding.progressBar.hide()
-                    activity?.toast("Error ${viewState.message}")
+                    toast("Error ${viewState.message}")
                 }
             }
         }
