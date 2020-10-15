@@ -48,11 +48,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding, HomeViewModel>() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        hideActionBar()
-    }
-
     override fun getViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?

@@ -19,12 +19,7 @@ package dev.shreyaspatil.noty.view.notes
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -67,11 +62,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     override fun onStart() {
         super.onStart()
         checkAuthentication()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showActionBar()
     }
 
     private fun initViews() {
