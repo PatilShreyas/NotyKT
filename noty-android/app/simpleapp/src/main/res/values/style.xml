@@ -16,19 +16,22 @@
   -->
 
 <resources>
+
     <style name="ActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Primary">
         <item name="android:background">@color/primaryColor</item>
     </style>
 
-    <style name="UsernameFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="startIconDrawable">@drawable/ic_person</item>
+    <style name="UsernameFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="startIconDrawable">@drawable/ic_user</item>
         <item name="android:hint">@string/hint_username</item>
+        <item name="hintTextColor">@color/primaryColor</item>
     </style>
 
-    <style name="PasswordFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="startIconDrawable">@drawable/ic_key</item>
+    <style name="PasswordFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="startIconDrawable">@drawable/ic_lock</item>
         <item name="endIconMode">password_toggle</item>
         <item name="android:hint">@string/hint_password</item>
+        <item name="hintTextColor">@color/primaryColor</item>
     </style>
 
 </resources>

@@ -15,6 +15,7 @@
   -->
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,11 +23,27 @@
         android:id="@+id/noteLayout"
         layout="@layout/content_note_layout" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/dimen_large"
-        android:src="@drawable/ic_done" />
+        android:layout_margin="@dimen/dimen_16"
+        android:contentDescription="@string/text_noty_icon"
+        android:fontFamily="@font/gilroy_semibold"
+        android:text="@string/text_save"
+        android:textAllCaps="false"
+        android:textColor="@color/defaultWhite"
+        android:textSize="16sp"
+        app:icon="@drawable/ic_check"
+        app:iconTint="@color/defaultWhite" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:theme="@style/ProgressBarTheme"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

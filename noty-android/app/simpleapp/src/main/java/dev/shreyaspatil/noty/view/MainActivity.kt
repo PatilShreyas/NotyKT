@@ -18,9 +18,11 @@ package dev.shreyaspatil.noty.view
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.asLiveData
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -51,6 +53,8 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
 
+        visibilityNavElements(binding, navHostFragment.navController)
+
         with(navHostFragment.navController) {
             appBarConfiguration = AppBarConfiguration(graph)
             setupActionBarWithNavController(this, appBarConfiguration)
@@ -76,4 +80,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment)
         .navigateUp(appBarConfiguration)
+
+    private fun visibilityNavElements(
+        binding: MainActivityBinding,
+        navController: NavController
+    ) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment -> binding.topAppBar.visibility = View.GONE
+                R.id.registerFragment -> binding.topAppBar.visibility = View.GONE
+                else -> binding.topAppBar.visibility = View.VISIBLE
+            }
+        }
+    }
 }

@@ -23,6 +23,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -30,11 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NoteDetailFragmentBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import javax.inject.Inject
-import kotlinx.android.synthetic.main.content_note_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -79,8 +81,8 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         viewModel.run {
             noteLiveData.observe(viewLifecycleOwner) {
                 binding.run {
-                    fieldTitle.setText(it.title)
-                    fieldNote.setText(it.note)
+                    binding.noteLayout.fieldTitle.setText(it.title)
+                    binding.noteLayout.fieldNote.setText(it.note)
                     fabSave.isEnabled = true
                 }
             }
@@ -88,11 +90,15 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             updateNoteState.observe(viewLifecycleOwner) { viewState ->
                 when (viewState) {
                     is ViewState.Loading -> {
-                        // TODO Show Loading
+                        binding.progressBar.show()
                     }
-                    is ViewState.Success -> findNavController().navigateUp()
+                    is ViewState.Success -> {
+                        binding.progressBar.hide()
+                        findNavController().navigateUp()
+                    }
                     is ViewState.Failed -> {
-                        // TODO Show error message
+                        binding.progressBar.hide()
+                        toast("Error ${viewState.message}")
                     }
                 }
             }
@@ -100,11 +106,14 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             deleteNoteState.observe(viewLifecycleOwner) { viewState ->
                 when (viewState) {
                     is ViewState.Loading -> {
-                        // TODO Show Loading
+                        binding.progressBar.show()
                     }
-                    is ViewState.Success -> findNavController().navigateUp()
+                    is ViewState.Success -> {
+                        binding.progressBar.hide()
+                        findNavController().navigateUp()
+                    }
                     is ViewState.Failed -> {
-                        // TODO Show error message
+                        binding.progressBar.hide()
                     }
                 }
             }
@@ -124,7 +133,29 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_delete -> viewModel.deleteNote()
+            R.id.action_share -> share()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // Share notes via Intent
+    private fun share() {
+        val title = binding.noteLayout.fieldTitle.text.toString()
+        val note = binding.noteLayout.fieldNote.text.toString()
+
+        val shareMsg = getString(
+            R.string.share_message,
+            title,
+            note
+        )
+
+        val intent = ShareCompat.IntentBuilder.from(requireActivity())
+            .setType("text/plain")
+            .setText(shareMsg)
+            .intent
+
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent)
+        }
     }
 }

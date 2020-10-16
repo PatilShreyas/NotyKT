@@ -19,12 +19,7 @@ package dev.shreyaspatil.noty.view.notes
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -35,6 +30,8 @@ import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NotesFragmentBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -67,11 +64,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         checkAuthentication()
     }
 
-    override fun onResume() {
-        super.onResume()
-        showActionBar()
-    }
-
     private fun initViews() {
         binding.notesRecyclerView.adapter = notesListAdapter
         binding.fabNew.setOnClickListener {
@@ -92,10 +84,16 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> {
+                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    notesListAdapter.submitList(it.data)
                 }
-                is ViewState.Success -> notesListAdapter.submitList(it.data)
-                is ViewState.Failed -> Log.e(javaClass.simpleName, it.message)
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                    Log.e(javaClass.simpleName, it.message)
+                    toast("Error ${it.message}")
+                }
             }
         }
     }
@@ -113,7 +111,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun logout() {
-        findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToHomeFragment())
+        findNavController().navigate(R.id.action_notesFragment_to_loginFragment)
     }
 
     override fun getViewBinding(

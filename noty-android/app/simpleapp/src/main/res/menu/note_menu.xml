@@ -18,8 +18,15 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/action_delete"
+    <item
+        android:id="@+id/action_delete"
         android:icon="@drawable/ic_delete"
         app:showAsAction="ifRoom"
         android:title="@string/menu_delete" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/menu_share"
+        app:showAsAction="ifRoom" />
 </menu>
