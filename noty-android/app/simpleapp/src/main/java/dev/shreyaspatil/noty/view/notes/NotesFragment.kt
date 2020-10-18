@@ -18,16 +18,13 @@ package dev.shreyaspatil.noty.view.notes
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.activity.addCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.model.Note
@@ -48,7 +45,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     override val viewModel: NotesViewModel by viewModels()
 
-    private val notesListAdapter by lazy { NotesListAdapter(::onNoteClicked) }
+    private val notesListAdapter = NotesListAdapter(::onNoteClicked)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
