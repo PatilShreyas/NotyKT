@@ -91,18 +91,14 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> {
-                    if (!binding.swipeNotes.isRefreshing) {
-                        binding.progressBar.show()
-                    }
+                    binding.swipeNotes.isRefreshing = true
                 }
                 is ViewState.Success -> {
                     binding.swipeNotes.isRefreshing = false
-                    binding.progressBar.hide()
                     notesListAdapter.submitList(it.data)
                 }
                 is ViewState.Failed -> {
                     binding.swipeNotes.isRefreshing = false
-                    binding.progressBar.hide()
                     Log.e(javaClass.simpleName, it.message)
                     toast("Error: ${it.message}")
                 }
