@@ -38,7 +38,9 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
 
     override val viewModel: AddNoteViewModel by viewModels()
 
-    private val connectivityLiveData by lazy { NetworkUtils.observeConnectivity(applicationContext()) }
+    private val connectivityLiveData by lazy {
+        NetworkUtils.observeConnectivity(applicationContext())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

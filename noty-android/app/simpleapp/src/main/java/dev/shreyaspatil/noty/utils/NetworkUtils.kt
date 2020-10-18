@@ -79,4 +79,3 @@ private fun isConnected(connectivityManager: ConnectivityManager): Boolean {
     }
     return isConnected
 }
-

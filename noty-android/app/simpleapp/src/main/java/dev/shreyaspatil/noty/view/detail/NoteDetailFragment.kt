@@ -45,7 +45,9 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     private val args: NoteDetailFragmentArgs by navArgs()
 
-    private val connectivityLiveData by lazy { NetworkUtils.observeConnectivity(applicationContext()) }
+    private val connectivityLiveData by lazy {
+        NetworkUtils.observeConnectivity(applicationContext())
+    }
 
     @Inject
     lateinit var myViewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
