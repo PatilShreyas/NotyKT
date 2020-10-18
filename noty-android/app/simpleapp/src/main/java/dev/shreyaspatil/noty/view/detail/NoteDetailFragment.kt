@@ -24,6 +24,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ShareCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -50,11 +51,11 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     @Inject
-    lateinit var myViewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
+    lateinit var viewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
 
     override val viewModel: NoteDetailViewModel by viewModels {
         args.noteId?.let { noteId ->
-            NoteDetailViewModel.provideFactory(myViewModelAssistedFactory, noteId)
+            NoteDetailViewModel.provideFactory(viewModelAssistedFactory, noteId)
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
@@ -63,6 +64,8 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
         initViews()
         observeNote()
+        observeNoteUpdate()
+        observeNoteDeletion()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,62 +74,87 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun initViews() {
-        binding.fabSave.setOnClickListener {
-            if (isConnected()) {
-                toast("No Internet! Try later")
-                return@setOnClickListener
-            }
-            val (title, note) = binding.noteLayout.let {
-                Pair(
-                    it.fieldTitle.text.toString(),
-                    it.fieldNote.text.toString()
-                )
-            }
-            viewModel.updateNote(title, note)
+        binding.run {
+            fabSave.setOnClickListener { onNoteSaveClicked() }
+            noteLayout.fieldTitle.addTextChangedListener { onNoteContentChanged() }
+            noteLayout.fieldNote.addTextChangedListener { onNoteContentChanged() }
         }
     }
 
+    private fun onNoteSaveClicked() {
+        if (!isConnected()) {
+            toast("No Internet! Try later")
+            return
+        }
+        val (title, note) = binding.noteLayout.let {
+            Pair(
+                it.fieldTitle.text.toString(),
+                it.fieldNote.text.toString()
+            )
+        }
+        viewModel.updateNote(title, note)
+    }
+
     private fun observeNote() {
-        viewModel.run {
-            noteLiveData.observe(viewLifecycleOwner) {
-                binding.run {
-                    binding.noteLayout.fieldTitle.setText(it.title)
-                    binding.noteLayout.fieldNote.setText(it.note)
-                    fabSave.isEnabled = true
-                }
+        viewModel.noteLiveData.observe(viewLifecycleOwner) {
+            binding.run {
+                binding.noteLayout.fieldTitle.setText(it.title)
+                binding.noteLayout.fieldNote.setText(it.note)
+                fabSave.isEnabled = true
             }
+        }
+    }
 
-            updateNoteState.observe(viewLifecycleOwner) { viewState ->
-                when (viewState) {
-                    is ViewState.Loading -> {
-                        binding.progressBar.show()
-                    }
-                    is ViewState.Success -> {
-                        binding.progressBar.hide()
-                        findNavController().navigateUp()
-                    }
-                    is ViewState.Failed -> {
-                        binding.progressBar.hide()
-                        toast("Error ${viewState.message}")
-                    }
+    private fun observeNoteUpdate() {
+        viewModel.updateNoteState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Loading -> {
+                    binding.progressBar.show()
                 }
-            }
-
-            deleteNoteState.observe(viewLifecycleOwner) { viewState ->
-                when (viewState) {
-                    is ViewState.Loading -> {
-                        binding.progressBar.show()
-                    }
-                    is ViewState.Success -> {
-                        binding.progressBar.hide()
-                        findNavController().navigateUp()
-                    }
-                    is ViewState.Failed -> {
-                        binding.progressBar.hide()
-                    }
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    findNavController().navigateUp()
+                }
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                    toast("Error ${viewState.message}")
                 }
             }
         }
+    }
+
+    private fun observeNoteDeletion() {
+        viewModel.deleteNoteState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    findNavController().navigateUp()
+                }
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                }
+            }
+        }
+    }
+
+    private fun onNoteContentChanged() {
+        val previousNote = viewModel.noteLiveData.value ?: return
+
+        val (newTitle, newNote) = binding.noteLayout.let {
+            Pair(
+                it.fieldTitle.text.toString(),
+                it.fieldNote.text.toString()
+            )
+        }
+
+        if (previousNote.title.trim() != newTitle.trim() ||
+            previousNote.note.trim() != newNote.trim()
+        ) {
+            binding.fabSave.show()
+        } else binding.fabSave.hide()
     }
 
     override fun getViewBinding(
@@ -172,5 +200,5 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun isConnected() =
-        (connectivityLiveData.value != null && connectivityLiveData.value == false)
+        (connectivityLiveData.value != null && connectivityLiveData.value == true)
 }

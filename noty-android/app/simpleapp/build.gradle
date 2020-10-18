@@ -81,6 +81,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     // Android
+    implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 
@@ -95,8 +96,8 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
 
     // Assisted Inject
-    compileOnly 'com.squareup.inject:assisted-inject-annotations-dagger2:0.6.0'
-    kapt 'com.squareup.inject:assisted-inject-processor-dagger2:0.6.0'
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
