@@ -18,7 +18,6 @@ package dev.shreyaspatil.noty.view
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.asLiveData
@@ -33,6 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.databinding.MainActivityBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
 
-        visibilityNavElements(binding, navHostFragment.navController)
+        observeNavElements(binding, navHostFragment.navController)
 
         with(navHostFragment.navController) {
             appBarConfiguration = AppBarConfiguration(graph)
@@ -81,20 +82,16 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment)
         .navigateUp(appBarConfiguration)
 
-    private fun visibilityNavElements(
+    private fun observeNavElements(
         binding: MainActivityBinding,
         navController: NavController
     ) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.loginFragment -> binding.topAppBar.visibility = View.GONE
-                R.id.registerFragment -> binding.topAppBar.visibility = View.GONE
-                else -> binding.topAppBar.visibility = View.VISIBLE
+                R.id.loginFragment -> binding.topAppBar.hide()
+                R.id.registerFragment -> binding.topAppBar.hide()
+                else -> binding.topAppBar.show()
             }
         }
-    }
-
-    override fun onBackPressed() {
-        finishAfterTransition()
     }
 }
