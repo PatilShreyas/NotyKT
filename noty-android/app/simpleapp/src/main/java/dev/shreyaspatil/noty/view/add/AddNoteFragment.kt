@@ -25,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.AddNoteFragmentBinding
+import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
@@ -37,6 +38,8 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
 
     override val viewModel: AddNoteViewModel by viewModels()
 
+    private val connectivityLiveData by lazy { NetworkUtils.observeConnectivity(applicationContext()) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -46,6 +49,10 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
 
     private fun initViews() {
         binding.fabSave.setOnClickListener {
+            if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
+                toast("No Internet! Try later")
+                return@setOnClickListener
+            }
             val (title, note) = binding.noteLayout.let {
                 Pair(
                     it.fieldTitle.text.toString(),

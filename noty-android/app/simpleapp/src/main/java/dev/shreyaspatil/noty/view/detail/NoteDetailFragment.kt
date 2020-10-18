@@ -31,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NoteDetailFragmentBinding
+import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
@@ -43,6 +44,8 @@ import javax.inject.Inject
 class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailViewModel>() {
 
     private val args: NoteDetailFragmentArgs by navArgs()
+
+    private val connectivityLiveData by lazy { NetworkUtils.observeConnectivity(applicationContext()) }
 
     @Inject
     lateinit var myViewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
@@ -67,6 +70,10 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     private fun initViews() {
         binding.fabSave.setOnClickListener {
+            if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
+                toast("No Internet! Try later")
+                return@setOnClickListener
+            }
             val (title, note) = binding.noteLayout.let {
                 Pair(
                     it.fieldTitle.text.toString(),
