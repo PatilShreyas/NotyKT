@@ -144,7 +144,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         val note = binding.noteLayout.fieldNote.text.toString()
 
         val shareMsg = getString(
-            R.string.share_message,
+            R.string.text_message_share,
             title,
             note
         )
