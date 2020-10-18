@@ -17,7 +17,6 @@
 package dev.shreyaspatil.noty.utils
 
 import android.view.View
-import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dev.shreyaspatil.noty.R
