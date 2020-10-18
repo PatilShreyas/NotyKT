@@ -60,7 +60,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        handleOnBackPressed()
         loadNotes()
     }
 
@@ -205,21 +204,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun handleOnBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback {
-            MaterialAlertDialogBuilder(requireActivity())
-                .setTitle("Exit?")
-                .setMessage("Are you sure want to exit?")
-                .setPositiveButton("YES") { dialogInterface: DialogInterface, i: Int ->
-                    requireActivity().finish()
-                }
-                .setNegativeButton("NO") { dialogInterface: DialogInterface, i: Int ->
-                    dialogInterface.dismiss()
-                }
-                .show()
-        }
     }
 
     companion object {
