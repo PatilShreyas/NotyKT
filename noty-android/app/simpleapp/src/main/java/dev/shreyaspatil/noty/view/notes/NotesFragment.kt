@@ -96,16 +96,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
-                is ViewState.Success -> {
-                    if (it.data.isEmpty()) {
-                        binding.swipeRefreshNotes.isRefreshing = false
-                        binding.emptyStateLayout.emptyStateView.visibility = View.VISIBLE
-                    } else {
-                        binding.swipeRefreshNotes.isRefreshing = false
-                        binding.emptyStateLayout.emptyStateView.visibility = View.GONE
-                        notesListAdapter.submitList(it.data)
-                    }
-                }
+                is ViewState.Success -> onNotesLoaded(it.data)
                 is ViewState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     Log.e(javaClass.simpleName, it.message)
@@ -113,6 +104,17 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 }
             }
         }
+    }
+
+    private fun onNotesLoaded(data: List<Note>) {
+        if (data.isNullOrEmpty()) {
+            binding.swipeRefreshNotes.isRefreshing = false
+            binding.emptyStateLayout.emptyStateView.show()
+        } else {
+            binding.swipeRefreshNotes.isRefreshing = false
+            binding.emptyStateLayout.emptyStateView.hide()
+        }
+        notesListAdapter.submitList(data)
     }
 
     private fun observeConnectivity() {
