@@ -82,7 +82,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun onNoteSaveClicked() {
-        if (isConnected()) {
+        if (!isConnected()) {
             toast("No Internet! Try later")
             return
         }
@@ -200,5 +200,5 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun isConnected() =
-        (connectivityLiveData.value != null && connectivityLiveData.value == false)
+        (connectivityLiveData.value != null && connectivityLiveData.value == true)
 }
