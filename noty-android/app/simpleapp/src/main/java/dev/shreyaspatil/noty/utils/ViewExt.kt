@@ -17,14 +17,11 @@
 package dev.shreyaspatil.noty.utils
 
 import android.view.View
-import android.widget.ProgressBar
 
-// progress show
-fun ProgressBar.show() {
+fun View.show() {
     visibility = View.VISIBLE
 }
 
-// progress hide
-fun ProgressBar.hide() {
+fun View.hide() {
     visibility = View.GONE
 }

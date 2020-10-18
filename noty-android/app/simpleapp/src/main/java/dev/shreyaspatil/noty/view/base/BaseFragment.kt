@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.view.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     fun toast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
+
+    fun applicationContext(): Context = requireActivity().applicationContext
 
     override fun onDestroy() {
         super.onDestroy()
