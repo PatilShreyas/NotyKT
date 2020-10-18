@@ -33,8 +33,8 @@
 
     <color name="statusBarColor">#FFFFFF</color>
     <color name="actionBarColor">#FFFFFF</color>
-    <color name="error">#B00020</color>
-    <color name="success">#388E3C</color>
+    <color name="error">#EB5757</color>
+    <color name="success">#6FCF97</color>
 
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#ffffff</color>
