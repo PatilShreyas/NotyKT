@@ -85,4 +85,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@android:color/white" />
 
+    <include
+        android:id="@+id/emptyStateLayout"
+        layout="@layout/content_empty_state_layout"
+        android:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

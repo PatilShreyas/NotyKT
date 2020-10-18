@@ -35,6 +35,7 @@
     <string name="text_welcome_back">Welcome back</string>
     <string name="text_no_connectivity">No Internet!</string>
     <string name="text_connectivity">Online back</string>
+    <string name="text_empty_state_title">No notes found</string>
     <string name="text_noty_icon">Noty Icon</string>
     <string name="text_message_share">\"%s\" by %s. \nVisit: https://github.com/PatilShreyas/NotyKT</string>
 
@@ -46,4 +47,6 @@
     <string name="hint_field_note">Write note here…</string>
 
     <string name="content_description_connectivity_icon">Connectivity status Icon</string>
+    <string name="text_empty_state_detail">When you add a notes. You will see your notes here</string>
+
 </resources>

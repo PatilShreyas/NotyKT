@@ -97,8 +97,14 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
                 is ViewState.Success -> {
-                    binding.swipeRefreshNotes.isRefreshing = false
-                    notesListAdapter.submitList(it.data)
+                    if (it.data.isEmpty()) {
+                        binding.swipeRefreshNotes.isRefreshing = false
+                        binding.emptyStateLayout.emptyStateView.visibility = View.VISIBLE
+                    } else {
+                        binding.swipeRefreshNotes.isRefreshing = false
+                        binding.emptyStateLayout.emptyStateView.visibility = View.GONE
+                        notesListAdapter.submitList(it.data)
+                    }
                 }
                 is ViewState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
