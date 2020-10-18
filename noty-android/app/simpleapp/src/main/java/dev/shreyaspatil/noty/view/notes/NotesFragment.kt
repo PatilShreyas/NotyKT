@@ -16,11 +16,14 @@
 
 package dev.shreyaspatil.noty.view.notes
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.activity.addCallback
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -30,6 +33,7 @@ import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NotesFragmentBinding
+import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
@@ -50,6 +54,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         observeNotes()
+        observeConnectivity()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,10 +97,59 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 is ViewState.Failed -> {
                     binding.progressBar.hide()
                     Log.e(javaClass.simpleName, it.message)
-                    toast("Error ${it.message}")
+                    toast("Error: ${it.message}")
                 }
             }
         }
+    }
+
+    private fun observeConnectivity() {
+        NetworkUtils.observeConnectivity(applicationContext())
+            .observe(viewLifecycleOwner) { isConnected ->
+                if (!isConnected) {
+                    binding.run {
+                        textViewNetworkStatus.text = getString(R.string.text_no_connectivity)
+                        networkStatusLayout.apply {
+                            show()
+                            setBackgroundColor(
+                                ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.error,
+                                    requireActivity().theme
+                                )
+                            )
+                        }
+                    }
+                } else {
+                    if (viewModel.notesState.value is ViewState.Failed ||
+                        notesListAdapter.itemCount == 0
+                    ) {
+                        viewModel.getAllNotes()
+                    }
+                    binding.run {
+                        textViewNetworkStatus.text = getString(R.string.text_connectivity)
+                        networkStatusLayout.apply {
+                            setBackgroundColor(
+                                ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.success,
+                                    requireActivity().theme
+                                )
+                            )
+                            animate()
+                                .alpha(1f)
+                                .setStartDelay(ANIMATION_DURATION)
+                                .setDuration(ANIMATION_DURATION)
+                                .setListener(object : AnimatorListenerAdapter() {
+                                    override fun onAnimationEnd(animation: Animator) {
+                                        hide()
+                                    }
+                                })
+                                .start()
+                        }
+                    }
+                }
+            }
     }
 
     private fun checkAuthentication() {
@@ -166,5 +220,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 }
                 .show()
         }
+    }
+
+    companion object {
+        const val ANIMATION_DURATION = 2000L
     }
 }
