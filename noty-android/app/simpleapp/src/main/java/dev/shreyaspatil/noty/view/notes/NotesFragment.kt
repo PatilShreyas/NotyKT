@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -70,6 +71,13 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         binding.fabNew.setOnClickListener {
             findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
         }
+        binding.swipeRefreshNotes.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.secondaryColor),
+            ContextCompat.getColor(requireContext(), R.color.onSecondary)
+        )
+        binding.swipeRefreshNotes.setOnRefreshListener {
+            viewModel.getAllNotes()
+        }
     }
 
     private fun loadNotes() {
@@ -85,13 +93,15 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Loading -> {
+                    binding.swipeRefreshNotes.isRefreshing = true
+                }
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    binding.swipeRefreshNotes.isRefreshing = false
                     notesListAdapter.submitList(it.data)
                 }
                 is ViewState.Failed -> {
-                    binding.progressBar.hide()
+                    binding.swipeRefreshNotes.isRefreshing = false
                     Log.e(javaClass.simpleName, it.message)
                     toast("Error: ${it.message}")
                 }
