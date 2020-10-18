@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +33,6 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.utils.hide
-import dev.shreyaspatil.noty.utils.setSchemeColors
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.notes.adapter.NotesListAdapter
@@ -71,8 +71,11 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         binding.fabNew.setOnClickListener {
             findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
         }
-        binding.swipeNotes.setSchemeColors()
-        binding.swipeNotes.setOnRefreshListener {
+        binding.swipeRefreshNotes.setColorSchemeColors(
+            ContextCompat.getColor(requireContext(), R.color.secondaryColor),
+            ContextCompat.getColor(requireContext(), R.color.onSecondary)
+        )
+        binding.swipeRefreshNotes.setOnRefreshListener {
             viewModel.getAllNotes()
         }
     }
@@ -91,14 +94,14 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> {
-                    binding.swipeNotes.isRefreshing = true
+                    binding.swipeRefreshNotes.isRefreshing = true
                 }
                 is ViewState.Success -> {
-                    binding.swipeNotes.isRefreshing = false
+                    binding.swipeRefreshNotes.isRefreshing = false
                     notesListAdapter.submitList(it.data)
                 }
                 is ViewState.Failed -> {
-                    binding.swipeNotes.isRefreshing = false
+                    binding.swipeRefreshNotes.isRefreshing = false
                     Log.e(javaClass.simpleName, it.message)
                     toast("Error: ${it.message}")
                 }

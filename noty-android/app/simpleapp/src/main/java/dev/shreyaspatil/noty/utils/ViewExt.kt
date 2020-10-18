@@ -17,9 +17,6 @@
 package dev.shreyaspatil.noty.utils
 
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import dev.shreyaspatil.noty.R
 
 fun View.show() {
     visibility = View.VISIBLE
@@ -27,14 +24,4 @@ fun View.show() {
 
 fun View.hide() {
     visibility = View.GONE
-}
-
-/**
- * Set Swipe refresh layout colors
- */
-fun SwipeRefreshLayout.setSchemeColors() {
-    setColorSchemeColors(
-        ContextCompat.getColor(context, R.color.secondaryColor),
-        ContextCompat.getColor(context, R.color.onSecondary)
-    )
 }
