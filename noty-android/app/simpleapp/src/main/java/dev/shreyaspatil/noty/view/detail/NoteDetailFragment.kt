@@ -72,7 +72,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     private fun initViews() {
         binding.fabSave.setOnClickListener {
-            if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
+            if (isConnected()) {
                 toast("No Internet! Try later")
                 return@setOnClickListener
             }
@@ -141,7 +141,10 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_delete -> viewModel.deleteNote()
+            R.id.action_delete -> if (isConnected()) {
+                viewModel.deleteNote()
+            } else toast("No Internet! Try again.")
+
             R.id.action_share -> share()
         }
         return super.onOptionsItemSelected(item)
@@ -167,4 +170,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             startActivity(intent)
         }
     }
+
+    private fun isConnected() =
+        (connectivityLiveData.value != null && connectivityLiveData.value == false)
 }
