@@ -37,6 +37,7 @@
     <style name="StatusTextView">
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="fontFamily">@font/gilroy_regular</item>
     </style>
 
     <style name="StatusView">
