@@ -24,7 +24,7 @@
     <ImageView
         android:id="@+id/empty_state_image"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/text_noty_icon"
         android:src="@drawable/empty_state_image" />
 
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/empty_state_detail"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/empty_state_title"
         android:layout_marginStart="@dimen/dimen_48"
