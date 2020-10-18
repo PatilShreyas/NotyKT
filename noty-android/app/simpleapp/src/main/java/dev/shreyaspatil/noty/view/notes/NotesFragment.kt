@@ -67,16 +67,18 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun initViews() {
-        binding.notesRecyclerView.adapter = notesListAdapter
-        binding.fabNew.setOnClickListener {
-            findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
-        }
-        binding.swipeRefreshNotes.setColorSchemeColors(
-            ContextCompat.getColor(requireContext(), R.color.secondaryColor),
-            ContextCompat.getColor(requireContext(), R.color.onSecondary)
-        )
-        binding.swipeRefreshNotes.setOnRefreshListener {
-            viewModel.getAllNotes()
+        binding.run {
+            notesRecyclerView.adapter = notesListAdapter
+            fabNew.setOnClickListener {
+                findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
+            }
+            swipeRefreshNotes.setColorSchemeColors(
+                ContextCompat.getColor(requireContext(), R.color.secondaryColor),
+                ContextCompat.getColor(requireContext(), R.color.onSecondary)
+            )
+            swipeRefreshNotes.setOnRefreshListener {
+                viewModel.getAllNotes()
+            }
         }
     }
 
@@ -93,9 +95,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> {
-                    binding.swipeRefreshNotes.isRefreshing = true
-                }
+                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
                 is ViewState.Success -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     notesListAdapter.submitList(it.data)
