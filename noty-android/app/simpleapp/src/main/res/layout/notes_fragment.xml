@@ -51,19 +51,27 @@
             android:layout_height="wrap_content"
             tools:text="@string/text_no_connectivity" />
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notesRecyclerView"
-        android:layout_width="@dimen/dimen_0"
-        android:layout_height="@dimen/dimen_0"
-        android:padding="@dimen/dimen_4"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/networkStatusLayout"
-        tools:listitem="@layout/item_note" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/swipeNotes"
+        android:layout_height="0dp">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dimen_4"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/networkStatusLayout"
+            tools:listitem="@layout/item_note" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabNew"
         android:layout_width="wrap_content"

@@ -32,6 +32,7 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.setSchemeColors
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.notes.adapter.NotesListAdapter
@@ -70,6 +71,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         binding.fabNew.setOnClickListener {
             findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
         }
+        binding.swipeNotes.setSchemeColors()
+        binding.swipeNotes.setOnRefreshListener {
+            viewModel.getAllNotes()
+        }
     }
 
     private fun loadNotes() {
@@ -85,12 +90,18 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Loading -> {
+                    if (!binding.swipeNotes.isRefreshing) {
+                        binding.progressBar.show()
+                    }
+                }
                 is ViewState.Success -> {
+                    binding.swipeNotes.isRefreshing = false
                     binding.progressBar.hide()
                     notesListAdapter.submitList(it.data)
                 }
                 is ViewState.Failed -> {
+                    binding.swipeNotes.isRefreshing = false
                     binding.progressBar.hide()
                     Log.e(javaClass.simpleName, it.message)
                     toast("Error: ${it.message}")
