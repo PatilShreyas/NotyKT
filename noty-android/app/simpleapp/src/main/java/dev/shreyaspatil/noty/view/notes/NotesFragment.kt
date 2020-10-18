@@ -124,7 +124,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private fun onConnectivityUnavailable() {
         binding.run {
-            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_available)
+            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_unavailable)
             textNetworkStatus.text = getString(R.string.text_no_connectivity)
             networkStatusLayout.apply {
                 show()
@@ -146,7 +146,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             viewModel.getAllNotes()
         }
         binding.run {
-            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_unavailable)
+            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_available)
             textNetworkStatus.text = getString(R.string.text_connectivity)
             networkStatusLayout.apply {
                 setBackgroundColor(
