@@ -102,49 +102,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeConnectivity() {
         NetworkUtils.observeConnectivity(applicationContext())
             .observe(viewLifecycleOwner) { isConnected ->
-                if (!isConnected) {
-                    binding.run {
-                        textViewNetworkStatus.text = getString(R.string.text_no_connectivity)
-                        networkStatusLayout.apply {
-                            show()
-                            setBackgroundColor(
-                                ResourcesCompat.getColor(
-                                    resources,
-                                    R.color.error,
-                                    requireActivity().theme
-                                )
-                            )
-                        }
-                    }
-                } else {
-                    if (viewModel.notesState.value is ViewState.Failed ||
-                        notesListAdapter.itemCount == 0
-                    ) {
-                        viewModel.getAllNotes()
-                    }
-                    binding.run {
-                        textViewNetworkStatus.text = getString(R.string.text_connectivity)
-                        networkStatusLayout.apply {
-                            setBackgroundColor(
-                                ResourcesCompat.getColor(
-                                    resources,
-                                    R.color.success,
-                                    requireActivity().theme
-                                )
-                            )
-                            animate()
-                                .alpha(1f)
-                                .setStartDelay(ANIMATION_DURATION)
-                                .setDuration(ANIMATION_DURATION)
-                                .setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator) {
-                                        hide()
-                                    }
-                                })
-                                .start()
-                        }
-                    }
-                }
+                if (isConnected) onConnectivityAvailable() else onConnectivityUnavailable()
             }
     }
 
@@ -162,6 +120,54 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private fun logout() {
         findNavController().navigate(R.id.action_notesFragment_to_loginFragment)
+    }
+
+    private fun onConnectivityUnavailable() {
+        binding.run {
+            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_available)
+            textNetworkStatus.text = getString(R.string.text_no_connectivity)
+            networkStatusLayout.apply {
+                show()
+                setBackgroundColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.error,
+                        requireActivity().theme
+                    )
+                )
+            }
+        }
+    }
+
+    private fun onConnectivityAvailable() {
+        if (viewModel.notesState.value is ViewState.Failed ||
+            notesListAdapter.itemCount == 0
+        ) {
+            viewModel.getAllNotes()
+        }
+        binding.run {
+            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_unavailable)
+            textNetworkStatus.text = getString(R.string.text_connectivity)
+            networkStatusLayout.apply {
+                setBackgroundColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.success,
+                        requireActivity().theme
+                    )
+                )
+                animate()
+                    .alpha(1f)
+                    .setStartDelay(ANIMATION_DURATION)
+                    .setDuration(ANIMATION_DURATION)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            hide()
+                        }
+                    })
+                    .start()
+            }
+        }
     }
 
     override fun getViewBinding(

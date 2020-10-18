@@ -44,4 +44,6 @@
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_field_title">Title</string>
     <string name="hint_field_note">Write note here…</string>
+
+    <string name="content_description_connectivity_icon">Connectivity status Icon</string>
 </resources>

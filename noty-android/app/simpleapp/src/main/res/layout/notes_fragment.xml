@@ -28,14 +28,24 @@
         style="@style/StatusView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@color/error">
 
+        <ImageView
+            android:id="@+id/imageNetworkStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_8"
+            android:contentDescription="@string/content_description_connectivity_icon"
+            tools:src="@drawable/ic_connectivity_available" />
+
         <TextView
-            android:id="@+id/textViewNetworkStatus"
+            android:id="@+id/textNetworkStatus"
             style="@style/StatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
