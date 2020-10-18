@@ -159,7 +159,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 .setTitle("Exit?")
                 .setMessage("Are you sure want to exit?")
                 .setPositiveButton("YES") { dialogInterface: DialogInterface, i: Int ->
-                    requireActivity().finish()
+                    dialogInterface.dismiss()
+                    requireActivity().finishAfterTransition()
                 }
                 .setNegativeButton("NO") { dialogInterface: DialogInterface, i: Int ->
                     dialogInterface.dismiss()
