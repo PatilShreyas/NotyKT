@@ -72,12 +72,14 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             fabNew.setOnClickListener {
                 findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
             }
-            swipeRefreshNotes.setColorSchemeColors(
-                ContextCompat.getColor(requireContext(), R.color.secondaryColor),
-                ContextCompat.getColor(requireContext(), R.color.onSecondary)
-            )
-            swipeRefreshNotes.setOnRefreshListener {
-                viewModel.getAllNotes()
+            swipeRefreshNotes.apply {
+                setColorSchemeColors(
+                    ContextCompat.getColor(requireContext(), R.color.secondaryColor),
+                    ContextCompat.getColor(requireContext(), R.color.onSecondary)
+                )
+                setOnRefreshListener {
+                    viewModel.getAllNotes()
+                }
             }
         }
     }
