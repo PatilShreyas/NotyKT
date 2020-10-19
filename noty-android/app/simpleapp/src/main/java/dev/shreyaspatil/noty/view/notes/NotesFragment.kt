@@ -51,19 +51,19 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        observeNotes()
-        observeConnectivity()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        loadNotes()
     }
 
     override fun onStart() {
         super.onStart()
         checkAuthentication()
+        observeNotes()
+        observeConnectivity()
+        loadNotes()
     }
 
     private fun initViews() {
@@ -96,7 +96,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
-                is ViewState.Success -> onNotesLoaded(it.data)
+                is ViewState.Success -> onNotesLoaded(it.data).also {
+                    binding.swipeRefreshNotes.isRefreshing = false
+                }
+
                 is ViewState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     Log.e(javaClass.simpleName, it.message)
@@ -107,12 +110,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onNotesLoaded(data: List<Note>) {
-        if (data.isNullOrEmpty()) {
-            binding.swipeRefreshNotes.isRefreshing = false
-            binding.emptyStateLayout.emptyStateView.show()
-        } else {
-            binding.swipeRefreshNotes.isRefreshing = false
-            binding.emptyStateLayout.emptyStateView.hide()
+        binding.emptyStateLayout.emptyStateView.run {
+            if (data.isEmpty()) show() else hide()
         }
         notesListAdapter.submitList(data)
     }
