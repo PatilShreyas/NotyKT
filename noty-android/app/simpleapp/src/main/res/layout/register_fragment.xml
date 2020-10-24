@@ -132,7 +132,7 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="@color/secondaryColor"
             android:fontFamily="@font/gilroy_bold"
-            android:text="@string/text_login"
+            android:text="@string/text_signup"
             app:layout_constraintBottom_toBottomOf="parent" />
 
 
