@@ -228,7 +228,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
-
     companion object {
         const val ANIMATION_DURATION = 2000L
     }
