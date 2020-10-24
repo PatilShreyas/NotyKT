@@ -27,6 +27,7 @@
 
     <!-- Text -->
     <string name="text_login">Login</string>
+    <string name="text_signup">Sign Up</string>
     <string name="text_create_account">Don\'t have an account?  <font color='#7885FF'>Sign up</font></string>
     <string name="text_login_account">Already have an account?  <font color='#7885FF'>Login</font></string>
     <string name="text_registration">Create account</string>

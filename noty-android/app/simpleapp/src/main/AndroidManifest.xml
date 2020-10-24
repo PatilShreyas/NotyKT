@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".view.MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|navigation"
+            android:configChanges="keyboard|keyboardHidden|orientation|navigation|screenSize|screenLayout"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

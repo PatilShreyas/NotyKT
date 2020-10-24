@@ -112,7 +112,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onNotesLoaded(data: List<Note>) {
-        binding.emptyStateLayout.emptyStateView.run {
+        binding.emptyStateLayout.run {
             if (data.isEmpty()) show() else hide()
         }
         notesListAdapter.submitList(data)
