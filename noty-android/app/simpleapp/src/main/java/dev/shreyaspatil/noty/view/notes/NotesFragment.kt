@@ -37,6 +37,7 @@ import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
+import kotlinx.android.synthetic.main.notes_fragment.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -112,7 +113,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onNotesLoaded(data: List<Note>) {
-        binding.emptyStateLayout.emptyStateView.run {
+        binding.emptyStateLayout.emptyStateLayout.run {
             if (data.isEmpty()) show() else hide()
         }
         notesListAdapter.submitList(data)
@@ -227,6 +228,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
         return super.onOptionsItemSelected(item)
     }
+
 
     companion object {
         const val ANIMATION_DURATION = 2000L
