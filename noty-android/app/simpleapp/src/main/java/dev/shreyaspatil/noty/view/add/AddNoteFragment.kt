@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.trimmedLength
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -67,7 +68,7 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
         val (title, note) = getNoteContent()
 
         binding.fabSave.let { fab ->
-            if (title.isBlank() or note.isBlank()) fab.hide() else fab.show()
+            if (title.trimmedLength() < 4 || note.isBlank()) fab.hide() else fab.show()
         }
     }
 
@@ -91,16 +92,14 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
     private fun observeAddNoteResult() {
         viewModel.addNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> binding.progressBar.show()
+
                 is ViewState.Success -> {
                     binding.progressBar.hide()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> {
-                    binding.progressBar.hide()
-                }
+
+                is ViewState.Failed -> binding.progressBar.hide()
             }
         }
     }
