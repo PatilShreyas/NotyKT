@@ -56,16 +56,19 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
-        observeNote()
-        observeNoteUpdate()
-        observeNoteDeletion()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        observeNote()
+        observeNoteUpdate()
+        observeNoteDeletion()
     }
 
     private fun initViews() {
