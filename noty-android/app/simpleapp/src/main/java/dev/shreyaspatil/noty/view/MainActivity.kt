@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme) // Set AppTheme before setting content view.
         super.onCreate(savedInstanceState)
         val binding = MainActivityBinding.inflate(layoutInflater)
 
