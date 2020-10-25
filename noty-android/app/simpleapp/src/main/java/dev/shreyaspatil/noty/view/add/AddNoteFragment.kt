@@ -99,7 +99,10 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
                     findNavController().navigateUp()
                 }
 
-                is ViewState.Failed -> binding.progressBar.hide()
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                    toast("Error ${viewState.message}")
+                }
             }
         }
     }

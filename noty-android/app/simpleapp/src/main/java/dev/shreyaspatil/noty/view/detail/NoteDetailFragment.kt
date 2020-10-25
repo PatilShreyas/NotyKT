@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.view.detail
 import android.os.Bundle
 import android.view.*
 import androidx.core.app.ShareCompat
+import androidx.core.text.trimmedLength
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -84,12 +85,8 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             toast("No Internet! Try later")
             return
         }
-        val (title, note) = binding.noteLayout.let {
-            Pair(
-                it.fieldTitle.text.toString(),
-                it.fieldNote.text.toString()
-            )
-        }
+        val (title, note) = getNoteContent()
+
         viewModel.updateNote(title, note)
     }
 
@@ -106,9 +103,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteUpdate() {
         viewModel.updateNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> binding.progressBar.show()
                 is ViewState.Success -> {
                     binding.progressBar.hide()
                     findNavController().navigateUp()
@@ -141,18 +136,21 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun onNoteContentChanged() {
         val previousNote = viewModel.noteLiveData.value ?: return
 
-        val (newTitle, newNote) = binding.noteLayout.let {
-            Pair(
-                it.fieldTitle.text.toString(),
-                it.fieldNote.text.toString()
-            )
-        }
+        val (newTitle, newNote) = getNoteContent()
 
-        if (previousNote.title.trim() != newTitle.trim() ||
-            previousNote.note.trim() != newNote.trim()
+        if (previousNote.title != newTitle.trim() ||
+            previousNote.note.trim() != newNote.trim() ||
+            newTitle.trimmedLength() >= 4
         ) {
             binding.fabSave.show()
         } else binding.fabSave.hide()
+    }
+
+    private fun getNoteContent() = binding.noteLayout.let {
+        Pair(
+            it.fieldTitle.text.toString(),
+            it.fieldNote.text.toString()
+        )
     }
 
     override fun getViewBinding(
