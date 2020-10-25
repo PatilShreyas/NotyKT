@@ -20,6 +20,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.trimmedLength
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,40 +46,62 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
+    }
+
+    override fun onStart() {
+        super.onStart()
         observeAddNoteResult()
     }
 
     private fun initViews() {
-        binding.fabSave.setOnClickListener {
-            if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
-                toast("No Internet! Try later")
-                return@setOnClickListener
+        binding.run {
+            fabSave.setOnClickListener { saveNote() }
+            noteLayout.run {
+                fieldTitle.addTextChangedListener { onNoteContentChanged() }
+                fieldNote.addTextChangedListener { onNoteContentChanged() }
             }
-            val (title, note) = binding.noteLayout.let {
-                Pair(
-                    it.fieldTitle.text.toString(),
-                    it.fieldNote.text.toString()
-                )
-            }
-
-            viewModel.addNote(title, note)
         }
+    }
+
+    private fun onNoteContentChanged() {
+        val (title, note) = getNoteContent()
+
+        binding.fabSave.let { fab ->
+            if (title.trimmedLength() < 4 || note.isBlank()) fab.hide() else fab.show()
+        }
+    }
+
+    private fun saveNote() {
+        if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
+            toast("No Internet! Try later")
+            return
+        }
+        val (title, note) = getNoteContent()
+
+        viewModel.addNote(title, note)
+    }
+
+    private fun getNoteContent() = binding.noteLayout.let {
+        Pair(
+            it.fieldTitle.text.toString(),
+            it.fieldNote.text.toString()
+        )
     }
 
     private fun observeAddNoteResult() {
         viewModel.addNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> binding.progressBar.show()
+
                 is ViewState.Success -> {
                     binding.progressBar.hide()
                     findNavController().navigateUp()
                 }
+
                 is ViewState.Failed -> {
                     binding.progressBar.hide()
+                    toast("Error ${viewState.message}")
                 }
             }
         }
