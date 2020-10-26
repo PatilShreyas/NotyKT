@@ -16,7 +16,6 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <bool name="lightNavEnabled">true</bool>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
@@ -45,6 +44,16 @@
 
     <style name="ProgressBarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@color/primaryColor</item>
+    </style>
+
+    <!-- The splash theme to set the background with your splash screen drawable -->
+    <style name="AppTheme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/ic_launcher_background</item>
+        <item name="android:navigationBarColor" tools:targetApi="o">@color/ic_launcher_background
+        </item>
     </style>
 
 </resources>
