@@ -1,4 +1,4 @@
-Header Image Here
+![](art/GitHubPreview.png)
 
 # NotyKT 🖊️ 
 
