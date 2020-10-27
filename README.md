@@ -33,8 +33,8 @@ Navigate to [`/noty-api`](/noty-api) directory to browse and know more about Not
 This is an Android application which uses *Noty REST API*. It has application UI implementation using traditional *Android's Navigation Architecture* as well as modern *Jetpack 🚀 Compose UI*.  
 Navigate to [`/noty-android`](/noty-android) directory to browse and know more about Noty Android project.
 
-## Contribute
-If you want to contribute to this library, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md).
+## Want to Contribute 🙋‍♂️?
+Awesome! If you want to contribute to this project, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md).
 
 ## Contributors
 
