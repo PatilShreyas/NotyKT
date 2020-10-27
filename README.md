@@ -1,0 +1,55 @@
+Header Image Here
+
+# NotyKT 🖊️ 
+
+![Deploy (API)](https://github.com/PatilShreyas/NotyKT/workflows/Deploy%20(API)/badge.svg) 
+![Build (API)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(API)/badge.svg)
+![Build (Android)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(Android)/badge.svg)
+
+[![GitHub license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
+![GitHub stars](https://img.shields.io/github/stars/PatilShreyas/NotyKT?style=social)
+![GitHub forks](https://img.shields.io/github/forks/PatilShreyas/NotyKT?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/PatilShreyas/NotyKT?style=social)
+
+**NotyKT** is the complete Kotlin-stack note taking 🖊️ application 📱 built to demonstrate a use of Kotlin programming language in *server-side* and *Modern Android development* tools. Dedicated to all Android Developers with ❤️. 
+
+***You can Install and test latest NotyKT Android app from below 👇***
+
+[![Foodium App](https://img.shields.io/badge/NotyKT-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/PatilShreyas/NotyKT/releases/latest/download/noty-android.apk)
+
+
+## 💡 About
+
+This project includes two subprojects:
+
+### Noty API
+
+This is a *REST API* built using Ktor Framework deployed on *Heroku*.  
+Navigate to [`/noty-api`](/noty-api) directory to browse and know more about Noty API project.
+
+### Noty Android App
+
+This is an Android application which uses *Noty REST API*. It has application UI implementation using traditional *Android's Navigation Architecture* as well as modern *Jetpack 🚀 Compose UI*.  
+Navigate to [`/noty-android`](/noty-android) directory to browse and know more about Noty Android project.
+
+## Contribute
+If you want to contribute to this library, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md).
+
+## License
+
+```
+Copyright 2020 Shreyas Patil
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
