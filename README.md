@@ -36,6 +36,12 @@ Navigate to [`/noty-android`](/noty-android) directory to browse and know more a
 ## Contribute
 If you want to contribute to this library, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md).
 
+## Contributors
+
+- [Shreyas Patil](https://github.com/PatilShreyas)
+- [Sanju S](https://github.com/Spikeysanju)
+- [Pranay Patel](https://github.com/pranaypatel512)
+
 ## License
 
 ```
