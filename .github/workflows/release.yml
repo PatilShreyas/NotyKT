@@ -29,9 +29,11 @@ jobs:
             
       - name: Grant Permission to Execute
         run: chmod +x gradlew
+        working-directory: noty-android
 
       - name: Build APKs ⚙️🛠
         run: bash ./gradlew assemble
+        working-directory: noty-android
 
       - name: Create Release ✅
         id: create_release
@@ -44,7 +46,7 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Upload NotyKT Simple App 🗳
+      - name: Upload NotyKT Simple App 🚀
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,7 +56,7 @@ jobs:
           asset_name: noty-android-simple.apk
           asset_content_type: application/apk
           
-      - name: Upload NotyKT Compose App 🗳
+      - name: Upload NotyKT Compose App 🚀
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
