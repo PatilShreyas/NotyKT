@@ -74,6 +74,17 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 
 ## Modules
 
+- `app`
+    - `simpleapp`: UI implementation using [_Navigation Architecture_](https://developer.android.com/guide/navigation/navigation-getting-started) using traditional XML resources.
+    - `composeapp`: UI implementation using [_Jetpack Compose UI Toolkit_](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwreT8BRDTARIsAJLI0KKRX0vsRWcQ-0AC6lCutEWwAB4t1wqWBi2MclQqm96gnSddahFRdkAaArbwEALw_wcB&gclsrc=aw.ds)
+
+- `core`: Pure JVM module consist of utilities, interfaces and base boilerplate.
+- `data`: Data Source
+    - `local`: Persistent storage of data using Room (SQLite) database.
+    - `remote`: Network layer implemented using Retrofit.
+- `repository`: For single source of data. Implements `local` and `remote` modules.
+- `viewmodel`: ViewModel implementation. Used `repository` for source of data.
+
 ## Architecture
 
 This app uses [_**MVVM (Model View View-Model)**_](https://developer.android.com/jetpack/docs/guide#recommended-app-arch) architecture.
