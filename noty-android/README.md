@@ -16,14 +16,28 @@ _Dedicated to all Android Developers with_ ❤️.
 
 ## Features  👓
 
+The codebase focuses on following key things:
+
+- [x] Single Activity Design
 - [x] Offline Capability - Notes ✈️
 - [ ] Offline Capability - Add/Update/Delete Notes ***(WIP)***
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
 - [ ] Tests ***(WIP)***
+- [ ] Jetpack Compose UI ***(WIP)***
 
 ## About this project 💡
 
+- Noty Android app is available with _traditional approach using Navigation Architecture_ as well as modern UI development toolkit i.e. _Jetpack Compose UI_.
+- There are two submodules in [**`app`**](/app) module as following:
+    - [**`:app:simpleapp`**](app/simpleapp): Android Noty UI implementation using [_Navigation Architecture_](https://developer.android.com/guide/navigation/navigation-getting-started) using traditional XML resources.
+    - [**`:app:composeapp`**](app/composeapp): Android Noty UI implementation using [_Jetpack Compose UI Toolkit_](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwreT8BRDTARIsAJLI0KKRX0vsRWcQ-0AC6lCutEWwAB4t1wqWBi2MclQqm96gnSddahFRdkAaArbwEALw_wcB&gclsrc=aw.ds) with Kotlin ❤️.
+
+In Android Studio, just run the application as you want with any one of the module from above.
+
+## Development Setup 🖥
+
+You will require latest Canary version of Android Studio 4.2 or newer to be able to build the app. Download latest Canary release from [here](https://developer.android.com/studio/preview).
 
 ## Design / Wireframes ✨
 
