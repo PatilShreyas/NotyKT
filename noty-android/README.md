@@ -41,7 +41,10 @@ You will require latest Canary version of Android Studio 4.2 or newer to be able
 
 ## Design / Wireframes ✨
 
-Design of this awesome application is implemented by [Sanju S](https://github.com/Spikeysanju)
+Design of this awesome application is implemented by [Sanju S](https://github.com/Spikeysanju). You can see design below.
+
+[![Figma Design](https://img.shields.io/badge/Figma-Design-pink.svg?style=for-the-badge&logo=figma)](https://www.figma.com/file/6TPCaBtOmfXQ48bYIkpDi6/NotyKT)
+
 
 
 ## Built with 🛠
