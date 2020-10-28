@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="noty-android/art/logo.png" height="128"/>
+  <img src="art/logo.png" height="128"/>
 </p>
 
 # NotyKT (Android) 📱
@@ -14,8 +14,13 @@ _Dedicated to all Android Developers with_ ❤️.
 
 [![Noty App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=%23FFFF&label=Download%20APK&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android.apk)
 
-## Features 💡
+## Features  👓
 
+- [x] Offline Capability - Notes ✈️
+- [ ] Offline Capability - Add/Update/Delete Notes ***(WIP)***
+- [x] Clean and Simple Material UI 🎨
+- [x] Dark mode 🌗
+- [ ] Tests ***(WIP)***
 
 ## About this project 💡
 
