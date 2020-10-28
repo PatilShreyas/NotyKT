@@ -14,19 +14,22 @@ _Dedicated to all Android Developers with_ ❤️.
 
 [![Noty App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=%23FFFF&label=Download%20APK&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android.apk)
 
-## Features
+## Features 💡
 
 
-## About this project
+## About this project 💡
 
 
-## About Design / Wireframes
+## Design / Wireframes ✨
 
-Design of this awesome application is implemented by [Sanju S]()
+Design of this awesome application is implemented by [Sanju S](https://github.com/Spikeysanju)
 
 
-## Built with
+## Built with 🛠
 
 ## Modules
 
 ## Architecture
+
+This app uses [_**MVVM (Model View View-Model)**_](https://developer.android.com/jetpack/docs/guide#recommended-app-arch) architecture.
+
