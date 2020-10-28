@@ -16,7 +16,7 @@
 
 ***You can Install and test latest NotyKT Android app from below 👇***
 
-[![Foodium App](https://img.shields.io/badge/NotyKT-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/PatilShreyas/NotyKT/releases/latest/download/noty-android.apk)
+[![Noty App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=%23FFFF&label=NotyKT&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android.apk)
 
 
 ## 💡 About the Project
