@@ -52,3 +52,79 @@ Replace database credentials with your local config.
 - [PostgreSQL JDBC Driver](https://jdbc.postgresql.org/) - JDBC Database driver for PostgreSQL.
 - [Testcontainer](https://www.testcontainers.org/) - Testcontainers is a Java library that supports JUnit tests, providing lightweight, throwaway instances of common databases, Selenium web browsers, or anything else that can run in a Docker container.
 - [Kotest](https://kotest.io/) - Kotest is a flexible and comprehensive testing project for Kotlin with multiplatform support.
+
+# REST API Specification
+
+You can navigate to [`/http`](http/) and try API calls in IntelliJ Idea IDE itself after API is running.
+
+## Authentication
+
+### Register
+
+```http
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+    "username": "test12345",
+    "password": "12346789"
+}
+
+```
+
+### Login
+
+```http
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "username": "test12345",
+    "password": "12346789"
+}
+
+```
+
+## Note Operations
+
+### Get all Notes
+
+```http
+GET http://localhost:8080/notes
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN
+```
+
+### Create New Note
+
+```http
+POST http://localhost:8080/note/new
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+{
+  "title": "Hey there! This is title",
+  "note": "Write note here..."
+}
+```
+
+### Update Note
+
+```http
+PUT http://localhost:8080/note/NOTE_ID_HERE
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN
+
+{
+  "title": "Updated title!",
+  "note": "Updated body here..."
+}
+```
+
+### Delete Note
+
+```http
+DELETE http://localhost:8080/note/NOTE_ID_HERE
+Content-Type: application/json
+Authorization: Bearer YOUR_AUTH_TOKEN
+```
