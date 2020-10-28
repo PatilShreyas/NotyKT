@@ -4,13 +4,15 @@
 
 # NotyKT (Android) 📱
 
+![Build (Android)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(Android)/badge.svg)
+
 _**Noty Android application**_ is built with _Modern Android application development_ tools or libraries. 
 Aim of this project is to showcase Good practice implementation of Android application development with proper architecture design. 
 _Dedicated to all Android Developers with_ ❤️.
 
 ***You can Install and test latest Covid19 Notifier app from below 👇***
 
-[![Noty App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=%23FFFF&label=Download%20APK&logo=android)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android.apk)
+[![Noty App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=%23FFFF&label=Download%20APK&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android.apk)
 
 ## Features
 
