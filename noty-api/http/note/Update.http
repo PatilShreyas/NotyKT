@@ -1,8 +1,8 @@
-PUT http://localhost:8080/note/859f6b98-0911-4db4-af98-9eaac7f0c6ec
+PUT http://localhost:8080/note/NOTE_ID_HERE
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwczovL25vdHktYXBpLmhlcm9rdWFwcC5jb20iLCJpc3MiOiJOb3R5S1QtSldULUlzc3VlciIsInVzZXJJZCI6Ijg4NTlhZDI0LWU4NTgtNGFmYi1hN2Y2LTBiZTcxYTMwN2JjOSJ9.sG6NREiAqYhx0HcF_GprQ-ltavDqto0O93X_E5ea2pQ
+Authorization: Bearer YOUR_AUTH_TOKEN
 
 {
-  "title": "Updated one 2 1 3",
-  "note": "7346837465 Yogbgrgbgu! 56"
+  "title": "Updated title!",
+  "note": "Updated body here..."
 }
