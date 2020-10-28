@@ -19,16 +19,16 @@
 [![Foodium App](https://img.shields.io/badge/NotyKT-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/PatilShreyas/NotyKT/releases/latest/download/noty-android.apk)
 
 
-## 💡 About
+## 💡 About the Project
 
 This project includes two subprojects:
 
-### Noty API
+### 🔹 [Noty API](/noty-api)
 
 This is a *REST API* built using Ktor Framework deployed on *Heroku*.  
 Navigate to [`/noty-api`](/noty-api) directory to browse and know more about Noty API project.
 
-### Noty Android App
+### 🔹 [Noty Android Application](/noty-android)
 
 This is an Android application which uses *Noty REST API*. It has application UI implementation using traditional *Android's Navigation Architecture* as well as modern *Jetpack 🚀 Compose UI*.  
 Navigate to [`/noty-android`](/noty-android) directory to browse and know more about Noty Android project.
