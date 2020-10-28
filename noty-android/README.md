@@ -12,7 +12,8 @@ _Dedicated to all Android Developers with_ ❤️.
 
 ***You can Install and test latest Covid19 Notifier app from below 👇***
 
-[![Noty App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=%23FFFF&label=Download%20APK&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android.apk)
+[![Noty Simple App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Simple%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-simple.apk)
+[![Noty Compose App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Compose%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-compose.apk)
 
 ## Features  👓
 
