@@ -98,4 +98,4 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 
 This app uses [_**MVVM (Model View View-Model)**_](https://developer.android.com/jetpack/docs/guide#recommended-app-arch) architecture.
 
-![MVVM Architecture](art/mvvm-arch.png)
+![MVVM Architecture](art/mvvm-arch.jpg)
