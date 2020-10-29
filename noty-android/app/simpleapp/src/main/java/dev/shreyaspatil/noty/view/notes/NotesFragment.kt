@@ -142,28 +142,21 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityUnavailable() {
-        binding.run {
-            // Get icon from drawable & Set [ic_connectivity_unavailable] icon to the start of the textView
-            val offlineDrawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_unavailable)
-            binding.textNetworkStatus.setCompoundDrawablesWithIntrinsicBounds(
-                offlineDrawable,
+        binding.textNetworkStatus.apply {
+            setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_unavailable),
                 null,
                 null,
                 null
             )
-            textNetworkStatus.text = getString(R.string.text_no_connectivity)
-            networkStatusLayout.apply {
-                show()
-                setBackgroundColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.error,
-                        requireActivity().theme
-                    )
-                )
-            }
+            text = getString(R.string.text_no_connectivity)
         }
+
+        binding.networkStatusLayout.apply {
+            setBackgroundColor(
+                ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
+            )
+        }.also { it.show() }
     }
 
     private fun onConnectivityAvailable() {
@@ -172,36 +165,30 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         ) {
             viewModel.getAllNotes()
         }
-        binding.run {
-            // Get icon from the drawable & Set [ic_connectivity_available] icon to the start of the textView
-            val onlineDrawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_available)
-            binding.textNetworkStatus.setCompoundDrawablesWithIntrinsicBounds(
-                onlineDrawable,
+        binding.textNetworkStatus.apply {
+            setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_available),
                 null,
                 null,
                 null
             )
-            textNetworkStatus.text = getString(R.string.text_connectivity)
-            networkStatusLayout.apply {
-                setBackgroundColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.success,
-                        requireActivity().theme
-                    )
-                )
-                animate()
-                    .alpha(1f)
-                    .setStartDelay(ANIMATION_DURATION)
-                    .setDuration(ANIMATION_DURATION)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            hide()
-                        }
-                    })
-                    .start()
-            }
+            text = getString(R.string.text_connectivity)
+        }
+
+        binding.networkStatusLayout.apply {
+            setBackgroundColor(
+                ResourcesCompat.getColor(resources, R.color.success, requireActivity().theme)
+            )
+        }.also {
+            it.animate()
+                .alpha(1f)
+                .setStartDelay(ANIMATION_DURATION)
+                .setDuration(ANIMATION_DURATION)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        it.hide()
+                    }
+                })
         }
     }
 
