@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.setContent
 import androidx.ui.tooling.preview.Preview
 import dev.shreyaspatil.noty.ui.NotyTheme
 
+// TODO This is work-in-progress.
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
