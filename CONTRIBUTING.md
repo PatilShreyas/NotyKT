@@ -1,6 +1,6 @@
 ## Feeling Awesome! Thanks for thinking about this.
 
-You can contribute us by filing issues, bugs and PRs.
+You can contribute us by filing issues, bugs and PRs. You can also take a look at active issues and fix them.
 
 ### Code contribution
 - Open issue regarding proposed change.
