@@ -40,14 +40,4 @@ jobs:
 
       - name: 🏗 Build with Gradle 🛠️
         run: ./gradlew build --stacktrace
-        working-directory: noty-api    
-
-      - name: Generate Test report 📈
-        run: ./gradlew codeCoverageReport
-        working-directory: noty-api    
-
-      - name: Upload Reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-reports-api
-          path: noty-api/**/reports  
+        working-directory: noty-api
