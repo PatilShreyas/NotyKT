@@ -21,6 +21,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.asLiveData
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -31,6 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.databinding.MainActivityBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme) // Set AppTheme before setting content view.
         super.onCreate(savedInstanceState)
         val binding = MainActivityBinding.inflate(layoutInflater)
 
@@ -50,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
+
+        observeNavElements(binding, navHostFragment.navController)
 
         with(navHostFragment.navController) {
             appBarConfiguration = AppBarConfiguration(graph)
@@ -76,4 +82,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment)
         .navigateUp(appBarConfiguration)
+
+    private fun observeNavElements(
+        binding: MainActivityBinding,
+        navController: NavController
+    ) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment -> binding.topAppBar.hide()
+                R.id.registerFragment -> binding.topAppBar.hide()
+                else -> binding.topAppBar.show()
+            }
+        }
+    }
 }

@@ -17,12 +17,10 @@
 package dev.shreyaspatil.noty.view.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.app.ShareCompat
+import androidx.core.text.trimmedLength
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -30,11 +28,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NoteDetailFragmentBinding
+import dev.shreyaspatil.noty.utils.NetworkUtils
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import javax.inject.Inject
-import kotlinx.android.synthetic.main.content_note_layout.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -42,20 +42,22 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     private val args: NoteDetailFragmentArgs by navArgs()
 
+    private val connectivityLiveData by lazy {
+        NetworkUtils.observeConnectivity(applicationContext())
+    }
+
     @Inject
-    lateinit var myViewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
+    lateinit var viewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
 
     override val viewModel: NoteDetailViewModel by viewModels {
         args.noteId?.let { noteId ->
-            NoteDetailViewModel.provideFactory(myViewModelAssistedFactory, noteId)
+            NoteDetailViewModel.provideFactory(viewModelAssistedFactory, noteId)
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
-        observeNote()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,52 +65,92 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         setHasOptionsMenu(true)
     }
 
+    override fun onStart() {
+        super.onStart()
+        observeNote()
+        observeNoteUpdate()
+        observeNoteDeletion()
+    }
+
     private fun initViews() {
-        binding.fabSave.setOnClickListener {
-            val (title, note) = binding.noteLayout.let {
-                Pair(
-                    it.fieldTitle.text.toString(),
-                    it.fieldNote.text.toString()
-                )
-            }
-            viewModel.updateNote(title, note)
+        binding.run {
+            fabSave.setOnClickListener { onNoteSaveClicked() }
+            noteLayout.fieldTitle.addTextChangedListener { onNoteContentChanged() }
+            noteLayout.fieldNote.addTextChangedListener { onNoteContentChanged() }
         }
     }
 
+    private fun onNoteSaveClicked() {
+        if (!isConnected()) {
+            toast("No Internet! Try later")
+            return
+        }
+        val (title, note) = getNoteContent()
+
+        viewModel.updateNote(title, note)
+    }
+
     private fun observeNote() {
-        viewModel.run {
-            noteLiveData.observe(viewLifecycleOwner) {
-                binding.run {
-                    fieldTitle.setText(it.title)
-                    fieldNote.setText(it.note)
-                    fabSave.isEnabled = true
-                }
+        viewModel.noteLiveData.observe(viewLifecycleOwner) {
+            binding.run {
+                binding.noteLayout.fieldTitle.setText(it.title)
+                binding.noteLayout.fieldNote.setText(it.note)
+                fabSave.isEnabled = true
             }
+        }
+    }
 
-            updateNoteState.observe(viewLifecycleOwner) { viewState ->
-                when (viewState) {
-                    is ViewState.Loading -> {
-                        // TODO Show Loading
-                    }
-                    is ViewState.Success -> findNavController().navigateUp()
-                    is ViewState.Failed -> {
-                        // TODO Show error message
-                    }
+    private fun observeNoteUpdate() {
+        viewModel.updateNoteState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    findNavController().navigateUp()
                 }
-            }
-
-            deleteNoteState.observe(viewLifecycleOwner) { viewState ->
-                when (viewState) {
-                    is ViewState.Loading -> {
-                        // TODO Show Loading
-                    }
-                    is ViewState.Success -> findNavController().navigateUp()
-                    is ViewState.Failed -> {
-                        // TODO Show error message
-                    }
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                    toast("Error ${viewState.message}")
                 }
             }
         }
+    }
+
+    private fun observeNoteDeletion() {
+        viewModel.deleteNoteState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Loading -> {
+                    binding.progressBar.show()
+                }
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    findNavController().navigateUp()
+                }
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                }
+            }
+        }
+    }
+
+    private fun onNoteContentChanged() {
+        val previousNote = viewModel.noteLiveData.value ?: return
+
+        val (newTitle, newNote) = getNoteContent()
+
+        if (previousNote.title != newTitle.trim() ||
+            previousNote.note.trim() != newNote.trim() ||
+            newTitle.trimmedLength() >= 4
+        ) {
+            binding.fabSave.show()
+        } else binding.fabSave.hide()
+    }
+
+    private fun getNoteContent() = binding.noteLayout.let {
+        Pair(
+            it.fieldTitle.text.toString(),
+            it.fieldNote.text.toString()
+        )
     }
 
     override fun getViewBinding(
@@ -123,8 +165,36 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_delete -> viewModel.deleteNote()
+            R.id.action_delete -> if (isConnected()) {
+                viewModel.deleteNote()
+            } else toast("No Internet! Try again.")
+
+            R.id.action_share -> share()
         }
         return super.onOptionsItemSelected(item)
     }
+
+    // Share notes via Intent
+    private fun share() {
+        val title = binding.noteLayout.fieldTitle.text.toString()
+        val note = binding.noteLayout.fieldNote.text.toString()
+
+        val shareMsg = getString(
+            R.string.text_message_share,
+            title,
+            note
+        )
+
+        val intent = ShareCompat.IntentBuilder.from(requireActivity())
+            .setType("text/plain")
+            .setText(shareMsg)
+            .intent
+
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(intent)
+        }
+    }
+
+    private fun isConnected() =
+        (connectivityLiveData.value != null && connectivityLiveData.value == true)
 }

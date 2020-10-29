@@ -16,8 +16,14 @@
   -->
 
 <resources>
-    <dimen name="dimen_very_small">4dp</dimen>
-    <dimen name="dimen_small">8dp</dimen>
-    <dimen name="dimen_large">16dp</dimen>
-    <dimen name="dimen_very_large">32dp</dimen>
+
+    <dimen name="dimen_0">0dp</dimen>
+    <dimen name="dimen_4">4dp</dimen>
+    <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_12">12dp</dimen>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_24">24dp</dimen>
+    <dimen name="dimen_32">32dp</dimen>
+    <dimen name="dimen_48">48dp</dimen>
+
 </resources>

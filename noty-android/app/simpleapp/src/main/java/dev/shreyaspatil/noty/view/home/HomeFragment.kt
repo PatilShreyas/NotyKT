@@ -21,12 +21,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.databinding.HomeFragmentBinding
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.HomeViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeFragmentBinding, HomeViewModel>() {
@@ -39,18 +42,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding, HomeViewModel>() {
     }
 
     private fun initViews() {
-        binding.buttonLogin.setOnClickListener {
+        lifecycleScope.launch {
+            delay(3000)
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
-
-        binding.buttonRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        hideActionBar()
     }
 
     override fun getViewBinding(

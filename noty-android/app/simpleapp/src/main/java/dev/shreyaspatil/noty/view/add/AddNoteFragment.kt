@@ -20,9 +20,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.trimmedLength
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.AddNoteFragmentBinding
+import dev.shreyaspatil.noty.utils.NetworkUtils
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,29 +40,70 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
 
     override val viewModel: AddNoteViewModel by viewModels()
 
+    private val connectivityLiveData by lazy {
+        NetworkUtils.observeConnectivity(applicationContext())
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
+    }
+
+    override fun onStart() {
+        super.onStart()
         observeAddNoteResult()
     }
 
     private fun initViews() {
-        binding.fabSave.setOnClickListener {
-            val (title, note) = binding.noteLayout.let {
-                Pair(
-                    it.fieldTitle.text.toString(),
-                    it.fieldNote.text.toString()
-                )
+        binding.run {
+            fabSave.setOnClickListener { saveNote() }
+            noteLayout.run {
+                fieldTitle.addTextChangedListener { onNoteContentChanged() }
+                fieldNote.addTextChangedListener { onNoteContentChanged() }
             }
-
-            viewModel.addNote(title, note)
         }
     }
 
+    private fun onNoteContentChanged() {
+        val (title, note) = getNoteContent()
+
+        binding.fabSave.let { fab ->
+            if (title.trimmedLength() < 4 || note.isBlank()) fab.hide() else fab.show()
+        }
+    }
+
+    private fun saveNote() {
+        if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
+            toast("No Internet! Try later")
+            return
+        }
+        val (title, note) = getNoteContent()
+
+        viewModel.addNote(title, note)
+    }
+
+    private fun getNoteContent() = binding.noteLayout.let {
+        Pair(
+            it.fieldTitle.text.toString(),
+            it.fieldNote.text.toString()
+        )
+    }
+
     private fun observeAddNoteResult() {
-        viewModel.addNoteState.observe(viewLifecycleOwner) {
-            // TODO Do something here
+        viewModel.addNoteState.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Loading -> binding.progressBar.show()
+
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    findNavController().navigateUp()
+                }
+
+                is ViewState.Failed -> {
+                    binding.progressBar.hide()
+                    toast("Error ${viewState.message}")
+                }
+            }
         }
     }
 

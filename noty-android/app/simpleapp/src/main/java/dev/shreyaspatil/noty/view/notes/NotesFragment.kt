@@ -16,25 +16,24 @@
 
 package dev.shreyaspatil.noty.view.notes
 
-import android.content.DialogInterface
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import androidx.activity.addCallback
+import android.view.*
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.NotesFragmentBinding
+import dev.shreyaspatil.noty.utils.NetworkUtils
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -47,35 +46,41 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     override val viewModel: NotesViewModel by viewModels()
 
-    private val notesListAdapter by lazy { NotesListAdapter(::onNoteClicked) }
+    private val notesListAdapter = NotesListAdapter(::onNoteClicked)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        observeNotes()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        handleOnBackPressed()
-        loadNotes()
     }
 
     override fun onStart() {
         super.onStart()
         checkAuthentication()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        showActionBar()
+        observeNotes()
+        observeConnectivity()
+        loadNotes()
     }
 
     private fun initViews() {
-        binding.notesRecyclerView.adapter = notesListAdapter
-        binding.fabNew.setOnClickListener {
-            findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
+        binding.run {
+            notesRecyclerView.adapter = notesListAdapter
+            fabNew.setOnClickListener {
+                findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
+            }
+            swipeRefreshNotes.apply {
+                setColorSchemeColors(
+                    ContextCompat.getColor(requireContext(), R.color.secondaryColor),
+                    ContextCompat.getColor(requireContext(), R.color.onSecondary)
+                )
+                setOnRefreshListener {
+                    viewModel.getAllNotes()
+                }
+            }
         }
     }
 
@@ -92,12 +97,32 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notesState.observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> {
+                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is ViewState.Success -> onNotesLoaded(it.data).also {
+                    binding.swipeRefreshNotes.isRefreshing = false
                 }
-                is ViewState.Success -> notesListAdapter.submitList(it.data)
-                is ViewState.Failed -> Log.e(javaClass.simpleName, it.message)
+
+                is ViewState.Failed -> {
+                    binding.swipeRefreshNotes.isRefreshing = false
+                    Log.e(javaClass.simpleName, it.message)
+                    toast("Error: ${it.message}")
+                }
             }
         }
+    }
+
+    private fun onNotesLoaded(data: List<Note>) {
+        binding.emptyStateLayout.run {
+            if (data.isEmpty()) show() else hide()
+        }
+        notesListAdapter.submitList(data)
+    }
+
+    private fun observeConnectivity() {
+        NetworkUtils.observeConnectivity(applicationContext())
+            .observe(viewLifecycleOwner) { isConnected ->
+                if (isConnected) onConnectivityAvailable() else onConnectivityUnavailable()
+            }
     }
 
     private fun checkAuthentication() {
@@ -113,7 +138,55 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun logout() {
-        findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToHomeFragment())
+        findNavController().navigate(R.id.action_notesFragment_to_loginFragment)
+    }
+
+    private fun onConnectivityUnavailable() {
+        binding.run {
+            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_unavailable)
+            textNetworkStatus.text = getString(R.string.text_no_connectivity)
+            networkStatusLayout.apply {
+                show()
+                setBackgroundColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.error,
+                        requireActivity().theme
+                    )
+                )
+            }
+        }
+    }
+
+    private fun onConnectivityAvailable() {
+        if (viewModel.notesState.value is ViewState.Failed ||
+            notesListAdapter.itemCount == 0
+        ) {
+            viewModel.getAllNotes()
+        }
+        binding.run {
+            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_available)
+            textNetworkStatus.text = getString(R.string.text_connectivity)
+            networkStatusLayout.apply {
+                setBackgroundColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.success,
+                        requireActivity().theme
+                    )
+                )
+                animate()
+                    .alpha(1f)
+                    .setStartDelay(ANIMATION_DURATION)
+                    .setDuration(ANIMATION_DURATION)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            hide()
+                        }
+                    })
+                    .start()
+            }
+        }
     }
 
     override fun getViewBinding(
@@ -155,18 +228,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun handleOnBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback {
-            MaterialAlertDialogBuilder(requireActivity())
-                .setTitle("Exit?")
-                .setMessage("Are you sure want to exit?")
-                .setPositiveButton("YES") { dialogInterface: DialogInterface, i: Int ->
-                    requireActivity().finish()
-                }
-                .setNegativeButton("NO") { dialogInterface: DialogInterface, i: Int ->
-                    dialogInterface.dismiss()
-                }
-                .show()
-        }
+    companion object {
+        const val ANIMATION_DURATION = 2000L
     }
 }

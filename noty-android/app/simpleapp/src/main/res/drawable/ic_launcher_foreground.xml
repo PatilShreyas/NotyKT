@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright 2020 Shreyas Patil
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+  <group android:scaleX="0.7902439"
+      android:scaleY="0.7902439"
+      android:translateX="38.19512"
+      android:translateY="37.8">
+    <path
+        android:pathData="M38.3333,1.796C16.7426,-0.5605 3.0005,29.9443 0.4081,39.7957C0.2754,40.3 0.8643,40.5293 1.1707,40.1072C5.0661,34.7412 8.5231,30.9313 10.1084,29.2628C10.6867,28.6541 11.5082,28.3561 12.3478,28.3481C20.81,28.267 24.2907,23.0544 24.2907,23.0544C23.118,23.4463 18.6334,22.6635 18.6334,22.6635C15.5134,22.2726 19.3967,21.301 19.9733,21.1779C29.7027,19.0818 30.3378,14.864 30.3378,14.864C27.9976,15.6447 22.7312,14.2791 22.7312,14.2791C32.2872,13.5014 34.0427,7.8431 34.0427,7.8431C31.1176,8.8188 27.5082,8.3787 27.5082,8.3787C35.2615,6.771 38.3333,1.796 38.3333,1.796Z"
+        android:fillColor="#ffffff"/>
+  </group>
+</vector>

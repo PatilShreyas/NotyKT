@@ -21,7 +21,7 @@ ext {
             minSdkVersion    : 21,
             targetSdkVersion : 30,
             versionCode      : 1,
-            versionName      : "1.0"
+            versionName      : "0.0.1"
     ]
 
     // Android Plugin
@@ -33,7 +33,7 @@ ext {
     coroutinesVersion = "1.3.9"
 
     // Android
-    appcompatVersion = "1.2.0"
+    appcompatVersion = "1.3.0-alpha02"
     coreKtxVersion = "1.3.2"
     constraintlayoutVersion = "2.0.2"
     swipeRefreshLayoutVersion = "1.1.0"

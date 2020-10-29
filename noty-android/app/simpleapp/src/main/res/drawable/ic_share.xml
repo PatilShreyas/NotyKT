@@ -1,0 +1,57 @@
+<!--
+  ~ Copyright 2020 Shreyas Patil
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M6,15C7.6568,15 9,13.6569 9,12C9,10.3431 7.6568,9 6,9C4.3432,9 3,10.3431 3,12C3,13.6569 4.3432,15 6,15Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M18,9C19.6569,9 21,7.6568 21,6C21,4.3432 19.6569,3 18,3C16.3431,3 15,4.3432 15,6C15,7.6568 16.3431,9 18,9Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M18,21C19.6569,21 21,19.6569 21,18C21,16.3431 19.6569,15 18,15C16.3431,15 15,16.3431 15,18C15,19.6569 16.3431,21 18,21Z"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M8.7,10.7L15.3,7.3"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M8.7,13.3L15.3,16.7"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

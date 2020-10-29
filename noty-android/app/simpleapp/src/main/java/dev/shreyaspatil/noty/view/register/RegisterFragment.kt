@@ -26,6 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.databinding.RegisterFragmentBinding
+import dev.shreyaspatil.noty.utils.hide
+import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,11 +48,15 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
         viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is ViewState.Loading -> {
-                    // TODO Show loading progress
+                    binding.progressBar.show()
                 }
-                is ViewState.Success -> onAuthSuccess()
+                is ViewState.Success -> {
+                    binding.progressBar.hide()
+                    onAuthSuccess()
+                }
                 is ViewState.Failed -> {
-                    // TODO Show error message
+                    binding.progressBar.hide()
+                    toast("Error ${viewState.message}")
                 }
             }
         }
@@ -58,6 +64,12 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
 
     private fun initViews() {
         binding.buttonRegister.setOnClickListener { onRegisterClicked() }
+        binding.backButton.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
+        binding.textLoginButton.setOnClickListener {
+            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+        }
     }
 
     private fun onRegisterClicked() {
