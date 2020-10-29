@@ -34,9 +34,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Single source of data of noty user.
+ *
+ * TODO [#36](https://github.com/PatilShreyas/NotyKT/issues/36)
+ *  If need to add offline capability for all kind of note operations then need to change this
+ *  structure.
+ *  Maybe we can have separate repositories like
+ *  `RemoteNotyNoteRepository` and `LocalNotyNoteRepository`.
+ */
 @ExperimentalCoroutinesApi
 @Singleton
-class DefaultNotyNoteNoteRepository @Inject internal constructor(
+class DefaultNotyNoteRepository @Inject internal constructor(
     private val notyService: NotyService,
     private val notesDao: NotesDao
 ) : NotyNoteRepository {

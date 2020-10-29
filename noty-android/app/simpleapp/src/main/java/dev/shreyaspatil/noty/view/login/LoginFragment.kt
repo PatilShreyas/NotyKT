@@ -47,9 +47,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
     private fun initData() {
         viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> binding.progressBar.show()
                 is ViewState.Success -> {
                     binding.progressBar.hide()
                     onAuthSuccess()

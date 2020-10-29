@@ -48,7 +48,6 @@ class NotesViewModel @ViewModelInject constructor(
     val notesState: LiveData<ViewState<List<Note>>> = _notesState
 
     fun getAllNotes() {
-        // Cancel existing job if running
         job?.cancel()
 
         job = viewModelScope.launch {

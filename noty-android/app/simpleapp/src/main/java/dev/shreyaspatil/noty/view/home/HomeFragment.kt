@@ -21,16 +21,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.databinding.HomeFragmentBinding
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.HomeViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
+/**
+ * Currently nothing is going to performed in HomeFragment.
+ */
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeFragmentBinding, HomeViewModel>() {
 
@@ -38,14 +38,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding, HomeViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
-    }
 
-    private fun initViews() {
-        lifecycleScope.launch {
-            delay(3000)
-            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
-        }
+        // Currently doing nothing in Home fragment, so navigate to login screen.
+        findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
     }
 
     override fun getViewBinding(
