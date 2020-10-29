@@ -20,17 +20,52 @@ import dev.shreyaspatil.noty.core.model.Note
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Repository for notes.
+ */
 @Singleton
 interface NotyNoteRepository {
+
+    /**
+     * Returns a note
+     *
+     * @param noteId A note ID.
+     */
     fun getNoteById(noteId: String): Flow<Note>
+
+    /**
+     * Returns all notes.
+     */
     suspend fun getAllNotes(): Flow<ResponseResult<List<Note>>>
+
+    /**
+     * Adds a new note
+     *
+     * @param title Title of a note
+     * @param note Body of a note
+     */
     suspend fun addNote(title: String, note: String): Flow<ResponseResult<String>>
+
+    /**
+     * Updates a new note having ID [noteId]
+     *
+     * @param noteId The Note ID
+     * @param title Title of a note
+     * @param note Body of a note
+     */
     suspend fun updateNote(
         noteId: String,
         title: String,
         note: String
     ): Flow<ResponseResult<String>>
 
+    /**
+     * Deletes a new note having ID [noteId]
+     */
     suspend fun deleteNote(noteId: String): Flow<ResponseResult<String>>
+
+    /**
+     * Deletes all notes.
+     */
     suspend fun deleteAllNotes()
 }

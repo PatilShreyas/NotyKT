@@ -19,6 +19,10 @@ package dev.shreyaspatil.noty.data.remote.util
 import dev.shreyaspatil.noty.core.utils.fromJson
 import retrofit2.Response
 
+/**
+ * Retrofit only gives generic response body when status is Successful.
+ * This extension will also parse error body and will give generic response.
+ */
 inline fun <reified T> Response<T>.getResponse(): T {
     val responseBody = body()
     return if (this.isSuccessful && responseBody != null) {

@@ -22,6 +22,9 @@ import javax.inject.Singleton
 import okhttp3.Interceptor
 import okhttp3.Response
 
+/**
+ * Interceptor which adds authorization token in header.
+ */
 @Singleton
 class AuthInterceptor @Inject constructor(
     private val sessionManager: SessionManager

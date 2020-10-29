@@ -18,11 +18,8 @@ package dev.shreyaspatil.noty.view.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import dev.shreyaspatil.noty.core.session.SessionManager
 
-class HomeViewModel @ViewModelInject constructor(
-    private val sessionManager: SessionManager
-) : ViewModel() {
-
-    fun isUserLoggedIn() = sessionManager.getToken() != null
-}
+/**
+ * Currently not in use
+ */
+class HomeViewModel @ViewModelInject constructor() : ViewModel()

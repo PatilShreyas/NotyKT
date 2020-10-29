@@ -28,6 +28,12 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * A repository which provides resource from local database as well as remote end point.
+ *
+ * [RESULT] represents the type for database.
+ * [REQUEST] represents the type for network.
+ */
 @ExperimentalCoroutinesApi
 abstract class NetworkBoundRepository<RESULT, REQUEST : BaseResponse> {
 
@@ -49,12 +55,21 @@ abstract class NetworkBoundRepository<RESULT, REQUEST : BaseResponse> {
         e.printStackTrace()
     }
 
+    /**
+     * Saves the data to the persistence storage.
+     */
     @WorkerThread
     protected abstract suspend fun persistData(response: REQUEST)
 
+    /**
+     * Returns the data from persistence storage.
+     */
     @WorkerThread
     protected abstract fun fetchFromLocal(): Flow<RESULT>
 
+    /**
+     * Received data from network.
+     */
     @WorkerThread
     protected abstract suspend fun fetchFromRemote(): REQUEST
 }

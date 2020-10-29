@@ -28,6 +28,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
+/**
+ * Single source of data of Notes.
+ */
 @Singleton
 class DefaultNotyAuthRepository @Inject internal constructor(
     private val authService: NotyAuthService
