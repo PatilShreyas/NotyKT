@@ -13,7 +13,6 @@
 [![GitHub forks](https://img.shields.io/github/forks/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/watchers)
 
-&nbsp;
 
 **NotyKT** is the complete Kotlin-stack note taking 🖊️ application 📱 built to demonstrate a use of Kotlin programming language in *server-side* and *Modern Android development* tools. Dedicated to all Android Developers with ❤️. 
 
