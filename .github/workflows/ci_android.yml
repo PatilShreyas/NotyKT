@@ -43,3 +43,4 @@ jobs:
         with:
           name: app
           path: noty-android/**/*.apk
+          retention-days: 3
