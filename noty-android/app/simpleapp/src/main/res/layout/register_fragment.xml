@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textFieldUsername"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
             app:boxBackgroundColor="@color/background">
 
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textFieldPassword"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
             app:boxBackgroundColor="@color/background">
 
@@ -129,7 +129,7 @@
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="60dp"
             android:layout_marginEnd="@dimen/dimen_16"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/dimen_16"
             android:backgroundTint="@color/secondaryColor"
             android:fontFamily="@font/gilroy_bold"
             android:text="@string/text_signup"

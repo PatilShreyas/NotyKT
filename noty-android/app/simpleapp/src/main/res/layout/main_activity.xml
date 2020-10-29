@@ -39,8 +39,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="@dimen/dimen_24"
+                    android:layout_height="@dimen/dimen_24"
                     android:contentDescription="@string/text_noty_icon"
                     android:src="@drawable/ic_noty_logo" />
 

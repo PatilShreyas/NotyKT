@@ -41,11 +41,11 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/fieldNote"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/dimen_0"
+        android:layout_height="@dimen/dimen_0"
         android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_32"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/dimen_16"
         android:background="@color/background"
         android:gravity="start"
         android:fontFamily="@font/universal_std"

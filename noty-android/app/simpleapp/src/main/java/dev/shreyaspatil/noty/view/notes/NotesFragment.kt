@@ -142,20 +142,21 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityUnavailable() {
-        binding.run {
-            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_unavailable)
-            textNetworkStatus.text = getString(R.string.text_no_connectivity)
-            networkStatusLayout.apply {
-                show()
-                setBackgroundColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.error,
-                        requireActivity().theme
-                    )
-                )
-            }
+        binding.textNetworkStatus.apply {
+            setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_unavailable),
+                null,
+                null,
+                null
+            )
+            text = getString(R.string.text_no_connectivity)
         }
+
+        binding.networkStatusLayout.apply {
+            setBackgroundColor(
+                ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
+            )
+        }.also { it.show() }
     }
 
     private fun onConnectivityAvailable() {
@@ -164,28 +165,30 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         ) {
             viewModel.getAllNotes()
         }
-        binding.run {
-            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_available)
-            textNetworkStatus.text = getString(R.string.text_connectivity)
-            networkStatusLayout.apply {
-                setBackgroundColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.success,
-                        requireActivity().theme
-                    )
-                )
-                animate()
-                    .alpha(1f)
-                    .setStartDelay(ANIMATION_DURATION)
-                    .setDuration(ANIMATION_DURATION)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            hide()
-                        }
-                    })
-                    .start()
-            }
+        binding.textNetworkStatus.apply {
+            setCompoundDrawablesWithIntrinsicBounds(
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_available),
+                null,
+                null,
+                null
+            )
+            text = getString(R.string.text_connectivity)
+        }
+
+        binding.networkStatusLayout.apply {
+            setBackgroundColor(
+                ResourcesCompat.getColor(resources, R.color.success, requireActivity().theme)
+            )
+        }.also {
+            it.animate()
+                .alpha(1f)
+                .setStartDelay(ANIMATION_DURATION)
+                .setDuration(ANIMATION_DURATION)
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        it.hide()
+                    }
+                })
         }
     }
 
