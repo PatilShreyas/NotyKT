@@ -99,7 +99,7 @@
             android:layout_height="60dp"
             android:layout_below="@id/textFieldPassword"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/dimen_16"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="@dimen/dimen_16"
             android:backgroundTint="@color/secondaryColor"

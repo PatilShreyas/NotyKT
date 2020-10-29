@@ -143,7 +143,15 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private fun onConnectivityUnavailable() {
         binding.run {
-            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_unavailable)
+            // Get icon from drawable & Set [ic_connectivity_unavailable] icon to the start of the textView
+            val offlineDrawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_unavailable)
+            binding.textNetworkStatus.setCompoundDrawablesWithIntrinsicBounds(
+                offlineDrawable,
+                null,
+                null,
+                null
+            )
             textNetworkStatus.text = getString(R.string.text_no_connectivity)
             networkStatusLayout.apply {
                 show()
@@ -165,7 +173,15 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             viewModel.getAllNotes()
         }
         binding.run {
-            imageNetworkStatus.setImageResource(R.drawable.ic_connectivity_available)
+            // Get icon from the drawable & Set [ic_connectivity_available] icon to the start of the textView
+            val onlineDrawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_available)
+            binding.textNetworkStatus.setCompoundDrawablesWithIntrinsicBounds(
+                onlineDrawable,
+                null,
+                null,
+                null
+            )
             textNetworkStatus.text = getString(R.string.text_connectivity)
             networkStatusLayout.apply {
                 setBackgroundColor(
