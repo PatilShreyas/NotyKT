@@ -34,16 +34,12 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabSave"
+        style="@style/FabSaveStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/dimen_16"
-        android:contentDescription="@string/text_noty_icon"
-        android:fontFamily="@font/gilroy_semibold"
         android:text="@string/text_save"
-        android:textAllCaps="false"
-        android:textColor="@color/defaultWhite"
-        android:textSize="16sp"
         android:visibility="gone"
         app:icon="@drawable/ic_check"
         app:iconTint="@color/defaultWhite" />
