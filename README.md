@@ -36,7 +36,7 @@ This is an Android application which uses *Noty REST API*. It has application UI
 Navigate to [`/noty-android`](/noty-android) directory to browse and know more about Noty Android project.
 
 ## Want to Contribute 🙋‍♂️?
-Awesome! If you want to contribute to this project, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md).
+Awesome! If you want to contribute to this project, you're always welcome! See [Contributing Guidelines](CONTRIBUTING.md). You can also take a look at [NotyKT's Project Status Tracker](https://github.com/PatilShreyas/NotyKT/projects/1) for getting more information about current or upcoming tasks.
 
 ## Contributors
 
