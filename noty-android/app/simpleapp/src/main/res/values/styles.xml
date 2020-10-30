@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Shreyas Patil
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,5 +43,13 @@
         <item name="android:orientation">vertical</item>
         <item name="android:padding">@dimen/dimen_8</item>
         <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="FabSaveStyle">
+        <item name="android:contentDescription">@string/text_noty_icon</item>
+        <item name="android:fontFamily">@font/gilroy_semibold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/defaultWhite</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>
