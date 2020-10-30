@@ -14,13 +14,11 @@
   ~ limitations under the License.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.add.AddNoteFragment">
-
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/fieldTitle"
@@ -29,31 +27,28 @@
         android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_32"
         android:layout_marginEnd="@dimen/dimen_16"
-        android:fontFamily="@font/gilroy_bold"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
         android:background="@color/background"
+        android:fontFamily="@font/gilroy_bold"
         android:hint="@string/hint_field_title"
         android:maxLength="30"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/fieldNote"
-        android:layout_width="@dimen/dimen_0"
-        android:layout_height="@dimen/dimen_0"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fieldTitle"
         android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_32"
         android:layout_marginEnd="@dimen/dimen_16"
         android:background="@color/background"
-        android:gravity="start"
         android:fontFamily="@font/universal_std"
-        android:lineSpacingExtra="5dp"
+        android:gravity="start"
         android:hint="@string/hint_field_note"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldTitle" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:lineSpacingExtra="5dp"
+        android:overScrollMode="always"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+</RelativeLayout>
