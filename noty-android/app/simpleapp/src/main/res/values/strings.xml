@@ -38,7 +38,7 @@
     <string name="text_connectivity">Online back</string>
     <string name="text_empty_state_title">No notes found</string>
     <string name="text_noty_icon">Noty Icon</string>
-    <string name="text_message_share">\"%s\" by %s. \nVisit: https://github.com/PatilShreyas/NotyKT</string>
+    <string name="text_message_share">Title: %s\n\nNote: %s.\n \nVisit: https://github.com/PatilShreyas/NotyKT</string>
 
     <!-- Hint -->
     <string name="hint_username">Username</string>
