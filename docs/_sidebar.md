@@ -1,4 +1,8 @@
 - [Introduction](/)
+- [Noty API]()
+    - [Getting Started](/pages/noty-api/getting-started)
+    - [Setting up project locally](/pages/noty-api/setting-up-locally)
+    - [Setting up deployment](/pages/noty-api/setting-up-deployment)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**

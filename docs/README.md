@@ -1,4 +1,4 @@
-# NotyKT
+# 🖋️NotyKT
 
 ![SocialPreview](https://raw.githubusercontent.com/PatilShreyas/NotyKT/master/art/GitHubPreview.png)
 
