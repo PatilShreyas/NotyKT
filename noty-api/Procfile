@@ -1,1 +1,1 @@
-web: application/build/install/application/bin/application
+web: application\build\install\application\bin\application.bat

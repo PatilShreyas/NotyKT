@@ -2,7 +2,10 @@
 - [Noty API]()
     - [Getting Started](/pages/noty-api/getting-started)
     - [Setting up project locally](/pages/noty-api/setting-up-locally)
-    - [Setting up deployment](/pages/noty-api/setting-up-deployment)
+    - [Setting up deployment]()
+        - [Setup Heroku](/pages/noty-api/setting-up-heroku)
+        - [Deployment configuration](/pages/noty-api/deployment-configuration)
+        - [Test Heroku Locally](/pages/noty-api/test-heroku-locally)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**
