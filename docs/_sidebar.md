@@ -1,0 +1,6 @@
+- [Introduction](/)
+- [End notes](/pages/finish)
+- [Changelog](/pages/changelog)
+- **Links**
+- [![Github](https://icongr.am/simple/github.svg?color=808080&size=16)Github](https://github.com/patilshreyas/NotyKT)
+- [![Twitter](https://icongram.jgog.in/simple/twitter.svg?colored&size=16)@imShreyasPatil](http://twitter.com/imShreyasPatil)
