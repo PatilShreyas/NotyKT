@@ -229,7 +229,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 logout()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 
