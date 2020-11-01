@@ -22,22 +22,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import dev.shreyaspatil.noty.R
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.databinding.FragmentAboutBinding
+import dev.shreyaspatil.noty.view.base.BaseFragment
+import dev.shreyaspatil.noty.view.viewmodel.AboutViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class AboutFragment : Fragment(R.layout.fragment_about) {
-    private lateinit var _binding: FragmentAboutBinding
-    private val binding get() = _binding
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentAboutBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
+class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
+    override val viewModel: AboutViewModel by viewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
@@ -46,12 +41,23 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
     private fun initViews() {
         binding.run {
             licenseCardView.setOnClickListener {
-                openURL(url = LICENSE)
+                viewModel.setURL(LICENSE)
             }
 
             repoCardView.setOnClickListener {
-                openURL(url = REPO)
+                viewModel.setURL(REPO)
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        observeURL()
+    }
+
+    private fun observeURL() {
+        viewModel.url.observe(viewLifecycleOwner) {
+            openURL(it.toString())
         }
     }
 
@@ -60,9 +66,13 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
         startActivity(i)
     }
 
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentAboutBinding.inflate(inflater, container, false)
+
     companion object {
         const val REPO = "https://github.com/PatilShreyas/NotyKT"
         const val LICENSE = "https://github.com/PatilShreyas/NotyKT/blob/master/LICENSE"
     }
-
 }
