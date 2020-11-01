@@ -49,5 +49,12 @@
 
     <string name="content_description_connectivity_icon">Connectivity status Icon</string>
     <string name="text_empty_state_detail">When you add a notes. You will see your notes here</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_app_version">v.0.0.1</string>
+    <string name="text_license_title"><![CDATA[Attributions & License]]></string>
+    <string name="text_license">Licensed under Apache License, Version 2.0</string>
+    <string name="text_visit">Visit</string>
+    <string name="text_repo_url"><u>https://github.com/PatilShreyas/NotyKT</u></string>
 
 </resources>

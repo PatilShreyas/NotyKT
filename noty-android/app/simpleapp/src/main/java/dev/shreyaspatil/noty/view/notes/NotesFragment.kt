@@ -222,6 +222,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
             R.id.action_dark_mode -> viewModel.setDarkMode(true)
 
+            R.id.action_about -> findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
+
             R.id.action_logout -> {
                 viewModel.clearUserSession()
                 logout()
