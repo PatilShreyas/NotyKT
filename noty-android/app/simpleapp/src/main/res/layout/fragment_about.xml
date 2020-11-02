@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/app_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
             android:layout_marginTop="60dp"
             android:contentDescription="@string/text_noty_icon"
             android:src="@drawable/noty_app_logo"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_8"
             android:fontFamily="@font/universal_std"
-            android:text="@string/text_app_version"
+            tools:text="v1.0.0 (10)"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +65,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/license_card_view"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_8"
             android:layout_marginTop="@dimen/dimen_48"
             android:layout_marginEnd="@dimen/dimen_8"
@@ -85,26 +85,22 @@
                     android:id="@+id/text_license_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:fontFamily="@font/gilroy_bold"
                     android:text="@string/text_license_title"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    style="@style/AboutContentTitleStyle" />
 
                 <TextView
                     android:id="@+id/text_license"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/dimen_12"
-                    android:fontFamily="@font/universal_std"
                     android:text="@string/text_license"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+                    style="@style/AboutContentBodyStyle" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/repo_card_view"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_8"
             android:layout_marginTop="@dimen/dimen_8"
             android:layout_marginEnd="@dimen/dimen_8"
@@ -124,22 +120,16 @@
                     android:id="@+id/text_repo_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dimen_8"
-                    android:layout_marginTop="@dimen/dimen_8"
-                    android:fontFamily="@font/gilroy_bold"
                     android:text="@string/text_visit"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+                    style="@style/AboutContentTitleStyle" />
 
                 <TextView
                     android:id="@+id/text_repo"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/dimen_8"
-                    android:layout_marginTop="@dimen/dimen_12"
-                    android:fontFamily="@font/universal_std"
                     android:text="@string/text_repo_url"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    android:textColor="@color/primaryColor" />
+                    android:textColor="@color/primaryColor"
+                    style="@style/AboutContentBodyStyle" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
