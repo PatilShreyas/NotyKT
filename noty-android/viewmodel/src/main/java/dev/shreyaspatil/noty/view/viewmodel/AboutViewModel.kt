@@ -16,18 +16,6 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
-class AboutViewModel : ViewModel() {
-    private val _url = MutableLiveData<String>()
-    val url: LiveData<String>
-        get() = _url
-
-    fun setURL(url: String) {
-        _url.postValue(url)
-    }
-}
+class AboutViewModel : ViewModel()

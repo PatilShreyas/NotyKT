@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.noty.BuildConfig
+import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.databinding.FragmentAboutBinding
 import dev.shreyaspatil.noty.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.AboutViewModel
@@ -33,6 +35,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
     override val viewModel: AboutViewModel by viewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
@@ -40,30 +43,23 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
 
     private fun initViews() {
         binding.run {
+            textAppVersion.text = getString(
+                R.string.text_app_version,
+                BuildConfig.VERSION_NAME,
+                BuildConfig.VERSION_CODE
+            )
             licenseCardView.setOnClickListener {
-                viewModel.setURL(LICENSE)
+                launchBrowser(URL_LICENSE)
             }
 
             repoCardView.setOnClickListener {
-                viewModel.setURL(REPO)
+                launchBrowser(URL_REPO)
             }
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        observeURL()
-    }
-
-    private fun observeURL() {
-        viewModel.url.observe(viewLifecycleOwner) {
-            openURL(it.toString())
-        }
-    }
-
-    private fun openURL(url: String) {
-        val i = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        startActivity(i)
+    private fun launchBrowser(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
+        startActivity(it)
     }
 
     override fun getViewBinding(
@@ -72,7 +68,7 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
     ) = FragmentAboutBinding.inflate(inflater, container, false)
 
     companion object {
-        const val REPO = "https://github.com/PatilShreyas/NotyKT"
-        const val LICENSE = "https://github.com/PatilShreyas/NotyKT/blob/master/LICENSE"
+        const val URL_REPO = "https://github.com/PatilShreyas/NotyKT"
+        const val URL_LICENSE = "https://github.com/PatilShreyas/NotyKT/blob/master/LICENSE"
     }
 }
