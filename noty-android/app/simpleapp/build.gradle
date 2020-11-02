@@ -84,6 +84,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
 
     // Jetpack DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"

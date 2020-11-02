@@ -123,10 +123,22 @@
             app:destination="@id/loginFragment"
             app:popUpTo="@id/notesFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_notesFragment_to_aboutFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:destination="@id/aboutFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNoteFragment"
         android:name="dev.shreyaspatil.noty.view.add.AddNoteFragment"
         android:label="add_note_fragment"
         tools:layout="@layout/add_note_fragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="dev.shreyaspatil.noty.view.about.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
 </navigation>

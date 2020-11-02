@@ -23,11 +23,11 @@
     <string name="menu_share">Share</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_about">About</string>
-    <string name="text_save">Save</string>
 
     <!-- Text -->
     <string name="text_login">Login</string>
     <string name="text_signup">Sign Up</string>
+    <string name="text_save">Save</string>
     <string name="text_create_account">Don\'t have an account?  <font color='#7885FF'>Sign up</font></string>
     <string name="text_login_account">Already have an account?  <font color='#7885FF'>Login</font></string>
     <string name="text_registration">Create account</string>
@@ -39,6 +39,12 @@
     <string name="text_empty_state_title">No notes found</string>
     <string name="text_noty_icon">Noty Icon</string>
     <string name="text_message_share">Title: %s\n\nNote: %s.\n \nVisit: https://github.com/PatilShreyas/NotyKT</string>
+    <string name="text_empty_state_detail">When you add a notes. You will see your notes here</string>
+    <string name="text_app_version">v%s (%d)</string>
+    <string name="text_license_title"><![CDATA[Attributions & License]]></string>
+    <string name="text_license">Licensed under Apache License, Version 2.0</string>
+    <string name="text_visit">Visit</string>
+    <string name="text_repo_url"><u>https://github.com/PatilShreyas/NotyKT</u></string>
 
     <!-- Hint -->
     <string name="hint_username">Username</string>
@@ -48,6 +54,6 @@
     <string name="hint_field_note">Write note here…</string>
 
     <string name="content_description_connectivity_icon">Connectivity status Icon</string>
-    <string name="text_empty_state_detail">When you add a notes. You will see your notes here</string>
+
 
 </resources>

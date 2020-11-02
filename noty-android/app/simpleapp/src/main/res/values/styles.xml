@@ -52,4 +52,17 @@
         <item name="android:textColor">@color/defaultWhite</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="AboutContentTitleStyle">
+        <item name="android:layout_marginTop">@dimen/dimen_8</item>
+        <item name="android:fontFamily">@font/gilroy_bold</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6
+        </item>
+    </style>
+
+    <style name="AboutContentBodyStyle">
+        <item name="android:layout_marginTop">@dimen/dimen_12</item>
+        <item name="android:fontFamily">@font/universal_std</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
+    </style>
 </resources>
