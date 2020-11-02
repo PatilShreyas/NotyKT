@@ -18,9 +18,6 @@
 
 buildscript {
     apply from: 'config.gradle'
-    ext {
-        kotlin_version = '1.4.10'
-    }
     repositories {
         google()
         jcenter()

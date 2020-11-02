@@ -84,6 +84,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+    implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
 
     // Jetpack DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
@@ -93,8 +94,6 @@ dependencies {
 
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
 
     // Assisted Inject
