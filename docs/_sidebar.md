@@ -6,6 +6,7 @@
         - [Setup Heroku](/pages/noty-api/setting-up-heroku)
         - [Deployment configuration](/pages/noty-api/deployment-configuration)
         - [Test Heroku Locally](/pages/noty-api/test-heroku-locally)
+        - [Setup GitHub Actions](/pages/noty-api/deployment-gh-actions.md)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**
