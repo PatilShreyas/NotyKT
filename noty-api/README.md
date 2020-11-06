@@ -7,6 +7,8 @@ Noty backend _REST API_ is built with Ktor framework with PostgreSQL as database
 
 Currently this API is deployed on _`https://noty-api.herokuapp.com/notes`_. You can try it 😃.
 
+[📄 _**Visit the documentation of this project**_](https://patilshreyas.github.io/NotyKT/) to get more information in detail.
+
 ## Features 👓
 
 - Easy structure
