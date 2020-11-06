@@ -1,4 +1,4 @@
-# Noty Android App
+# 📱 Noty Android App
 
 ***You can Install and test latest Covid19 Notifier app from below 👇***
 
