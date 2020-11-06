@@ -10,6 +10,8 @@ _**Noty Android application**_ is built with _Modern Android application develop
 Aim of this project is to showcase Good practice implementation of Android application development with proper architecture design. 
 _Dedicated to all Android Developers with_ ❤️.
 
+[📄 _**Visit the documentation of this project**_](https://patilshreyas.github.io/NotyKT/) to get more information in detail.
+
 ***You can Install and test latest Covid19 Notifier app from below 👇***
 
 [![Noty Simple App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Simple%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-simple.apk)
