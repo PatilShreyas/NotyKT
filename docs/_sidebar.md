@@ -7,6 +7,11 @@
         - [Deployment configuration](/pages/noty-api/deployment-configuration)
         - [Test Heroku Locally](/pages/noty-api/test-heroku-locally)
         - [Setup GitHub Actions](/pages/noty-api/deployment-gh-actions.md)
+- [Noty Android]()
+    - [Getting Started](/pages/noty-android/getting-started)
+    - [Setting up project](/pages/noty-android/setting-up-project)
+    - [Design / Wireframe](pages/noty-android/design-wireframe.md)
+    - [App Architecture](/pages/noty-android/app-architecture.md)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**
