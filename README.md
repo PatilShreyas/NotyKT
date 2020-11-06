@@ -21,6 +21,10 @@
 [![Noty Simple App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Simple%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-simple.apk)
 [![Noty Compose App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Compose%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-compose.apk)
 
+## 📄 Project Documentation
+
+[_**Visit the documentation of this project**_](https://patilshreyas.github.io/NotyKT/) to get more information in detail.
+
 ## 💡 About the Project
 
 This project includes two subprojects:
