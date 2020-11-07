@@ -20,7 +20,6 @@ include ':core'
 include ':data:remote'
 include ':data:local'
 include ':repository'
-//include ':viewmodel'
 
 include ':app'
 include ':app:simpleapp'
