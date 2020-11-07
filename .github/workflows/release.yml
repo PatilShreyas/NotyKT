@@ -32,7 +32,7 @@ jobs:
         working-directory: noty-android
 
       - name: Build APKs ⚙️🛠
-        run: bash ./gradlew assemble
+        run: bash ./gradlew assembleRelease
         working-directory: noty-android
 
       - name: Create Release ✅
@@ -52,7 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: noty-android/app/simpleapp/build/outputs/apk/debug/simpleapp-debug.apk
+          asset_path: noty-android/app/simpleapp/build/outputs/apk/release/simpleapp-release-unsigned.apk
           asset_name: noty-android-simple.apk
           asset_content_type: application/apk
           
@@ -62,6 +62,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: noty-android/app/composeapp/build/outputs/apk/debug/composeapp-debug.apk
+          asset_path: noty-android/app/composeapp/build/outputs/apk/release/composeapp-release-unsigned.apk
           asset_name: noty-android-compose.apk
           asset_content_type: application/apk
