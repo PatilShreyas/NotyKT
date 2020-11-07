@@ -33,6 +33,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("dev.shreyaspatil.noty.view.viewmodel.test", appContext.packageName)
+        assertEquals("dev.shreyaspatil.noty.simpleapp.view.viewmodel.test", appContext.packageName)
     }
 }

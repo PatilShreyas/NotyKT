@@ -16,7 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.shreyaspatil.noty">
+    package="dev.shreyaspatil.noty.composeapp">
 
     <application
         android:allowBackup="true"
