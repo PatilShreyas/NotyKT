@@ -29,7 +29,7 @@ import dev.shreyaspatil.noty.simpleapp.databinding.RegisterFragmentBinding
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.simpleapp.view.viewmodel.RegisterViewModel
+import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi

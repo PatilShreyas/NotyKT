@@ -26,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.HomeFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.simpleapp.view.viewmodel.HomeViewModel
+import dev.shreyaspatil.noty.view.viewmodel.HomeViewModel
 
 /**
  * Currently nothing is going to performed in HomeFragment.

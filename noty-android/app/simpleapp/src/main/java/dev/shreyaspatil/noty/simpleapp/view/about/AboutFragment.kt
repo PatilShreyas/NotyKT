@@ -28,7 +28,7 @@ import dev.shreyaspatil.noty.simpleapp.BuildConfig
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.FragmentAboutBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.simpleapp.view.viewmodel.AboutViewModel
+import dev.shreyaspatil.noty.view.viewmodel.AboutViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi

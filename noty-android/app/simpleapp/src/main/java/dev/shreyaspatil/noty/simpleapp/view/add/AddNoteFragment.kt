@@ -29,7 +29,7 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.simpleapp.view.viewmodel.AddNoteViewModel
+import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import kotlinx.coroutines.ExperimentalCoroutinesApi
