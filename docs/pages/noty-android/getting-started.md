@@ -25,8 +25,7 @@ This is Gradle based multi-module project having modules as following:
 
 ### Application (`app`)
 
-This is the main Android application module which include Android specific features or code.
-
+This is the main Android application module which include Android specific features or code. It includes common shared code for both submodules like DI bindings, ViewModel, Session Manager, etc.  
 It has two submodules as:
 
 - **Simple Application (`simpleapp`):** UI implementation using [_Navigation Architecture_](https://developer.android.com/guide/navigation/navigation-getting-started) using traditional XML resources.
@@ -48,10 +47,6 @@ This is a data source for the application. It has two sub-modules as following.
 ### Repository (`repository`)
 
 For single source of data. Implements `local` and `remote` modules.
-
-### ViewModel (`viewmodel`)
-
-ViewModel implementation. Used `repository` for source of data.
 
 ## Built with 🛠
 
