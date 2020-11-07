@@ -65,7 +65,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
     private fun initViews() {
         binding.buttonRegister.setOnClickListener { onRegisterClicked() }
         binding.backButton.setOnClickListener {
-            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+            findNavController().navigateUp()
         }
         binding.textLoginButton.setOnClickListener {
             findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
