@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty
+package dev.shreyaspatil.noty.view.viewmodel
 
-import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import androidx.lifecycle.ViewModel
 
-@HiltAndroidApp
-class NotyApp : Application() {
-    override fun onCreate() {
-        super.onCreate()
-    }
-}
+class AboutViewModel : ViewModel()
