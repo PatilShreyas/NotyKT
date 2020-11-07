@@ -24,7 +24,7 @@ android {
     buildToolsVersion ProjectConfig.buildToolsVersion
 
     defaultConfig {
-        applicationId "dev.shreyaspatil.noty"
+        applicationId "dev.shreyaspatil.noty.composeapp"
         minSdkVersion ProjectConfig.minSdkVersion
         targetSdkVersion ProjectConfig.targetSdkVersion
         versionCode ProjectConfig.versionCode

@@ -22,10 +22,10 @@
     android:fillViewport="true"
     tools:context=".view.login.LoginFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:fitsSystemWindows="true"
         android:gravity="center">
 
@@ -33,27 +33,29 @@
             android:id="@+id/loginAppLogo"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dimen_32"
             android:layout_marginBottom="@dimen/dimen_16"
             android:contentDescription="@string/text_noty_icon"
-            android:src="@drawable/noty_app_logo" />
-
+            android:src="@drawable/noty_app_logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/loginTitleTextView"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/loginAppLogo"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
             android:fontFamily="@font/gilroy_bold"
             android:lineSpacingExtra="5dp"
             android:text="@string/text_welcome_back"
             android:textAlignment="textStart"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
-            android:textColor="@color/onBackground" />
+            android:textColor="@color/onBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginAppLogo" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -61,11 +63,12 @@
             style="@style/UsernameFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/loginTitleTextView"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="@dimen/dimen_16"
-            app:boxBackgroundColor="@color/background">
+            app:boxBackgroundColor="@color/background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/loginTitleTextView">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -79,11 +82,12 @@
             style="@style/PasswordFieldStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textFieldUsername"
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="@dimen/dimen_16"
-            app:boxBackgroundColor="@color/background">
+            app:boxBackgroundColor="@color/background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textFieldUsername">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -97,40 +101,47 @@
             android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_below="@id/textFieldPassword"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginBottom="@dimen/dimen_16"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="@dimen/dimen_16"
+            android:layout_marginBottom="@dimen/dimen_16"
             android:backgroundTint="@color/secondaryColor"
-            android:text="@string/text_login"
             android:fontFamily="@font/gilroy_bold"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:text="@string/text_login"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textFieldPassword" />
 
 
         <TextView
             android:id="@+id/textSignUpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/buttonLogin"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_marginTop="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
             android:layout_marginBottom="@dimen/dimen_32"
             android:fontFamily="@font/gilroy_semibold"
             android:text="@string/text_create_account"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonLogin" />
 
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:theme="@style/ProgressBarTheme"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-rootProject.name = "Noty"
+package dev.shreyaspatil.noty.composeapp.ui
 
-include ':core'
-include ':data:remote'
-include ':data:local'
-include ':repository'
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Shapes
+import androidx.compose.ui.unit.dp
 
-include ':app'
-include ':app:simpleapp'
-include ':app:composeapp'
+val shapes = Shapes(
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(4.dp),
+    large = RoundedCornerShape(0.dp)
+)

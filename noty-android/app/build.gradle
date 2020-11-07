@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
@@ -26,26 +25,10 @@ android {
     buildToolsVersion ProjectConfig.buildToolsVersion
 
     defaultConfig {
-        applicationId "dev.shreyaspatil.noty.simpleapp"
         minSdkVersion ProjectConfig.minSdkVersion
         targetSdkVersion ProjectConfig.targetSdkVersion
         versionCode ProjectConfig.versionCode
         versionName ProjectConfig.versionName
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildFeatures {
-        viewBinding {
-            enabled true
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
     }
 
     compileOptions {
@@ -64,27 +47,31 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     }
 }
 
-kapt {
-    correctErrorTypes true
-}
-
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // Core Module
     implementation project(":core")
 
-    // Common App Module
-    implementation project(":app")
-
-    // Coroutines (Android)
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    // Repository Module
+    api project(":repository")
 
     // Android
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
+
+    // Lifecycle
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+
+    // Jetpack DataStore
+    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
+
+    // JetPack Security
+    implementation "androidx.security:security-crypto:$securityCryptoVersion"
+
+    // Hilt + JetPack
+    api "androidx.hilt:hilt-lifecycle-viewmodel:$jetpackHiltVersion"
+    kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
 
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
@@ -94,23 +81,6 @@ dependencies {
     compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
     kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
 
-    // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-
-    // Material Design
-    implementation "com.google.android.material:material:$materialDesignVersion"
-
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
-
-    // Android Testing
-    androidTestImplementation "androidx.test.ext:junit:$androidJUnitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-
-    // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }

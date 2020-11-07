@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-rootProject.name = "Noty"
+package dev.shreyaspatil.noty.simpleapp
 
-include ':core'
-include ':data:remote'
-include ':data:local'
-include ':repository'
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-include ':app'
-include ':app:simpleapp'
-include ':app:composeapp'
+@HiltAndroidApp
+class NotyApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+    }
+}

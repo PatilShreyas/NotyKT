@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="dev.shreyaspatil.noty.view.login.LoginFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/login_fragment">
         <action
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="dev.shreyaspatil.noty.view.home.HomeFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.home.HomeFragment"
         android:label="Noty"
         tools:layout="@layout/home_fragment">
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="dev.shreyaspatil.noty.view.register.RegisterFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.register.RegisterFragment"
         android:label="Register"
         tools:layout="@layout/register_fragment">
         <action
@@ -85,7 +85,7 @@
     </fragment>
     <fragment
         android:id="@+id/noteDetailFragment"
-        android:name="dev.shreyaspatil.noty.view.detail.NoteDetailFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.detail.NoteDetailFragment"
         android:label="note_detail_fragment"
         app:popUpTo="@+id/notesFragment"
         tools:layout="@layout/note_detail_fragment">
@@ -96,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/notesFragment"
-        android:name="dev.shreyaspatil.noty.view.notes.NotesFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.notes.NotesFragment"
         android:label="notes_fragment"
         tools:layout="@layout/notes_fragment">
         <action
@@ -133,12 +133,12 @@
     </fragment>
     <fragment
         android:id="@+id/addNoteFragment"
-        android:name="dev.shreyaspatil.noty.view.add.AddNoteFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.add.AddNoteFragment"
         android:label="add_note_fragment"
         tools:layout="@layout/add_note_fragment" />
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="dev.shreyaspatil.noty.view.about.AboutFragment"
+        android:name="dev.shreyaspatil.noty.simpleapp.view.about.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
 </navigation>
