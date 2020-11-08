@@ -16,11 +16,9 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -32,26 +30,45 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class AddNoteViewModel @ViewModelInject constructor(
-    private val notyNoteRepository: NotyNoteRepository
+    private val notyNoteRepository: NotyNoteRepository,
+    @Assisted state: SavedStateHandle
 ) : ViewModel() {
 
     var job: Job? = null
-
     private val _addNoteState = MutableLiveData<ViewState<String>>()
-    val addNoteState: LiveData<ViewState<String>> = _addNoteState
 
-    fun addNote(title: String, note: String) {
+    private val _currentNote: MutableLiveData<Pair<String, String>> =
+        state.getLiveData(RESTORED_NOTE)
+
+    val addNoteState = _currentNote.switchMap { note ->
         job?.cancel()
+
         job = viewModelScope.launch {
-            notyNoteRepository.addNote(title, note)
-                .onStart { _addNoteState.value = ViewState.loading() }
+            notyNoteRepository.addNote(note.first, note.second)
+                .onStart {
+                    _addNoteState.value = ViewState.loading()
+                }
                 .collect { state ->
                     val viewState = when (state) {
-                        is ResponseResult.Success -> ViewState.success<String>(state.data)
-                        is ResponseResult.Error -> ViewState.failed<String>(state.message)
+                        is ResponseResult.Success -> ViewState.success(
+                            state.data
+                        )
+                        is ResponseResult.Error -> ViewState.failed(
+                            state.message
+                        )
                     }
                     _addNoteState.value = viewState
                 }
+
         }
+        _addNoteState
+    }
+
+    fun addNote(title: String, note: String) {
+        _currentNote.value = Pair(title, note)
+    }
+
+    companion object {
+        private const val RESTORED_NOTE = "RESTORED_NOTE"
     }
 }
