@@ -59,7 +59,6 @@ class AddNoteViewModel @ViewModelInject constructor(
                     }
                     _addNoteState.value = viewState
                 }
-
         }
         _addNoteState
     }
