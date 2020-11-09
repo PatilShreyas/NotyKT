@@ -66,6 +66,7 @@ ext {
     jUnitVersion = "4.13.1"
     androidJUnitVersion = "1.1.2"
     espressoVersion = "3.3.0"
+    mockKVersion = "1.10.0"
 
     // Jetpack Compose
     composeVersion = "1.0.0-alpha04"
