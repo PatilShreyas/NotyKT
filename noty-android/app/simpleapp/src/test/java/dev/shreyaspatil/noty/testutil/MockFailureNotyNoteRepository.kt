@@ -50,5 +50,4 @@ class MockFailureNotyNoteRepository : NotyNoteRepository {
     override suspend fun deleteAllNotes() {
         // No Implementation
     }
-
 }

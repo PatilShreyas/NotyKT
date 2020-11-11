@@ -31,7 +31,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class NoteDetailViewModelTest {
 
@@ -96,7 +95,6 @@ class NoteDetailViewModelTest {
             viewModel.deleteNote()
         }
 
-
     @Test
     fun deleteNotes_withValidData_shouldReturnSuccess() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
@@ -108,6 +106,4 @@ class NoteDetailViewModelTest {
             }
             viewModel.deleteNote()
         }
-
-
 }
