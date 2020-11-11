@@ -56,6 +56,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -106,6 +111,10 @@ dependencies {
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "io.mockk:mockk:$mockKVersion"
+    testImplementation "android.arch.core:core-testing:$coreTestingVersion"
+    androidTestImplementation "androidx.test:core-ktx:$testCoreKtxVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     // Android Testing
     androidTestImplementation "androidx.test.ext:junit:$androidJUnitVersion"
@@ -113,4 +122,5 @@ dependencies {
 
     // Leak Canary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+
 }

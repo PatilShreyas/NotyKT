@@ -16,11 +16,7 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import com.squareup.inject.assisted.dagger2.AssistedModule
@@ -44,17 +40,19 @@ class NoteDetailViewModel @AssistedInject constructor(
     @Assisted private val noteId: String
 ) : ViewModel() {
 
+    private val _noteLiveData = MutableLiveData<Note>()
+    val noteLiveData: LiveData<Note> = _noteLiveData
+
     init {
         viewModelScope.launch {
-            notyNoteRepository.getNoteById(noteId).first()
+            notyNoteRepository
+                .getNoteById(noteId)
+                .first()
                 .let { _noteLiveData.value = it }
         }
     }
 
     private var job: Job? = null
-
-    private val _noteLiveData = MutableLiveData<Note>()
-    val noteLiveData: LiveData<Note> = _noteLiveData
 
     private val _updateNoteState = MutableLiveData<ViewState<Unit>>()
     val updateNoteState: LiveData<ViewState<Unit>> = _updateNoteState
