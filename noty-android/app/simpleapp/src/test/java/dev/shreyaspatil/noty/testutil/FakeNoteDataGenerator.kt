@@ -36,7 +36,6 @@ object FakeNoteDataGenerator {
             )
         )
 
-
     fun getNote() = Note(
         id = "fake_id_1",
         title = "fake_title_1",

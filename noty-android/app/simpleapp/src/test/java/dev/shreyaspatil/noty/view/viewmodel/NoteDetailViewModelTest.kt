@@ -51,7 +51,8 @@ class NoteDetailViewModelTest {
                 title = "fake_title_1",
                 note = "fake_note_1",
                 created = 1000
-            ), viewModel.noteLiveData.getOrAwaitValue()
+            ),
+            viewModel.noteLiveData.getOrAwaitValue()
         )
     }
 
@@ -70,7 +71,7 @@ class NoteDetailViewModelTest {
     @Test
     fun updateNotes_whenUpdatesFails_shouldReturnFailure() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            //Initialising view model with fake failure repository
+            // Initialising view model with fake failure repository
             viewModel = NoteDetailViewModel(MockFailureNotyNoteRepository(), "noteId")
             viewModel.updateNoteState.observeForever { state ->
                 when (state) {
@@ -84,7 +85,7 @@ class NoteDetailViewModelTest {
     @Test
     fun deleteNotes_whenDeleteFails_shouldReturnFailure() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
-            //Initialising view model with fake failure repository
+            // Initialising view model with fake failure repository
             viewModel = NoteDetailViewModel(MockFailureNotyNoteRepository(), "noteId")
             viewModel.updateNoteState.observeForever { state ->
                 when (state) {
