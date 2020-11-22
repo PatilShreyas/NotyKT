@@ -24,6 +24,8 @@ import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.model.response.NoteResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.api.model.response.State
+import dev.shreyaspatil.noty.api.testutils.toJson
+import dev.shreyaspatil.noty.api.testutils.toModel
 import dev.shreyaspatil.noty.application.testutils.*
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
