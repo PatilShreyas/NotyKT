@@ -16,11 +16,18 @@
 
 package dev.shreyaspatil.noty.api.model.response
 
-import dev.shreyaspatil.noty.data.model.Note
+import kotlinx.serialization.Serializable
+
+/**
+ * Response model used for exposing a note.
+ */
+@Serializable
+data class Note(val id: String, val title: String, val note: String, val created: Long)
 
 /**
  * Response model used for exposing list of notes in API.
  */
+@Serializable
 data class NotesResponse(
     override val status: State,
     override val message: String,
@@ -45,6 +52,7 @@ data class NotesResponse(
  * Response model used for exposing operation status performed on notes via API.
  * For e.g. Creating new note, deleting or updating note.
  */
+@Serializable
 data class NoteResponse(
     override val status: State,
     override val message: String,

@@ -18,32 +18,5 @@ package dev.shreyaspatil.noty.api.model.response
 
 import kotlinx.serialization.Serializable
 
-/**
- * Response model used in Authentication API. For e.g. Login/Register.
- */
 @Serializable
-data class AuthResponse(
-    override val status: State,
-    override val message: String,
-    val token: String? = null
-) : Response {
-
-    companion object {
-
-        fun failed(message: String) = AuthResponse(
-            State.FAILED,
-            message
-        )
-
-        fun unauthorized(message: String) = AuthResponse(
-            State.UNAUTHORIZED,
-            message
-        )
-
-        fun success(token: String, message: String) = AuthResponse(
-            State.SUCCESS,
-            message,
-            token
-        )
-    }
-}
+data class FailureResponse(override val status: State, override val message: String): Response
