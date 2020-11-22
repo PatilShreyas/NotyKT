@@ -16,7 +16,8 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.4.10"
+        kotlinVersion = "1.4.20"
+        kotlinSerializerVersion = "1.0.1"
         ktlintVersion = "9.3.0"
         coroutinesVersion = "1.4.1"
         ktorVersion = "1.4.2"
@@ -37,6 +38,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
     }
 }
@@ -96,7 +98,7 @@ subprojects {
 
     dependencies {
         // Kotlin
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
         // Dagger

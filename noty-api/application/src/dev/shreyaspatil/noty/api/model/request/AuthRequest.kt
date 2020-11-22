@@ -16,9 +16,12 @@
 
 package dev.shreyaspatil.noty.api.model.request
 
+import kotlinx.serialization.Serializable
+
 /**
  * Model for getting API request body parameters for authentication.
  */
+@Serializable
 data class AuthRequest(
     val username: String,
     val password: String

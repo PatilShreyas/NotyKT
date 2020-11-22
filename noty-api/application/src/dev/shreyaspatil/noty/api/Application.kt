@@ -16,11 +16,10 @@
 
 package dev.shreyaspatil.noty.api
 
-import com.fasterxml.jackson.databind.SerializationFeature
 import dev.shreyaspatil.noty.api.auth.NotyJWT
 import dev.shreyaspatil.noty.api.di.DaggerControllerComp
 import dev.shreyaspatil.noty.api.exception.FailureMessages
-import dev.shreyaspatil.noty.api.model.response.Response
+import dev.shreyaspatil.noty.api.model.response.FailureResponse
 import dev.shreyaspatil.noty.api.model.response.State
 import dev.shreyaspatil.noty.api.route.auth
 import dev.shreyaspatil.noty.api.route.notes
@@ -32,10 +31,11 @@ import io.ktor.auth.*
 import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.jackson.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.serialization.*
 import io.ktor.util.*
+import kotlinx.serialization.json.Json
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -80,22 +80,25 @@ fun Application.module() {
 
     install(StatusPages) {
         exception<BadRequestException> {
-            call.respond(HttpStatusCode.BadRequest, getResponse(State.FAILED, it.message ?: "Bad Request"))
+            call.respond(HttpStatusCode.BadRequest, FailureResponse(State.FAILED, it.message ?: "Bad Request"))
         }
 
         status(HttpStatusCode.InternalServerError) {
-            call.respond(it, getResponse(State.FAILED, FailureMessages.MESSAGE_FAILED))
+            call.respond(it, FailureResponse(State.FAILED, FailureMessages.MESSAGE_FAILED))
         }
 
         status(HttpStatusCode.Unauthorized) {
-            call.respond(it, getResponse(State.UNAUTHORIZED, FailureMessages.MESSAGE_ACCESS_DENIED))
+            call.respond(it, FailureResponse(State.UNAUTHORIZED, FailureMessages.MESSAGE_ACCESS_DENIED))
         }
     }
 
     install(ContentNegotiation) {
-        jackson {
-            enable(SerializationFeature.INDENT_OUTPUT)
-        }
+        json(
+            json = Json {
+                prettyPrint = true
+            },
+            contentType = ContentType.Application.Json
+        )
     }
 
     val controllers = DaggerControllerComp.create()
@@ -109,11 +112,4 @@ fun Application.module() {
 fun initWithSecret(secretKey: String) {
     NotyJWT.initialize(secretKey)
     KeyProvider.initialize(secretKey)
-}
-
-fun getResponse(state: State, message: String): Response {
-    return object : Response {
-        override val status: State = state
-        override val message: String = message
-    }
 }
