@@ -24,7 +24,7 @@ buildscript {
         exposedVersion = "0.28.1"
         postgresVersion = "42.2.18"
         logbackVersion = "1.2.3"
-        daggerVersion = "2.28.3"
+        daggerVersion = "2.30"
         testContainerVersion = "1.15.0"
         kotestVersion = "4.3.1"
     }
