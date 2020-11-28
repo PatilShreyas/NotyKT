@@ -30,17 +30,20 @@ interface NotesDao {
     fun getAllNotes(): Flow<List<NoteEntity>>
 
     @Insert
+    suspend fun addNote(note: NoteEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addNotes(notes: List<NoteEntity>)
+
+    @Query("UPDATE notes SET title = :title, note = :note WHERE noteId = :noteId")
+    suspend fun updateNoteById(noteId: String, title: String, note: String)
+
+    @Query("DELETE FROM notes WHERE noteId = :noteId")
+    suspend fun deleteNoteById(noteId: String)
 
     @Query("DELETE FROM notes")
     suspend fun deleteAllNotes()
 
-    @Query("SELECT * FROM notes WHERE noteId = :noteId")
-    fun getNoteById(noteId: String): Flow<NoteEntity>
-
-    @Transaction
-    suspend fun clearAndAddNotes(notes: List<NoteEntity>) {
-        deleteAllNotes()
-        addNotes(notes)
-    }
+    @Query("UPDATE notes SET noteId = :newNoteId WHERE noteId = :oldNoteId")
+    fun updateNoteId(oldNoteId: String, newNoteId: String)
 }
