@@ -19,7 +19,6 @@ package dev.shreyaspatil.noty.simpleapp.view.detail
 import android.os.Bundle
 import android.view.*
 import androidx.core.app.ShareCompat
-import androidx.core.text.trimmedLength
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
