@@ -16,16 +16,17 @@
 
 package dev.shreyaspatil.noty.data.local.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotesDao {
-    @Query("SELECT * FROM notes")
+
+    @Query("SELECT * FROM notes WHERE noteId = :noteId")
+    fun getNoteById(noteId: String): Flow<NoteEntity>
+
+    @Query("SELECT * FROM notes ORDER BY created DESC")
     fun getAllNotes(): Flow<List<NoteEntity>>
 
     @Insert
