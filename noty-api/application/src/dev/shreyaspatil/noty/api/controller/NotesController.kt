@@ -20,6 +20,7 @@ import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.NoteNotFoundException
 import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
+import dev.shreyaspatil.noty.api.model.response.Note
 import dev.shreyaspatil.noty.api.model.response.NoteResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.dao.NoteDao
@@ -34,7 +35,7 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         return try {
             val notes = noteDao.getNotesByUser(userId)
 
-            NotesResponse.success(notes)
+            NotesResponse.success(notes.map { Note(it.id, it.title, it.note, it.created) })
         } catch (uae: UnauthorizedActivityException) {
             NotesResponse.unauthorized(uae.message)
         }

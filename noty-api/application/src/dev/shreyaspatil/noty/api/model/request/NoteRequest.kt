@@ -16,9 +16,12 @@
 
 package dev.shreyaspatil.noty.api.model.request
 
+import kotlinx.serialization.Serializable
+
 /**
  * Model for getting API request body parameters related to notes.
  */
+@Serializable
 data class NoteRequest(
     val title: String,
     val note: String

@@ -1,4 +1,5 @@
 apply plugin: 'application'
+apply plugin: 'kotlinx-serialization'
 
 group 'dev.shreyaspatil.noty.application'
 version '0.1.0'
@@ -18,12 +19,15 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
 
+    // Serializer
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerializerVersion"
+
     // Ktor
     implementation "io.ktor:ktor-server-netty:$ktorVersion"
     implementation "io.ktor:ktor-server-core:$ktorVersion"
     implementation "io.ktor:ktor-auth:$ktorVersion"
     implementation "io.ktor:ktor-auth-jwt:$ktorVersion"
-    implementation "io.ktor:ktor-jackson:$ktorVersion"
+    implementation "io.ktor:ktor-serialization:$ktorVersion"
 
     // Logging
     implementation "ch.qos.logback:logback-classic:$logbackVersion"
