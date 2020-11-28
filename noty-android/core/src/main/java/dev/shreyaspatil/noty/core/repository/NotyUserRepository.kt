@@ -16,22 +16,25 @@
 
 package dev.shreyaspatil.noty.core.repository
 
+import dev.shreyaspatil.noty.core.model.AuthCredential
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Network Repository for user authorization of noty.
  */
 @Singleton
-interface NotyAuthRepository {
+interface NotyUserRepository {
 
     /**
      * Register/Create a new user using [username] and [password]
      */
-    suspend fun register(username: String, password: String): Flow<ResponseResult<String>>
+    suspend fun addUser(username: String, password: String): ResponseResult<AuthCredential>
 
     /**
      * Sign ins a user using [username] and [password] which is already exists.
      */
-    suspend fun login(username: String, password: String): Flow<ResponseResult<String>>
+    suspend fun getUserByUsernameAndPassword(
+        username: String,
+        password: String
+    ): ResponseResult<AuthCredential>
 }
