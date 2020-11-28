@@ -16,7 +16,6 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -38,6 +37,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
