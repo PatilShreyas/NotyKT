@@ -48,6 +48,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private val notesListAdapter = NotesListAdapter(::onNoteClicked)
 
+    private val connectivityLiveData by lazy {
+        NetworkUtils.observeConnectivity(applicationContext())
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
@@ -62,6 +66,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         super.onStart()
         checkAuthentication()
         observeNotes()
+        observeSync()
         observeConnectivity()
         loadNotes()
     }
@@ -78,24 +83,29 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                     ContextCompat.getColor(requireContext(), R.color.onSecondary)
                 )
                 setOnRefreshListener {
-                    viewModel.getAllNotes()
+                    syncNotes()
                 }
             }
         }
     }
 
     private fun loadNotes() {
-        viewModel.notesState.value.let { notesState ->
-            if (notesState is ViewState.Success) {
-                notesListAdapter.submitList(notesState.data)
-            } else {
-                viewModel.getAllNotes()
+        viewModel.notes.value.let { notesState ->
+            when {
+                notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
+                notesListAdapter.itemCount == 0 -> syncNotes()
             }
         }
     }
 
+    private fun syncNotes() {
+        if (isConnected()) {
+            viewModel.syncNotes()
+        }
+    }
+
     private fun observeNotes() {
-        viewModel.notesState.observe(viewLifecycleOwner) {
+        viewModel.notes.observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
                 is ViewState.Success -> onNotesLoaded(it.data).also {
@@ -111,6 +121,20 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         }
     }
 
+    private fun observeSync() {
+        viewModel.syncState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is ViewState.Success -> binding.swipeRefreshNotes.isRefreshing = false
+                is ViewState.Failed -> {
+                    binding.swipeRefreshNotes.isRefreshing = false
+                    Log.e(javaClass.simpleName, it.message)
+                    toast("Sync Error: ${it.message}")
+                }
+            }
+        }
+    }
+
     private fun onNotesLoaded(data: List<Note>) {
         binding.emptyStateLayout.run {
             if (data.isEmpty()) show() else hide()
@@ -119,10 +143,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun observeConnectivity() {
-        NetworkUtils.observeConnectivity(applicationContext())
-            .observe(viewLifecycleOwner) { isConnected ->
-                if (isConnected) onConnectivityAvailable() else onConnectivityUnavailable()
-            }
+        connectivityLiveData.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected) onConnectivityAvailable() else onConnectivityUnavailable()
+        }
     }
 
     private fun checkAuthentication() {
@@ -160,10 +183,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityAvailable() {
-        if (viewModel.notesState.value is ViewState.Failed ||
-            notesListAdapter.itemCount == 0
-        ) {
-            viewModel.getAllNotes()
+        if (viewModel.notes.value is ViewState.Failed || notesListAdapter.itemCount == 0) {
+            syncNotes()
         }
         binding.textNetworkStatus.apply {
             setCompoundDrawablesWithIntrinsicBounds(
@@ -191,6 +212,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 })
         }
     }
+
+    private fun isConnected() =
+        (connectivityLiveData.value != null && connectivityLiveData.value == true)
 
     override fun getViewBinding(
         inflater: LayoutInflater,
