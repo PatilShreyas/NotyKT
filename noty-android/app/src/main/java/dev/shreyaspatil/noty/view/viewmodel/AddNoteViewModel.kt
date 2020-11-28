@@ -21,18 +21,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.shreyaspatil.noty.core.task.NotyTaskManager
+import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.di.LocalRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class AddNoteViewModel @ViewModelInject constructor(
-    private val notyNoteRepository: NotyNoteRepository
+    @LocalRepository private val noteRepository: NotyNoteRepository,
+    private val notyTaskManager: NotyTaskManager
 ) : ViewModel() {
 
     var job: Job? = null
@@ -43,15 +45,21 @@ class AddNoteViewModel @ViewModelInject constructor(
     fun addNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            notyNoteRepository.addNote(title, note)
-                .onStart { _addNoteState.value = ViewState.loading() }
-                .collect { state ->
-                    val viewState = when (state) {
-                        is ResponseResult.Success -> ViewState.success<String>(state.data)
-                        is ResponseResult.Error -> ViewState.failed<String>(state.message)
-                    }
-                    _addNoteState.value = viewState
+            _addNoteState.value = ViewState.loading()
+
+            val state = when (val result = noteRepository.addNote(title, note)) {
+                is ResponseResult.Success -> {
+                    val noteId = result.data
+                    scheduleNoteCreate(noteId)
+                    ViewState.success(noteId)
                 }
+                is ResponseResult.Error -> ViewState.failed(result.message)
+            }
+
+            _addNoteState.value = state
         }
     }
+
+    private fun scheduleNoteCreate(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.create(noteId))
 }
