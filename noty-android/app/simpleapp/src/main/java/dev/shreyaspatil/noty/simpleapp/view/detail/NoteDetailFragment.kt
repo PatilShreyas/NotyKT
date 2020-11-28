@@ -33,6 +33,7 @@ import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
+import dev.shreyaspatil.noty.utils.NoteValidator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -81,12 +82,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun onNoteSaveClicked() {
-        if (!isConnected()) {
-            toast("No Internet! Try later")
-            return
-        }
         val (title, note) = getNoteContent()
-
         viewModel.updateNote(title, note)
     }
 
@@ -138,9 +134,8 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
         val (newTitle, newNote) = getNoteContent()
 
-        if (previousNote.title != newTitle.trim() ||
-            previousNote.note.trim() != newNote.trim() ||
-            newTitle.trimmedLength() >= 4
+        if ((previousNote.title != newTitle.trim() || previousNote.note.trim() != newNote.trim()) &&
+            NoteValidator.isValidNote(newTitle, newNote)
         ) {
             binding.fabSave.show()
         } else binding.fabSave.hide()
@@ -165,10 +160,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_delete -> if (isConnected()) {
-                viewModel.deleteNote()
-            } else toast("No Internet! Try again.")
-
+            R.id.action_delete -> viewModel.deleteNote()
             R.id.action_share -> share()
         }
         return super.onOptionsItemSelected(item)
@@ -194,7 +186,4 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             startActivity(intent)
         }
     }
-
-    private fun isConnected() =
-        (connectivityLiveData.value != null && connectivityLiveData.value == true)
 }
