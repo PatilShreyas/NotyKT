@@ -18,14 +18,18 @@ apply plugin: 'kotlin'
 
 dependencies {
     // Kotlin Stdlib
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
 
     // JavaX Inject
-    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+    api "javax.inject:javax.inject:$javaxInjectVersion"
 
     // Moshi
-    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
+    api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
+    api "com.squareup.moshi:moshi-adapters:$moshiVersion"
 }
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
