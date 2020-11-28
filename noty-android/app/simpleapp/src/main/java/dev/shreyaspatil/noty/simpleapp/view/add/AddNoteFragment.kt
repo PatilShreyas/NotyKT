@@ -29,6 +29,7 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.utils.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
@@ -39,10 +40,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>() {
 
     override val viewModel: AddNoteViewModel by viewModels()
-
-    private val connectivityLiveData by lazy {
-        NetworkUtils.observeConnectivity(applicationContext())
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,17 +65,12 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
         val (title, note) = getNoteContent()
 
         binding.fabSave.let { fab ->
-            if (title.trimmedLength() < 4 || note.isBlank()) fab.hide() else fab.show()
+            if (NoteValidator.isValidNote(title, note)) fab.show() else fab.hide()
         }
     }
 
     private fun saveNote() {
-        if (connectivityLiveData.value != null && connectivityLiveData.value == false) {
-            toast("No Internet! Try later")
-            return
-        }
         val (title, note) = getNoteContent()
-
         viewModel.addNote(title, note)
     }
 
