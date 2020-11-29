@@ -70,5 +70,9 @@ ext {
     espressoVersion = "3.3.0"
 
     // Jetpack Compose
-    composeVersion = "1.0.0-alpha04"
+    composeVersion = "1.0.0-alpha07"
+
+    // Jetpack Compose Navigation
+    nav_compose_version = "1.0.0-alpha02"
+
 }

@@ -82,6 +82,9 @@ dependencies {
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
 
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:$nav_compose_version"
+
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
 
