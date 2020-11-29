@@ -23,6 +23,7 @@ import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,9 +49,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private val notesListAdapter = NotesListAdapter(::onNoteClicked)
 
-    private val connectivityLiveData by lazy {
-        NetworkUtils.observeConnectivity(applicationContext())
-    }
+    private lateinit var connectivityLiveData: LiveData<Boolean>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,6 +59,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        connectivityLiveData = NetworkUtils.observeConnectivity(requireContext())
     }
 
     override fun onStart() {
