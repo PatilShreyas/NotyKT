@@ -10,7 +10,7 @@ This release includes some major feature and improvements
 
 ### 🔮 What's New?
 
-- [#36](https://github.com/PatilShreyas/NotyKT/issues/36) Added Offline capability in the application
+- [[#36]](https://github.com/PatilShreyas/NotyKT/issues/36) Added Offline capability in the application
 
 Now onwards, internet connectivity isn't necessary to interact with _NotyKT app_. If connectivity is not available it'll still allow you to add, update and delete notes. It'll persist state of notes locally and will process updates once connectivity is back.
 
