@@ -18,15 +18,12 @@ package dev.shreyaspatil.noty.composeapp.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.setContent
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.ui.tooling.preview.Preview
+import dev.shreyaspatil.noty.composeapp.navigation.NavigatorFlow
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
 
 // TODO This is work-in-progress.
@@ -37,38 +34,17 @@ class MainActivity : AppCompatActivity() {
             NotyTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    AppSetup()
+                    NavigatorFlow()
                 }
             }
         }
     }
 }
 
-@Composable
-fun AppSetup() {
-    Scaffold(topBar = {
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Noty KT",
-                    textAlign = TextAlign.Start,
-                    color = Color.Black,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            backgroundColor = MaterialTheme.colors.onBackground,
-            contentColor = MaterialTheme.colors.secondary,
-            elevation = 0.dp
-        )
-    }, bodyContent = {
-        Text(text = "Welcome to Noty", color = Color.Black)
-    })
-}
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     NotyTheme {
-        AppSetup()
+        NavigatorFlow()
     }
 }

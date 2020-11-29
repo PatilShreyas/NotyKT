@@ -1,0 +1,25 @@
+<!--
+  ~ Copyright 2020 Shreyas Patil
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@color/onBackground"
+        android:pathData="M23,1.0776C10.5695,-0.2791 2.4749,16.5185 0.4663,23.1016C0.3141,23.6004 0.8689,23.8327 1.18,23.4142C3.0628,20.8818 4.7292,18.9928 5.7056,17.9406C6.2768,17.3251 7.0967,17.037 7.9352,16.9925C12.6308,16.7433 14.5744,13.8326 14.5744,13.8326C13.8708,14.0678 11.18,13.5981 11.18,13.5981C9.308,13.3636 11.638,12.7806 11.984,12.7067C17.8216,11.4491 18.2027,8.9184 18.2027,8.9184C16.7985,9.3868 13.6387,8.5675 13.6387,8.5675C19.3723,8.1009 20.4256,4.7059 20.4256,4.7059C18.6705,5.2913 16.5049,5.0272 16.5049,5.0272C21.1569,4.0626 23,1.0776 23,1.0776Z" />
+</vector>

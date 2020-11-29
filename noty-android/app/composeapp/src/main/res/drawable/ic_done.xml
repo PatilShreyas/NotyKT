@@ -14,13 +14,13 @@
   ~ limitations under the License.
   -->
 
-<resources>
-    <string name="app_name">Noty</string>
-
-    <!--    screen titles-->
-    <string name="text_signup">Sign up</string>
-    <string name="text_login">Login</string>
-    <string name="text_notes">Notes</string>
-    <string name="text_note_detail">Note Detail</string>
-    <string name="text_add_note">Add Note</string>
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:tint="?attr/colorControlNormal"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4,-1.4L9,16.2z" />
+</vector>
