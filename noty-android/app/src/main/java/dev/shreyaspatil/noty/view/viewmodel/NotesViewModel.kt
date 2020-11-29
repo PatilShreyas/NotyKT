@@ -29,6 +29,7 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -46,6 +47,7 @@ class NotesViewModel @ViewModelInject constructor(
     val syncState: LiveData<ViewState<Unit>> = _syncState
 
     val notes: LiveData<ViewState<List<Note>>> = notyNoteRepository.getAllNotes()
+        .distinctUntilChanged()
         .map { result ->
             when (result) {
                 is ResponseResult.Success -> ViewState.success(result.data)
