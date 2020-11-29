@@ -23,11 +23,13 @@ import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
 import dev.shreyaspatil.noty.data.remote.model.response.State
 import dev.shreyaspatil.noty.data.remote.util.getResponse
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
 
 /**
  * Single source of data of noty user.

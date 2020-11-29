@@ -21,7 +21,6 @@ import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.data.local.dao.NotesDao
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
