@@ -36,6 +36,7 @@ import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
+import dev.shreyaspatil.noty.utils.setDrawableLeft
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -163,51 +164,57 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityUnavailable() {
-        binding.textNetworkStatus.apply {
-            setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_unavailable),
-                null,
-                null,
-                null
-            )
-            text = getString(R.string.text_no_connectivity)
-        }
+        with(binding) {
+            swipeRefreshNotes.isEnabled = false
+            textNetworkStatus.apply {
+                setDrawableLeft(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_connectivity_unavailable
+                    )
+                )
+                text = getString(R.string.text_no_connectivity)
+            }
 
-        binding.networkStatusLayout.apply {
-            setBackgroundColor(
-                ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
-            )
-        }.also { it.show() }
+            networkStatusLayout.apply {
+                setBackgroundColor(
+                    ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
+                )
+            }.also { it.show() }
+        }
     }
 
     private fun onConnectivityAvailable() {
         if (viewModel.notes.value is ViewState.Failed || notesListAdapter.itemCount == 0) {
             syncNotes()
         }
-        binding.textNetworkStatus.apply {
-            setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_available),
-                null,
-                null,
-                null
-            )
-            text = getString(R.string.text_connectivity)
-        }
+        with(binding) {
+            swipeRefreshNotes.isEnabled = true
+            textNetworkStatus.apply {
+                setDrawableLeft(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_connectivity_available
+                    )
+                )
+                text = getString(R.string.text_connectivity)
+            }
 
-        binding.networkStatusLayout.apply {
-            setBackgroundColor(
-                ResourcesCompat.getColor(resources, R.color.success, requireActivity().theme)
-            )
-        }.also {
-            it.animate()
-                .alpha(1f)
-                .setStartDelay(ANIMATION_DURATION)
-                .setDuration(ANIMATION_DURATION)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        it.hide()
-                    }
-                })
+            networkStatusLayout.apply {
+                setBackgroundColor(
+                    ResourcesCompat.getColor(resources, R.color.success, requireActivity().theme)
+                )
+            }.also {
+                it.animate()
+                    .alpha(1f)
+                    .setStartDelay(ANIMATION_DURATION)
+                    .setDuration(ANIMATION_DURATION)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            it.hide()
+                        }
+                    })
+            }
         }
     }
 
