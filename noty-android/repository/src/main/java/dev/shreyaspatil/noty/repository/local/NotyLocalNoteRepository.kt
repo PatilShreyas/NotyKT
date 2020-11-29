@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
-import java.util.*
 import javax.inject.Inject
 
 class NotyLocalNoteRepository @Inject constructor(
@@ -44,7 +43,7 @@ class NotyLocalNoteRepository @Inject constructor(
         title: String,
         note: String
     ): ResponseResult<String> = runCatching {
-        val tempNoteId = generateTemporaryId()
+        val tempNoteId = NotyNoteRepository.generateTemporaryId()
         notesDao.addNote(
             NoteEntity(
                 tempNoteId,
@@ -80,6 +79,4 @@ class NotyLocalNoteRepository @Inject constructor(
 
     override suspend fun updateNoteId(oldNoteId: String, newNoteId: String) =
         notesDao.updateNoteId(oldNoteId, newNoteId)
-
-    private fun generateTemporaryId() = "TMP-${UUID.randomUUID()}"
 }

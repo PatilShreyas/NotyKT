@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.core.repository
 import dev.shreyaspatil.noty.core.model.Note
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 /**
  * Repository for notes.
@@ -78,4 +79,10 @@ interface NotyNoteRepository {
      * Updates ID of a note
      */
     suspend fun updateNoteId(oldNoteId: String, newNoteId: String)
+
+    companion object {
+        private const val PREFIX_TEMP_NOTE_ID = "TMP"
+        fun generateTemporaryId() = "$PREFIX_TEMP_NOTE_ID-${UUID.randomUUID()}"
+        fun isTemporaryNote(noteId: String) = noteId.startsWith(PREFIX_TEMP_NOTE_ID)
+    }
 }
