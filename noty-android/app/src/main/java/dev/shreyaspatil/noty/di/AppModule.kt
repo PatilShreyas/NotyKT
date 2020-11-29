@@ -17,6 +17,7 @@
 package dev.shreyaspatil.noty.di
 
 import android.app.Application
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +42,11 @@ class AppModule {
     @Provides
     fun provideSessionManager(application: Application): SessionManager {
         return SessionManagerImpl(application)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWorkManager(application: Application): WorkManager {
+        return WorkManager.getInstance(application)
     }
 }

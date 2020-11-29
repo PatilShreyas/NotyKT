@@ -19,11 +19,11 @@ package dev.shreyaspatil.noty.simpleapp.view.notes
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +36,7 @@ import dev.shreyaspatil.noty.utils.hide
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
+import dev.shreyaspatil.noty.utils.setDrawableLeft
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -48,6 +49,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private val notesListAdapter = NotesListAdapter(::onNoteClicked)
 
+    private lateinit var connectivityLiveData: LiveData<Boolean>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
@@ -56,12 +59,14 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        connectivityLiveData = NetworkUtils.observeConnectivity(requireContext())
     }
 
     override fun onStart() {
         super.onStart()
         checkAuthentication()
         observeNotes()
+        observeSync()
         observeConnectivity()
         loadNotes()
     }
@@ -78,24 +83,29 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                     ContextCompat.getColor(requireContext(), R.color.onSecondary)
                 )
                 setOnRefreshListener {
-                    viewModel.getAllNotes()
+                    syncNotes()
                 }
             }
         }
     }
 
     private fun loadNotes() {
-        viewModel.notesState.value.let { notesState ->
-            if (notesState is ViewState.Success) {
-                notesListAdapter.submitList(notesState.data)
-            } else {
-                viewModel.getAllNotes()
+        viewModel.notes.value.let { notesState ->
+            when {
+                notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
+                notesListAdapter.itemCount == 0 -> syncNotes()
             }
         }
     }
 
+    private fun syncNotes() {
+        if (isConnected()) {
+            viewModel.syncNotes()
+        }
+    }
+
     private fun observeNotes() {
-        viewModel.notesState.observe(viewLifecycleOwner) {
+        viewModel.notes.observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
                 is ViewState.Success -> onNotesLoaded(it.data).also {
@@ -104,8 +114,20 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
                 is ViewState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
-                    Log.e(javaClass.simpleName, it.message)
                     toast("Error: ${it.message}")
+                }
+            }
+        }
+    }
+
+    private fun observeSync() {
+        viewModel.syncState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is ViewState.Success -> binding.swipeRefreshNotes.isRefreshing = false
+                is ViewState.Failed -> {
+                    binding.swipeRefreshNotes.isRefreshing = false
+                    toast("Sync Error: ${it.message}")
                 }
             }
         }
@@ -119,10 +141,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun observeConnectivity() {
-        NetworkUtils.observeConnectivity(applicationContext())
-            .observe(viewLifecycleOwner) { isConnected ->
-                if (isConnected) onConnectivityAvailable() else onConnectivityUnavailable()
-            }
+        connectivityLiveData.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected) onConnectivityAvailable() else onConnectivityUnavailable()
+        }
     }
 
     private fun checkAuthentication() {
@@ -142,55 +163,62 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityUnavailable() {
-        binding.textNetworkStatus.apply {
-            setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_unavailable),
-                null,
-                null,
-                null
-            )
-            text = getString(R.string.text_no_connectivity)
-        }
+        with(binding) {
+            swipeRefreshNotes.isEnabled = false
+            textNetworkStatus.apply {
+                setDrawableLeft(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_connectivity_unavailable
+                    )
+                )
+                text = getString(R.string.text_no_connectivity)
+            }
 
-        binding.networkStatusLayout.apply {
-            setBackgroundColor(
-                ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
-            )
-        }.also { it.show() }
+            networkStatusLayout.apply {
+                setBackgroundColor(
+                    ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
+                )
+            }.also { it.show() }
+        }
     }
 
     private fun onConnectivityAvailable() {
-        if (viewModel.notesState.value is ViewState.Failed ||
-            notesListAdapter.itemCount == 0
-        ) {
-            viewModel.getAllNotes()
+        if (viewModel.notes.value is ViewState.Failed || notesListAdapter.itemCount == 0) {
+            syncNotes()
         }
-        binding.textNetworkStatus.apply {
-            setCompoundDrawablesWithIntrinsicBounds(
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_connectivity_available),
-                null,
-                null,
-                null
-            )
-            text = getString(R.string.text_connectivity)
-        }
+        with(binding) {
+            swipeRefreshNotes.isEnabled = true
+            textNetworkStatus.apply {
+                setDrawableLeft(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_connectivity_available
+                    )
+                )
+                text = getString(R.string.text_connectivity)
+            }
 
-        binding.networkStatusLayout.apply {
-            setBackgroundColor(
-                ResourcesCompat.getColor(resources, R.color.success, requireActivity().theme)
-            )
-        }.also {
-            it.animate()
-                .alpha(1f)
-                .setStartDelay(ANIMATION_DURATION)
-                .setDuration(ANIMATION_DURATION)
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        it.hide()
-                    }
-                })
+            networkStatusLayout.apply {
+                setBackgroundColor(
+                    ResourcesCompat.getColor(resources, R.color.success, requireActivity().theme)
+                )
+            }.also {
+                it.animate()
+                    .alpha(1f)
+                    .setStartDelay(ANIMATION_DURATION)
+                    .setDuration(ANIMATION_DURATION)
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            it.hide()
+                        }
+                    })
+            }
         }
     }
+
+    private fun isConnected() =
+        (connectivityLiveData.value != null && connectivityLiveData.value == true)
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -222,7 +250,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             R.id.action_dark_mode -> viewModel.setDarkMode(true)
             R.id.action_about ->
                 findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
-            R.id.action_logout -> {
+            R.id.action_logout -> lifecycleScope.launch {
                 viewModel.clearUserSession()
                 logout()
             }

@@ -16,7 +16,6 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -38,6 +37,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -63,6 +66,9 @@ dependencies {
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
 
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:$workmanagerVersion"
+
     // Jetpack DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
 
@@ -71,6 +77,7 @@ dependencies {
 
     // Hilt + JetPack
     api "androidx.hilt:hilt-lifecycle-viewmodel:$jetpackHiltVersion"
+    api "androidx.hilt:hilt-work:$jetpackHiltVersion"
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
 
     // Dagger + Hilt

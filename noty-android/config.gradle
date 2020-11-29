@@ -25,12 +25,12 @@ ext {
     ]
 
     // Android Plugin
-    androidGradlePluginVersion = '4.2.0-alpha15'
+    androidGradlePluginVersion = '4.2.0-alpha16'
 
     // Kotlin
     kotlinVersion = "1.4.10"
     ktlintVersion = "9.3.0"
-    coroutinesVersion = "1.3.9"
+    coroutinesVersion = "1.4.1"
 
     // Android
     appcompatVersion = "1.3.0-alpha02"
@@ -43,7 +43,7 @@ ext {
     navigationVersion = "2.3.1"
     securityCryptoVersion = "1.1.0-alpha02"
     roomVersion = "2.2.5"
-    dataStoreVersion = "1.0.0-alpha02"
+    dataStoreVersion = "1.0.0-alpha04"
     legacySupportVersion = "1.0.0"
 
     // Design
@@ -56,7 +56,9 @@ ext {
 
     // Networking
     retrofitVersion = "2.9.0"
-    moshiVersion = "1.10.0"
+
+    // Moshi
+    moshiVersion = "1.11.0"
 
     // Other utility
     leakCanaryVersion = "2.4"

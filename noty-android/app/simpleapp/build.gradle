@@ -16,7 +16,6 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -56,6 +55,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -70,6 +73,9 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    // Kotlin Stdlib
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     // Core Module
     implementation project(":core")
@@ -90,6 +96,9 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
 
+    // Hilt + Jetpack
+    implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
+
     // Assisted Inject
     compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
     kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
@@ -103,6 +112,9 @@ dependencies {
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:$workmanagerVersion"
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"

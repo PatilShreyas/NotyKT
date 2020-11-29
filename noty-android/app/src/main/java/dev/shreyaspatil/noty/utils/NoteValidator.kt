@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-apply plugin: 'kotlin'
+package dev.shreyaspatil.noty.utils
 
-dependencies {
-    // Kotlin Stdlib
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+import androidx.core.text.trimmedLength
 
-    // Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-
-    // JavaX Inject
-    api "javax.inject:javax.inject:$javaxInjectVersion"
-
-    // Moshi
-    api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    api "com.squareup.moshi:moshi-adapters:$moshiVersion"
+object NoteValidator {
+    fun isValidNote(title: String, note: String) = (title.trimmedLength() >= 4 && note.isNotBlank())
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

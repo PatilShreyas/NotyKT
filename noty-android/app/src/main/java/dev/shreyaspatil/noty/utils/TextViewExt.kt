@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-apply plugin: 'kotlin'
+package dev.shreyaspatil.noty.utils
 
-dependencies {
-    // Kotlin Stdlib
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+import android.graphics.drawable.Drawable
+import android.widget.TextView
 
-    // Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-
-    // JavaX Inject
-    api "javax.inject:javax.inject:$javaxInjectVersion"
-
-    // Moshi
-    api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    api "com.squareup.moshi:moshi-adapters:$moshiVersion"
+fun TextView.setDrawableLeft(drawable: Drawable?) {
+    setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

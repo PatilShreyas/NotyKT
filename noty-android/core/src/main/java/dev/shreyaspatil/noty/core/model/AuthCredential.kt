@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-apply plugin: 'kotlin'
+package dev.shreyaspatil.noty.core.model
 
-dependencies {
-    // Kotlin Stdlib
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-
-    // Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-
-    // JavaX Inject
-    api "javax.inject:javax.inject:$javaxInjectVersion"
-
-    // Moshi
-    api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    api "com.squareup.moshi:moshi-adapters:$moshiVersion"
-}
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+data class AuthCredential(val token: String)

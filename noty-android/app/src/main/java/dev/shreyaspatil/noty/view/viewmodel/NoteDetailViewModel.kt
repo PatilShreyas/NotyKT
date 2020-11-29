@@ -16,11 +16,7 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import com.squareup.inject.assisted.dagger2.AssistedModule
@@ -28,33 +24,35 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dev.shreyaspatil.noty.core.model.Note
+import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.di.LocalRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class NoteDetailViewModel @AssistedInject constructor(
-    private val notyNoteRepository: NotyNoteRepository,
+    private val notyTaskManager: NotyTaskManager,
+    @LocalRepository private val noteRepository: NotyNoteRepository,
     @Assisted private val noteId: String
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            notyNoteRepository.getNoteById(noteId).first()
-                .let { _noteLiveData.value = it }
+            noteRepository.getNoteById(noteId).first()
+                .let { _note.value = it }
         }
     }
 
     private var job: Job? = null
 
-    private val _noteLiveData = MutableLiveData<Note>()
-    val noteLiveData: LiveData<Note> = _noteLiveData
+    private val _note = MutableLiveData<Note>()
+    val note: LiveData<Note> = _note
 
     private val _updateNoteState = MutableLiveData<ViewState<Unit>>()
     val updateNoteState: LiveData<ViewState<Unit>> = _updateNoteState
@@ -65,32 +63,55 @@ class NoteDetailViewModel @AssistedInject constructor(
     fun updateNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            notyNoteRepository.updateNote(noteId, title, note)
-                .onStart { _updateNoteState.value = ViewState.loading() }
-                .collect { state ->
-                    val viewState = when (state) {
-                        is ResponseResult.Success -> ViewState.success(Unit)
-                        is ResponseResult.Error -> ViewState.failed(state.message)
+            _updateNoteState.value = ViewState.loading()
+
+            val viewState = when (val result = noteRepository.updateNote(noteId, title, note)) {
+                is ResponseResult.Success -> {
+                    val noteId = result.data
+
+                    if (NotyNoteRepository.isTemporaryNote(noteId)) {
+                        scheduleNoteCreate(noteId)
+                    } else {
+                        scheduleNoteUpdate(noteId)
                     }
-                    _updateNoteState.value = viewState
+
+                    ViewState.success(Unit)
                 }
+                is ResponseResult.Error -> ViewState.failed(result.message)
+            }
+
+            _updateNoteState.value = viewState
         }
     }
 
     fun deleteNote() {
         job?.cancel()
         job = viewModelScope.launch {
-            notyNoteRepository.deleteNote(noteId)
-                .onStart { _updateNoteState.value = ViewState.loading() }
-                .collect { state ->
-                    val viewState = when (state) {
-                        is ResponseResult.Success -> ViewState.success(Unit)
-                        is ResponseResult.Error -> ViewState.failed(state.message)
+            _deleteNoteState.value = ViewState.loading()
+
+            val viewState = when (val result = noteRepository.deleteNote(noteId)) {
+                is ResponseResult.Success -> {
+                    val noteId = result.data
+
+                    if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                        scheduleNoteDelete(noteId)
                     }
-                    _deleteNoteState.value = viewState
+                    ViewState.success(Unit)
                 }
+                is ResponseResult.Error -> ViewState.failed(result.message)
+            }
+            _deleteNoteState.value = viewState
         }
     }
+
+    private fun scheduleNoteCreate(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.create(noteId))
+
+    private fun scheduleNoteUpdate(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.update(noteId))
+
+    private fun scheduleNoteDelete(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
     @AssistedInject.Factory
     interface AssistedFactory {

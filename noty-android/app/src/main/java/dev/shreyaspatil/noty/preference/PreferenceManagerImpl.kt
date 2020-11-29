@@ -17,10 +17,10 @@
 package dev.shreyaspatil.noty.preference
 
 import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
-import androidx.datastore.preferences.edit
-import androidx.datastore.preferences.emptyPreferences
-import androidx.datastore.preferences.preferencesKey
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
