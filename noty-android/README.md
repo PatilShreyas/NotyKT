@@ -23,7 +23,6 @@ The codebase focuses on following key things:
 
 - [x] Single Activity Design
 - [x] Offline Capability - Notes ✈️
-- [ ] Offline Capability - Add/Update/Delete Notes ***(WIP)***
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
 - [ ] Tests ***(WIP)***
@@ -66,6 +65,7 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
   - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) - Stores UI-related data that isn't destroyed on UI changes. 
   - [ViewBinding](https://developer.android.com/topic/libraries/view-binding) - Generates a binding class for each XML layout file present in that module and allows you to more easily write code that interacts with views.
   - [Room](https://developer.android.com/topic/libraries/architecture/room) - SQLite object mapping library.
+  - [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) - WorkManager is an API that makes it easy to schedule deferrable, asynchronous tasks that are expected to run even if the app exits or the device restarts.
 - [Navigation Component](https://developer.android.com/guide/navigation/navigation-getting-started) Navigation refers to the interactions that allow users to navigate across, into, and back out from the different pieces of content within your app.
     - [Safe args](https://developer.android.com/guide/navigation/navigation-pass-data#Safe-args) - Gradle plugin that provides type safety when navigating and passing data between destinations. 
 - [Jetpack Security](https://developer.android.com/topic/security/)
@@ -90,9 +90,11 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
     - `composeapp`: UI implementation using [_Jetpack Compose UI Toolkit_](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwreT8BRDTARIsAJLI0KKRX0vsRWcQ-0AC6lCutEWwAB4t1wqWBi2MclQqm96gnSddahFRdkAaArbwEALw_wcB&gclsrc=aw.ds)
 
 - `core`: Pure JVM module consist of utilities, interfaces and base boilerplate.
+
 - `data`: Data Source
     - `local`: Persistent storage of data using Room (SQLite) database.
     - `remote`: Network layer implemented using Retrofit.
+
 - `repository`: For single source of data. Implements `local` and `remote` modules.
 
 ## Architecture
