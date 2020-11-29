@@ -4,6 +4,18 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v0.1.0_ (2020-11-29)
+
+This release includes some major feature and improvements
+
+### 🔮 What's New?
+
+- [#36](https://github.com/PatilShreyas/NotyKT/issues/36) Added Offline capability in the application
+
+Now onwards, internet connectivity isn't necessary to interact with _NotyKT app_. If connectivity is not available it'll still allow you to add, update and delete notes. It'll persist state of notes locally and will process updates once connectivity is back.
+
+---
+
 ## _v0.0.2_ (2020-11-08)
 
 This release includes some fixes and improvements
