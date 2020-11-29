@@ -27,13 +27,10 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class NotesViewModel @ViewModelInject constructor(
@@ -75,12 +72,10 @@ class NotesViewModel @ViewModelInject constructor(
 
     fun isUserLoggedIn() = sessionManager.getToken() != null
 
-    fun clearUserSession() {
-        viewModelScope.launch(Dispatchers.IO) {
-            sessionManager.saveToken(null)
-            notyTaskManager.abortAllTasks()
-            notyNoteRepository.deleteAllNotes()
-        }
+    suspend fun clearUserSession() = withContext(Dispatchers.IO) {
+        sessionManager.saveToken(null)
+        notyTaskManager.abortAllTasks()
+        notyNoteRepository.deleteAllNotes()
     }
 
     suspend fun isDarkModeEnabled() = preferenceManager.uiModeFlow.first()
