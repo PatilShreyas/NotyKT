@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.application.testutils
+package dev.shreyaspatil.noty.api.testutils
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-val mapper = jacksonObjectMapper()
+inline fun <reified T> T.toJson(): String = Json.encodeToString(this)
 
-fun <T> T.toJson(): String = mapper.writeValueAsString(this)
-
-inline fun <reified T> String?.toModel(): T = this.toString().let { mapper.readValue(it) }
+inline fun <reified T> String?.toModel(): T = this!!.let { json -> Json.decodeFromString(json) }

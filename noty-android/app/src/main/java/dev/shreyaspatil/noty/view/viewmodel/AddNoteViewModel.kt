@@ -19,46 +19,43 @@ package dev.shreyaspatil.noty.view.viewmodel
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.di.LocalRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class AddNoteViewModel @ViewModelInject constructor(
-    private val notyNoteRepository: NotyNoteRepository,
+    @LocalRepository private val noteRepository: NotyNoteRepository,
+    private val notyTaskManager: NotyTaskManager,
     @Assisted state: SavedStateHandle
 ) : ViewModel() {
 
     var job: Job? = null
-    private val _addNoteState = MutableLiveData<ViewState<String>>()
 
     private val _currentNote: MutableLiveData<Pair<String, String>> =
         state.getLiveData(RESTORED_NOTE)
 
+    private val _addNoteState = MutableLiveData<ViewState<String>>()
     val addNoteState = _currentNote.switchMap { note ->
         job?.cancel()
-
         job = viewModelScope.launch {
-            notyNoteRepository.addNote(note.first, note.second)
-                .onStart {
-                    _addNoteState.value = ViewState.loading()
+            _addNoteState.value = ViewState.loading()
+
+            val state = when (val result = noteRepository.addNote(note.first, note.second)) {
+                is ResponseResult.Success -> {
+                    val noteId = result.data
+                    scheduleNoteCreate(noteId)
+                    ViewState.success(noteId)
                 }
-                .collect { state ->
-                    val viewState = when (state) {
-                        is ResponseResult.Success -> ViewState.success(
-                            state.data
-                        )
-                        is ResponseResult.Error -> ViewState.failed(
-                            state.message
-                        )
-                    }
-                    _addNoteState.value = viewState
-                }
+                is ResponseResult.Error -> ViewState.failed(result.message)
+            }
+            _addNoteState.value = state
         }
         _addNoteState
     }
@@ -66,6 +63,9 @@ class AddNoteViewModel @ViewModelInject constructor(
     fun addNote(title: String, note: String) {
         _currentNote.value = Pair(title, note)
     }
+
+    private fun scheduleNoteCreate(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
     companion object {
         private const val RESTORED_NOTE = "RESTORED_NOTE"

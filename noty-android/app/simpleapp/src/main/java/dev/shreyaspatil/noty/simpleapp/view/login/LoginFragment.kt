@@ -61,13 +61,13 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
     }
 
     private fun initViews() {
-        binding.buttonLogin.setOnClickListener { onRegisterClicked() }
+        binding.buttonLogin.setOnClickListener { onLoginClicked() }
         binding.textSignUpButton.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
 
-    private fun onRegisterClicked() {
+    private fun onLoginClicked() {
         val username = binding.textFieldUsername.editText?.text.toString()
         val password = binding.textFieldPassword.editText?.text.toString()
 

@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-apply plugin: 'kotlin'
+package dev.shreyaspatil.noty.di
 
-dependencies {
-    // Kotlin Stdlib
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dev.shreyaspatil.noty.core.task.NotyTaskManager
+import dev.shreyaspatil.noty.task.NotyTaskManagerImpl
 
-    // Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+@Module
+@InstallIn(ApplicationComponent::class)
+interface NotyTaskManagerModule {
 
-    // JavaX Inject
-    api "javax.inject:javax.inject:$javaxInjectVersion"
-
-    // Moshi
-    api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    api "com.squareup.moshi:moshi-adapters:$moshiVersion"
+    @Binds
+    fun notyTaskManager(notyTaskManager: NotyTaskManagerImpl): NotyTaskManager
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-apply plugin: 'kotlin'
+package dev.shreyaspatil.noty.utils
 
-dependencies {
-    // Kotlin Stdlib
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+import androidx.work.Data
 
-    // Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+fun <T> Data.Builder.putEnum(key: String, value: T) = apply { putString(key, value.toString()) }
 
-    // JavaX Inject
-    api "javax.inject:javax.inject:$javaxInjectVersion"
-
-    // Moshi
-    api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    api "com.squareup.moshi:moshi-adapters:$moshiVersion"
+inline fun <reified T : Enum<T>> Data.getEnum(key: String): T? {
+    val enumValue = getString(key)
+    return runCatching { enumValueOf<T>(enumValue!!) }.getOrNull()
 }
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"

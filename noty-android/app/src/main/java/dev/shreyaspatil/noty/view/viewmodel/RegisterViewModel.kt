@@ -21,18 +21,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.shreyaspatil.noty.core.repository.NotyAuthRepository
+import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.view.ViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class RegisterViewModel @ViewModelInject constructor(
-    private val notyAuthRepository: NotyAuthRepository,
+    private val notyUserRepository: NotyUserRepository,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
@@ -45,24 +43,25 @@ class RegisterViewModel @ViewModelInject constructor(
         password: String
     ) {
         viewModelScope.launch {
-            notyAuthRepository.register(username, password).onStart {
-                _authLiveData.value = ViewState.loading()
-            }.collect { responseState ->
-                val viewState = when (responseState) {
-                    is ResponseResult.Success -> {
-                        val token = responseState.data
-                        saveToken(token)
-                        ViewState.success("Success")
-                    }
-                    is ResponseResult.Error -> ViewState.failed(responseState.message)
+            _authLiveData.value = ViewState.loading()
+
+            val responseState = notyUserRepository.addUser(username, password)
+
+            val viewState = when (responseState) {
+                is ResponseResult.Success -> {
+                    val authCredential = responseState.data
+                    saveToken(authCredential.token)
+                    ViewState.success("Registration Successful")
                 }
 
-                _authLiveData.value = viewState
+                is ResponseResult.Error -> ViewState.failed(responseState.message)
             }
+
+            _authLiveData.value = viewState
         }
     }
 
-    private suspend fun saveToken(token: String) {
+    private fun saveToken(token: String) {
         sessionManager.saveToken(token)
     }
 }

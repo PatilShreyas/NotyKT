@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.simpleapp.databinding.ItemNoteBinding
-import kotlinx.android.synthetic.main.item_note.view.*
 
 class NotesListAdapter(
     private val onNoteClick: (Note) -> Unit
@@ -41,12 +40,15 @@ class NotesListAdapter(
         holder.bind(getItem(position), onNoteClick)
     }
 
-    inner class NoteViewHolder(itemView: ItemNoteBinding) : RecyclerView.ViewHolder(itemView.root) {
+    inner class NoteViewHolder(
+        private val binding: ItemNoteBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(note: Note, onNoteClick: (Note) -> Unit) {
-            itemView.run {
+            with(binding) {
                 textTitle.text = note.title
                 textNote.text = note.note
-                rootView.setOnClickListener { onNoteClick(note) }
+                root.setOnClickListener { onNoteClick(note) }
             }
         }
     }

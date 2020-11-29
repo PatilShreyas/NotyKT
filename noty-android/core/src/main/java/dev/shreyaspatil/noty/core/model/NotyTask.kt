@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.core.repository
+package dev.shreyaspatil.noty.core.model
 
-import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
+class NotyTask private constructor(val noteId: String, val action: NotyTaskAction) {
+    companion object {
+        fun create(noteId: String) = NotyTask(noteId, NotyTaskAction.CREATE)
+        fun update(noteId: String) = NotyTask(noteId, NotyTaskAction.UPDATE)
+        fun delete(noteId: String) = NotyTask(noteId, NotyTaskAction.DELETE)
+    }
+}
 
-/**
- * Network Repository for user authorization of noty.
- */
-@Singleton
-interface NotyAuthRepository {
-
-    /**
-     * Register/Create a new user using [username] and [password]
-     */
-    suspend fun register(username: String, password: String): Flow<ResponseResult<String>>
-
-    /**
-     * Sign ins a user using [username] and [password] which is already exists.
-     */
-    suspend fun login(username: String, password: String): Flow<ResponseResult<String>>
+enum class NotyTaskAction {
+    CREATE, UPDATE, DELETE
 }
