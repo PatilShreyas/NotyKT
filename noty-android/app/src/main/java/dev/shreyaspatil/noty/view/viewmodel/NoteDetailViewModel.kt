@@ -37,8 +37,8 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class NoteDetailViewModel @AssistedInject constructor(
-    @LocalRepository private val noteRepository: NotyNoteRepository,
     private val notyTaskManager: NotyTaskManager,
+    @LocalRepository private val noteRepository: NotyNoteRepository,
     @Assisted private val noteId: String
 ) : ViewModel() {
 
@@ -69,7 +69,13 @@ class NoteDetailViewModel @AssistedInject constructor(
             val viewState = when (val result = noteRepository.updateNote(noteId, title, note)) {
                 is ResponseResult.Success -> {
                     val noteId = result.data
-                    scheduleNoteUpdate(noteId)
+
+                    if (NotyNoteRepository.isTemporaryNote(noteId)) {
+                        scheduleNoteCreate(noteId)
+                    } else {
+                        scheduleNoteUpdate(noteId)
+                    }
+
                     ViewState.success(Unit)
                 }
                 is ResponseResult.Error -> ViewState.failed(result.message)
@@ -87,7 +93,10 @@ class NoteDetailViewModel @AssistedInject constructor(
             val viewState = when (val result = noteRepository.deleteNote(noteId)) {
                 is ResponseResult.Success -> {
                     val noteId = result.data
-                    scheduleNoteDelete(noteId)
+
+                    if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                        scheduleNoteDelete(noteId)
+                    }
                     ViewState.success(Unit)
                 }
                 is ResponseResult.Error -> ViewState.failed(result.message)
@@ -95,6 +104,9 @@ class NoteDetailViewModel @AssistedInject constructor(
             _deleteNoteState.value = viewState
         }
     }
+
+    private fun scheduleNoteCreate(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
     private fun scheduleNoteUpdate(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.update(noteId))

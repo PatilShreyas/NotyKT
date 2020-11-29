@@ -45,7 +45,7 @@ class NotesListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(note: Note, onNoteClick: (Note) -> Unit) {
-            binding.run {
+            with(binding) {
                 textTitle.text = note.title
                 textNote.text = note.note
                 root.setOnClickListener { onNoteClick(note) }

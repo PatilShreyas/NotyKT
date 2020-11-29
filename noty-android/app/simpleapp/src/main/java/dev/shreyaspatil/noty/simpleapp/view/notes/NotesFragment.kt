@@ -114,7 +114,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
                 is ViewState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
-                    Log.e(javaClass.simpleName, it.message)
                     toast("Error: ${it.message}")
                 }
             }
@@ -128,7 +127,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
                 is ViewState.Success -> binding.swipeRefreshNotes.isRefreshing = false
                 is ViewState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
-                    Log.e(javaClass.simpleName, it.message)
                     toast("Sync Error: ${it.message}")
                 }
             }

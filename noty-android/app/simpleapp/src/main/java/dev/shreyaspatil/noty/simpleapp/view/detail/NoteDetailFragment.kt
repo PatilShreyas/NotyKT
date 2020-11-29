@@ -105,7 +105,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
                 }
                 is ViewState.Failed -> {
                     binding.progressBar.hide()
-                    toast("Error ${viewState.message}")
+                    toast("Error: ${viewState.message}")
                 }
             }
         }
