@@ -32,7 +32,6 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -42,18 +41,9 @@ class NoteDetailViewModel @AssistedInject constructor(
     @Assisted private val noteId: String
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            noteRepository.getNoteById(noteId)
-                .first()
-                .let { _noteLiveData.value = it }
-        }
-    }
-
     private var job: Job? = null
 
-    private val _noteLiveData = MutableLiveData<Note>()
-    val noteLiveData: LiveData<Note> = _noteLiveData
+    val note: LiveData<Note> = noteRepository.getNoteById(noteId).asLiveData()
 
     private val _updateNoteState = MutableLiveData<ViewState<Unit>>()
     val updateNoteState: LiveData<ViewState<Unit>> = _updateNoteState

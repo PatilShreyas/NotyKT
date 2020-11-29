@@ -86,7 +86,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun observeNote() {
-        viewModel.noteLiveData.observe(viewLifecycleOwner) {
+        viewModel.note.observe(viewLifecycleOwner) {
             binding.run {
                 binding.noteLayout.fieldTitle.setText(it.title)
                 binding.noteLayout.fieldNote.setText(it.note)
@@ -129,7 +129,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun onNoteContentChanged() {
-        val previousNote = viewModel.noteLiveData.value ?: return
+        val previousNote = viewModel.note.value ?: return
 
         val (newTitle, newNote) = getNoteContent()
 
