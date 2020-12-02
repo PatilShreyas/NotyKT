@@ -8,7 +8,7 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 This release includes some major feature and improvements
 
-### 🔮 What's New?
+**🔮 What's New?**
 
 - [[#36](https://github.com/PatilShreyas/NotyKT/issues/36)] Added Offline capability in the application
 
