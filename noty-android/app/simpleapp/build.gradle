@@ -39,10 +39,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        stage {}
+        dev {}
     }
 
     compileOptions {
@@ -57,6 +66,10 @@ android {
     lintOptions {
         abortOnError false
     }
+}
+
+configurations {
+    devDebugImplementation {}
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -125,5 +138,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }
