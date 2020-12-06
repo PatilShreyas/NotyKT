@@ -146,8 +146,10 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
             val (newTitle, newNote) = getNoteContent()
 
-            if ((previousNote.title != newTitle.trim() ||
-                        previousNote.note.trim() != newNote.trim()) &&
+            if ((
+                previousNote.title != newTitle.trim() ||
+                    previousNote.note.trim() != newNote.trim()
+                ) &&
                 NoteValidator.isValidNote(newTitle, newNote)
             ) {
                 binding.fabSave.show()
