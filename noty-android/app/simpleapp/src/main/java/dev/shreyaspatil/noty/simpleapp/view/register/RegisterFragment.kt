@@ -56,7 +56,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
                 }
                 is ViewState.Failed -> {
                     binding.progressBar.hide()
-                    toast("Error ${viewState.message}")
+                    toast("Error: ${viewState.message}")
                 }
             }
         }
@@ -90,24 +90,25 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
         return with(binding) {
             when {
                 username.isBlank() -> {
-                    textFieldUsername.error = "Username should be valid!"
+                    textFieldUsername.error = getString(R.string.message_field_blank)
                     false
                 }
 
                 password.isBlank() -> {
-                    textFieldPassword.error = "Should not blank"
+                    textFieldPassword.error = getString(R.string.message_field_blank)
                     false
                 }
 
                 confirmPassword.isBlank() -> {
-                    textFieldConfirmPassword.error = "Should not blank"
+                    textFieldConfirmPassword.error = getString(R.string.message_field_blank)
                     false
                 }
 
                 password != confirmPassword -> {
-                    textFieldConfirmPassword.error = "Password and confirm password not matching"
+                    textFieldConfirmPassword.error = getString(R.string.message_password_mismatched)
                     false
                 }
+
                 else -> true
             }
         }

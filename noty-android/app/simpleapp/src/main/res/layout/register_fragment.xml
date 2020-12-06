@@ -21,7 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".view.login.LoginFragment">
+    tools:context=".view.register.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -31,7 +31,7 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/loginAppLogo"
+            android:id="@+id/notyAppLogo"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="@dimen/dimen_32"
@@ -53,7 +53,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/loginTitleTextView"
+            android:id="@+id/registerTitleTextView"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
@@ -66,7 +66,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
             android:textColor="@color/onBackground"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginAppLogo" />
+            app:layout_constraintTop_toBottomOf="@id/notyAppLogo" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -79,9 +79,10 @@
             android:layout_marginEnd="@dimen/dimen_16"
             app:boxBackgroundColor="@color/background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginTitleTextView">
+            app:layout_constraintTop_toBottomOf="@id/registerTitleTextView">
 
             <com.google.android.material.textfield.TextInputEditText
+                style="@style/UsernameEditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gilroy_regular" />
@@ -116,6 +117,7 @@
             android:layout_marginStart="@dimen/dimen_16"
             android:layout_marginTop="@dimen/dimen_16"
             android:layout_marginEnd="@dimen/dimen_16"
+            android:hint="@string/hint_confirm_password"
             app:boxBackgroundColor="@color/background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textFieldPassword">

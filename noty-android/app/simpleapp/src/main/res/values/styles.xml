@@ -22,8 +22,13 @@
 
     <style name="UsernameFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="startIconDrawable">@drawable/ic_user</item>
+        <item name="android:inputType">text</item>
         <item name="android:hint">@string/hint_username</item>
         <item name="hintTextColor">@color/primaryColor</item>
+    </style>
+
+    <style name="UsernameEditTextStyle">
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="PasswordFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">

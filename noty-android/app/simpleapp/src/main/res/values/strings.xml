@@ -55,6 +55,10 @@
     <string name="hint_field_title">Title</string>
     <string name="hint_field_note">Write note here…</string>
 
+    <!-- Messages -->
+    <string name="message_field_blank">Should not blank</string>
+    <string name="message_password_mismatched">Password and confirm password not matching</string>
+
     <string name="content_description_connectivity_icon">Connectivity status Icon</string>
 
 
