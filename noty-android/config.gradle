@@ -21,11 +21,11 @@ ext {
             minSdkVersion    : 21,
             targetSdkVersion : 30,
             versionCode      : 1,
-            versionName      : "0.0.1"
+            versionName      : "0.1.1-DEV"
     ]
 
     // Android Plugin
-    androidGradlePluginVersion = '4.2.0-alpha16'
+    androidGradlePluginVersion = '7.0.0-alpha02'
 
     // Kotlin
     kotlinVersion = "1.4.10"
