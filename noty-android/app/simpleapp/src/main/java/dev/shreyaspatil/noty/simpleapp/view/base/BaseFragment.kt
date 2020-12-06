@@ -25,6 +25,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
+import dev.shreyaspatil.noty.simpleapp.view.custom.ProgressDialog
 
 abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
@@ -32,6 +33,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     protected val binding get() = _binding!!
 
     protected abstract val viewModel: VM
+
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +45,14 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         return binding.root
     }
 
-    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+    fun showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = ProgressDialog()
+        }
+        progressDialog?.show(requireActivity().supportFragmentManager, "")
+    }
+
+    fun hideProgressDialog() = progressDialog?.dismiss()
 
     fun toast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
@@ -53,5 +63,12 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        progressDialog = null
+    }
+
+    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+
+    companion object {
+        private const val TAG_PROGRESS_DIALOG = "progress_dialog"
     }
 }
