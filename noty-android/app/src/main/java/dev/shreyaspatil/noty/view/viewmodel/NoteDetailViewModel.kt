@@ -30,9 +30,10 @@ import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
+import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -45,25 +46,25 @@ class NoteDetailViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             noteRepository.getNoteById(noteId).first()
-                .let { _note.value = it }
+                .let { _note.emit(it) }
         }
     }
 
     private var job: Job? = null
 
-    private val _note = MutableLiveData<Note>()
-    val note: LiveData<Note> = _note
+    private val _note = MutableSharedFlow<Note>()
+    val note: SharedFlow<Note> = _note.shareWhileObserved(viewModelScope)
 
-    private val _updateNoteState = MutableLiveData<ViewState<Unit>>()
-    val updateNoteState: LiveData<ViewState<Unit>> = _updateNoteState
+    private val _updateNoteState = MutableSharedFlow<ViewState<Unit>>()
+    val updateNoteState = _updateNoteState.shareWhileObserved(viewModelScope)
 
-    private val _deleteNoteState = MutableLiveData<ViewState<Unit>>()
-    val deleteNoteState: LiveData<ViewState<Unit>> = _deleteNoteState
+    private val _deleteNoteState = MutableSharedFlow<ViewState<Unit>>()
+    val deleteNoteState = _deleteNoteState.shareWhileObserved(viewModelScope)
 
     fun updateNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            _updateNoteState.value = ViewState.loading()
+            _updateNoteState.emit(ViewState.loading())
 
             val viewState = when (val result = noteRepository.updateNote(noteId, title, note)) {
                 is ResponseResult.Success -> {
@@ -80,14 +81,14 @@ class NoteDetailViewModel @AssistedInject constructor(
                 is ResponseResult.Error -> ViewState.failed(result.message)
             }
 
-            _updateNoteState.value = viewState
+            _updateNoteState.emit(viewState)
         }
     }
 
     fun deleteNote() {
         job?.cancel()
         job = viewModelScope.launch {
-            _deleteNoteState.value = ViewState.loading()
+            _updateNoteState.emit(ViewState.loading())
 
             val viewState = when (val result = noteRepository.deleteNote(noteId)) {
                 is ResponseResult.Success -> {
@@ -100,7 +101,7 @@ class NoteDetailViewModel @AssistedInject constructor(
                 }
                 is ResponseResult.Error -> ViewState.failed(result.message)
             }
-            _deleteNoteState.value = viewState
+            _deleteNoteState.emit(viewState)
         }
     }
 

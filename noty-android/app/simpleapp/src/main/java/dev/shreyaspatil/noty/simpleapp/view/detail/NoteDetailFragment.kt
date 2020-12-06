@@ -30,6 +30,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
+import androidx.lifecycle.asLiveData
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -42,6 +43,9 @@ import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.utils.NoteValidator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -98,7 +102,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun observeNote() {
-        viewModel.note.observe(viewLifecycleOwner) {
+        viewModel.note.asLiveData().observe(viewLifecycleOwner) {
             binding.run {
                 binding.noteLayout.fieldTitle.setText(it.title)
                 binding.noteLayout.fieldNote.setText(it.note)
@@ -108,7 +112,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun observeNoteUpdate() {
-        viewModel.updateNoteState.observe(viewLifecycleOwner) { viewState ->
+        viewModel.updateNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
@@ -124,7 +128,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun observeNoteDeletion() {
-        viewModel.deleteNoteState.observe(viewLifecycleOwner) { viewState ->
+        viewModel.deleteNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
@@ -137,15 +141,20 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun onNoteContentChanged() {
-        val previousNote = viewModel.note.value ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            val previousNote = viewModel.note.first()
 
-        val (newTitle, newNote) = getNoteContent()
+            val (newTitle, newNote) = getNoteContent()
 
-        if ((previousNote.title != newTitle.trim() || previousNote.note.trim() != newNote.trim()) &&
-            NoteValidator.isValidNote(newTitle, newNote)
-        ) {
-            binding.fabSave.show()
-        } else binding.fabSave.hide()
+            if ((
+                previousNote.title != newTitle.trim() ||
+                    previousNote.note.trim() != newNote.trim()
+                ) &&
+                NoteValidator.isValidNote(newTitle, newNote)
+            ) {
+                binding.fabSave.show()
+            } else binding.fabSave.hide()
+        }
     }
 
     private fun getNoteContent() = binding.noteLayout.let {
