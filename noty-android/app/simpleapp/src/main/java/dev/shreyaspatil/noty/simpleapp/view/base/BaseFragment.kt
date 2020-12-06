@@ -25,6 +25,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
+import dev.shreyaspatil.noty.simpleapp.view.custom.ProgressDialog
+import dev.shreyaspatil.noty.simpleapp.view.custom.ErrorDialog
 
 abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
@@ -32,6 +34,9 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     protected val binding get() = _binding!!
 
     protected abstract val viewModel: VM
+
+    private var progressDialog: ProgressDialog? = null
+    private var errorDialog: ErrorDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +47,33 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         return binding.root
     }
 
-    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+    fun showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = ProgressDialog()
+        }
+        progressDialog?.let {
+            if (!it.isVisible) {
+                it.show(requireActivity().supportFragmentManager, TAG_PROGRESS_DIALOG)
+            }
+        }
+    }
+
+    fun hideProgressDialog() = progressDialog?.dismiss()
+
+    fun showErrorDialog(title: String, message: String) {
+        if (errorDialog == null) {
+            errorDialog = ErrorDialog()
+        }
+        errorDialog?.apply {
+            this.title = title
+            this.message = message
+        }
+        errorDialog?.let {
+            if (!it.isVisible) {
+                it.show(requireActivity().supportFragmentManager, TAG_ERROR_DIALOG)
+            }
+        }
+    }
 
     fun toast(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
@@ -53,5 +84,17 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        progressDialog?.dismiss()
+        progressDialog = null
+
+        errorDialog?.dismiss()
+        errorDialog = null
+    }
+
+    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+
+    companion object {
+        private const val TAG_PROGRESS_DIALOG = "progress_dialog"
+        private const val TAG_ERROR_DIALOG = "error_dialog"
     }
 }

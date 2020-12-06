@@ -35,16 +35,23 @@ android {
     }
 
     buildFeatures {
-        viewBinding {
-            enabled true
-        }
+        viewBinding true
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        stage {}
+        dev {}
     }
 
     compileOptions {
@@ -59,6 +66,10 @@ android {
     lintOptions {
         abortOnError false
     }
+}
+
+configurations {
+    devDebugImplementation {}
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -109,6 +120,9 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
 
+    // Lottie Animation Library
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
@@ -124,5 +138,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }
