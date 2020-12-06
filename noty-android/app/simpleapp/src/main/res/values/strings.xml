@@ -47,6 +47,7 @@
     <string name="text_license">Licensed under Apache License, Version 2.0</string>
     <string name="text_visit">Visit</string>
     <string name="text_repo_url"><u>https://github.com/PatilShreyas/NotyKT</u></string>
+    <string name="text_ok">OK</string>
 
     <!-- Hint -->
     <string name="hint_username">Username</string>
@@ -57,7 +58,15 @@
 
     <!-- Messages -->
     <string name="message_field_blank">Should not blank</string>
+    <string name="message_field_username_invalid">Should be of min 4 and max 30 chars</string>
+    <string name="message_field_password_invalid">Should be of min 8 and max 50 chars</string>
     <string name="message_password_mismatched">Password and confirm password not matching</string>
+
+    <!-- Dialog Strings -->
+    <string name="dialog_title_login_failed">Login Failed!</string>
+    <string name="dialog_title_signup_failed">Sign up Failed!</string>
+    <string name="dialog_title_failed_image_share">Failed to share image!</string>
+    <string name="dialog_message_failed_image_share">Unable to share image because Permission denied. To be able to share image, please allow storage access.</string>
 
     <string name="content_description_connectivity_icon">Connectivity status Icon</string>
 

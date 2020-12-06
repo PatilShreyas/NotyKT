@@ -107,6 +107,9 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
 
+    // Lottie Animation Library
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"

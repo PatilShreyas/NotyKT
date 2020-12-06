@@ -34,7 +34,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
-import dev.shreyaspatil.noty.utils.NetworkUtils
 import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
@@ -59,14 +58,13 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
-    private val connectivityLiveData by lazy {
-        NetworkUtils.observeConnectivity(applicationContext())
-    }
-
     val requestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) shareImage() else toast("Can't share image. Permission denied!")
+        if (isGranted) shareImage() else showErrorDialog(
+            title = getString(R.string.dialog_title_failed_image_share),
+            message = getString(R.string.dialog_message_failed_image_share)
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -112,13 +110,13 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteUpdate() {
         viewModel.updateNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     findNavController().navigateUp()
                 }
                 is ViewState.Failed -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     toast("Error: ${viewState.message}")
                 }
             }
@@ -128,16 +126,12 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteDeletion() {
         viewModel.deleteNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> {
-                    binding.progressBar.hide()
-                }
+                is ViewState.Failed -> hideProgressDialog()
             }
         }
     }
