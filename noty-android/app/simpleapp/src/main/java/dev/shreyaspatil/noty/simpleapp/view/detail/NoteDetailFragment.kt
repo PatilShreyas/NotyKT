@@ -59,10 +59,6 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
-    private val connectivityLiveData by lazy {
-        NetworkUtils.observeConnectivity(applicationContext())
-    }
-
     val requestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -112,13 +108,13 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteUpdate() {
         viewModel.updateNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     findNavController().navigateUp()
                 }
                 is ViewState.Failed -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     toast("Error: ${viewState.message}")
                 }
             }
@@ -128,16 +124,12 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteDeletion() {
         viewModel.deleteNoteState.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> {
-                    binding.progressBar.hide()
-                }
+                is ViewState.Failed -> hideProgressDialog()
             }
         }
     }

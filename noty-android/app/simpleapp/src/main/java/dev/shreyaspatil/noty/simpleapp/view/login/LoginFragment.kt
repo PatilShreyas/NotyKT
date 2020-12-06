@@ -47,14 +47,14 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
     private fun initData() {
         viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> binding.progressBar.show()
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     onAuthSuccess()
                 }
                 is ViewState.Failed -> {
-                    binding.progressBar.hide()
-                    toast("Error ${viewState.message}")
+                    hideProgressDialog()
+                    toast("Error: ${viewState.message}")
                 }
             }
         }

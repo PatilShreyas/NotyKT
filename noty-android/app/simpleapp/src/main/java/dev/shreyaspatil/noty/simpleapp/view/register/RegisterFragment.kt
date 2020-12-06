@@ -23,11 +23,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.RegisterFragmentBinding
-import dev.shreyaspatil.noty.utils.hide
-import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,15 +45,13 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
     private fun initData() {
         viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     onAuthSuccess()
                 }
                 is ViewState.Failed -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     toast("Error: ${viewState.message}")
                 }
             }
