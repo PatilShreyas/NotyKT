@@ -28,7 +28,7 @@
     </style>
 
     <style name="UsernameEditTextStyle">
-        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="PasswordFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
