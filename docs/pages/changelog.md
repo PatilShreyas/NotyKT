@@ -21,6 +21,7 @@ Now there're be two sub-menus for sharing menu i.e. _'Share as Text'_ and _'Shar
 **🎯 Codebase Improvements**
 
 - [[#81](https://github.com/PatilShreyas/NotyKT/issues/81)] Migrated from `LiveData` to `Flow` in _ViewModels_. This has been implemented so that we can effectively manage states in future when integrated with Jetpack Compose UI.
+
 ---
 
 ## _v0.1.0_ (2020-11-29)
