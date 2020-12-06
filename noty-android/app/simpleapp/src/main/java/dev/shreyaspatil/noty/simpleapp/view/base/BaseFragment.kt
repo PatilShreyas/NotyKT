@@ -38,7 +38,6 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     private var progressDialog: ProgressDialog? = null
     private var errorDialog: ErrorDialog? = null
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

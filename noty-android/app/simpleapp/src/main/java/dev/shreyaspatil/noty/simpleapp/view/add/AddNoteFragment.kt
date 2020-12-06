@@ -89,7 +89,7 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
 
                 is ViewState.Failed -> {
                     hideProgressDialog()
-                    toast("Error ${viewState.message}")
+                    showErrorDialog("Failed to add a note", viewState.message)
                 }
             }
         }
