@@ -17,18 +17,18 @@
 package dev.shreyaspatil.noty.view.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
+import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -39,13 +39,13 @@ class AddNoteViewModel @ViewModelInject constructor(
 
     var job: Job? = null
 
-    private val _addNoteState = MutableLiveData<ViewState<String>>()
-    val addNoteState: LiveData<ViewState<String>> = _addNoteState
+    private val _addNoteState = MutableSharedFlow<ViewState<String>>()
+    val addNoteState = _addNoteState.shareWhileObserved(viewModelScope)
 
     fun addNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            _addNoteState.value = ViewState.loading()
+            _addNoteState.emit(ViewState.loading())
 
             val state = when (val result = noteRepository.addNote(title, note)) {
                 is ResponseResult.Success -> {
@@ -56,7 +56,7 @@ class AddNoteViewModel @ViewModelInject constructor(
                 is ResponseResult.Error -> ViewState.failed(result.message)
             }
 
-            _addNoteState.value = state
+            _addNoteState.emit(state)
         }
     }
 

@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -44,7 +45,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
     }
 
     private fun initData() {
-        viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
+        viewModel.authFlow.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
                 is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {

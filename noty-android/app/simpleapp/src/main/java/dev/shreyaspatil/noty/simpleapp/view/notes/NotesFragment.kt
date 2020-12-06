@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +40,7 @@ import dev.shreyaspatil.noty.utils.setDrawableLeft
 import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -90,10 +92,12 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun loadNotes() {
-        viewModel.notes.value.let { notesState ->
-            when {
-                notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
-                notesListAdapter.itemCount == 0 -> syncNotes()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.notes.first().let { notesState ->
+                when {
+                    notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
+                    notesListAdapter.itemCount == 0 -> syncNotes()
+                }
             }
         }
     }
@@ -105,7 +109,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun observeNotes() {
-        viewModel.notes.observe(viewLifecycleOwner) {
+        viewModel.notes.asLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
                 is ViewState.Success -> onNotesLoaded(it.data).also {
@@ -121,7 +125,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun observeSync() {
-        viewModel.syncState.observe(viewLifecycleOwner) {
+        viewModel.syncState.asLiveData().observe(viewLifecycleOwner) {
             when (it) {
                 is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
                 is ViewState.Success -> binding.swipeRefreshNotes.isRefreshing = false
@@ -184,8 +188,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityAvailable() {
-        if (viewModel.notes.value is ViewState.Failed || notesListAdapter.itemCount == 0) {
-            syncNotes()
+        viewLifecycleOwner.lifecycleScope.launch {
+            if (shouldSyncNotes()) {
+                syncNotes()
+            }
         }
         with(binding) {
             swipeRefreshNotes.isEnabled = true
@@ -219,6 +225,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private fun isConnected() =
         (connectivityLiveData.value != null && connectivityLiveData.value == true)
+
+    private suspend fun shouldSyncNotes() = viewModel.notes.first()
+        .let { state -> state is ViewState.Failed || notesListAdapter.itemCount == 0 }
 
     override fun getViewBinding(
         inflater: LayoutInflater,

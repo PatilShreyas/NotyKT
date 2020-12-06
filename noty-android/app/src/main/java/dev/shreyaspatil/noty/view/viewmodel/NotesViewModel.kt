@@ -27,11 +27,9 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
+import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 @ExperimentalCoroutinesApi
 class NotesViewModel @ViewModelInject constructor(
@@ -43,17 +41,18 @@ class NotesViewModel @ViewModelInject constructor(
 
     private var syncJob: Job? = null
 
-    private val _syncState = MutableLiveData<ViewState<Unit>>()
-    val syncState: LiveData<ViewState<Unit>> = _syncState
+    private val _syncState = MutableSharedFlow<ViewState<Unit>>()
+    val syncState: SharedFlow<ViewState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
 
-    val notes: LiveData<ViewState<List<Note>>> = notyNoteRepository.getAllNotes()
+    val notes: SharedFlow<ViewState<List<Note>>> = notyNoteRepository.getAllNotes()
         .distinctUntilChanged()
         .map { result ->
             when (result) {
                 is ResponseResult.Success -> ViewState.success(result.data)
                 is ResponseResult.Error -> ViewState.failed(result.message)
             }
-        }.asLiveData()
+        }.onStart { emit(ViewState.loading()) }
+        .shareWhileObserved(viewModelScope)
 
     fun syncNotes() {
         syncJob?.cancel()
@@ -67,7 +66,7 @@ class NotesViewModel @ViewModelInject constructor(
                     TaskState.FAILED -> ViewState.failed("Failed")
                 }
 
-                _syncState.value = viewState
+                _syncState.emit(viewState)
             }
         }
     }

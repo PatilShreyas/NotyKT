@@ -25,7 +25,10 @@ import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -34,16 +37,15 @@ class RegisterViewModel @ViewModelInject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    private val _authLiveData = MutableLiveData<ViewState<String>>()
-
-    val authLiveData: LiveData<ViewState<String>> = _authLiveData
+    private val _authFlow = MutableSharedFlow<ViewState<String>>()
+    val authFlow: SharedFlow<ViewState<String>> = _authFlow.shareWhileObserved(viewModelScope)
 
     fun register(
         username: String,
         password: String
     ) {
         viewModelScope.launch {
-            _authLiveData.value = ViewState.loading()
+            _authFlow.emit(ViewState.loading())
 
             val responseState = notyUserRepository.addUser(username, password)
 
@@ -57,7 +59,7 @@ class RegisterViewModel @ViewModelInject constructor(
                 is ResponseResult.Error -> ViewState.failed(responseState.message)
             }
 
-            _authLiveData.value = viewState
+            _authFlow.emit(viewState)
         }
     }
 
