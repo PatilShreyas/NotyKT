@@ -18,7 +18,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.shreyaspatil.noty.composeapp">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".NotyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

@@ -28,7 +28,7 @@ ext {
     androidGradlePluginVersion = '4.2.0-alpha16'
 
     // Kotlin
-    kotlinVersion = "1.4.10"
+    kotlinVersion = "1.4.21"
     ktlintVersion = "9.3.0"
     coroutinesVersion = "1.4.1"
 
@@ -70,9 +70,9 @@ ext {
     espressoVersion = "3.3.0"
 
     // Jetpack Compose
-    composeVersion = "1.0.0-alpha07"
+    composeVersion = "1.0.0-alpha08"
 
     // Jetpack Compose Navigation
-    nav_compose_version = "1.0.0-alpha02"
+    nav_compose_version = "1.0.0-alpha03"
 
 }

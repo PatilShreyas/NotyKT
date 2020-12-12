@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.view.signup
 
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -36,9 +37,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.composeapp.ui.typography
+import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun SignUpScreen(
+    navController: NavHostController,
+    viewModel: RegisterViewModel,
+) {
 
     ScrollableColumn {
 
@@ -98,7 +105,15 @@ fun SignUpScreen(navController: NavHostController) {
             )
 
             Button(
-                onClick = { navController.navigate(Screen.Notes.route) },
+                onClick = {
+                    onRegisterClicked(
+                        viewModel,
+                        username.value,
+                        password.value,
+                        confirmPassword.value
+                    )
+//                    navController.navigate(Screen.Notes.route)
+                },
                 modifier = Modifier.fillMaxWidth().height(60.dp).padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(btn_signup) {
                         top.linkTo(et_confirmPassword.bottom, margin = 40.dp)
@@ -122,9 +137,27 @@ fun SignUpScreen(navController: NavHostController) {
                     top.linkTo(btn_signup.bottom, margin = 24.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
+                }.clickable(onClick = {
+                    navController.navigate(Screen.Login.route)
                 })
+            )
 
         }
     }
 
 }
+
+@ExperimentalCoroutinesApi
+fun onRegisterClicked(
+    viewModel: RegisterViewModel,
+    usernameValue: TextFieldValue,
+    passwordValue: TextFieldValue,
+    confirmPasswordValue: TextFieldValue,
+) {
+    val username = usernameValue.text
+    val password = passwordValue.text
+    val confirmPassword = confirmPasswordValue.text
+    viewModel.register(username = username, password = password)
+
+}
+

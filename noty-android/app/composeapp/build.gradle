@@ -17,6 +17,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -31,6 +33,11 @@ android {
         versionName ProjectConfig.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
     }
 
     buildTypes {
@@ -65,7 +72,11 @@ android {
 }
 
 dependencies {
+    // Core Module
     implementation project(":core")
+
+    // Common App Module
+    implementation project(":app")
 
     // Android
     implementation "androidx.core:core-ktx:$coreKtxVersion"
@@ -77,10 +88,31 @@ dependencies {
     // Compose
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.ui:ui-tooling:$composeVersion"
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+    implementation "androidx.compose.ui:ui-test:$composeVersion"
+
+
+    // Dagger + Hilt
+    implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
+
+    // Hilt + Jetpack
+    implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
+
+    implementation "com.google.dagger:hilt-android:2.30.1-alpha"
+    kapt "com.google.dagger:hilt-android-compiler:2.30.1-alpha"
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02'
+    kapt "androidx.hilt:hilt-compiler:1.0.0-alpha02"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+
+    // Assisted Inject
+    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
+    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
+    implementation "androidx.compose.runtime:runtime-livedata:1.0.0-alpha08"
+
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"

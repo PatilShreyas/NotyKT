@@ -27,9 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @Composable
-fun NoteDetails(navController: NavHostController) {
+fun NoteDetails(navController: NavHostController, noteDetailViewModel: NoteDetailViewModel) {
     Scaffold(topBar = {
         TopAppBar(
             title = {

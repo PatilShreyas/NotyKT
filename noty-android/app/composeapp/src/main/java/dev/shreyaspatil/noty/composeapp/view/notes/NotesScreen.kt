@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp.view.notes
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -24,12 +25,22 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.navigate
+import dev.shreyaspatil.noty.composeapp.navigation.Screen
+import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @Composable
-fun NotesScreen(navController: NavHostController) {
+fun NotesScreen(
+    navController: NavHostController,
+    notesViewModel: NotesViewModel,
+) {
     Scaffold(topBar = {
         TopAppBar(
             title = {
@@ -45,6 +56,30 @@ fun NotesScreen(navController: NavHostController) {
             elevation = 0.dp
         )
     }, bodyContent = {
-        Text(text = "Welcome to Noty", color = Color.Black)
+
+
+        val context = AmbientContext.current
+
+        if (!notesViewModel.isUserLoggedIn()) {
+            navController.navigate(Screen.Login.route)
+            Toast.makeText(context, "Hello ${notesViewModel.isUserLoggedIn()}", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            notesViewModel.notes.value.let { notesState ->
+                when (notesState) {
+                    is ViewState.Success -> Toast.makeText(context,
+                        "Notes are ${notesState.data.first().title}",
+                        Toast.LENGTH_SHORT).show()
+
+                    is ViewState.Loading -> Toast.makeText(context, "Loading", Toast.LENGTH_SHORT)
+                        .show()
+                    is ViewState.Failed -> Toast.makeText(context, "Failed", Toast.LENGTH_SHORT)
+                        .show()
+                    null -> Toast.makeText(context, "No results found", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        }
+
     })
 }

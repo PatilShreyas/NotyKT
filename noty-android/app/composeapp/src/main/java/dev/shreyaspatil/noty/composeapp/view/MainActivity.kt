@@ -22,11 +22,17 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
-import androidx.ui.tooling.preview.Preview
-import dev.shreyaspatil.noty.composeapp.navigation.NavigatorFlow
+import androidx.compose.ui.tooling.preview.Preview
+import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.noty.composeapp.navigation.Main
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
-// TODO This is work-in-progress.
+
+@AndroidEntryPoint
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             NotyTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    NavigatorFlow()
+                    Main()
                 }
             }
         }
@@ -45,6 +51,6 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun DefaultPreview() {
     NotyTheme {
-        NavigatorFlow()
+
     }
 }

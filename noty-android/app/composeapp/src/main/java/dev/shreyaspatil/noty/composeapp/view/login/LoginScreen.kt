@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.composeapp.view.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -37,29 +38,28 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
-import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.composeapp.ui.typography
+import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
+@ExperimentalCoroutinesApi
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
 
     ScrollableColumn {
-
         ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
-
             val (logo, title, et_username, et_password, btn_signup, txt_login) = createRefs()
 
-            Image(
-                imageResource(id = R.drawable.noty_app_logo),
+            Image(bitmap = imageResource(id = noty_app_logo),
                 modifier = Modifier.preferredHeightIn(100.dp, 100.dp).constrainAs(logo) {
                     top.linkTo(parent.top, margin = 60.dp)
                     start.linkTo(parent.start, 16.dp)
                     end.linkTo(parent.end, 16.dp)
                 },
-                contentScale = ContentScale.Inside
-            )
+                contentScale = ContentScale.Inside)
 
             Text(
                 text = "Welcome\nback",
@@ -100,7 +100,16 @@ fun LoginScreen(navController: NavHostController) {
 
 
             Button(
-                onClick = { navController.navigate(Screen.Notes.route) },
+
+                onClick = {
+                    onLoginClicked(
+                        loginViewModel = loginViewModel,
+                        usernameValue = username.value,
+                        passwordValue = password.value
+                    ).also {
+                        navController.navigate(Screen.Notes.route)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(60.dp).padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(btn_signup) {
                         top.linkTo(et_password.bottom, margin = 40.dp)
@@ -124,9 +133,23 @@ fun LoginScreen(navController: NavHostController) {
                     top.linkTo(btn_signup.bottom, margin = 24.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
+                }.clickable(onClick = {
+                    navController.navigate(Screen.SignUp.route)
                 })
+            )
 
         }
     }
 
+}
+
+@ExperimentalCoroutinesApi
+fun onLoginClicked(
+    loginViewModel: LoginViewModel,
+    usernameValue: TextFieldValue,
+    passwordValue: TextFieldValue,
+) {
+    val username = usernameValue.text
+    val password = passwordValue.text
+    loginViewModel.login(username = username, password = password)
 }
