@@ -92,7 +92,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun loadNotes() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.notes.first().let { notesState ->
                 when {
                     notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
@@ -188,7 +188,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun onConnectivityAvailable() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             if (shouldSyncNotes()) {
                 syncNotes()
             }
