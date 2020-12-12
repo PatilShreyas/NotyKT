@@ -141,7 +141,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     }
 
     private fun onNoteContentChanged() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             val previousNote = viewModel.note.first()
 
             val (newTitle, newNote) = getNoteContent()
