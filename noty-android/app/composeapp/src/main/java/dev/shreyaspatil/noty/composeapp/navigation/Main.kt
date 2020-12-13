@@ -17,44 +17,45 @@
 package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.shreyaspatil.noty.composeapp.view.details.NoteDetails
+import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
+import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
 import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
 import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
+import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
-import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @Composable
-fun Main() {
+fun Main(
+    toggleTheme: () -> Unit,
+    registerViewModel: RegisterViewModel,
+    loginViewModel: LoginViewModel,
+    notesViewModel: NotesViewModel,
+    addNoteViewModel: AddNoteViewModel,
+) {
     val navController = rememberNavController()
     NavHost(navController, startDestination = Screen.Notes.route) {
         composable(Screen.SignUp.route) {
-            val registerViewModel: RegisterViewModel = viewModel()
             SignUpScreen(navController, registerViewModel)
         }
         composable(Screen.Login.route) {
-            val loginViewModel: LoginViewModel = viewModel()
             LoginScreen(navController, loginViewModel)
         }
         composable(Screen.AddNotes.route) {
-            val noteDetailViewModel: NoteDetailViewModel = viewModel()
-            NoteDetails(navController, noteDetailViewModel)
+            AddNotesScreen(navController, addNoteViewModel)
         }
         composable(Screen.Notes.route) {
-            val notesViewModel: NotesViewModel = viewModel()
-            NotesScreen(navController, notesViewModel)
+            NotesScreen(toggleTheme, navController, notesViewModel)
         }
         composable(Screen.NotesDetail.route) {
-            val noteDetailViewModel: NoteDetailViewModel = viewModel()
-            NoteDetails(navController, noteDetailViewModel)
+            NoteDetailsScreen(navController)
         }
     }
 }

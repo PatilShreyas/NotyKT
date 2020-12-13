@@ -44,7 +44,6 @@ import dev.shreyaspatil.noty.composeapp.ui.typography
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-
 @ExperimentalCoroutinesApi
 @Composable
 fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
@@ -53,13 +52,15 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
         ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
             val (logo, title, et_username, et_password, btn_signup, txt_login) = createRefs()
 
-            Image(bitmap = imageResource(id = noty_app_logo),
+            Image(
+                bitmap = imageResource(id = noty_app_logo),
                 modifier = Modifier.preferredHeightIn(100.dp, 100.dp).constrainAs(logo) {
                     top.linkTo(parent.top, margin = 60.dp)
                     start.linkTo(parent.start, 16.dp)
                     end.linkTo(parent.end, 16.dp)
                 },
-                contentScale = ContentScale.Inside)
+                contentScale = ContentScale.Inside
+            )
 
             Text(
                 text = "Welcome\nback",
@@ -68,7 +69,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 modifier = Modifier.constrainAs(title) {
                     top.linkTo(logo.bottom, margin = 30.dp)
                     start.linkTo(parent.start, margin = 16.dp)
-                })
+                }
+            )
 
             val username = remember { mutableStateOf(TextFieldValue()) }
             TextField(
@@ -97,7 +99,6 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 value = password.value,
                 onValueChange = { password.value = it }
             )
-
 
             Button(
 
@@ -133,14 +134,14 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     top.linkTo(btn_signup.bottom, margin = 24.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                }.clickable(onClick = {
-                    navController.navigate(Screen.SignUp.route)
-                })
+                }.clickable(
+                    onClick = {
+                        navController.navigate(Screen.SignUp.route)
+                    }
+                )
             )
-
         }
     }
-
 }
 
 @ExperimentalCoroutinesApi

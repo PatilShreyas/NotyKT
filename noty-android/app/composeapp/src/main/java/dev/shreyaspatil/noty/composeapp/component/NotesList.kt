@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.ui
+package dev.shreyaspatil.noty.composeapp.component
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.runtime.Composable
+import dev.shreyaspatil.noty.core.model.Note
 
-// primary color
-val blue500 = Color(0xFF7885FF)
-
-// for bg
-val dayBG = Color(0xfff3f7f9)
-val nightBG = Color(0xff121212)
-
-// for card colors
-val day = Color(0xffffffff)
-val night = Color(0xff1A191E)
-
-// for text colors
-val black = Color(0xff000000)
-val white = Color(0xffffffff)
+@Composable
+fun NotesList(noteList: List<Note>, onClick: (Note) -> Unit) {
+    LazyColumnFor(items = noteList) {
+        val note = Note(it.id, it.title, it.note, it.created)
+        NotesCard(note = note, navTo = {
+            onClick(note)
+        })
+    }
+}

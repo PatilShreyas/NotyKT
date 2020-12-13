@@ -113,6 +113,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
     implementation "androidx.compose.runtime:runtime-livedata:1.0.0-alpha08"
 
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha05"
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:$nav_compose_version"

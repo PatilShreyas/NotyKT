@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.ui
+package dev.shreyaspatil.noty.composeapp.component
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
+import dev.shreyaspatil.noty.composeapp.R
 
-// primary color
-val blue500 = Color(0xFF7885FF)
-
-// for bg
-val dayBG = Color(0xfff3f7f9)
-val nightBG = Color(0xff121212)
-
-// for card colors
-val day = Color(0xffffffff)
-val night = Color(0xff1A191E)
-
-// for text colors
-val black = Color(0xff000000)
-val white = Color(0xffffffff)
+@Composable
+fun DarkThemeSwitch(onToggle: () -> Unit) {
+    val icon = vectorResource(R.drawable.ic_day)
+    Icon(icon, Modifier.padding(end = 8.dp).clickable(onClick = onToggle))
+}

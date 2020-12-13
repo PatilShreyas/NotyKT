@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.fontFamily
 import androidx.compose.ui.unit.sp
 import dev.shreyaspatil.noty.composeapp.R
 
-
 private val gilroy = fontFamily(
     font(R.font.gilroy_regular),
     font(R.font.gilroy_semibold, FontWeight.W600),

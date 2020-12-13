@@ -39,5 +39,7 @@
     <color name="secondaryTextColor">#ffffff</color>
 
     <color name="defaultWhite">#ffffff</color>
+    <color name="defaultBlack">#000000</color>
+
 
 </resources>

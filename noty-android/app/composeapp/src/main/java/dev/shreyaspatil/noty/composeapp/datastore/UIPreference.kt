@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.preference
+package dev.shreyaspatil.noty.composeapp.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
-import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-class PreferenceManagerImpl(context: Context) : PreferenceManager {
-    private val dataStore = context.createDataStore(name = "ui_mode_pref")
+enum class UiMode {
+    LIGHT, DARK
+}
 
-    override val uiModeFlow: Flow<Boolean> = dataStore.data
+class UIPreference(context: Context) {
+
+    private val dataStore = context.createDataStore(name = "noty_ui_prefs")
+
+    val uiModeFlow: Flow<UiMode> = dataStore.data
         .catch {
             if (it is IOException) {
                 it.printStackTrace()
@@ -38,15 +42,24 @@ class PreferenceManagerImpl(context: Context) : PreferenceManager {
             } else {
                 throw it
             }
-        }.map { preference -> preference[IS_DARK_MODE] ?: false }
+        }
+        .map { preference ->
+            when (preference[IS_DARK_MODE] ?: false) {
+                true -> UiMode.DARK
+                false -> UiMode.LIGHT
+            }
+        }
 
-    override suspend fun setDarkMode(enable: Boolean) {
+    suspend fun setUiMode(uiMode: UiMode) {
         dataStore.edit { preferences ->
-            preferences[IS_DARK_MODE] = enable
+            preferences[IS_DARK_MODE] = when (uiMode) {
+                UiMode.LIGHT -> false
+                UiMode.DARK -> true
+            }
         }
     }
 
     companion object {
-        val IS_DARK_MODE = preferencesKey<Boolean>("dark_mode")
+        val IS_DARK_MODE = preferencesKey<Boolean>("ui_mode")
     }
 }

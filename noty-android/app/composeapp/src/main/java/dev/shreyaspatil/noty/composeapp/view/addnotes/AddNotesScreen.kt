@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.details
+package dev.shreyaspatil.noty.composeapp.view.addnotes
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
@@ -27,11 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @Composable
-fun NoteDetailsScreen(navController: NavHostController) {
+fun AddNotesScreen(navController: NavHostController, addNoteViewModel: AddNoteViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(

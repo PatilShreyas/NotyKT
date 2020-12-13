@@ -60,7 +60,8 @@ fun SignUpScreen(
                 modifier = Modifier.constrainAs(title) {
                     top.linkTo(parent.top, margin = 60.dp)
                     start.linkTo(parent.start, margin = 16.dp)
-                })
+                }
+            )
 
             val username = remember { mutableStateOf(TextFieldValue()) }
             TextField(
@@ -137,14 +138,14 @@ fun SignUpScreen(
                     top.linkTo(btn_signup.bottom, margin = 24.dp)
                     start.linkTo(parent.start, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                }.clickable(onClick = {
-                    navController.navigate(Screen.Login.route)
-                })
+                }.clickable(
+                    onClick = {
+                        navController.navigate(Screen.Login.route)
+                    }
+                )
             )
-
         }
     }
-
 }
 
 @ExperimentalCoroutinesApi
@@ -158,6 +159,4 @@ fun onRegisterClicked(
     val password = passwordValue.text
     val confirmPassword = confirmPasswordValue.text
     viewModel.register(username = username, password = password)
-
 }
-
