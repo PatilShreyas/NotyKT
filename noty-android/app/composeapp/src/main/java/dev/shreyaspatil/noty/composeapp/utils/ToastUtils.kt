@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component
+package dev.shreyaspatil.noty.composeapp.utils
 
-import androidx.compose.foundation.lazy.LazyColumnFor
-import androidx.compose.runtime.Composable
-import dev.shreyaspatil.noty.core.model.Note
+import android.content.Context
+import android.widget.Toast
 
-@Composable
-fun NotesList(noteList: List<Note>, onClick: (Note) -> Unit) {
-    LazyColumnFor(items = noteList) {
-        val note = Note(it.id, it.title, it.note, it.created)
-        NotesCard(
-            note = note,
-            navTo = {
-                onClick(note)
-            }
-        )
-    }
+fun Context.toast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

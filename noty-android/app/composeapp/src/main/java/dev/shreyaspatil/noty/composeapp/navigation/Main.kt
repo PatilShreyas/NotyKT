@@ -17,14 +17,18 @@
 package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AmbientContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
+import dev.shreyaspatil.noty.composeapp.utils.toast
 import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
 import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
 import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
+import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -41,9 +45,30 @@ fun Main(
     addNoteViewModel: AddNoteViewModel,
 ) {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = Screen.Notes.route) {
+    val context = AmbientContext.current
+
+    NavHost(navController, startDestination = Screen.Login.route) {
         composable(Screen.SignUp.route) {
-            SignUpScreen(navController, registerViewModel)
+            SignUpScreen(
+                navController, registerViewModel,
+                onSignUpClicked = {
+                    registerViewModel.register(it.username, it.password)
+                },
+                onAuthSuccess = {
+                    registerViewModel.authLiveData.value.let { viewState ->
+                        when (viewState) {
+                            is ViewState.Loading -> context.toast("Loading")
+
+                            is ViewState.Success -> {
+                                navController.navigate(Screen.Notes.route)
+                            }
+                            is ViewState.Failed -> {
+                                context.toast("Error ${viewState.message}")
+                            }
+                        }
+                    }
+                }
+            )
         }
         composable(Screen.Login.route) {
             LoginScreen(navController, loginViewModel)

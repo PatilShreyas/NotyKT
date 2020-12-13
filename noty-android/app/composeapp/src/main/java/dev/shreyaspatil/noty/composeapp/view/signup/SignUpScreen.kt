@@ -30,8 +30,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
@@ -45,13 +47,23 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun SignUpScreen(
     navController: NavHostController,
     viewModel: RegisterViewModel,
+    onSignUpClicked: (User) -> Unit,
+    onAuthSuccess: () -> Unit,
 ) {
 
     ScrollableColumn {
 
         ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
 
-            val (title, et_username, et_password, et_confirmPassword, btn_signup, txt_login) = createRefs()
+            val (
+                title,
+                et_username,
+                et_password,
+                et_confirmPassword,
+                btn_signup,
+                txt_login,
+            ) =
+                createRefs()
 
             Text(
                 text = "Create\naccount",
@@ -63,6 +75,7 @@ fun SignUpScreen(
                 }
             )
 
+            // <editor-fold desc="Username">
             val username = remember { mutableStateOf(TextFieldValue()) }
             TextField(
                 modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
@@ -71,12 +84,17 @@ fun SignUpScreen(
                     },
                 label = { Text(text = "Username") },
                 leadingIcon = { Icon(Icons.Outlined.Person) },
-                textStyle = typography.subtitle1,
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.onPrimary,
+                    fontSize = TextUnit.Companion.Sp(16)
+                ),
                 backgroundColor = MaterialTheme.colors.background,
                 value = username.value,
                 onValueChange = { username.value = it }
             )
+            // </editor-fold>
 
+            // <editor-fold desc="Password">
             val password = remember { mutableStateOf(TextFieldValue()) }
             TextField(
                 modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
@@ -85,12 +103,17 @@ fun SignUpScreen(
                     },
                 label = { Text(text = "Password") },
                 leadingIcon = { Icon(Icons.Outlined.Lock) },
-                textStyle = typography.subtitle1,
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.onPrimary,
+                    fontSize = TextUnit.Companion.Sp(16)
+                ),
                 backgroundColor = MaterialTheme.colors.background,
                 value = password.value,
                 onValueChange = { password.value = it }
             )
+            // </editor-fold>
 
+            // <editor-fold desc="Confirm password">
             val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
             TextField(
                 modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
@@ -99,21 +122,21 @@ fun SignUpScreen(
                     },
                 label = { Text(text = "Confirm password") },
                 leadingIcon = { Icon(Icons.Outlined.Lock) },
-                textStyle = typography.subtitle1,
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.onPrimary,
+                    fontSize = TextUnit.Companion.Sp(16)
+                ),
                 backgroundColor = MaterialTheme.colors.background,
                 value = confirmPassword.value,
                 onValueChange = { confirmPassword.value = it }
             )
+            // </editor-fold>
 
+            // <editor-fold desc="SignUp Button">
             Button(
                 onClick = {
-                    onRegisterClicked(
-                        viewModel,
-                        username.value,
-                        password.value,
-                        confirmPassword.value
-                    )
-//                    navController.navigate(Screen.Notes.route)
+                    onSignUpClicked(User(username.toString(), password.toString()))
+                    onAuthSuccess()
                 },
                 modifier = Modifier.fillMaxWidth().height(60.dp).padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(btn_signup) {
@@ -122,7 +145,9 @@ fun SignUpScreen(
             ) {
                 Text(style = typography.subtitle1, color = Color.White, text = "Create account")
             }
+            // </editor-fold>
 
+            // <editor-fold desc="Login view">
             Text(
                 text = annotatedString {
                     // push black so entire text will be in black
@@ -144,6 +169,7 @@ fun SignUpScreen(
                     }
                 )
             )
+            // </editor-fold>
         }
     }
 }
@@ -160,3 +186,5 @@ fun onRegisterClicked(
     val confirmPassword = confirmPasswordValue.text
     viewModel.register(username = username, password = password)
 }
+
+data class User(var username: String, var password: String)

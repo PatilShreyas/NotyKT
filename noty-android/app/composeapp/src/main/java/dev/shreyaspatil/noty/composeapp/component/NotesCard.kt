@@ -32,24 +32,32 @@ import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
 fun NotesCard(note: Note, navTo: () -> Unit) {
-    Card(shape = RoundedCornerShape(4.dp),
+    Card(
+        shape = RoundedCornerShape(4.dp),
         backgroundColor = MaterialTheme.colors.surface,
         modifier = Modifier.padding(8.dp).fillMaxWidth().wrapContentHeight(),
-        elevation = 0.dp) {
-        Column(modifier = Modifier.padding(16.dp).clickable(onClick = {
-            navTo()
-        }
-        )) {
-            Text(text = note.title,
+        elevation = 0.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp).clickable(
+                onClick = {
+                    navTo()
+                }
+            )
+        ) {
+            Text(
+                text = note.title,
                 style = typography.h5,
                 color = MaterialTheme.colors.onPrimary,
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = note.note,
+            Text(
+                text = note.note,
                 style = typography.body1,
                 color = MaterialTheme.colors.onPrimary,
-                lineHeight = TextUnit.Companion.Sp(24))
+                lineHeight = TextUnit.Companion.Sp(24)
+            )
         }
     }
-
 }

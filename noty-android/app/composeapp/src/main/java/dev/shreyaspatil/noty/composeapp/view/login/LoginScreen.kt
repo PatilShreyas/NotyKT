@@ -33,8 +33,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
@@ -80,7 +82,10 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     },
                 label = { Text(text = "Username") },
                 leadingIcon = { Icon(Icons.Outlined.Person) },
-                textStyle = typography.subtitle1,
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.onPrimary,
+                    fontSize = TextUnit.Sp(16)
+                ),
                 backgroundColor = MaterialTheme.colors.background,
                 value = username.value,
                 onValueChange = { username.value = it }
@@ -94,7 +99,10 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     },
                 label = { Text(text = "Password") },
                 leadingIcon = { Icon(Icons.Outlined.Lock) },
-                textStyle = typography.subtitle1,
+                textStyle = TextStyle(
+                    color = MaterialTheme.colors.onPrimary,
+                    fontSize = TextUnit.Companion.Sp(16)
+                ),
                 backgroundColor = MaterialTheme.colors.background,
                 value = password.value,
                 onValueChange = { password.value = it }

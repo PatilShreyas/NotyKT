@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
         super.onCreate(savedInstanceState)
         setContent {
+
             val currentTheme = isSystemInDarkTheme()
             val darkMode by prefsManager.uiModeFlow.map { uiMode ->
                 when (uiMode) {
@@ -89,11 +90,13 @@ class MainActivity : AppCompatActivity() {
                     val loginViewModel: LoginViewModel = viewModel()
                     val addNoteViewModel: AddNoteViewModel = viewModel()
                     val notesViewModel: NotesViewModel = viewModel()
-                    Main(toggleTheme = toggleTheme,
+                    Main(
+                        toggleTheme = toggleTheme,
                         registerViewModel,
                         loginViewModel,
                         notesViewModel,
-                        addNoteViewModel)
+                        addNoteViewModel
+                    )
                 }
             }
         }

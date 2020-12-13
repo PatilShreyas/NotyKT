@@ -63,37 +63,12 @@ fun NotesScreen(
         },
         bodyContent = {
             val context = AmbientContext.current
-            NotesList(noteList = FakeData.noteList, onClick = {
-                navController.navigate(Screen.NotesDetail.route)
-            })
-
-//            if (!notesViewModel.isUserLoggedIn()) {
-//                Toast.makeText(context, "Hello ${notesViewModel.isUserLoggedIn()}", Toast.LENGTH_SHORT).show()
-//                NotesList(navController = navController, noteList = FakeData.noteList, onClick = {
-//
-//                })
-//            } else {
-//
-//                notesViewModel.notes.value.let { notesState ->
-//                    when (notesState) {
-//                        is ViewState.Success -> Toast.makeText(
-//                            context,
-//                            "Notes are ${notesState.data.first().title}",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//
-//                        is ViewState.Loading ->
-//                            Toast.makeText(context, "Loading", Toast.LENGTH_SHORT)
-//                                .show()
-//                        is ViewState.Failed ->
-//                            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT)
-//                                .show()
-//                        null -> Toast.makeText(context, "No results found", Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//                }
-//            }
+            NotesList(
+                noteList = FakeData.noteList,
+                onClick = {
+                    navController.navigate(Screen.NotesDetail.route)
+                }
+            )
         }
     )
-
 }
