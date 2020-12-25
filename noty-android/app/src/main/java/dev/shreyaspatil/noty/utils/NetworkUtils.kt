@@ -22,49 +22,44 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+
+sealed class ConnectionState {
+    object Available : ConnectionState()
+    object Unavailable : ConnectionState()
+}
 
 /**
  * Network Utility to detect availability or unavailability of Internet connection
  */
-object NetworkUtils : ConnectivityManager.NetworkCallback() {
+@ExperimentalCoroutinesApi
+fun Context.observeConnectivityAsFlow() = callbackFlow {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    private val networkLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val callback = NetworkCallback { connectionState -> offer(connectionState) }
 
-    /**
-     * Returns instance of [LiveData] which can be observed for connectivity changes.
-     */
-    fun observeConnectivity(context: Context): LiveData<Boolean> {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            connectivityManager.registerDefaultNetworkCallback(this)
-        } else {
-            val builder = NetworkRequest.Builder()
-            connectivityManager.registerNetworkCallback(builder.build(), this)
-        }
-
-        // Retrieve current status of connectivity
-        val isConnected = isConnected(connectivityManager)
-
-        networkLiveData.postValue(isConnected)
-
-        return networkLiveData
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        connectivityManager.registerDefaultNetworkCallback(callback)
+    } else {
+        val builder = NetworkRequest.Builder()
+        connectivityManager.registerNetworkCallback(builder.build(), callback)
     }
 
-    override fun onAvailable(network: Network) {
-        networkLiveData.postValue(true)
-    }
+    // Set current state
+    val currentState = getCurrentConnectivityState(connectivityManager)
+    offer(currentState)
 
-    override fun onLost(network: Network) {
-        networkLiveData.postValue(false)
+    // Remove callback when not used
+    awaitClose {
+        // Remove listeners
+        connectivityManager.unregisterNetworkCallback(callback)
     }
 }
 
-private fun isConnected(connectivityManager: ConnectivityManager): Boolean {
-    var isConnected = false
+private fun getCurrentConnectivityState(connectivityManager: ConnectivityManager): ConnectionState {
+    var currentState: ConnectionState = ConnectionState.Unavailable
 
     // Retrieve current status of connectivity
     connectivityManager.allNetworks.forEach { network ->
@@ -72,10 +67,24 @@ private fun isConnected(connectivityManager: ConnectivityManager): Boolean {
 
         networkCapability?.let {
             if (it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                isConnected = true
+                currentState = ConnectionState.Available
                 return@forEach
             }
         }
     }
-    return isConnected
+
+    return currentState
+}
+
+@Suppress("FunctionName")
+fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.NetworkCallback {
+    return object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            callback(ConnectionState.Available)
+        }
+
+        override fun onLost(network: Network) {
+            callback(ConnectionState.Unavailable)
+        }
+    }
 }
