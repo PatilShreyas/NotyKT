@@ -15,15 +15,6 @@
  */
 
 ext {
-    ProjectConfig = [
-            compileSdkVersion: 30,
-            buildToolsVersion: "30.0.2",
-            minSdkVersion    : 21,
-            targetSdkVersion : 30,
-            versionCode      : 1,
-            versionName      : "0.1.1"
-    ]
-
     // Android Plugin
     androidGradlePluginVersion = '7.0.0-alpha03'
 
