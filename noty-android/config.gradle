@@ -25,7 +25,7 @@ ext {
     ]
 
     // Android Plugin
-    androidGradlePluginVersion = '7.0.0-alpha02'
+    androidGradlePluginVersion = '7.0.0-alpha03'
 
     // Kotlin
     kotlinVersion = "1.4.10"
@@ -38,7 +38,7 @@ ext {
     constraintlayoutVersion = "2.0.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.0-alpha03"
-    workmanagerVersion = "2.4.0"
+    workmanagerVersion = "2.5.0-beta01"
     lifecycleVersion = "2.2.0"
     navigationVersion = "2.3.2"
     securityCryptoVersion = "1.1.0-alpha02"
