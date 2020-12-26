@@ -18,10 +18,8 @@ package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.*
 import dev.shreyaspatil.noty.composeapp.utils.toast
 import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
@@ -47,7 +45,7 @@ fun Main(
     val navController = rememberNavController()
     val context = AmbientContext.current
 
-    NavHost(navController, startDestination = Screen.Login.route) {
+    NavHost(navController, startDestination = Screen.Notes.route) {
         composable(Screen.SignUp.route) {
             SignUpScreen(
                 navController, registerViewModel,
@@ -79,8 +77,23 @@ fun Main(
         composable(Screen.Notes.route) {
             NotesScreen(toggleTheme, navController, notesViewModel)
         }
-        composable(Screen.NotesDetail.route) {
-            NoteDetailsScreen(navController)
+        composable(
+            "${Screen.NotesDetail.route}/{id}/{title}/{note}/{created}",
+            arguments = listOf(
+                navArgument("id") { type = NavType.IntType },
+                navArgument("title") { type = NavType.StringType },
+                navArgument("note") { type = NavType.StringType },
+                navArgument("created") { type = NavType.LongType }
+
+            )
+        ) {
+            NoteDetailsScreen(
+                navController,
+                it.arguments?.getInt("id") ?: 0,
+                it.arguments!!.getString("title")!!,
+                it.arguments!!.getString("note")!!,
+                it.arguments!!.getLong("created")
+            )
         }
     }
 }

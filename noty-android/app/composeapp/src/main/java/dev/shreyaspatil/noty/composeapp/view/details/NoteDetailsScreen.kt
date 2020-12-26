@@ -16,22 +16,36 @@
 
 package dev.shreyaspatil.noty.composeapp.view.details
 
+import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.navigate
+import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @Composable
-fun NoteDetailsScreen(navController: NavHostController) {
+fun NoteDetailsScreen(
+    navController: NavHostController,
+    id: Int,
+    title: String,
+    note: String,
+    created: Long,
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,9 +53,20 @@ fun NoteDetailsScreen(navController: NavHostController) {
                     Text(
                         text = "Note Details",
                         textAlign = TextAlign.Start,
-                        color = Color.Black,
+                        color = MaterialTheme.colors.onPrimary,
                         modifier = Modifier.fillMaxWidth()
                     )
+                },
+                navigationIcon = {
+
+                    IconButton(
+                        modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp),
+                        onClick = {
+                            navController.navigate(Screen.Notes.route)
+                        }
+                    ) {
+                        Icon(Icons.Filled.ArrowBack, tint = MaterialTheme.colors.onPrimary)
+                    }
                 },
                 backgroundColor = MaterialTheme.colors.onBackground,
                 contentColor = MaterialTheme.colors.secondary,
@@ -49,7 +74,34 @@ fun NoteDetailsScreen(navController: NavHostController) {
             )
         },
         bodyContent = {
-            Text(text = "This is note details", color = Color.Black)
+            ScrollableColumn {
+                val title = remember { mutableStateOf(TextFieldValue()) }
+                TextField(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    label = { Text(text = "Title") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = TextUnit.Sp(24)
+                    ),
+                    backgroundColor = MaterialTheme.colors.background,
+                    value = title.value,
+                    onValueChange = { title.value = it }
+                )
+
+                val note = remember { mutableStateOf(TextFieldValue()) }
+                TextField(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    label = { Text(text = "Type something here...") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onPrimary,
+                        fontSize = TextUnit.Sp(16)
+                    ),
+                    backgroundColor = MaterialTheme.colors.background,
+                    value = note.value,
+                    onValueChange = { note.value = it }
+                )
+            }
         }
     )
 }

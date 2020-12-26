@@ -66,7 +66,7 @@ fun NotesScreen(
             NotesList(
                 noteList = FakeData.noteList,
                 onClick = {
-                    navController.navigate(Screen.NotesDetail.route)
+                    navController.navigate("${Screen.NotesDetail.route}/${it.id}/${it.title}/${it.note}/${it.created}")
                 }
             )
         }
