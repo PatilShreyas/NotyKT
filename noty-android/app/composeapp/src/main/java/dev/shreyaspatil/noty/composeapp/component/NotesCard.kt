@@ -26,8 +26,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
@@ -56,7 +56,7 @@ fun NotesCard(note: Note, navTo: () -> Unit) {
                 text = note.note,
                 style = typography.body1,
                 color = MaterialTheme.colors.onPrimary,
-                lineHeight = TextUnit.Companion.Sp(24)
+                lineHeight = 24.sp
             )
         }
     }

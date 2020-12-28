@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import dev.shreyaspatil.noty.composeapp.utils.toast
@@ -53,7 +54,7 @@ fun Main(
                     registerViewModel.register(it.username, it.password)
                 },
                 onAuthSuccess = {
-                    registerViewModel.authLiveData.value.let { viewState ->
+                    registerViewModel.authFlow.asLiveData().value.let { viewState ->
                         when (viewState) {
                             is ViewState.Loading -> context.toast("Loading")
 

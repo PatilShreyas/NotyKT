@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         }
         super.onCreate(savedInstanceState)
         setContent {
-
             val currentTheme = isSystemInDarkTheme()
             val darkMode by prefsManager.uiModeFlow.map { uiMode ->
                 when (uiMode) {
