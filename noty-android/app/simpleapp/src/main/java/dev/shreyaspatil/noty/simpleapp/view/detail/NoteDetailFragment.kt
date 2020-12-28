@@ -62,7 +62,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
-    val requestLauncher = registerForActivityResult(
+    private val requestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) shareImage() else showErrorDialog(
