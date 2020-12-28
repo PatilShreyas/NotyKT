@@ -24,8 +24,10 @@
     tools:showIn="@layout/add_note_fragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/noteContentLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/background">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fieldTitle"

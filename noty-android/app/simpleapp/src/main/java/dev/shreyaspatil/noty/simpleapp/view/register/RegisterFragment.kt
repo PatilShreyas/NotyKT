@@ -21,14 +21,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.RegisterFragmentBinding
-import dev.shreyaspatil.noty.utils.hide
-import dev.shreyaspatil.noty.utils.show
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.utils.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -45,18 +45,19 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
     }
 
     private fun initData() {
-        viewModel.authLiveData.observe(viewLifecycleOwner) { viewState ->
+        viewModel.authFlow.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> {
-                    binding.progressBar.show()
-                }
+                is ViewState.Loading -> showProgressDialog()
                 is ViewState.Success -> {
-                    binding.progressBar.hide()
+                    hideProgressDialog()
                     onAuthSuccess()
                 }
                 is ViewState.Failed -> {
-                    binding.progressBar.hide()
-                    toast("Error ${viewState.message}")
+                    hideProgressDialog()
+                    showErrorDialog(
+                        title = getString(R.string.dialog_title_signup_failed),
+                        message = viewState.message
+                    )
                 }
             }
         }
@@ -64,12 +65,8 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
 
     private fun initViews() {
         binding.buttonRegister.setOnClickListener { onRegisterClicked() }
-        binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
-        binding.textLoginButton.setOnClickListener {
-            findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
-        }
+        binding.backButton.setOnClickListener { navigateUp() }
+        binding.textLoginButton.setOnClickListener { navigateUp() }
     }
 
     private fun onRegisterClicked() {
@@ -89,29 +86,34 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
     private fun validate(username: String, password: String, confirmPassword: String): Boolean {
         return with(binding) {
             when {
-                username.isBlank() -> {
-                    textFieldUsername.error = "Username should be valid!"
+                !AuthValidator.isValidUsername(username) -> {
+                    textFieldUsername.error = getString(R.string.message_field_username_invalid)
                     false
                 }
 
-                password.isBlank() -> {
-                    textFieldPassword.error = "Should not blank"
+                !AuthValidator.isValidPassword(password) -> {
+                    textFieldPassword.error = getString(R.string.message_field_password_invalid)
                     false
                 }
 
-                confirmPassword.isBlank() -> {
-                    textFieldConfirmPassword.error = "Should not blank"
+                !AuthValidator.isValidPassword(confirmPassword) -> {
+                    textFieldConfirmPassword.error = getString(
+                        R.string.message_field_password_invalid
+                    )
                     false
                 }
 
-                password != confirmPassword -> {
-                    textFieldConfirmPassword.error = "Password and confirm password not matching"
+                !AuthValidator.isPasswordAndConfirmPasswordSame(password, confirmPassword) -> {
+                    textFieldConfirmPassword.error = getString(R.string.message_password_mismatched)
                     false
                 }
+
                 else -> true
             }
         }
     }
+
+    private fun navigateUp() = findNavController().navigateUp()
 
     override fun getViewBinding(
         inflater: LayoutInflater,
