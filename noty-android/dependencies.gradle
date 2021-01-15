@@ -50,6 +50,7 @@ ext {
 
     // Networking
     retrofitVersion = "2.9.0"
+    okHttpVersion = "4.9.0"
 
     // Moshi
     moshiVersion = "1.11.0"
@@ -60,6 +61,8 @@ ext {
 
     // Testing
     jUnitVersion = "4.13.1"
+    kotestVersion = "4.3.2"
+    mockkVersion = "1.10.4"
     androidJUnitVersion = "1.1.2"
     espressoVersion = "3.3.0"
 
