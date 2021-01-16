@@ -41,10 +41,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
-    id: Int,
-    title: String,
-    note: String,
-    created: Long,
+    id: String
 ) {
     Scaffold(
         topBar = {

@@ -33,10 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.composeapp.navigation.Main
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
-import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
-import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
-import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
-import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
+import dev.shreyaspatil.noty.view.viewmodel.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect

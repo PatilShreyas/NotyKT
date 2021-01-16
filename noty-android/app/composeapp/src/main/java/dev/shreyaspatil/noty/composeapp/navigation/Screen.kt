@@ -23,6 +23,6 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
     object SignUp : Screen("signup", R.string.text_signup)
     object Login : Screen("login", R.string.text_login)
     object Notes : Screen("notes", R.string.text_notes)
-    object NotesDetail : Screen("noteDetail", R.string.text_note_detail)
+    object NotesDetail : Screen("note/{noteId}", R.string.text_note_detail)
     object AddNotes : Screen("addNote", R.string.text_add_note)
 }

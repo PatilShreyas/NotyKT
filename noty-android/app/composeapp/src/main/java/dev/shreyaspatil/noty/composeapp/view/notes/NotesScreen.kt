@@ -22,8 +22,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.AmbientLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -32,8 +35,12 @@ import dev.shreyaspatil.noty.composeapp.component.DarkThemeSwitch
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.data.FakeData
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
+import dev.shreyaspatil.noty.core.model.Note
+import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.stateIn
+import javax.annotation.meta.When
 
 @ExperimentalCoroutinesApi
 @Composable
@@ -44,6 +51,15 @@ fun NotesScreen(
 ) {
     if (!notesViewModel.isUserLoggedIn()) {
         navController.navigate(Screen.Login.route)
+        return
+    }
+
+    val notes = notesViewModel.notes.collectAsState(initial = ViewState.success(emptyList()))
+
+    val onNoteClicked: (Note) -> Unit = {
+        navController.navigate(
+            "${Screen.NotesDetail.route}/${it.id}/"
+        )
     }
     Scaffold(
         topBar = {
@@ -65,15 +81,13 @@ fun NotesScreen(
             )
         },
         bodyContent = {
-            val context = AmbientContext.current
-            NotesList(
-                noteList = FakeData.noteList,
-                onClick = {
-                    navController.navigate(
-                        "${Screen.NotesDetail.route}/${it.id}/${it.title}/${it.note}/${it.created}"
-                    )
-                }
-            )
+            when (val state = notes.value) {
+                is ViewState.Success -> NotesList(state.data, onNoteClicked)
+                is ViewState.Failed -> Text(text = "Failed")
+                is ViewState.Loading -> Text(text = "Loading")
+            }
         }
     )
+
+    notesViewModel.syncNotes()
 }

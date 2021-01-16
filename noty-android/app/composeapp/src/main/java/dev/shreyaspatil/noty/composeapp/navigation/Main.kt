@@ -79,21 +79,13 @@ fun Main(
             NotesScreen(toggleTheme, navController, notesViewModel)
         }
         composable(
-            "${Screen.NotesDetail.route}/{id}/{title}/{note}/{created}",
-            arguments = listOf(
-                navArgument("id") { type = NavType.IntType },
-                navArgument("title") { type = NavType.StringType },
-                navArgument("note") { type = NavType.StringType },
-                navArgument("created") { type = NavType.LongType }
-
-            )
+            Screen.NotesDetail.route,
+            arguments = listOf(navArgument("noteId") { type = NavType.StringType })
         ) {
             NoteDetailsScreen(
                 navController,
-                it.arguments?.getInt("id") ?: 0,
-                it.arguments!!.getString("title")!!,
-                it.arguments!!.getString("note")!!,
-                it.arguments!!.getLong("created")
+                it.arguments?.getString("noteId") ?: throw Exception("NoteId"),
+
             )
         }
     }
