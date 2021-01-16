@@ -57,9 +57,7 @@ fun NotesScreen(
     val notes = notesViewModel.notes.collectAsState(initial = ViewState.success(emptyList()))
 
     val onNoteClicked: (Note) -> Unit = {
-        navController.navigate(
-            "${Screen.NotesDetail.route}/${it.id}/"
-        )
+        navController.navigate("note/${it.id}")
     }
     Scaffold(
         topBar = {

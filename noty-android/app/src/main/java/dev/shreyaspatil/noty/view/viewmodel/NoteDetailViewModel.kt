@@ -22,6 +22,7 @@ import com.squareup.inject.assisted.AssistedInject
 import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.components.FragmentComponent
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
@@ -44,9 +45,10 @@ class NoteDetailViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     init {
+        println("ViewModelNoteId: $noteId")
         viewModelScope.launch {
-            noteRepository.getNoteById(noteId).first()
-                .let { _note.emit(it) }
+            noteRepository.getNoteById(noteId).firstOrNull()
+                ?.let { _note.emit(it) }
         }
     }
 
@@ -133,5 +135,5 @@ class NoteDetailViewModel @AssistedInject constructor(
 
 @AssistedModule
 @Module
-@InstallIn(FragmentComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 interface AssistedInjectModule

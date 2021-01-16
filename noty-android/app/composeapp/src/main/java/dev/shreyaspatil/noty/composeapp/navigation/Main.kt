@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
@@ -28,10 +29,7 @@ import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
 import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
 import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
 import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
-import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
-import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
-import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
+import dev.shreyaspatil.noty.view.viewmodel.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -42,6 +40,7 @@ fun Main(
     loginViewModel: LoginViewModel,
     notesViewModel: NotesViewModel,
     addNoteViewModel: AddNoteViewModel,
+    noteDetailViewModelFactory: NoteDetailViewModel.AssistedFactory
 ) {
     val navController = rememberNavController()
     val context = AmbientContext.current
@@ -82,11 +81,14 @@ fun Main(
             Screen.NotesDetail.route,
             arguments = listOf(navArgument("noteId") { type = NavType.StringType })
         ) {
-            NoteDetailsScreen(
-                navController,
-                it.arguments?.getString("noteId") ?: throw Exception("NoteId"),
+            val noteId = it.arguments?.getString("noteId")
+                ?: throw IllegalStateException("'noteId' shouldn't be null")
 
+            val noteDetailViewModel: NoteDetailViewModel = viewModel(
+                factory = NoteDetailViewModel.provideFactory(noteDetailViewModelFactory, noteId)
             )
+
+            NoteDetailsScreen(navController, noteDetailViewModel)
         }
     }
 }

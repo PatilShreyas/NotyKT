@@ -23,6 +23,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -35,27 +36,31 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
+import dev.shreyaspatil.noty.core.model.Note
+import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
-    id: String
+    noteDetailViewModel: NoteDetailViewModel
 ) {
+    val note = noteDetailViewModel.note.collectAsState(initial = null)
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Note Details",
+                        text = "NotyKT",
                         textAlign = TextAlign.Start,
                         color = MaterialTheme.colors.onPrimary,
                         modifier = Modifier.fillMaxWidth()
                     )
                 },
                 navigationIcon = {
-
                     IconButton(
                         modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp),
                         onClick = {
@@ -72,9 +77,11 @@ fun NoteDetailsScreen(
         },
         bodyContent = {
             ScrollableColumn {
-                val title = remember { mutableStateOf(TextFieldValue()) }
+                val title = remember { mutableStateOf(TextFieldValue(note.value?.title ?: "")) }
                 TextField(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp),
                     label = { Text(text = "Title") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
@@ -86,17 +93,19 @@ fun NoteDetailsScreen(
                     onValueChange = { title.value = it }
                 )
 
-                val note = remember { mutableStateOf(TextFieldValue()) }
+                val noteBody = remember { mutableStateOf(TextFieldValue(note.value?.note ?: "")) }
                 TextField(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp),
-                    label = { Text(text = "Type something here...") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    label = { Text(text = "Write something...") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = TextUnit.Sp(16)
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = note.value,
-                    onValueChange = { note.value = it }
+                    value = noteBody.value,
+                    onValueChange = { noteBody.value = it }
                 )
             }
         }

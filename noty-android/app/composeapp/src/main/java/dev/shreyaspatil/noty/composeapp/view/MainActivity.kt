@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var preferenceManager: PreferenceManager
 
+    @Inject
+    lateinit var noteDetailViewModelFactory: NoteDetailViewModel.AssistedFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -77,7 +80,8 @@ class MainActivity : AppCompatActivity() {
                     registerViewModel,
                     loginViewModel,
                     notesViewModel,
-                    addNoteViewModel
+                    addNoteViewModel,
+                    noteDetailViewModelFactory
                 )
             }
         }
