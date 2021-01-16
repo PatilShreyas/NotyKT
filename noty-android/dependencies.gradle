@@ -16,7 +16,7 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.0-alpha03'
+    androidGradlePluginVersion = '7.0.0-alpha04'
 
     // Kotlin
     kotlinVersion = "1.4.21"
@@ -59,7 +59,7 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.0.0-alpha09"
+    composeVersion = "1.0.0-alpha10"
 
     // Jetpack Compose Navigation
     nav_compose_version = "1.0.0-alpha04"
