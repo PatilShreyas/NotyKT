@@ -20,6 +20,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.Constant
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
@@ -31,7 +32,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     private val baseRetrofitBuilder: Retrofit.Builder = Retrofit.Builder()

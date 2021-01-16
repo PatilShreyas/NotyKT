@@ -22,6 +22,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.preference.PreferenceManagerImpl
@@ -29,7 +30,7 @@ import dev.shreyaspatil.noty.session.SessionManagerImpl
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 class AppModule {
 
     @Singleton

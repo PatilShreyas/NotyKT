@@ -30,10 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.composeapp.datastore.UIPreference
-import dev.shreyaspatil.noty.composeapp.datastore.UiMode
 import dev.shreyaspatil.noty.composeapp.navigation.Main
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
+import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -43,60 +42,58 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        val prefsManager = UIPreference(context = this)
-        lifecycleScope.launch {
-            prefsManager.uiModeFlow.collect {
-                when (it) {
-                    UiMode.DARK -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    }
-                    UiMode.LIGHT -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                }
-            }
-        }
         super.onCreate(savedInstanceState)
         setContent {
-            val currentTheme = isSystemInDarkTheme()
-            val darkMode by prefsManager.uiModeFlow.map { uiMode ->
-                when (uiMode) {
-                    UiMode.DARK -> {
-                        true
-                    }
-                    UiMode.LIGHT -> {
-                        false
-                    }
-                }
-            }.collectAsState(initial = currentTheme)
+            NotyContent()
+        }
+        observeUiTheme()
+    }
 
-            val toggleTheme: () -> Unit = {
-                lifecycleScope.launch {
-                    prefsManager.setUiMode(if (darkMode) UiMode.LIGHT else UiMode.DARK)
-                }
+    @Composable
+    private fun NotyContent() {
+        val darkMode by preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
+
+        val toggleTheme: () -> Unit = {
+            lifecycleScope.launch { preferenceManager.setDarkMode(!darkMode) }
+        }
+
+        NotyTheme(darkTheme = darkMode) {
+            // A surface container using the 'background' color from the theme
+            Surface(color = MaterialTheme.colors.background) {
+                val registerViewModel: RegisterViewModel = viewModel()
+                val loginViewModel: LoginViewModel = viewModel()
+                val addNoteViewModel: AddNoteViewModel = viewModel()
+                val notesViewModel: NotesViewModel = viewModel()
+                Main(
+                    toggleTheme = toggleTheme,
+                    registerViewModel,
+                    loginViewModel,
+                    notesViewModel,
+                    addNoteViewModel
+                )
             }
+        }
+    }
 
-            NotyTheme(darkTheme = darkMode) {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    val registerViewModel: RegisterViewModel = viewModel()
-                    val loginViewModel: LoginViewModel = viewModel()
-                    val addNoteViewModel: AddNoteViewModel = viewModel()
-                    val notesViewModel: NotesViewModel = viewModel()
-                    Main(
-                        toggleTheme = toggleTheme,
-                        registerViewModel,
-                        loginViewModel,
-                        notesViewModel,
-                        addNoteViewModel
-                    )
+    private fun observeUiTheme() {
+        lifecycleScope.launchWhenStarted {
+            preferenceManager.uiModeFlow.collect {
+                val mode = when (it) {
+                    true -> AppCompatDelegate.MODE_NIGHT_YES
+                    false -> AppCompatDelegate.MODE_NIGHT_NO
                 }
+                AppCompatDelegate.setDefaultNightMode(mode)
             }
         }
     }
@@ -105,6 +102,5 @@ class MainActivity : AppCompatActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    NotyTheme {
-    }
+    NotyTheme {}
 }

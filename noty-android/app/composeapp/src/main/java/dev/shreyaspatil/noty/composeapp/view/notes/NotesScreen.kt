@@ -42,6 +42,9 @@ fun NotesScreen(
     navController: NavHostController,
     notesViewModel: NotesViewModel,
 ) {
+    if (!notesViewModel.isUserLoggedIn()) {
+        navController.navigate(Screen.Login.route)
+    }
     Scaffold(
         topBar = {
             TopAppBar(

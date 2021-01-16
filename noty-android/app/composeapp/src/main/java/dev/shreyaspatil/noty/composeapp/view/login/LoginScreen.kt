@@ -31,24 +31,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.AmbientLifecycleOwner
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.annotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.composeapp.ui.typography
+import dev.shreyaspatil.noty.composeapp.utils.toast
+import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 
 @ExperimentalCoroutinesApi
 @Composable
 fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
+
+    val context = AmbientContext.current
+    AmbientLifecycleOwner.current.lifecycleScope.launchWhenStarted {
+        loginViewModel.authFlow.collect {
+            when(it) {
+                is ViewState.Failed -> context.toast(it.message)
+                is ViewState.Loading -> context.toast("Signing in")
+                is ViewState.Success -> {
+                    context.toast("Success")
+                    navController.navigate(Screen.Notes.route)
+                }
+            }
+        }
+    }
 
     ScrollableColumn {
         ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
@@ -109,15 +130,12 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             )
 
             Button(
-
                 onClick = {
                     onLoginClicked(
                         loginViewModel = loginViewModel,
                         usernameValue = username.value,
                         passwordValue = password.value
-                    ).also {
-                        navController.navigate(Screen.Notes.route)
-                    }
+                    )
                 },
                 modifier = Modifier.fillMaxWidth().height(60.dp).padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(btn_signup) {
@@ -128,7 +146,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             }
 
             Text(
-                text = annotatedString {
+                text = buildAnnotatedString {
                     // push black so entire text will be in black
                     pushStyle(SpanStyle(color = Color.Black))
                     // append new text, this text will be rendered as black
