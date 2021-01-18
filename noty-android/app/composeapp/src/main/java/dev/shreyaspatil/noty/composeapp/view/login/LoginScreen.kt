@@ -41,6 +41,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
@@ -55,12 +56,12 @@ import kotlinx.coroutines.flow.collect
 
 @ExperimentalCoroutinesApi
 @Composable
-fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
+fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel = viewModel()) {
 
     val context = AmbientContext.current
     AmbientLifecycleOwner.current.lifecycleScope.launchWhenStarted {
         loginViewModel.authFlow.collect {
-            when(it) {
+            when (it) {
                 is ViewState.Failed -> context.toast(it.message)
                 is ViewState.Loading -> context.toast("Signing in")
                 is ViewState.Success -> {
@@ -72,16 +73,22 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
     }
 
     ScrollableColumn {
-        ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
+        ConstraintLayout(
+            Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
             val (logo, title, et_username, et_password, btn_signup, txt_login) = createRefs()
 
             Image(
                 bitmap = imageResource(id = noty_app_logo),
-                modifier = Modifier.preferredHeightIn(100.dp, 100.dp).constrainAs(logo) {
-                    top.linkTo(parent.top, margin = 60.dp)
-                    start.linkTo(parent.start, 16.dp)
-                    end.linkTo(parent.end, 16.dp)
-                },
+                modifier = Modifier
+                    .preferredHeightIn(100.dp, 100.dp)
+                    .constrainAs(logo) {
+                        top.linkTo(parent.top, margin = 60.dp)
+                        start.linkTo(parent.start, 16.dp)
+                        end.linkTo(parent.end, 16.dp)
+                    },
                 contentScale = ContentScale.Inside
             )
 
@@ -97,7 +104,9 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
             val username = remember { mutableStateOf(TextFieldValue()) }
             TextField(
-                modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(et_username) {
                         top.linkTo(title.bottom, margin = 30.dp)
                     },
@@ -114,7 +123,9 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
             val password = remember { mutableStateOf(TextFieldValue()) }
             TextField(
-                modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(et_password) {
                         top.linkTo(et_username.bottom, margin = 16.dp)
                     },
@@ -137,7 +148,10 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         passwordValue = password.value
                     )
                 },
-                modifier = Modifier.fillMaxWidth().height(60.dp).padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(btn_signup) {
                         top.linkTo(et_password.bottom, margin = 40.dp)
                     },
@@ -156,15 +170,17 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     toAnnotatedString()
                 },
                 style = typography.subtitle1,
-                modifier = Modifier.constrainAs(txt_login) {
-                    top.linkTo(btn_signup.bottom, margin = 24.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                }.clickable(
-                    onClick = {
-                        navController.navigate(Screen.SignUp.route)
+                modifier = Modifier
+                    .constrainAs(txt_login) {
+                        top.linkTo(btn_signup.bottom, margin = 24.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
                     }
-                )
+                    .clickable(
+                        onClick = {
+                            navController.navigate(Screen.SignUp.route)
+                        }
+                    )
             )
         }
     }

@@ -34,27 +34,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.HiltViewModelFactory
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
-import dagger.hilt.EntryPoints
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.HiltAndroidApp
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
-import dev.shreyaspatil.noty.composeapp.view.Hilt_MainActivity
+import dev.shreyaspatil.noty.composeapp.view.MainActivity
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
-    noteDetailViewModel: NoteDetailViewModel
+    noteId: String,
+    noteDetailViewModel: NoteDetailViewModel = noteDetailViewModel(noteId)
 ) {
-//    val factory = EntryPointAccessors.fromActivity(AmbientContext.current as Activity, NoteDetailViewModel.FactoryProvider::class.java).factory()
-//    println("MY FACTORY: $factory")
-
     val note = noteDetailViewModel.note.collectAsState(initial = null)
 
     val titleText = mutableStateOf(note.value?.title)
@@ -130,5 +127,19 @@ fun NoteDetailsScreen(
                 )
             }
         }
+    )
+}
+
+@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
+@Composable
+fun noteDetailViewModel(noteId: String): NoteDetailViewModel {
+    val factory = EntryPointAccessors.fromActivity(
+        AmbientContext.current as Activity,
+        MainActivity.ViewModelFactoryProvider::class.java
+    ).noteDetailViewModelFactory()
+
+    return viewModel(
+        factory = NoteDetailViewModel.provideFactory(factory, noteId)
     )
 }

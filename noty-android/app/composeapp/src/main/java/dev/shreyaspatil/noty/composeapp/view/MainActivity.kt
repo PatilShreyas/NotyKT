@@ -48,17 +48,14 @@ import javax.inject.Inject
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
-    @EntryPoint
-    @InstallIn(ActivityComponent::class)
-    interface FactoryProvider {
-        fun factory(): NoteDetailViewModel.AssistedFactory
-    }
-
     @Inject
     lateinit var preferenceManager: PreferenceManager
 
-    @Inject
-    lateinit var noteDetailViewModelFactory: NoteDetailViewModel.AssistedFactory
+    @EntryPoint
+    @InstallIn(ActivityComponent::class)
+    interface ViewModelFactoryProvider {
+        fun noteDetailViewModelFactory(): NoteDetailViewModel.AssistedFactory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,18 +76,7 @@ class MainActivity : AppCompatActivity() {
         NotyTheme(darkTheme = darkMode) {
             // A surface container using the 'background' color from the theme
             Surface(color = MaterialTheme.colors.background) {
-                val registerViewModel: RegisterViewModel = viewModel()
-                val loginViewModel: LoginViewModel = viewModel()
-                val addNoteViewModel: AddNoteViewModel = viewModel()
-                val notesViewModel: NotesViewModel = viewModel()
-                Main(
-                    toggleTheme = toggleTheme,
-                    registerViewModel,
-                    loginViewModel,
-                    notesViewModel,
-                    addNoteViewModel,
-                    noteDetailViewModelFactory
-                )
+                Main(toggleTheme = toggleTheme)
             }
         }
     }

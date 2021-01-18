@@ -35,10 +35,14 @@ import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.viewModel
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.composeapp.ui.typography
+import dev.shreyaspatil.noty.composeapp.utils.toast
+import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -46,14 +50,32 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
-    viewModel: RegisterViewModel,
-    onSignUpClicked: (User) -> Unit,
-    onAuthSuccess: () -> Unit,
+    viewModel: RegisterViewModel = viewModel()
 ) {
+
+    // TODO Refactor
+    viewModel.authFlow.asLiveData().value.let { viewState ->
+        when (viewState) {
+            // TODO show progress
+            is ViewState.Loading -> {
+            }
+
+            is ViewState.Success -> {
+                navController.navigate(Screen.Notes.route)
+            }
+            is ViewState.Failed -> {
+                // TODO Show Error
+            }
+        }
+    }
 
     ScrollableColumn {
 
-        ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
+        ConstraintLayout(
+            Modifier
+                .fillMaxSize()
+                .background(Color.White)
+        ) {
 
             val (
                 title,
@@ -78,7 +100,9 @@ fun SignUpScreen(
             // <editor-fold desc="Username">
             val username = remember { mutableStateOf(TextFieldValue()) }
             TextField(
-                modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(et_username) {
                         top.linkTo(title.bottom, margin = 50.dp)
                     },
@@ -97,7 +121,9 @@ fun SignUpScreen(
             // <editor-fold desc="Password">
             val password = remember { mutableStateOf(TextFieldValue()) }
             TextField(
-                modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(et_password) {
                         top.linkTo(et_username.bottom, margin = 16.dp)
                     },
@@ -116,7 +142,9 @@ fun SignUpScreen(
             // <editor-fold desc="Confirm password">
             val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
             TextField(
-                modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(et_confirmPassword) {
                         top.linkTo(et_password.bottom, margin = 16.dp)
                     },
@@ -135,10 +163,13 @@ fun SignUpScreen(
             // <editor-fold desc="SignUp Button">
             Button(
                 onClick = {
-                    onSignUpClicked(User(username.toString(), password.toString()))
-                    onAuthSuccess()
+                    viewModel.register(username.value.text, password.value.text)
+                    // TODO navigate on Event
                 },
-                modifier = Modifier.fillMaxWidth().height(60.dp).padding(16.dp, 0.dp, 16.dp, 0.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
                     .constrainAs(btn_signup) {
                         top.linkTo(et_confirmPassword.bottom, margin = 40.dp)
                     },
@@ -159,15 +190,17 @@ fun SignUpScreen(
                     toAnnotatedString()
                 },
                 style = typography.subtitle1,
-                modifier = Modifier.constrainAs(txt_login) {
-                    top.linkTo(btn_signup.bottom, margin = 24.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                }.clickable(
-                    onClick = {
-                        navController.navigate(Screen.Login.route)
+                modifier = Modifier
+                    .constrainAs(txt_login) {
+                        top.linkTo(btn_signup.bottom, margin = 24.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
+                        end.linkTo(parent.end, margin = 16.dp)
                     }
-                )
+                    .clickable(
+                        onClick = {
+                            navController.navigate(Screen.Login.route)
+                        }
+                    )
             )
             // </editor-fold>
         }

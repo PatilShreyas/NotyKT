@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.platform.AmbientLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.component.DarkThemeSwitch
@@ -47,7 +48,7 @@ import javax.annotation.meta.When
 fun NotesScreen(
     toggleTheme: () -> Unit,
     navController: NavHostController,
-    notesViewModel: NotesViewModel,
+    notesViewModel: NotesViewModel = viewModel(),
 ) {
     if (!notesViewModel.isUserLoggedIn()) {
         navController.navigate(Screen.Login.route)

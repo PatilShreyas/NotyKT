@@ -40,47 +40,22 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
 fun Main(
-    toggleTheme: () -> Unit,
-    registerViewModel: RegisterViewModel,
-    loginViewModel: LoginViewModel,
-    notesViewModel: NotesViewModel,
-    addNoteViewModel: AddNoteViewModel,
-    noteDetailViewModelFactory: NoteDetailViewModel.AssistedFactory
+    toggleTheme: () -> Unit
 ) {
     val navController = rememberNavController()
-    val context = AmbientContext.current
 
     NavHost(navController, startDestination = Screen.Notes.route) {
         composable(Screen.SignUp.route) {
-            SignUpScreen(
-                navController, registerViewModel,
-                onSignUpClicked = {
-                    registerViewModel.register(it.username, it.password)
-                },
-                onAuthSuccess = {
-                    registerViewModel.authFlow.asLiveData().value.let { viewState ->
-                        when (viewState) {
-                            is ViewState.Loading -> context.toast("Loading")
-
-                            is ViewState.Success -> {
-                                navController.navigate(Screen.Notes.route)
-                            }
-                            is ViewState.Failed -> {
-                                context.toast("Error ${viewState.message}")
-                            }
-                        }
-                    }
-                }
-            )
+            SignUpScreen(navController)
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController, loginViewModel)
+            LoginScreen(navController)
         }
         composable(Screen.AddNotes.route) {
-            AddNotesScreen(navController, addNoteViewModel)
+            AddNotesScreen(navController)
         }
         composable(Screen.Notes.route) {
-            NotesScreen(toggleTheme, navController, notesViewModel)
+            NotesScreen(toggleTheme, navController)
         }
         composable(
             Screen.NotesDetail.route,
@@ -88,13 +63,7 @@ fun Main(
         ) {
             val noteId = it.arguments?.getString("noteId")
                 ?: throw IllegalStateException("'noteId' shouldn't be null")
-
-            val factory = EntryPointAccessors.fromActivity(AmbientContext.current as Activity, MainActivity.FactoryProvider::class.java).factory()
-            val noteDetailViewModel: NoteDetailViewModel = viewModel(
-                factory = NoteDetailViewModel.provideFactory(factory, noteId)
-            )
-
-            NoteDetailsScreen(navController, noteDetailViewModel)
+            NoteDetailsScreen(navController, noteId)
         }
     }
 }
