@@ -100,10 +100,12 @@ dependencies {
 
     // Compose
     implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
+    implementation "androidx.compose.material:material-icons-core:$composeVersion"
+    implementation "androidx.compose.material:material-icons-extended:$composeVersion"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "androidx.compose.ui:ui-test:$composeVersion"
-
 
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
@@ -112,25 +114,15 @@ dependencies {
     // Hilt + Jetpack
     implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
 
-    // Assisted Inject
-    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
-    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
-
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-
-    // Assisted Inject
-    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
-    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
-
     // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
-    implementation "androidx.compose.runtime:runtime-livedata:1.0.0-alpha08"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
-    // Preferences DataStore
-    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha05"
+    // Compose Lifecycle
+    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
 
     // Navigation
-    implementation "androidx.navigation:navigation-compose:$nav_compose_version"
+    implementation "androidx.navigation:navigation-compose:$composeNavVersion"
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
