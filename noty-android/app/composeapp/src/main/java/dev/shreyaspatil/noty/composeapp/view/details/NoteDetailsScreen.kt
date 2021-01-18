@@ -16,28 +16,33 @@
 
 package dev.shreyaspatil.noty.composeapp.view.details
 
+import android.app.Activity
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.HiltViewModelFactory
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import dagger.hilt.EntryPoints
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.HiltAndroidApp
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
-import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.composeapp.view.Hilt_MainActivity
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -47,7 +52,13 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     noteDetailViewModel: NoteDetailViewModel
 ) {
+//    val factory = EntryPointAccessors.fromActivity(AmbientContext.current as Activity, NoteDetailViewModel.FactoryProvider::class.java).factory()
+//    println("MY FACTORY: $factory")
+
     val note = noteDetailViewModel.note.collectAsState(initial = null)
+
+    val titleText = mutableStateOf(note.value?.title)
+    val noteText = mutableStateOf(note.value?.note)
 
     Scaffold(
         topBar = {
@@ -77,7 +88,18 @@ fun NoteDetailsScreen(
         },
         bodyContent = {
             ScrollableColumn {
-                val title = remember { mutableStateOf(TextFieldValue(note.value?.title ?: "")) }
+                BasicTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = TextUnit.Sp(24)
+                    ),
+                    value = titleText.value ?: "",
+                    onValueChange = { titleText.value = it }
+                )
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -89,11 +111,10 @@ fun NoteDetailsScreen(
                         fontSize = TextUnit.Sp(24)
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = title.value,
-                    onValueChange = { title.value = it }
+                    value = titleText.value ?: "",
+                    onValueChange = { titleText.value = it }
                 )
 
-                val noteBody = remember { mutableStateOf(TextFieldValue(note.value?.note ?: "")) }
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -104,8 +125,8 @@ fun NoteDetailsScreen(
                         fontSize = TextUnit.Sp(16)
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = noteBody.value,
-                    onValueChange = { noteBody.value = it }
+                    value = noteText.value ?: "",
+                    onValueChange = { noteText.value = it }
                 )
             }
         }

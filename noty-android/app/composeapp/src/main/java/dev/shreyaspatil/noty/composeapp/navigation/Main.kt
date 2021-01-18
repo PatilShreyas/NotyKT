@@ -16,13 +16,16 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.asLiveData
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import dagger.hilt.android.EntryPointAccessors
 import dev.shreyaspatil.noty.composeapp.utils.toast
+import dev.shreyaspatil.noty.composeapp.view.MainActivity
 import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
@@ -31,7 +34,9 @@ import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
 fun Main(
@@ -84,8 +89,9 @@ fun Main(
             val noteId = it.arguments?.getString("noteId")
                 ?: throw IllegalStateException("'noteId' shouldn't be null")
 
+            val factory = EntryPointAccessors.fromActivity(AmbientContext.current as Activity, MainActivity.FactoryProvider::class.java).factory()
             val noteDetailViewModel: NoteDetailViewModel = viewModel(
-                factory = NoteDetailViewModel.provideFactory(noteDetailViewModelFactory, noteId)
+                factory = NoteDetailViewModel.provideFactory(factory, noteId)
             )
 
             NoteDetailsScreen(navController, noteDetailViewModel)

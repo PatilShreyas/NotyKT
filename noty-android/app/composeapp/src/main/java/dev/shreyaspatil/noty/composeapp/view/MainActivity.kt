@@ -29,7 +29,10 @@ import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.lifecycleScope
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.components.ActivityComponent
 import dev.shreyaspatil.noty.composeapp.navigation.Main
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
@@ -37,7 +40,6 @@ import dev.shreyaspatil.noty.view.viewmodel.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,6 +47,12 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
+
+    @EntryPoint
+    @InstallIn(ActivityComponent::class)
+    interface FactoryProvider {
+        fun factory(): NoteDetailViewModel.AssistedFactory
+    }
 
     @Inject
     lateinit var preferenceManager: PreferenceManager
