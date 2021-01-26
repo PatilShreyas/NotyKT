@@ -19,7 +19,6 @@ package dev.shreyaspatil.noty.di
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.components.SingletonComponent
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.task.NotyTaskManagerImpl

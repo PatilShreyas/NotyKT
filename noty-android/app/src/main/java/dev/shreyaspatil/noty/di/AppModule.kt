@@ -21,7 +21,6 @@ import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.components.SingletonComponent
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.session.SessionManager

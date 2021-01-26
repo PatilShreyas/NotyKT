@@ -19,17 +19,16 @@ package dev.shreyaspatil.noty.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.components.SingletonComponent
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.Constant
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.interceptor.AuthInterceptor
-import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
