@@ -21,7 +21,7 @@ ext {
     // Kotlin
     kotlinVersion = "1.4.21"
     ktlintVersion = "9.3.0"
-    coroutinesVersion = "1.4.1"
+    coroutinesVersion = "1.4.2"
 
     // Android
     appcompatVersion = "1.3.0-beta01"
@@ -29,7 +29,7 @@ ext {
     constraintlayoutVersion = "2.0.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.0-alpha03"
-    workmanagerVersion = '2.5.0-beta02'
+    workmanagerVersion = '2.5.0-rc01'
     lifecycleVersion = "2.3.0-rc01"
     navigationVersion = "2.3.2"
     securityCryptoVersion = '1.1.0-alpha03'
@@ -44,9 +44,8 @@ ext {
     lottieVersion = "3.5.0"
 
     // DI
-    daggerHiltVersion = "2.31-alpha"
+    daggerHiltVersion = "2.31.2-alpha"
     jetpackHiltVersion = "1.0.0-alpha02"
-    assistedInjectVersion = "0.6.0"
 
     // Networking
     retrofitVersion = "2.9.0"
