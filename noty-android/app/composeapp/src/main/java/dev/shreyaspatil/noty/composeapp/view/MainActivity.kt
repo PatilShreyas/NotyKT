@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     @EntryPoint
     @InstallIn(ActivityComponent::class)
     interface ViewModelFactoryProvider {
-        fun noteDetailViewModelFactory(): NoteDetailViewModel.AssistedFactory
+        fun noteDetailViewModelFactory(): NoteDetailViewModel.Factory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

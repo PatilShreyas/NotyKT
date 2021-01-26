@@ -54,7 +54,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private val args: NoteDetailFragmentArgs by navArgs()
 
     @Inject
-    lateinit var viewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
+    lateinit var viewModelAssistedFactory: NoteDetailViewModel.Factory
 
     override val viewModel: NoteDetailViewModel by viewModels {
         args.noteId?.let { noteId ->

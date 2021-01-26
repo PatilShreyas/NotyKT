@@ -16,23 +16,25 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
-import android.app.Activity
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.viewinterop.viewModel
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
-import dagger.hilt.android.EntryPointAccessors
-import dev.shreyaspatil.noty.composeapp.utils.toast
-import dev.shreyaspatil.noty.composeapp.view.MainActivity
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
 import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
 import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
 import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
-import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.view.viewmodel.*
+import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
+import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
+import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
+import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -40,22 +42,29 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
 fun Main(
+    addNoteViewModel: AddNoteViewModel = viewModel(),
+    notesViewModel: NotesViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel(),
+    registerViewModel: RegisterViewModel = viewModel(),
     toggleTheme: () -> Unit
 ) {
     val navController = rememberNavController()
 
+    (AmbientContext.current as AppCompatActivity).viewModels<NotesViewModel>().let {
+
+    }
     NavHost(navController, startDestination = Screen.Notes.route) {
         composable(Screen.SignUp.route) {
-            SignUpScreen(navController)
+            SignUpScreen(navController, registerViewModel)
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController)
+            LoginScreen(navController, loginViewModel)
         }
         composable(Screen.AddNotes.route) {
-            AddNotesScreen(navController)
+            AddNotesScreen(navController, addNoteViewModel)
         }
         composable(Screen.Notes.route) {
-            NotesScreen(toggleTheme, navController)
+            NotesScreen(toggleTheme, navController, notesViewModel)
         }
         composable(
             Screen.NotesDetail.route,
