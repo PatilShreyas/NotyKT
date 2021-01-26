@@ -17,14 +17,12 @@
 package dev.shreyaspatil.noty.view.viewmodel
 
 import androidx.lifecycle.*
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
-import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Module
-import dagger.hilt.EntryPoint
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.components.FragmentComponent
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -117,14 +115,14 @@ class NoteDetailViewModel @AssistedInject constructor(
     private fun scheduleNoteDelete(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-    @AssistedInject.Factory
-    interface AssistedFactory {
+    @AssistedFactory
+    interface Factory {
         fun create(noteId: String): NoteDetailViewModel
     }
 
     companion object {
         fun provideFactory(
-            assistedFactory: AssistedFactory,
+            assistedFactory: Factory,
             noteId: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -134,7 +132,6 @@ class NoteDetailViewModel @AssistedInject constructor(
     }
 }
 
-@AssistedModule
 @Module
 @InstallIn(ActivityRetainedComponent::class)
 interface AssistedInjectModule

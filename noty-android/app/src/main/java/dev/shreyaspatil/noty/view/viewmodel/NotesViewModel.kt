@@ -16,8 +16,9 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -30,9 +31,11 @@ import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class NotesViewModel @ViewModelInject constructor(
+@HiltViewModel
+class NotesViewModel @Inject constructor(
     @LocalRepository private val notyNoteRepository: NotyNoteRepository,
     private val sessionManager: SessionManager,
     private val preferenceManager: PreferenceManager,
