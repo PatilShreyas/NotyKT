@@ -16,7 +16,9 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.Module
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -33,7 +35,9 @@ import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -44,7 +48,6 @@ class NoteDetailViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     init {
-        println("ViewModelNoteId: $noteId")
         viewModelScope.launch {
             noteRepository.getNoteById(noteId).firstOrNull()
                 ?.let { _note.emit(it) }
