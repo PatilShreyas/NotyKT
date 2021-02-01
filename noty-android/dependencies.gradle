@@ -16,10 +16,10 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.0-alpha04'
+    androidGradlePluginVersion = '7.0.0-alpha05'
 
     // Kotlin
-    kotlinVersion = "1.4.21"
+    kotlinVersion = "1.4.21-2"
     ktlintVersion = "9.3.0"
     coroutinesVersion = "1.4.2"
 
@@ -29,7 +29,7 @@ ext {
     constraintlayoutVersion = "2.0.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.0-alpha03"
-    workmanagerVersion = '2.5.0-rc01'
+    workmanagerVersion = '2.5.0'
     lifecycleVersion = "2.3.0-rc01"
     navigationVersion = "2.3.2"
     securityCryptoVersion = '1.1.0-alpha03'
@@ -45,7 +45,7 @@ ext {
 
     // DI
     daggerHiltVersion = "2.31.2-alpha"
-    jetpackHiltVersion = "1.0.0-alpha02"
+    jetpackHiltVersion = "1.0.0-alpha03"
 
     // Networking
     retrofitVersion = "2.9.0"
@@ -58,10 +58,10 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.0.0-alpha10"
+    composeVersion = "1.0.0-alpha11"
 
     // Jetpack Compose Navigation
-    composeNavVersion = "1.0.0-alpha05"
+    composeNavVersion = "1.0.0-alpha06"
 
     // Testing
     jUnitVersion = "4.13.1"
