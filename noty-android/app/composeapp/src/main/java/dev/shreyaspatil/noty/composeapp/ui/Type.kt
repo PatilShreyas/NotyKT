@@ -18,20 +18,18 @@ package dev.shreyaspatil.noty.composeapp.ui
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.font
-import androidx.compose.ui.text.font.fontFamily
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.sp
 import dev.shreyaspatil.noty.composeapp.R
 
-private val gilroy = fontFamily(
-    font(R.font.gilroy_regular),
-    font(R.font.gilroy_semibold, FontWeight.W600),
-    font(R.font.gilroy_bold, FontWeight.Bold)
+private val gilroy = FontFamily(
+    Font(R.font.gilroy_regular),
+    Font(R.font.gilroy_semibold, FontWeight.W600),
+    Font(R.font.gilroy_bold, FontWeight.Bold)
 )
 
-private val universalStd = fontFamily(
-    font(R.font.universal_std)
+private val universalStd = FontFamily(
+    Font(R.font.universal_std)
 )
 
 val typography = Typography(
