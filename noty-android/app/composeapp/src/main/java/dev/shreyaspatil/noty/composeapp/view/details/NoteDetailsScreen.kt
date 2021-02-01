@@ -50,8 +50,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
-    noteId: String,
-    noteDetailViewModel: NoteDetailViewModel = noteDetailViewModel(noteId)
+    noteDetailViewModel: NoteDetailViewModel
 ) {
     val note = noteDetailViewModel.note.collectAsState(initial = null)
 

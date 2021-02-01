@@ -29,6 +29,7 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
+import dev.shreyaspatil.noty.composeapp.view.details.noteDetailViewModel
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
 import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
 import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
@@ -60,7 +61,7 @@ fun Main(toggleTheme: () -> Unit) {
         ) {
             val noteId = it.arguments?.getString("noteId")
                 ?: throw IllegalStateException("'noteId' shouldn't be null")
-            NoteDetailsScreen(navController, noteId)
+            NoteDetailsScreen(navController, noteDetailViewModel(noteId))
         }
     }
 }
