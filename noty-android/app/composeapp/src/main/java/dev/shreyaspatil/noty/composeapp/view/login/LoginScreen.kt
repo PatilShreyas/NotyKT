@@ -36,7 +36,6 @@ import androidx.compose.ui.platform.AmbientLifecycleOwner
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.annotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
@@ -81,6 +80,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             val (logo, title, et_username, et_password, btn_signup, txt_login) = createRefs()
 
             Image(
+                contentDescription = "App Logo",
                 bitmap = imageResource(id = noty_app_logo),
                 modifier = Modifier
                     .preferredHeightIn(100.dp, 100.dp)
@@ -111,7 +111,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         top.linkTo(title.bottom, margin = 30.dp)
                     },
                 label = { Text(text = "Username") },
-                leadingIcon = { Icon(Icons.Outlined.Person) },
+                leadingIcon = { Icon(Icons.Outlined.Person, "User") },
                 textStyle = TextStyle(
                     color = MaterialTheme.colors.onPrimary,
                     fontSize = TextUnit.Sp(16)
@@ -130,7 +130,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         top.linkTo(et_username.bottom, margin = 16.dp)
                     },
                 label = { Text(text = "Password") },
-                leadingIcon = { Icon(Icons.Outlined.Lock) },
+                leadingIcon = { Icon(Icons.Outlined.Lock, "Password") },
                 textStyle = TextStyle(
                     color = MaterialTheme.colors.onPrimary,
                     fontSize = TextUnit.Companion.Sp(16)

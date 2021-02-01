@@ -50,7 +50,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
-    viewModel: RegisterViewModel = viewModel()
+    viewModel: RegisterViewModel
 ) {
 
     // TODO Refactor
@@ -107,7 +107,7 @@ fun SignUpScreen(
                         top.linkTo(title.bottom, margin = 50.dp)
                     },
                 label = { Text(text = "Username") },
-                leadingIcon = { Icon(Icons.Outlined.Person) },
+                leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
                 textStyle = TextStyle(
                     color = MaterialTheme.colors.onPrimary,
                     fontSize = TextUnit.Companion.Sp(16)
@@ -128,7 +128,7 @@ fun SignUpScreen(
                         top.linkTo(et_username.bottom, margin = 16.dp)
                     },
                 label = { Text(text = "Password") },
-                leadingIcon = { Icon(Icons.Outlined.Lock) },
+                leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                 textStyle = TextStyle(
                     color = MaterialTheme.colors.onPrimary,
                     fontSize = TextUnit.Companion.Sp(16)
@@ -149,7 +149,7 @@ fun SignUpScreen(
                         top.linkTo(et_password.bottom, margin = 16.dp)
                     },
                 label = { Text(text = "Confirm password") },
-                leadingIcon = { Icon(Icons.Outlined.Lock) },
+                leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                 textStyle = TextStyle(
                     color = MaterialTheme.colors.onPrimary,
                     fontSize = TextUnit.Companion.Sp(16)

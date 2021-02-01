@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.view.details
 
 import android.app.Activity
 import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
@@ -75,7 +76,7 @@ fun NoteDetailsScreen(
                             navController.navigate(Screen.Notes.route)
                         }
                     ) {
-                        Icon(Icons.Filled.ArrowBack, tint = MaterialTheme.colors.onPrimary)
+                        Icon(Icons.Filled.ArrowBack, "Back", tint = MaterialTheme.colors.onPrimary)
                     }
                 },
                 backgroundColor = MaterialTheme.colors.onBackground,
@@ -115,6 +116,7 @@ fun NoteDetailsScreen(
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .fillMaxHeight()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp),
                     label = { Text(text = "Write something...") },
                     textStyle = TextStyle(

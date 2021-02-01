@@ -28,5 +28,11 @@ import dev.shreyaspatil.noty.composeapp.R
 @Composable
 fun DarkThemeSwitch(onToggle: () -> Unit) {
     val icon = vectorResource(R.drawable.ic_day)
-    Icon(icon, Modifier.padding(end = 8.dp).clickable(onClick = onToggle))
+    Icon(
+        icon,
+        "Theme switch",
+        Modifier
+            .padding(end = 8.dp)
+            .clickable(onClick = onToggle)
+    )
 }
