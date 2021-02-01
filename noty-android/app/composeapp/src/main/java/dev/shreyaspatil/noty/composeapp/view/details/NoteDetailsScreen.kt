@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
@@ -55,8 +56,8 @@ fun NoteDetailsScreen(
 ) {
     val note = noteDetailViewModel.note.collectAsState(initial = null)
 
-    val titleText = mutableStateOf(note.value?.title)
-    val noteText = mutableStateOf(note.value?.note)
+    val titleText = mutableStateOf(note.value?.title ?: "")
+    val noteText = mutableStateOf(note.value?.note ?: "")
 
     Scaffold(
         topBar = {
@@ -95,10 +96,10 @@ fun NoteDetailsScreen(
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.onPrimary,
                             fontWeight = FontWeight.Bold,
-                            fontSize = TextUnit.Sp(24)
+                            fontSize = 24.sp
                         ),
                         backgroundColor = MaterialTheme.colors.background,
-                        value = titleText.value ?: "",
+                        value = titleText.value,
                         onValueChange = { titleText.value = it }
                     )
                 }
@@ -111,10 +112,10 @@ fun NoteDetailsScreen(
                         label = { Text(text = "Write something...") },
                         textStyle = TextStyle(
                             color = MaterialTheme.colors.onPrimary,
-                            fontSize = TextUnit.Sp(16)
+                            fontSize = 16.sp
                         ),
                         backgroundColor = MaterialTheme.colors.background,
-                        value = noteText.value ?: "",
+                        value = noteText.value,
                         onValueChange = { noteText.value = it }
                     )
                 }
@@ -132,7 +133,5 @@ fun noteDetailViewModel(noteId: String): NoteDetailViewModel {
         MainActivity.ViewModelFactoryProvider::class.java
     ).noteDetailViewModelFactory()
 
-    return viewModel(
-        factory = NoteDetailViewModel.provideFactory(factory, noteId)
-    )
+    return viewModel(factory = NoteDetailViewModel.provideFactory(factory, noteId))
 }
