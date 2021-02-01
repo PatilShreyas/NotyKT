@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
-fun NotesCard(note: Note, navTo: () -> Unit) {
+fun NotesCard(note: Note, onNoteClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(4.dp),
         backgroundColor = MaterialTheme.colors.surface,
@@ -41,7 +41,7 @@ fun NotesCard(note: Note, navTo: () -> Unit) {
         Column(
             modifier = Modifier.padding(16.dp).clickable(
                 onClick = {
-                    navTo()
+                    onNoteClick()
                 }
             )
         ) {

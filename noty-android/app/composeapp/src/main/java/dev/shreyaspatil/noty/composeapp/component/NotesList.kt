@@ -16,19 +16,21 @@
 
 package dev.shreyaspatil.noty.composeapp.component
 
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
 fun NotesList(noteList: List<Note>, onClick: (Note) -> Unit) {
-    LazyColumnFor(items = noteList) {
-        val note = Note(it.id, it.title, it.note, it.created)
-        NotesCard(
-            note = note,
-            navTo = {
-                onClick(note)
-            }
-        )
+    LazyColumn {
+        items(items = noteList, itemContent = { note ->
+            NotesCard(
+                note = note,
+                onNoteClick = {
+                    onClick(note)
+                }
+            )
+        })
     }
 }
