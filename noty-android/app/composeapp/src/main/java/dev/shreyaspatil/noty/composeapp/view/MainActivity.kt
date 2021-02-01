@@ -27,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -36,7 +35,7 @@ import dagger.hilt.android.components.ActivityComponent
 import dev.shreyaspatil.noty.composeapp.navigation.Main
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
-import dev.shreyaspatil.noty.view.viewmodel.*
+import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect

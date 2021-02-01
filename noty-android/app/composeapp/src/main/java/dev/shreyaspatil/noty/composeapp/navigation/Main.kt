@@ -16,11 +16,12 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
-import androidx.compose.ui.viewinterop.viewModel
+import androidx.hilt.navigation.HiltViewModelFactory
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,40 +32,27 @@ import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
 import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
 import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
-import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
-import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
-import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
-import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
-fun Main(
-    addNoteViewModel: AddNoteViewModel = viewModel(),
-    notesViewModel: NotesViewModel = viewModel(),
-    loginViewModel: LoginViewModel = viewModel(),
-    registerViewModel: RegisterViewModel = viewModel(),
-    toggleTheme: () -> Unit
-) {
+fun Main(toggleTheme: () -> Unit) {
     val navController = rememberNavController()
 
-    (AmbientContext.current as AppCompatActivity).viewModels<NotesViewModel>().let {
-
-    }
     NavHost(navController, startDestination = Screen.Notes.route) {
         composable(Screen.SignUp.route) {
-            SignUpScreen(navController, registerViewModel)
+            SignUpScreen(navController, it.hiltNavGraphViewModel())
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController, loginViewModel)
+            LoginScreen(navController, it.hiltNavGraphViewModel())
         }
         composable(Screen.AddNotes.route) {
-            AddNotesScreen(navController, addNoteViewModel)
+            AddNotesScreen(navController, it.hiltNavGraphViewModel())
         }
         composable(Screen.Notes.route) {
-            NotesScreen(toggleTheme, navController, notesViewModel)
+            NotesScreen(toggleTheme, navController, it.hiltNavGraphViewModel())
         }
         composable(
             Screen.NotesDetail.route,
@@ -75,4 +63,10 @@ fun Main(
             NoteDetailsScreen(navController, noteId)
         }
     }
+}
+
+@Composable
+inline fun <reified VM : ViewModel> NavBackStackEntry.hiltNavGraphViewModel(): VM {
+    val viewModelFactory = HiltViewModelFactory(AmbientContext.current, this)
+    return ViewModelProvider(this, viewModelFactory).get(VM::class.java)
 }
