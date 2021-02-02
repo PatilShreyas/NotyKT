@@ -24,14 +24,12 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
-import dev.shreyaspatil.noty.composeapp.component.DarkThemeSwitch
 import dev.shreyaspatil.noty.composeapp.component.NotesList
+import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -60,7 +58,7 @@ fun NotesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Noty KT",
+                        text = "NotyKT",
                         textAlign = TextAlign.Start,
                         color = MaterialTheme.colors.onPrimary,
                         modifier = Modifier.fillMaxWidth()
@@ -70,7 +68,7 @@ fun NotesScreen(
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
-                    DarkThemeSwitch(toggleTheme)
+                    ThemeSwitchAction(toggleTheme)
                 }
             )
         },

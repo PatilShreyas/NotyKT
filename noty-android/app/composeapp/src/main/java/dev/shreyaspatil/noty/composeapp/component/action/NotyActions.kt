@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component
+package dev.shreyaspatil.noty.composeapp.component.action
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
@@ -26,7 +26,31 @@ import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.composeapp.R
 
 @Composable
-fun DarkThemeSwitch(onToggle: () -> Unit) {
+fun DeleteAction(onClick: () -> Unit) {
+    val icon = vectorResource(R.drawable.ic_delete)
+    Icon(
+        imageVector = icon,
+        contentDescription = "Delete",
+        modifier = Modifier
+            .padding(end = 8.dp)
+            .clickable(onClick = onClick)
+    )
+}
+
+@Composable
+fun ShareAction(onClick: () -> Unit) {
+    val icon = vectorResource(R.drawable.ic_share)
+    Icon(
+        icon,
+        "share",
+        Modifier
+            .padding(end = 8.dp)
+            .clickable(onClick = onClick)
+    )
+}
+
+@Composable
+fun ThemeSwitchAction(onToggle: () -> Unit) {
     val icon = vectorResource(R.drawable.ic_day)
     Icon(
         icon,
