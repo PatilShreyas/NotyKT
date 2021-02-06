@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
@@ -44,7 +45,11 @@ fun NotesScreen(
     notesViewModel: NotesViewModel
 ) {
     if (!notesViewModel.isUserLoggedIn()) {
-        navController.navigate(Screen.Login.route)
+        navController.navigate(Screen.Login.route, builder = {
+            popUpTo(Screen.Notes.route) {
+                inclusive = true
+            }
+        })
         return
     }
 
