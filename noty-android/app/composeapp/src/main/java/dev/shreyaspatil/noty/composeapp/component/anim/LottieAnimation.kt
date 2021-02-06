@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component.dialog
+package dev.shreyaspatil.noty.composeapp.component.anim
 
 import androidx.annotation.RawRes
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieAnimationSpec
 import com.airbnb.lottie.compose.rememberLottieAnimationState
 
 @Composable
-fun LottieAnimation(@RawRes resId: Int) {
+fun LottieAnimation(@RawRes resId: Int, modifier: Modifier = Modifier) {
     val animationSpec = remember { LottieAnimationSpec.RawRes(resId) }
     val animationState = rememberLottieAnimationState(
         autoPlay = true,
@@ -38,8 +35,6 @@ fun LottieAnimation(@RawRes resId: Int) {
     LottieAnimation(
         animationSpec,
         animationState = animationState,
-        modifier = Modifier
-            .padding(16.dp)
-            .size(100.dp)
+        modifier = modifier
     )
 }
