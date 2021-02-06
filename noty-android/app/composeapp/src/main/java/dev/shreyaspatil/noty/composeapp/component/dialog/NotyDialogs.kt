@@ -17,7 +17,10 @@
 package dev.shreyaspatil.noty.composeapp.component.dialog
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,7 +61,7 @@ fun FailureDialog(failureMessage: String, onDismissed: () -> Unit = {}) {
                     )
                     Text(
                         text = failureMessage,
-                        color = Color.Black,
+                        color = MaterialTheme.colors.onSurface,
                         style = MaterialTheme.typography.subtitle1,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(16.dp)
