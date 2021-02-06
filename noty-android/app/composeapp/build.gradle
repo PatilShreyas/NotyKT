@@ -97,6 +97,9 @@ dependencies {
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
 
+    // Lottie Compose
+    implementation "com.airbnb.android:lottie-compose:$lottieComposeVersion"
+
     // Compose
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
