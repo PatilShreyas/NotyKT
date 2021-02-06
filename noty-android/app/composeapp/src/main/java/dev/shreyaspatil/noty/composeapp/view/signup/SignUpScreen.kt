@@ -16,32 +16,32 @@
 
 package dev.shreyaspatil.noty.composeapp.view.signup
 
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.annotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.viewModel
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
+import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.composeapp.ui.typography
-import dev.shreyaspatil.noty.composeapp.utils.toast
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,171 +53,137 @@ fun SignUpScreen(
     viewModel: RegisterViewModel
 ) {
 
-    // TODO Refactor
-    viewModel.authFlow.asLiveData().value.let { viewState ->
-        when (viewState) {
-            // TODO show progress
-            is ViewState.Loading -> {
-            }
+    val viewState = viewModel.authFlow.collectAsState(initial = null).value
 
-            is ViewState.Success -> {
-                navController.navigate(Screen.Notes.route)
-            }
-            is ViewState.Failed -> {
-                // TODO Show Error
-            }
+    when (viewState) {
+        is ViewState.Loading -> LoaderDialog()
+        is ViewState.Success -> {
+            navController.navigate(route = Screen.Notes.route, builder = {
+                launchSingleTop = true
+            })
         }
+        is ViewState.Failed -> FailureDialog(viewState.message)
     }
 
-    ScrollableColumn {
-
-        ConstraintLayout(
-            Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-
-            val (
-                title,
-                et_username,
-                et_password,
-                et_confirmPassword,
-                btn_signup,
-                txt_login,
-            ) =
-                createRefs()
-
-            Text(
-                text = "Create\naccount",
-                style = typography.h4,
-                color = Color.Black,
-                modifier = Modifier.constrainAs(title) {
-                    top.linkTo(parent.top, margin = 60.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                }
-            )
-
-            // <editor-fold desc="Username">
-            val username = remember { mutableStateOf(TextFieldValue()) }
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                    .constrainAs(et_username) {
-                        top.linkTo(title.bottom, margin = 50.dp)
-                    },
-                label = { Text(text = "Username") },
-                leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
-                textStyle = TextStyle(
-                    color = MaterialTheme.colors.onPrimary,
-                    fontSize = TextUnit.Companion.Sp(16)
-                ),
-                backgroundColor = MaterialTheme.colors.background,
-                value = username.value,
-                onValueChange = { username.value = it }
-            )
-            // </editor-fold>
-
-            // <editor-fold desc="Password">
-            val password = remember { mutableStateOf(TextFieldValue()) }
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                    .constrainAs(et_password) {
-                        top.linkTo(et_username.bottom, margin = 16.dp)
-                    },
-                label = { Text(text = "Password") },
-                leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
-                textStyle = TextStyle(
-                    color = MaterialTheme.colors.onPrimary,
-                    fontSize = TextUnit.Companion.Sp(16)
-                ),
-                backgroundColor = MaterialTheme.colors.background,
-                value = password.value,
-                onValueChange = { password.value = it }
-            )
-            // </editor-fold>
-
-            // <editor-fold desc="Confirm password">
-            val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                    .constrainAs(et_confirmPassword) {
-                        top.linkTo(et_password.bottom, margin = 16.dp)
-                    },
-                label = { Text(text = "Confirm password") },
-                leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
-                textStyle = TextStyle(
-                    color = MaterialTheme.colors.onPrimary,
-                    fontSize = TextUnit.Companion.Sp(16)
-                ),
-                backgroundColor = MaterialTheme.colors.background,
-                value = confirmPassword.value,
-                onValueChange = { confirmPassword.value = it }
-            )
-            // </editor-fold>
-
-            // <editor-fold desc="SignUp Button">
-            Button(
-                onClick = {
-                    viewModel.register(username.value.text, password.value.text)
-                    // TODO navigate on Event
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                    .constrainAs(btn_signup) {
-                        top.linkTo(et_confirmPassword.bottom, margin = 40.dp)
-                    },
+    LazyColumn {
+        item {
+            ConstraintLayout(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
             ) {
-                Text(style = typography.subtitle1, color = Color.White, text = "Create account")
-            }
-            // </editor-fold>
 
-            // <editor-fold desc="Login view">
-            Text(
-                text = annotatedString {
-                    // push black so entire text will be in black
-                    pushStyle(SpanStyle(color = Color.Black))
-                    // append new text, this text will be rendered as black
-                    append("Already have an account? Login")
-                    // then style the last added word as red, exclamation mark will be red
-                    addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
-                    toAnnotatedString()
-                },
-                style = typography.subtitle1,
-                modifier = Modifier
-                    .constrainAs(txt_login) {
-                        top.linkTo(btn_signup.bottom, margin = 24.dp)
+                val (
+                    titleRef,
+                    usernameRef,
+                    passwordRef,
+                    confirmPasswordRef,
+                    buttonSignupRef,
+                    textLoginRef,
+                ) = createRefs()
+
+                Text(
+                    text = "Create\naccount",
+                    style = typography.h4,
+                    color = Color.Black,
+                    modifier = Modifier.constrainAs(titleRef) {
+                        top.linkTo(parent.top, margin = 60.dp)
                         start.linkTo(parent.start, margin = 16.dp)
-                        end.linkTo(parent.end, margin = 16.dp)
                     }
-                    .clickable(
-                        onClick = {
-                            navController.navigate(Screen.Login.route)
+                )
+
+                val username = remember { mutableStateOf(TextFieldValue()) }
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                        .constrainAs(usernameRef) {
+                            top.linkTo(titleRef.bottom, margin = 50.dp)
+                        },
+                    label = { Text(text = "Username") },
+                    leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onPrimary,
+                        fontSize = TextUnit.Companion.Sp(16)
+                    ),
+                    backgroundColor = MaterialTheme.colors.background,
+                    value = username.value,
+                    onValueChange = { username.value = it }
+                )
+
+                val password = remember { mutableStateOf(TextFieldValue()) }
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                        .constrainAs(passwordRef) {
+                            top.linkTo(usernameRef.bottom, margin = 16.dp)
+                        },
+                    label = { Text(text = "Password") },
+                    leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onPrimary,
+                        fontSize = TextUnit.Companion.Sp(16)
+                    ),
+                    backgroundColor = MaterialTheme.colors.background,
+                    value = password.value,
+                    onValueChange = { password.value = it }
+                )
+
+                val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
+
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                        .constrainAs(confirmPasswordRef) {
+                            top.linkTo(passwordRef.bottom, margin = 16.dp)
+                        },
+                    label = { Text(text = "Confirm password") },
+                    leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colors.onPrimary,
+                        fontSize = TextUnit.Companion.Sp(16)
+                    ),
+                    backgroundColor = MaterialTheme.colors.background,
+                    value = confirmPassword.value,
+                    onValueChange = { confirmPassword.value = it }
+                )
+
+                Button(
+                    onClick = {
+                        viewModel.register(username.value.text, password.value.text)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                        .constrainAs(buttonSignupRef) {
+                            top.linkTo(confirmPasswordRef.bottom, margin = 40.dp)
+                        },
+                ) {
+                    Text(style = typography.subtitle1, color = Color.White, text = "Create account")
+                }
+                Text(
+                    text = buildAnnotatedString {
+                        pushStyle(SpanStyle(color = Color.Black))
+                        append("Already have an account? Login")
+                        addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
+                    },
+                    style = typography.subtitle1,
+                    modifier = Modifier
+                        .constrainAs(textLoginRef) {
+                            top.linkTo(buttonSignupRef.bottom, margin = 24.dp)
+                            start.linkTo(parent.start, margin = 16.dp)
+                            end.linkTo(parent.end, margin = 16.dp)
                         }
-                    )
-            )
-            // </editor-fold>
+                        .clickable(
+                            onClick = {
+                                navController.navigateUp()
+                            }
+                        )
+                )
+            }
         }
     }
 }
-
-@ExperimentalCoroutinesApi
-fun onRegisterClicked(
-    viewModel: RegisterViewModel,
-    usernameValue: TextFieldValue,
-    passwordValue: TextFieldValue,
-    confirmPasswordValue: TextFieldValue,
-) {
-    val username = usernameValue.text
-    val password = passwordValue.text
-    val confirmPassword = confirmPasswordValue.text
-    viewModel.register(username = username, password = password)
-}
-
-data class User(var username: String, var password: String)
