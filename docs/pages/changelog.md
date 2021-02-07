@@ -4,6 +4,26 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v1.0.0_ (2021-02-07)
+
+This release includes major changes and improvements.
+
+**🔮 What's New?**
+
+- [[#15](https://github.com/PatilShreyas/NotyKT/issues/15)] Implemented App UI with Jetpack Compose UI toolkit.
+
+**✅ Bug Fixes / Improvements**
+
+- Fix crash when pressed back from Note details.
+
+**🎯 Codebase Improvements**
+
+- [[#15](https://github.com/PatilShreyas/NotyKT/issues/15)] Added module for Jetpack Compose implementation: `:app:composeapp`.
+- Migrated to the latest version of Dagger 2.31.2.
+- Use Hilt Assisted Injection for ViewModel and WorkManager.
+
+---
+
 ## _v0.1.1_ (2020-12-06)
 
 This release includes some minor fixes and improvements.
