@@ -47,6 +47,12 @@ android {
         }
     }
 
+    flavorDimensions "default"
+    productFlavors {
+        stage {}
+        dev {}
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -78,6 +84,10 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 kapt {
     correctErrorTypes true
+}
+
+configurations {
+    devDebugImplementation {}
 }
 
 dependencies {
@@ -142,5 +152,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }
