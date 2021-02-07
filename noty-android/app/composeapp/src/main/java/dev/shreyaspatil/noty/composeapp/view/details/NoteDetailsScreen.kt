@@ -27,7 +27,9 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -42,6 +44,8 @@ import dagger.hilt.android.EntryPointAccessors
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
+import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
+import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.composeapp.utils.toast
 import dev.shreyaspatil.noty.composeapp.view.MainActivity
@@ -62,110 +66,118 @@ fun NoteDetailsScreen(
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
     val deleteState = viewModel.deleteNoteState.collectAsState(initial = null)
 
-    val note = viewModel.note.collectAsState(initial = null)
+    val note = viewModel.note.collectAsState(initial = null).value
 
-    val titleText = mutableStateOf(note.value?.title)
-    val noteText = mutableStateOf(note.value?.note)
+    if (note == null) {
+        LoaderDialog()
+    } else {
+        val titleText = remember { mutableStateOf(note.title) }
+        val noteText = remember { mutableStateOf(note.note) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "NotyKT",
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp),
-                        onClick = {
-                            navController.navigate(Screen.Notes.route)
-                        }
-                    ) {
-                        Icon(
-                            vectorResource(R.drawable.ic_back),
-                            "Back",
-                            tint = MaterialTheme.colors.onPrimary
-                        )
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.onBackground,
-                contentColor = MaterialTheme.colors.onPrimary,
-                elevation = 0.dp,
-                actions = {
-                    DeleteAction(onClick = { viewModel.deleteNote() })
-                    ShareAction(onClick = { /* TODO Implement*/ })
-                }
-            )
-        },
-        bodyContent = {
-            LazyColumn {
-                item {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp, 0.dp, 16.dp, 0.dp),
-                        label = { Text(text = "Title") },
-                        textStyle = TextStyle(
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Noty",
+                            textAlign = TextAlign.Start,
                             color = MaterialTheme.colors.onPrimary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
-                        ),
-                        backgroundColor = MaterialTheme.colors.background,
-                        value = titleText.value ?: "",
-                        onValueChange = { titleText.value = it }
-                    )
-                }
-                item {
-                    TextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(16.dp, 0.dp, 16.dp, 0.dp),
-                        label = { Text(text = "Write something...") },
-                        textStyle = TextStyle(
-                            color = MaterialTheme.colors.onPrimary,
-                            fontSize = 16.sp
-                        ),
-                        backgroundColor = MaterialTheme.colors.background,
-                        value = noteText.value ?: "",
-                        onValueChange = { noteText.value = it }
-                    )
-                }
-            }
-        },
-        floatingActionButton = {
-            val noteTitle = titleText.value ?: return@Scaffold
-            val noteContent = noteText.value ?: return@Scaffold
-
-            if (NoteValidator.isValidNote(noteTitle, noteContent)) {
-                ExtendedFloatingActionButton(
-                    text = { Text("Save", color = MaterialTheme.colors.onPrimary) },
-                    icon = {
-                        Icon(
-                            Icons.Filled.Done,
-                            "Save",
-                            tint = MaterialTheme.colors.onPrimary
+                            modifier = Modifier.fillMaxWidth()
                         )
                     },
-                    onClick = { viewModel.updateNote(noteTitle, noteContent) },
-                    backgroundColor = MaterialTheme.colors.primary
+                    navigationIcon = {
+                        IconButton(
+                            modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp),
+                            onClick = {
+                                navController.navigate(Screen.Notes.route)
+                            }
+                        ) {
+                            Icon(
+                                vectorResource(R.drawable.ic_back),
+                                "Back",
+                                tint = MaterialTheme.colors.onPrimary
+                            )
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colors.onBackground,
+                    contentColor = MaterialTheme.colors.onPrimary,
+                    elevation = 0.dp,
+                    actions = {
+                        DeleteAction(onClick = { viewModel.deleteNote() })
+                        ShareAction(onClick = { /* TODO Implement*/ })
+                    }
                 )
+            },
+            bodyContent = {
+                LazyColumn {
+                    item {
+                        TextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                            label = { Text(text = "Title") },
+                            textStyle = TextStyle(
+                                color = MaterialTheme.colors.onPrimary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 24.sp
+                            ),
+                            backgroundColor = MaterialTheme.colors.background,
+                            value = titleText.value ?: "",
+                            onValueChange = { titleText.value = it }
+                        )
+                    }
+                    item {
+                        TextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                            label = { Text(text = "Write something...") },
+                            textStyle = TextStyle(
+                                color = MaterialTheme.colors.onPrimary,
+                                fontSize = 16.sp
+                            ),
+                            backgroundColor = MaterialTheme.colors.background,
+                            value = noteText.value ?: "",
+                            onValueChange = { noteText.value = it }
+                        )
+                    }
+                }
+            },
+            floatingActionButton = {
+                val noteTitle = titleText.value
+                val noteContent = noteText.value
+
+                if (NoteValidator.isValidNote(noteTitle, noteContent)) {
+                    ExtendedFloatingActionButton(
+                        text = { Text("Save", color = Color.White) },
+                        icon = {
+                            Icon(
+                                Icons.Filled.Done,
+                                "Save",
+                                tint = Color.White
+                            )
+                        },
+                        onClick = { viewModel.updateNote(noteTitle, noteContent) },
+                        backgroundColor = MaterialTheme.colors.primary
+                    )
+                } else {
+                    toast("Note title or note text are not valid!")
+                }
             }
+        )
+
+        when (val state = updateState.value) {
+            is ViewState.Loading -> LoaderDialog()
+            is ViewState.Success -> navController.navigateUp()
+            is ViewState.Failed -> FailureDialog(state.message)
         }
-    )
 
-    when (val state = updateState.value) {
-        is ViewState.Success -> navController.navigateUp()
-        is ViewState.Failed -> toast(state.message)
-    }
-
-    when (val state = deleteState.value) {
-        is ViewState.Success -> navController.navigateUp()
-        is ViewState.Failed -> toast(state.message)
+        when (val state = deleteState.value) {
+            is ViewState.Loading -> LoaderDialog()
+            is ViewState.Success -> navController.navigateUp()
+            is ViewState.Failed -> FailureDialog(state.message)
+        }
     }
 }
 
