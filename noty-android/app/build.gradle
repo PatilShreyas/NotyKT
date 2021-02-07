@@ -62,6 +62,9 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
 
+    // Material Design
+    implementation "com.google.android.material:material:$materialDesignVersion"
+
     // Lifecycle
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
