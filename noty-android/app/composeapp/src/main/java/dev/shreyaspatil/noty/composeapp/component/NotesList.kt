@@ -22,14 +22,12 @@ import androidx.compose.runtime.Composable
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
-fun NotesList(noteList: List<Note>, onClick: (Note) -> Unit) {
+fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
     LazyColumn {
-        items(items = noteList, itemContent = { note ->
+        items(items = notes, itemContent = { note ->
             NotesCard(
                 note = note,
-                onNoteClick = {
-                    onClick(note)
-                }
+                onNoteClick = { onClick(note) }
             )
         })
     }
