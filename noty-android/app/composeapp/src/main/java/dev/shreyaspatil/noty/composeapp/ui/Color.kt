@@ -19,11 +19,11 @@ package dev.shreyaspatil.noty.composeapp.ui
 import androidx.compose.ui.graphics.Color
 
 // primary color
-val blue500 = Color(0xFF7885FF)
+val primary = Color(0xFF7885FF)
 
 // for bg
-val dayBG = Color(0xfff3f7f9)
-val nightBG = Color(0xff121212)
+val bgDay = Color(0xfff3f7f9)
+val bgNight = Color(0xff121212)
 
 // for card colors
 val day = Color(0xffffffff)
