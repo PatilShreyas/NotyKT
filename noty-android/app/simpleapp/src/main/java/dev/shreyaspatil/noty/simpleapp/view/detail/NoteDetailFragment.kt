@@ -17,35 +17,31 @@
 package dev.shreyaspatil.noty.simpleapp.view.detail
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.content.Intent
 import android.view.*
-import androidx.core.view.drawToBitmap
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
-import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
-import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
-import dev.shreyaspatil.noty.utils.saveBitmap
-import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import dev.shreyaspatil.noty.utils.hide
-import dev.shreyaspatil.noty.utils.show
-import dev.shreyaspatil.noty.utils.NoteValidator
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import javax.inject.Inject
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.simpleapp.R
+import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
+import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.utils.NoteValidator
+import dev.shreyaspatil.noty.utils.saveBitmap
+import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -174,7 +170,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             note
         )
 
-        val intent = ShareCompat.IntentBuilder.from(requireActivity())
+        val intent = ShareCompat.IntentBuilder(requireActivity())
             .setType("text/plain")
             .setText(shareMsg)
             .intent
@@ -195,7 +191,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             return
         }
 
-        val intent = ShareCompat.IntentBuilder.from(requireActivity())
+        val intent = ShareCompat.IntentBuilder(requireActivity())
             .setType("image/jpeg")
             .setStream(imageUri)
             .intent

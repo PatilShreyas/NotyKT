@@ -123,6 +123,7 @@ class NoteDetailViewModel @AssistedInject constructor(
         fun create(noteId: String): NoteDetailViewModel
     }
 
+    @Suppress("UNCHECKED_CAST")
     companion object {
         fun provideFactory(
             assistedFactory: Factory,

@@ -107,13 +107,15 @@ fun NoteDetailsScreen(
                     elevation = 0.dp,
                     actions = {
                         DeleteAction(onClick = { viewModel.deleteNote() })
-                        ShareAction(onClick = {
-                            shareNote(
-                                activity,
-                                titleText.value,
-                                noteText.value
-                            )
-                        })
+                        ShareAction(
+                            onClick = {
+                                shareNote(
+                                    activity,
+                                    titleText.value,
+                                    noteText.value
+                                )
+                            }
+                        )
                     }
                 )
             },

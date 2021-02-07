@@ -161,11 +161,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
                 Text(
                     text = buildAnnotatedString {
-                        // push black so entire text will be in black
                         pushStyle(SpanStyle(color = Color.Black))
-                        // append new text, this text will be rendered as black
                         append("Don't have an account? Signup")
-                        // then style the last added word as red, exclamation mark will be red
                         addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
                         toAnnotatedString()
                     },

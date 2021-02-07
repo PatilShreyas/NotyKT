@@ -34,8 +34,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
@@ -107,7 +107,7 @@ fun SignUpScreen(
                     leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
-                        fontSize = TextUnit.Companion.Sp(16)
+                        fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = username.value,
@@ -126,7 +126,7 @@ fun SignUpScreen(
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
-                        fontSize = TextUnit.Companion.Sp(16)
+                        fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
@@ -146,7 +146,7 @@ fun SignUpScreen(
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
-                        fontSize = TextUnit.Companion.Sp(16)
+                        fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = confirmPassword.value,
