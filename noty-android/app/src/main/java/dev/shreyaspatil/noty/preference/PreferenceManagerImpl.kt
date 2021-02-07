@@ -22,10 +22,10 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
-import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
 class PreferenceManagerImpl(context: Context) : PreferenceManager {
     private val dataStore = context.createDataStore(name = "ui_mode_pref")

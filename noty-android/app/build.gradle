@@ -62,6 +62,9 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
 
+    // Material Design
+    implementation "com.google.android.material:material:$materialDesignVersion"
+
     // Lifecycle
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
@@ -83,10 +86,6 @@ dependencies {
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
-
-    // Assisted Inject
-    compileOnly "com.squareup.inject:assisted-inject-annotations-dagger2:$assistedInjectVersion"
-    kapt "com.squareup.inject:assisted-inject-processor-dagger2:$assistedInjectVersion"
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"

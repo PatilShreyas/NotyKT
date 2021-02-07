@@ -16,13 +16,15 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.*
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
-import com.squareup.inject.assisted.dagger2.AssistedModule
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.Module
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ActivityRetainedComponent
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -33,7 +35,9 @@ import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -45,8 +49,8 @@ class NoteDetailViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            noteRepository.getNoteById(noteId).first()
-                .let { _note.emit(it) }
+            noteRepository.getNoteById(noteId).firstOrNull()
+                ?.let { _note.emit(it) }
         }
     }
 
@@ -114,14 +118,15 @@ class NoteDetailViewModel @AssistedInject constructor(
     private fun scheduleNoteDelete(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-    @AssistedInject.Factory
-    interface AssistedFactory {
+    @AssistedFactory
+    interface Factory {
         fun create(noteId: String): NoteDetailViewModel
     }
 
+    @Suppress("UNCHECKED_CAST")
     companion object {
         fun provideFactory(
-            assistedFactory: AssistedFactory,
+            assistedFactory: Factory,
             noteId: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -131,7 +136,6 @@ class NoteDetailViewModel @AssistedInject constructor(
     }
 }
 
-@AssistedModule
 @Module
-@InstallIn(FragmentComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 interface AssistedInjectModule

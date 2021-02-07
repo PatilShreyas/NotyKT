@@ -1,10 +1,11 @@
 package dev.shreyaspatil.noty.worker
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -14,7 +15,8 @@ import dev.shreyaspatil.noty.di.RemoteRepository
 import dev.shreyaspatil.noty.utils.getEnum
 import kotlinx.coroutines.flow.first
 
-class NotyTaskWorker @WorkerInject constructor(
+@HiltWorker
+class NotyTaskWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     @RemoteRepository private val remoteNoteRepository: NotyNoteRepository,

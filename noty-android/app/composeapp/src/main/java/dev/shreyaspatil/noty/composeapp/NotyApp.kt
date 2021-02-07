@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.di
+package dev.shreyaspatil.noty.composeapp
 
 import android.app.Application
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dev.shreyaspatil.noty.data.local.NotyDatabase
-import javax.inject.Singleton
+import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-@Module
-@InstallIn(SingletonComponent::class)
-class DatabaseModule {
-    @Singleton
-    @Provides
-    fun provideDatabase(application: Application) = NotyDatabase.getInstance(application)
+@HiltAndroidApp
+class NotyApp : Application(), Configuration.Provider {
 
-    @Singleton
-    @Provides
-    fun provideNotesDao(database: NotyDatabase) = database.getNotesDao()
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .build()
 }

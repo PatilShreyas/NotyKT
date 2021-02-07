@@ -17,10 +17,11 @@
 package dev.shreyaspatil.noty.worker
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
@@ -30,10 +31,9 @@ import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.di.RemoteRepository
 import kotlinx.coroutines.flow.first
 import java.util.*
-import javax.inject.Singleton
 
-@Singleton
-class NotySyncWorker @WorkerInject constructor(
+@HiltWorker
+class NotySyncWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     @RemoteRepository private val remoteNoteRepository: NotyNoteRepository,

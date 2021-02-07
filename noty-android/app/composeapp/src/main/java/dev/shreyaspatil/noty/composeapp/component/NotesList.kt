@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.di
+package dev.shreyaspatil.noty.composeapp.component
 
-import android.app.Application
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dev.shreyaspatil.noty.data.local.NotyDatabase
-import javax.inject.Singleton
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.Composable
+import dev.shreyaspatil.noty.core.model.Note
 
-@Module
-@InstallIn(SingletonComponent::class)
-class DatabaseModule {
-    @Singleton
-    @Provides
-    fun provideDatabase(application: Application) = NotyDatabase.getInstance(application)
-
-    @Singleton
-    @Provides
-    fun provideNotesDao(database: NotyDatabase) = database.getNotesDao()
+@Composable
+fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
+    LazyColumn {
+        items(
+            items = notes,
+            itemContent = { note ->
+                NoteCard(
+                    note = note,
+                    onNoteClick = { onClick(note) }
+                )
+            }
+        )
+    }
 }

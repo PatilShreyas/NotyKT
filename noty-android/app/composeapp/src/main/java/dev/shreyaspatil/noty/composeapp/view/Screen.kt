@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.di
+package dev.shreyaspatil.noty.composeapp.view
 
-import android.app.Application
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dev.shreyaspatil.noty.data.local.NotyDatabase
-import javax.inject.Singleton
+sealed class Screen(val route: String, val name: String) {
+    object SignUp : Screen("signup", "Sign Up")
+    object Login : Screen("login", "Login")
+    object Notes : Screen("notes", "Notes")
+    object NotesDetail : Screen("note/{noteId}", "Note details") {
+        fun route(noteId: String) = "note/$noteId"
 
-@Module
-@InstallIn(SingletonComponent::class)
-class DatabaseModule {
-    @Singleton
-    @Provides
-    fun provideDatabase(application: Application) = NotyDatabase.getInstance(application)
+        const val ARG_NOTE_ID: String = "noteId"
+    }
 
-    @Singleton
-    @Provides
-    fun provideNotesDao(database: NotyDatabase) = database.getNotesDao()
+    object AddNote : Screen("note/new", "New note")
 }

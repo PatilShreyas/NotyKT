@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.di
+package dev.shreyaspatil.noty.composeapp.utils
 
-import android.app.Application
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import dev.shreyaspatil.noty.data.local.NotyDatabase
-import javax.inject.Singleton
+import android.widget.Toast
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.AmbientContext
 
-@Module
-@InstallIn(SingletonComponent::class)
-class DatabaseModule {
-    @Singleton
-    @Provides
-    fun provideDatabase(application: Application) = NotyDatabase.getInstance(application)
-
-    @Singleton
-    @Provides
-    fun provideNotesDao(database: NotyDatabase) = database.getNotesDao()
+@Composable
+fun toast(message: String) {
+    Toast.makeText(AmbientContext.current, message, Toast.LENGTH_SHORT).show()
 }

@@ -16,9 +16,9 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
@@ -30,9 +30,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class AddNoteViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddNoteViewModel @Inject constructor(
     @LocalRepository private val noteRepository: NotyNoteRepository,
     private val notyTaskManager: NotyTaskManager
 ) : ViewModel() {
