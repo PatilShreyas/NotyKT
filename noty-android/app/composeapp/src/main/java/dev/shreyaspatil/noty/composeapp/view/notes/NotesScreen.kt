@@ -24,8 +24,10 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.AmbientLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
@@ -39,28 +41,28 @@ import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @Composable
 fun NotesScreen(
     toggleTheme: () -> Unit,
     navController: NavHostController,
-    notesViewModel: NotesViewModel
+    viewModel: NotesViewModel
 ) {
-    if (!notesViewModel.isUserLoggedIn()) {
-        navController.navigate(Screen.Login.route, builder = {
-            popUpTo(Screen.Notes.route) {
-                inclusive = true
-            }
-        })
+    if (!viewModel.isUserLoggedIn()) {
+        navigateToLogin(navController)
         return
     }
 
-    val notes = notesViewModel.notes.collectAsState(initial = null)
+    val notes = viewModel.notes.collectAsState(initial = null)
 
     val onNoteClicked: (Note) -> Unit = {
         navController.navigate(Screen.NotesDetail.route(it.id))
     }
+
+    val lifecycleScope = AmbientLifecycleOwner.current.lifecycleScope
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,7 +79,12 @@ fun NotesScreen(
                 elevation = 0.dp,
                 actions = {
                     ThemeSwitchAction(toggleTheme)
-                    LogoutAction(onLogout = { /*TODO*/ })
+                    LogoutAction(onLogout = {
+                        lifecycleScope.launch {
+                            viewModel.clearUserSession()
+                            navigateToLogin(navController)
+                        }
+                    })
                 }
             )
         },
@@ -90,5 +97,13 @@ fun NotesScreen(
         }
     )
 
-    notesViewModel.syncNotes()
+    viewModel.syncNotes()
+}
+
+private fun navigateToLogin(navController: NavHostController) {
+    navController.navigate(Screen.Login.route, builder = {
+        popUpTo(Screen.Notes.route) {
+            inclusive = true
+        }
+    })
 }
