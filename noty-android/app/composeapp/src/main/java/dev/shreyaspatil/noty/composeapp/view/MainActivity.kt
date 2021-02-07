@@ -61,13 +61,13 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContent {
-            NotyContent()
+            NotyMain()
         }
         observeUiTheme()
     }
 
     @Composable
-    private fun NotyContent() {
+    private fun NotyMain() {
         val darkMode by preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
 
         val toggleTheme: () -> Unit = {
