@@ -16,14 +16,9 @@
 
 package dev.shreyaspatil.noty.composeapp.utils
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
-
-fun Context.toast(message: String) {
-    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-}
 
 @Composable
 fun toast(message: String) {
