@@ -30,7 +30,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.component.NotesList
+import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
+import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
+import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.navigation.Screen
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -53,10 +56,10 @@ fun NotesScreen(
         return
     }
 
-    val notes = notesViewModel.notes.collectAsState(initial = ViewState.success(emptyList()))
+    val notes = notesViewModel.notes.collectAsState(initial = null)
 
     val onNoteClicked: (Note) -> Unit = {
-        navController.navigate("note/${it.id}")
+        navController.navigate(Screen.NotesDetail.route(it.id))
     }
     Scaffold(
         topBar = {
@@ -74,14 +77,15 @@ fun NotesScreen(
                 elevation = 0.dp,
                 actions = {
                     ThemeSwitchAction(toggleTheme)
+                    LogoutAction(onLogout = { /*TODO*/ })
                 }
             )
         },
         bodyContent = {
             when (val state = notes.value) {
                 is ViewState.Success -> NotesList(state.data, onNoteClicked)
-                is ViewState.Failed -> Text(text = "Failed")
-                is ViewState.Loading -> Text(text = "Loading")
+                is ViewState.Failed -> FailureDialog(state.message)
+                is ViewState.Loading -> LoaderDialog()
             }
         }
     )

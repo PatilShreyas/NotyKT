@@ -49,7 +49,7 @@ fun Main(toggleTheme: () -> Unit) {
         composable(Screen.Login.route) {
             LoginScreen(navController, it.hiltNavGraphViewModel())
         }
-        composable(Screen.AddNotes.route) {
+        composable(Screen.AddNote.route) {
             AddNotesScreen(navController, it.hiltNavGraphViewModel())
         }
         composable(Screen.Notes.route) {
@@ -57,9 +57,11 @@ fun Main(toggleTheme: () -> Unit) {
         }
         composable(
             Screen.NotesDetail.route,
-            arguments = listOf(navArgument("noteId") { type = NavType.StringType })
+            arguments = listOf(navArgument(Screen.NotesDetail.ARG_NOTE_ID) {
+                type = NavType.StringType
+            })
         ) {
-            val noteId = it.arguments?.getString("noteId")
+            val noteId = it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID)
                 ?: throw IllegalStateException("'noteId' shouldn't be null")
             NoteDetailsScreen(navController, noteDetailViewModel(noteId))
         }

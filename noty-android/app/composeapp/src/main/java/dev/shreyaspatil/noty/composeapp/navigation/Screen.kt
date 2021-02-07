@@ -16,13 +16,15 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
-import androidx.annotation.StringRes
-import dev.shreyaspatil.noty.composeapp.R
+sealed class Screen(val route: String, val name: String) {
+    object SignUp : Screen("signup", "Sign Up")
+    object Login : Screen("login", "Login")
+    object Notes : Screen("notes", "Notes")
+    object NotesDetail : Screen("note/{noteId}", "Note details") {
+        fun route(noteId: String) = "note/$noteId"
 
-sealed class Screen(val route: String, @StringRes val resourceId: Int) {
-    object SignUp : Screen("signup", R.string.text_signup)
-    object Login : Screen("login", R.string.text_login)
-    object Notes : Screen("notes", R.string.text_notes)
-    object NotesDetail : Screen("note/{noteId}", R.string.text_note_detail)
-    object AddNotes : Screen("addNote", R.string.text_add_note)
+        const val ARG_NOTE_ID: String = "noteId"
+    }
+
+    object AddNote : Screen("note/new", "New note")
 }
