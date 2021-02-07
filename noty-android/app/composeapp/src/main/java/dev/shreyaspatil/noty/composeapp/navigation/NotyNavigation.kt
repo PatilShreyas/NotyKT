@@ -28,12 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import dev.shreyaspatil.noty.composeapp.view.Screen
-import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNoteScreen
-import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
-import dev.shreyaspatil.noty.composeapp.view.details.noteDetailViewModel
-import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
-import dev.shreyaspatil.noty.composeapp.view.notes.NotesScreen
-import dev.shreyaspatil.noty.composeapp.view.signup.SignUpScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 

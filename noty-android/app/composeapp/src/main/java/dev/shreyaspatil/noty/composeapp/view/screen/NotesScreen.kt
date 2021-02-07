@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.notes
+package dev.shreyaspatil.noty.composeapp.view.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*

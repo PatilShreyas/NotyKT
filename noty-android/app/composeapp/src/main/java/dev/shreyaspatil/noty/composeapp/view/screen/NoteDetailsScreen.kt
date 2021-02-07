@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.details
+package dev.shreyaspatil.noty.composeapp.view.screen
 
 import android.app.Activity
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -46,9 +46,9 @@ import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
-import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.composeapp.utils.toast
 import dev.shreyaspatil.noty.composeapp.view.MainActivity
+import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.utils.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
