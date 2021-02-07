@@ -46,7 +46,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
-import dev.shreyaspatil.noty.composeapp.navigation.Screen
+import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.composeapp.utils.toast
 import dev.shreyaspatil.noty.composeapp.view.MainActivity
 import dev.shreyaspatil.noty.core.view.ViewState

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.navigation
+package dev.shreyaspatil.noty.composeapp.view
 
 sealed class Screen(val route: String, val name: String) {
     object SignUp : Screen("signup", "Sign Up")

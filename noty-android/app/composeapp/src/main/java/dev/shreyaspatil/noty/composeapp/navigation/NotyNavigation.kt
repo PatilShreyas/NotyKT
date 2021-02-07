@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNoteScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.details.noteDetailViewModel
@@ -39,7 +40,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
-fun Main(toggleTheme: () -> Unit) {
+fun NotyNavigation(toggleTheme: () -> Unit) {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = Screen.Notes.route) {

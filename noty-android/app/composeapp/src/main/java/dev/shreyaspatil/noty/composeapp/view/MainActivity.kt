@@ -33,7 +33,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
 import dev.shreyaspatil.noty.composeapp.R
-import dev.shreyaspatil.noty.composeapp.navigation.Main
+import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         NotyTheme(darkTheme = darkMode) {
             // A surface container using the 'background' color from the theme
             Surface(color = MaterialTheme.colors.background) {
-                Main(toggleTheme = toggleTheme)
+                NotyNavigation(toggleTheme = toggleTheme)
             }
         }
     }
