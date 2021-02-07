@@ -53,9 +53,11 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
         }
         composable(
             Screen.NotesDetail.route,
-            arguments = listOf(navArgument(Screen.NotesDetail.ARG_NOTE_ID) {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+                navArgument(Screen.NotesDetail.ARG_NOTE_ID) {
+                    type = NavType.StringType
+                }
+            )
         ) {
             val noteId = it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID)
                 ?: throw IllegalStateException("'noteId' shouldn't be null")

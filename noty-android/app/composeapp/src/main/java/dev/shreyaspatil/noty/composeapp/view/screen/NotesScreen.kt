@@ -73,20 +73,23 @@ fun NotesScreen(
                 elevation = 0.dp,
                 actions = {
                     ThemeSwitchAction(toggleTheme)
-                    LogoutAction(onLogout = {
-                        lifecycleScope.launch {
-                            viewModel.clearUserSession()
-                            navigateToLogin(navController)
+                    LogoutAction(
+                        onLogout = {
+                            lifecycleScope.launch {
+                                viewModel.clearUserSession()
+                                navigateToLogin(navController)
+                            }
                         }
-                    })
+                    )
                 }
             )
         },
         bodyContent = {
             val notesState = viewModel.notes.collectAsState(initial = null).value
 
-            val onNoteClicked: (Note) -> Unit =
-                { navController.navigate(Screen.NotesDetail.route(it.id)) }
+            val onNoteClicked: (Note) -> Unit = {
+                navController.navigate(Screen.NotesDetail.route(it.id))
+            }
 
             when (notesState) {
                 is ViewState.Loading, null -> LoaderDialog()
@@ -112,9 +115,12 @@ fun NotesScreen(
 }
 
 private fun navigateToLogin(navController: NavHostController) {
-    navController.navigate(Screen.Login.route, builder = {
-        popUpTo(Screen.Notes.route) {
-            inclusive = true
+    navController.navigate(
+        Screen.Login.route,
+        builder = {
+            popUpTo(Screen.Notes.route) {
+                inclusive = true
+            }
         }
-    })
+    )
 }

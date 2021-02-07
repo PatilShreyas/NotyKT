@@ -60,9 +60,12 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Failed -> FailureDialog(viewState.message)
         is ViewState.Success -> {
-            navController.navigate(route = Screen.Notes.route, builder = {
-                launchSingleTop = true
-            })
+            navController.navigate(
+                route = Screen.Notes.route,
+                builder = {
+                    launchSingleTop = true
+                }
+            )
         }
     }
 
@@ -73,7 +76,14 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     .fillMaxSize()
                     .background(Color.White)
             ) {
-                val (logoRef, titleRef, usernameRef, passwordRef, buttonSignupRef, textLoginRef) = createRefs()
+                val (
+                    logoRef,
+                    titleRef,
+                    usernameRef,
+                    passwordRef,
+                    buttonSignupRef,
+                    textLoginRef
+                ) = createRefs()
 
                 Image(
                     contentDescription = "App Logo",

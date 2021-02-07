@@ -24,11 +24,14 @@ import dev.shreyaspatil.noty.core.model.Note
 @Composable
 fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
     LazyColumn {
-        items(items = notes, itemContent = { note ->
-            NoteCard(
-                note = note,
-                onNoteClick = { onClick(note) }
-            )
-        })
+        items(
+            items = notes,
+            itemContent = { note ->
+                NoteCard(
+                    note = note,
+                    onNoteClick = { onClick(note) }
+                )
+            }
+        )
     }
 }

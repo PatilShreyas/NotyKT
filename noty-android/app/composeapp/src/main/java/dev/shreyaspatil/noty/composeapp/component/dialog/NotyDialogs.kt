@@ -38,9 +38,12 @@ import dev.shreyaspatil.noty.composeapp.ui.typography
 fun LoaderDialog() {
     Dialog(onDismissRequest = {}) {
         Surface(modifier = Modifier.size(128.dp)) {
-            LottieAnimation(resId = R.raw.loading, modifier = Modifier
-                .padding(16.dp)
-                .size(100.dp))
+            LottieAnimation(
+                resId = R.raw.loading,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(100.dp)
+            )
         }
     }
 }
@@ -79,7 +82,6 @@ fun FailureDialog(failureMessage: String, onDismissed: () -> Unit = {}) {
                     ) {
                         Text(style = typography.subtitle1, color = Color.White, text = "OK")
                     }
-
                 }
             }
         }

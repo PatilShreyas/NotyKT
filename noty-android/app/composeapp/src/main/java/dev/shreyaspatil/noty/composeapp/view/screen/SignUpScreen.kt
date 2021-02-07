@@ -58,9 +58,12 @@ fun SignUpScreen(
     when (viewState) {
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Success -> {
-            navController.navigate(route = Screen.Notes.route, builder = {
-                launchSingleTop = true
-            })
+            navController.navigate(
+                route = Screen.Notes.route,
+                builder = {
+                    launchSingleTop = true
+                }
+            )
         }
         is ViewState.Failed -> FailureDialog(viewState.message)
     }
