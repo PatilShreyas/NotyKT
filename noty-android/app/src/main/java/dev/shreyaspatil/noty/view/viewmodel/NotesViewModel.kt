@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,14 +63,18 @@ class NotesViewModel @Inject constructor(
         syncJob = viewModelScope.launch {
             val taskId = notyTaskManager.syncNotes()
 
-            notyTaskManager.observeTask(taskId).collect { taskState ->
-                val viewState = when (taskState) {
-                    TaskState.SCHEDULED -> ViewState.loading()
-                    TaskState.COMPLETED, TaskState.CANCELLED -> ViewState.success(Unit)
-                    TaskState.FAILED -> ViewState.failed("Failed")
-                }
+            try {
+                notyTaskManager.observeTask(taskId).collect { taskState ->
+                    val viewState = when (taskState) {
+                        TaskState.SCHEDULED -> ViewState.loading()
+                        TaskState.COMPLETED, TaskState.CANCELLED -> ViewState.success(Unit)
+                        TaskState.FAILED -> ViewState.failed("Failed")
+                    }
 
-                _syncState.emit(viewState)
+                    _syncState.emit(viewState)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Can't find work by ID '$taskId'")
             }
         }
     }
@@ -88,5 +93,9 @@ class NotesViewModel @Inject constructor(
         viewModelScope.launch {
             preferenceManager.setDarkMode(enable)
         }
+    }
+
+    companion object {
+        const val TAG = "NotesViewModel"
     }
 }
