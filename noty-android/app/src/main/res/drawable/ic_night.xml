@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright 2020 Shreyas Patil
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp"
+    android:height="30dp"
+    android:viewportWidth="30"
+    android:viewportHeight="30">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M11.25,20C10.2006,19.2129 9.4254,18.1156 9.0343,16.8635C8.6432,15.6114 8.6559,14.268 9.0707,13.0236C9.4855,11.7791 10.2814,10.6967 11.3456,9.9297C12.4097,9.1627 13.6882,8.75 15,8.75C16.3118,8.75 17.5903,9.1627 18.6544,9.9297C19.7186,10.6967 20.5145,11.7791 20.9293,13.0236C21.3441,14.268 21.3568,15.6114 20.9657,16.8635C20.5746,18.1156 19.7994,19.2129 18.75,20C18.262,20.4831 17.8945,21.0743 17.6773,21.7258C17.4602,22.3773 17.3994,23.0707 17.5,23.75C17.5,24.413 17.2366,25.0489 16.7678,25.5178C16.2989,25.9866 15.663,26.25 15,26.25C14.337,26.25 13.7011,25.9866 13.2322,25.5178C12.7634,25.0489 12.5,24.413 12.5,23.75C12.6006,23.0707 12.5398,22.3773 12.3227,21.7258C12.1055,21.0743 11.738,20.4831 11.25,20"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M12.125,21.25H17.875"
+        android:strokeWidth="1.5"
+        android:strokeColor="@color/onBackground"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

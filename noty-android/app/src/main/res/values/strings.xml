@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright 2020 Shreyas Patil
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Noty</string>
+
+    <!-- Action Menu -->
+    <string name="menu_ui_mode">Light/Dark Mode</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_share_text">Share as Text</string>
+    <string name="menu_share_image">Share as Image</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_about">About</string>
+
+    <!-- Text -->
+    <string name="text_login">Login</string>
+    <string name="text_signup">Sign Up</string>
+    <string name="text_save">Save</string>
+    <string name="text_create_account">Don\'t have an account?  <font color='#7885FF'>Sign up</font></string>
+    <string name="text_login_account">Already have an account?  <font color='#7885FF'>Login</font></string>
+    <string name="text_registration">Create account</string>
+    <string name="text_register">Register</string>
+    <string name="text_welcome">Welcome to Noty!</string>
+    <string name="text_welcome_back">Welcome back</string>
+    <string name="text_no_connectivity">No Internet!</string>
+    <string name="text_connectivity">Online back</string>
+    <string name="text_empty_state_title">No notes found</string>
+    <string name="text_noty_icon">Noty Icon</string>
+    <string name="text_message_share">Title: %s\n\nNote: %s.\n \nVisit: https://github.com/PatilShreyas/NotyKT</string>
+    <string name="text_empty_state_detail">When you add a notes. You will see your notes here</string>
+    <string name="text_app_version">v%s (%d)</string>
+    <string name="text_license_title"><![CDATA[Attributions & License]]></string>
+    <string name="text_license">Licensed under Apache License, Version 2.0</string>
+    <string name="text_visit">Visit</string>
+    <string name="text_repo_url"><u>https://github.com/PatilShreyas/NotyKT</u></string>
+    <string name="text_ok">OK</string>
+
+    <!-- Hint -->
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_field_title">Title</string>
+    <string name="hint_field_note">Write note here…</string>
+
+    <!-- Messages -->
+    <string name="message_field_blank">Should not blank</string>
+    <string name="message_field_username_invalid">Should be of min 4 and max 30 chars</string>
+    <string name="message_field_password_invalid">Should be of min 8 and max 50 chars</string>
+    <string name="message_password_mismatched">Password and confirm password not matching</string>
+
+    <!-- Dialog Strings -->
+    <string name="dialog_title_login_failed">Login Failed!</string>
+    <string name="dialog_title_signup_failed">Sign up Failed!</string>
+    <string name="dialog_title_failed_image_share">Failed to share image!</string>
+    <string name="dialog_message_failed_image_share">Unable to share image because Permission denied. To be able to share image, please allow storage access.</string>
+
+    <string name="content_description_connectivity_icon">Connectivity status Icon</string>
+
+
+</resources>
