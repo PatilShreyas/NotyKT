@@ -35,15 +35,15 @@ fun NotesCard(note: Note, onNoteClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(4.dp),
         backgroundColor = MaterialTheme.colors.surface,
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp).fillMaxWidth().wrapContentHeight(),
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable { onNoteClick() },
         elevation = 0.dp
     ) {
         Column(
-            modifier = Modifier.padding(16.dp).clickable(
-                onClick = {
-                    onNoteClick()
-                }
-            )
+            modifier = Modifier.padding(16.dp)
         ) {
             Text(
                 text = note.title,
