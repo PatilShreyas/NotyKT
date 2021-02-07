@@ -15,8 +15,8 @@ It connects with the Noty REST API to save and retrieve data.
 - [x] Offline Capability - Notes ✈️
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
+- [x] Jetpack Compose UI
 - [ ] Tests ***(WIP)***
-- [ ] Jetpack Compose UI ***(WIP)***
 
 ## 📙 Overview of Codebase
 
@@ -29,7 +29,7 @@ It has two submodules as:
 
 - **Simple Application (`simpleapp`):** UI implementation using [_Navigation Architecture_](https://developer.android.com/guide/navigation/navigation-getting-started) using traditional XML resources.
 
-- **JetPack Compose Application (`composeapp`) _(WIP)_:** UI implementation using [_Jetpack Compose UI Toolkit_](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwreT8BRDTARIsAJLI0KKRX0vsRWcQ-0AC6lCutEWwAB4t1wqWBi2MclQqm96gnSddahFRdkAaArbwEALw_wcB&gclsrc=aw.ds)
+- **JetPack Compose Application (`composeapp`):** UI implementation using [_Jetpack Compose UI Toolkit_](https://developer.android.com/jetpack/compose?gclid=Cj0KCQjwreT8BRDTARIsAJLI0KKRX0vsRWcQ-0AC6lCutEWwAB4t1wqWBi2MclQqm96gnSddahFRdkAaArbwEALw_wcB&gclsrc=aw.ds)
 
 ### Core (`core`)
 

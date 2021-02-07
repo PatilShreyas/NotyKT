@@ -25,8 +25,8 @@ The codebase focuses on following key things:
 - [x] Offline Capability - Notes ✈️
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
+- [x] Jetpack Compose UI
 - [ ] Tests ***(WIP)***
-- [ ] Jetpack Compose UI ***(WIP)***
 
 ## About this project 💡
 
