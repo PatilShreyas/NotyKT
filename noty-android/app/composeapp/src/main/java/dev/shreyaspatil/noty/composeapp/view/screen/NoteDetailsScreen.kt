@@ -17,6 +17,7 @@
 package dev.shreyaspatil.noty.composeapp.view.screen
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.viewModel
+import androidx.core.app.ShareCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dagger.hilt.android.EntryPointAccessors
@@ -62,6 +64,7 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
+    val activity = AmbientContext.current as Activity
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
     val deleteState = viewModel.deleteNoteState.collectAsState(initial = null)
@@ -104,7 +107,13 @@ fun NoteDetailsScreen(
                     elevation = 0.dp,
                     actions = {
                         DeleteAction(onClick = { viewModel.deleteNote() })
-                        ShareAction(onClick = { /* TODO Implement*/ })
+                        ShareAction(onClick = {
+                            shareNote(
+                                activity,
+                                titleText.value,
+                                noteText.value
+                            )
+                        })
                     }
                 )
             },
@@ -122,7 +131,7 @@ fun NoteDetailsScreen(
                                 fontSize = 24.sp
                             ),
                             backgroundColor = MaterialTheme.colors.background,
-                            value = titleText.value ?: "",
+                            value = titleText.value,
                             onValueChange = { titleText.value = it }
                         )
                     }
@@ -138,7 +147,7 @@ fun NoteDetailsScreen(
                                 fontSize = 16.sp
                             ),
                             backgroundColor = MaterialTheme.colors.background,
-                            value = noteText.value ?: "",
+                            value = noteText.value,
                             onValueChange = { noteText.value = it }
                         )
                     }
@@ -179,6 +188,21 @@ fun NoteDetailsScreen(
             is ViewState.Failed -> FailureDialog(state.message)
         }
     }
+}
+
+fun shareNote(activity: Activity, title: String, note: String) {
+    val shareMsg = activity.getString(
+        R.string.text_message_share,
+        title,
+        note
+    )
+
+    val intent = ShareCompat.IntentBuilder(activity)
+        .setType("text/plain")
+        .setText(shareMsg)
+        .intent
+
+    activity.startActivity(Intent.createChooser(intent, null))
 }
 
 @InternalCoroutinesApi
