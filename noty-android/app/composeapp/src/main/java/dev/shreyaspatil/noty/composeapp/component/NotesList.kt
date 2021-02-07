@@ -25,7 +25,7 @@ import dev.shreyaspatil.noty.core.model.Note
 fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
     LazyColumn {
         items(items = notes, itemContent = { note ->
-            NotesCard(
+            NoteCard(
                 note = note,
                 onNoteClick = { onClick(note) }
             )
