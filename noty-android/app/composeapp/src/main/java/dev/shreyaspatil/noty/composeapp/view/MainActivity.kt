@@ -32,6 +32,7 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.navigation.Main
 import dev.shreyaspatil.noty.composeapp.ui.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContent {
             NotyContent()
