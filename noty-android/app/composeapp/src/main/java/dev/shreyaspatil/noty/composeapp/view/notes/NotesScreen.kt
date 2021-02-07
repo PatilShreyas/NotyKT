@@ -55,12 +55,6 @@ fun NotesScreen(
         return
     }
 
-    val notes = viewModel.notes.collectAsState(initial = null)
-
-    val onNoteClicked: (Note) -> Unit = {
-        navController.navigate(Screen.NotesDetail.route(it.id))
-    }
-
     val lifecycleScope = AmbientLifecycleOwner.current.lifecycleScope
 
     Scaffold(
@@ -68,7 +62,7 @@ fun NotesScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "NotyKT",
+                        text = "Noty",
                         textAlign = TextAlign.Start,
                         color = MaterialTheme.colors.onPrimary,
                         modifier = Modifier.fillMaxWidth()
@@ -89,11 +83,17 @@ fun NotesScreen(
             )
         },
         bodyContent = {
-            when (val state = notes.value) {
-                is ViewState.Success -> NotesList(state.data, onNoteClicked)
-                is ViewState.Failed -> FailureDialog(state.message)
-                is ViewState.Loading -> LoaderDialog()
+            val notesState = viewModel.notes.collectAsState(initial = null).value
+
+            val onNoteClicked: (Note) -> Unit =
+                { navController.navigate(Screen.NotesDetail.route(it.id)) }
+
+            when (notesState) {
+                is ViewState.Loading, null -> LoaderDialog()
+                is ViewState.Success -> NotesList(notesState.data, onNoteClicked)
+                is ViewState.Failed -> FailureDialog(notesState.message)
             }
+
         }
     )
 
