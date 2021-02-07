@@ -17,13 +17,13 @@
 package dev.shreyaspatil.noty.composeapp.view.notes
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AmbientLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -94,10 +94,21 @@ fun NotesScreen(
                 is ViewState.Failed -> FailureDialog(notesState.message)
             }
 
+            viewModel.syncNotes()
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate(Screen.AddNote.route) },
+                backgroundColor = MaterialTheme.colors.primary
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    "Add",
+                    tint = Color.White
+                )
+            }
         }
     )
-
-    viewModel.syncNotes()
 }
 
 private fun navigateToLogin(navController: NavHostController) {
