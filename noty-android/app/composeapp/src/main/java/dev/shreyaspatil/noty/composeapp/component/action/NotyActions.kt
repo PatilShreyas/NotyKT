@@ -23,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.R
 
 @Composable
 fun DeleteAction(onClick: () -> Unit) {
@@ -58,5 +58,17 @@ fun ThemeSwitchAction(onToggle: () -> Unit) {
         Modifier
             .padding(end = 8.dp)
             .clickable(onClick = onToggle)
+    )
+}
+
+@Composable
+fun LogoutAction(onLogout: () -> Unit) {
+    val icon = vectorResource(R.drawable.ic_logout)
+    Icon(
+        icon,
+        "Logout",
+        Modifier
+            .padding(end = 8.dp)
+            .clickable(onClick = onLogout)
     )
 }
