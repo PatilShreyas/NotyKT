@@ -16,7 +16,7 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.4.21"
+        kotlinVersion = "1.4.21-2"
         kotlinSerializerVersion = "1.0.1"
         ktlintVersion = "9.3.0"
         coroutinesVersion = "1.4.2"
@@ -26,7 +26,7 @@ buildscript {
         logbackVersion = "1.2.3"
         daggerVersion = "2.30.1"
         testContainerVersion = "1.15.1"
-        kotestVersion = "4.3.2"
+        kotestVersion = "4.4.0"
     }
 
     repositories {
