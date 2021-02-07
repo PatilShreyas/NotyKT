@@ -27,7 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
-import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNotesScreen
+import dev.shreyaspatil.noty.composeapp.view.addnotes.AddNoteScreen
 import dev.shreyaspatil.noty.composeapp.view.details.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.view.details.noteDetailViewModel
 import dev.shreyaspatil.noty.composeapp.view.login.LoginScreen
@@ -50,7 +50,7 @@ fun Main(toggleTheme: () -> Unit) {
             LoginScreen(navController, it.hiltNavGraphViewModel())
         }
         composable(Screen.AddNote.route) {
-            AddNotesScreen(navController, it.hiltNavGraphViewModel())
+            AddNoteScreen(navController, it.hiltNavGraphViewModel())
         }
         composable(Screen.Notes.route) {
             NotesScreen(toggleTheme, navController, it.hiltNavGraphViewModel())

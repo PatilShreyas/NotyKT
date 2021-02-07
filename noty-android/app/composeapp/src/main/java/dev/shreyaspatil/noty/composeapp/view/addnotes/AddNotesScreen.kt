@@ -26,23 +26,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @Composable
-fun AddNotesScreen(
+fun AddNoteScreen(
     navController: NavHostController,
-    addNoteViewModel: AddNoteViewModel = viewModel()
+    viewModel: AddNoteViewModel
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Note Details",
+                        text = "Noty",
                         textAlign = TextAlign.Start,
                         color = Color.Black,
                         modifier = Modifier.fillMaxWidth()
