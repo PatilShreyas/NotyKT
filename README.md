@@ -2,8 +2,7 @@
 
 # NotyKT 🖊️ 
 
-![Deploy (API)](https://github.com/PatilShreyas/NotyKT/workflows/Deploy%20(API)[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FPatilShreyas%2FNotyKT.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FPatilShreyas%2FNotyKT?ref=badge_shield)
-/badge.svg) 
+![Deploy (API)](https://github.com/PatilShreyas/NotyKT/workflows/Deploy%20(API)/badge.svg) 
 ![Build (API)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(API)/badge.svg)
 ![Build (Android)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(Android)/badge.svg)
 ![Release](https://github.com/PatilShreyas/NotyKT/workflows/Release/badge.svg)
