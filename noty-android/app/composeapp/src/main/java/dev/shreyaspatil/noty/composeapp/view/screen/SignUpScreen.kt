@@ -33,11 +33,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.ui.typography
@@ -62,19 +64,22 @@ fun SignUpScreen(
                 route = Screen.Notes.route,
                 builder = {
                     launchSingleTop = true
+                    popUpTo(Screen.SignUp.route) {
+                        inclusive = true
+                    }
                 }
             )
         }
         is ViewState.Failed -> FailureDialog(viewState.message)
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         item {
-            ConstraintLayout(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
+            ConstraintLayout {
 
                 val (
                     titleRef,
@@ -128,6 +133,7 @@ fun SignUpScreen(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
+                    visualTransformation = PasswordVisualTransformation(),
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
                     onValueChange = { password.value = it }
@@ -148,6 +154,7 @@ fun SignUpScreen(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
+                    visualTransformation = PasswordVisualTransformation(),
                     backgroundColor = MaterialTheme.colors.background,
                     value = confirmPassword.value,
                     onValueChange = { confirmPassword.value = it }

@@ -36,11 +36,13 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
@@ -54,9 +56,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @Composable
 fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
 
-    val viewState = loginViewModel.authFlow.collectAsState(initial = null).value
-
-    when (viewState) {
+    when (val viewState = loginViewModel.authFlow.collectAsState(initial = null).value) {
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Failed -> FailureDialog(viewState.message)
         is ViewState.Success -> {
@@ -64,18 +64,21 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 route = Screen.Notes.route,
                 builder = {
                     launchSingleTop = true
+                    popUpTo(Screen.Login.route) {
+                        inclusive = true
+                    }
                 }
             )
         }
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         item {
-            ConstraintLayout(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-            ) {
+            ConstraintLayout {
                 val (
                     logoRef,
                     titleRef,
@@ -141,6 +144,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
+                    visualTransformation = PasswordVisualTransformation(),
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
                     onValueChange = { password.value = it }
