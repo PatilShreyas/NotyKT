@@ -13,7 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+pluginManagement {
+    val kotlinVersion: String by settings
+    val ktlintVersion: String by settings
+
+    plugins {
+        kotlin("jvm") version kotlinVersion
+        kotlin("plugin.serialization") version kotlinVersion
+        id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
+        kotlin("kapt") version kotlinVersion
+    }
+    repositories {
+        maven("https://dl.bintray.com/kotlin/kotlinx")
+        gradlePluginPortal()
+        maven(url = "https://plugins.gradle.org/m2")
+    }
+}
 
 rootProject.name = "noty-api"
-include 'application'
-include 'data'
+include("application", "data")

@@ -367,7 +367,7 @@ class ApplicationTest : AnnotationSpec() {
         sqlContainer.stop()
     }
 
-    inner class DatabaseContainer : PostgreSQLContainer<DatabaseContainer>()
+    inner class DatabaseContainer : PostgreSQLContainer<DatabaseContainer>("postgres")
 }
 
 data class FailedResponse(

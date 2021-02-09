@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+
 /*
  * Copyright 2020 Shreyas Patil
  *
@@ -14,80 +17,78 @@
  * limitations under the License.
  */
 
-buildscript {
-    ext {
-        kotlinVersion = "1.4.21-2"
-        kotlinSerializerVersion = "1.0.1"
-        ktlintVersion = "9.3.0"
-        coroutinesVersion = "1.4.2"
-        ktorVersion = "1.4.3"
-        exposedVersion = "0.28.1"
-        postgresVersion = "42.2.18"
-        logbackVersion = "1.2.3"
-        daggerVersion = "2.30.1"
-        testContainerVersion = "1.15.1"
-        kotestVersion = "4.4.0"
-    }
+val kotlinVersion: String by project
+val daggerVersion: String by project
+val kotestVersion: String by project
 
-    repositories {
-        jcenter()
-        maven {
-            url("https://plugins.gradle.org/m2/")
-        }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
-    }
+plugins {
+    kotlin("jvm")
+    kotlin("plugin.serialization")
+    id("org.jlleitschuh.gradle.ktlint")
+    kotlin("kapt")
+    jacoco
 }
-
-apply plugin: 'kotlin'
-apply plugin: 'jacoco'
-
-version "0.1.0"
-group "dev.shreyaspatil.noty"
 
 repositories {
     mavenCentral()
     jcenter()
+    maven("https://kotlin.bintray.com/ktor")
+    maven("https://kotlin.bintray.com/kotlinx")
 }
 
-subprojects {
-    apply(plugin: 'org.jetbrains.kotlin.jvm')
-    apply(plugin: 'org.jetbrains.kotlin.kapt')
-    apply(plugin: 'jacoco')
-    apply(plugin: 'org.jlleitschuh.gradle.ktlint')
+version = "0.1.0"
+group = "dev.shreyaspatil.noty"
 
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
-
-    sourceSets {
-        main.kotlin.srcDirs = main.java.srcDirs = ['src']
-        test.kotlin.srcDirs = test.java.srcDirs = ['test']
-        main.resources.srcDirs = ['resources']
-        test.resources.srcDirs = ['testresources']
-    }
-
-    test {
-        useJUnitPlatform()
-        jacoco {
-            destinationFile = file("${buildDir}/jacoco/test.exec")
+configure(subprojects) {
+    configurations {
+        all {
+            if (!name.startsWith("ktlint")) {
+                resolutionStrategy.eachDependency {
+                    if (requested.group == "org.jetbrains.kotlin") {
+                        useVersion(kotlinVersion)
+                        because("use single kotlin version")
+                    }
+                }
+            }
         }
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    plugins.let {
+        it.apply("org.jetbrains.kotlin.jvm")
+        it.apply("org.jetbrains.kotlin.kapt")
+        it.apply("jacoco")
+        it.apply("org.jlleitschuh.gradle.ktlint")
+    }
+
+    java.sourceCompatibility = JavaVersion.VERSION_11
+    java.targetCompatibility = JavaVersion.VERSION_11
+
+    kotlin.sourceSets["main"].kotlin.srcDirs("src")
+    kotlin.sourceSets["test"].kotlin.srcDirs("test")
+
+    sourceSets["main"].resources.srcDirs("resources")
+    sourceSets["test"].resources.srcDirs("testresources")
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+        configure<JacocoTaskExtension> {
+            destinationFile.apply {
+                file("$buildDir/jacoco/test.exec")
+            }
+        }
+    }
+
+    tasks.withType<KotlinCompile>().all {
         kotlinOptions {
             jvmTarget = "11"
         }
     }
 
-    ktlint {
-        debug = true
-        verbose = true
-        outputToConsole = true
-        outputColorName = "RED"
+    configure<KtlintExtension> {
+        debug.set(true)
+        verbose.set(true)
+        outputToConsole.set(true)
+        outputColorName.set("RED")
     }
 
     repositories {
@@ -98,32 +99,30 @@ subprojects {
 
     dependencies {
         // Kotlin
-        implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-        implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+        implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
         // Dagger
-        implementation "com.google.dagger:dagger:$daggerVersion"
-        kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+        implementation("com.google.dagger:dagger:$daggerVersion")
+        kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 
         // Testing
-        testImplementation "io.kotest:kotest-runner-junit5-jvm:$kotestVersion"
-        testImplementation "io.kotest:kotest-assertions-core-jvm:$kotestVersion"
-        testImplementation "io.kotest:kotest-property-jvm:$kotestVersion"
+        testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
+        testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+        testImplementation("io.kotest:kotest-property-jvm:$kotestVersion")
     }
 }
 
-// Code Coverage Report (Jacoco)
-task codeCoverageReport(type: JacocoReport) {
-    // Gather execution data from all subprojects
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    subprojects.each {
-        sourceSets it.sourceSets.main
+tasks.register<JacocoReport>("codeCoverageReport") {
+    executionData(fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec"))
+    subprojects.forEach {
+        sourceSets.apply {
+            it.sourceSets.main
+        }
     }
-
     reports {
-        xml.enabled true
-        html.enabled true
-        csv.enabled false
+        xml.isEnabled = true
+        html.isEnabled = true
+        csv.isEnabled = false
     }
 }
