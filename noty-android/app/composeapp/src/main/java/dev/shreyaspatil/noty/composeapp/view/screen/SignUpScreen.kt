@@ -33,11 +33,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.ui.typography
@@ -53,15 +55,16 @@ fun SignUpScreen(
     viewModel: RegisterViewModel
 ) {
 
-    val viewState = viewModel.authFlow.collectAsState(initial = null).value
-
-    when (viewState) {
+    when (val viewState = viewModel.authFlow.collectAsState(initial = null).value) {
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Success -> {
             navController.navigate(
                 route = Screen.Notes.route,
                 builder = {
                     launchSingleTop = true
+                    popUpTo(Screen.SignUp.route) {
+                        inclusive = true
+                    }
                 }
             )
         }
@@ -128,6 +131,7 @@ fun SignUpScreen(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
+                    visualTransformation = PasswordVisualTransformation(),
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
                     onValueChange = { password.value = it }
@@ -148,6 +152,7 @@ fun SignUpScreen(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
+                    visualTransformation = PasswordVisualTransformation(),
                     backgroundColor = MaterialTheme.colors.background,
                     value = confirmPassword.value,
                     onValueChange = { confirmPassword.value = it }
