@@ -10,3 +10,10 @@ If you want to discuss on something then feel free to present your opinions, vie
 - If your proposed change is approved, Fork this repo and do changes.
 - Open PR against latest *development* branch. Add nice description in PR.
 - You're done!
+
+### Code contribution checklist
+
+- New code addition/deletion should not break existing flow of a system.
+- All tests should be passed.
+- Verify `./gradlew build` is passing before raising a PR.
+- Reformat code with KtLint `./gradlew ktlintFormat` before raising a PR.
