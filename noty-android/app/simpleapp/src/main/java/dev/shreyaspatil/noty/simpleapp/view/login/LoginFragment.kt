@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +27,7 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.LoginFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.utils.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,7 +36,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
 
-    override val viewModel: LoginViewModel by viewModels()
+    override val viewModel: LoginViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

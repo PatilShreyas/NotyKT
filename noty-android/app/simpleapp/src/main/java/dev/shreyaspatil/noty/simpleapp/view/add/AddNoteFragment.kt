@@ -21,13 +21,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.utils.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,7 +36,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>() {
 
-    override val viewModel: AddNoteViewModel by viewModels()
+    override val viewModel: AddNoteViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
