@@ -33,6 +33,14 @@ This is not mandatory but encouraged
 
 ## Checklist
 
+<!--
+The current CI workflow will validate code level changes. 
+Make sure that `./gradlew build` is passing before raising a PR. If build is failing at linting then just 
+execute `./gradlew ktlintFormat` which will reformat code according to our code standards.
+Other than this, it's encouraged if you pay attention to the below checklist.
+-->
+
+- [ ] Build and linting is passing.
 - [ ] This change is not breaking existing flow of a system.
 - [ ] I have written test case for this change.
 - [ ] This change is tested from all aspects.
