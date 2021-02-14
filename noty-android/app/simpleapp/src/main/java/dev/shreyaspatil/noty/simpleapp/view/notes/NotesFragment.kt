@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -32,6 +31,7 @@ import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.utils.*
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
-    override val viewModel: NotesViewModel by viewModels()
+    override val viewModel: NotesViewModel by hiltNotyMainNavGraphViewModels()
 
     private val notesListAdapter = NotesListAdapter(::onNoteClicked)
 

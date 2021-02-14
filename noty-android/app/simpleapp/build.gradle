@@ -108,6 +108,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
 
     // Hilt + Jetpack
+    implementation "androidx.hilt:hilt-navigation-fragment:$jetpackHiltVersion"
     implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
 
     // Lifecycle

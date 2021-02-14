@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-ext {
-    ProjectConfig = [
-            compileSdkVersion: 30,
-            buildToolsVersion: "30.0.2",
-            minSdkVersion    : 21,
-            targetSdkVersion : 30,
-            versionCode      : 1,
-            versionName      : "1.0.0"
-    ]
-}
+package dev.shreyaspatil.noty.simpleapp.view
+
+import androidx.fragment.app.Fragment
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.ViewModel
+import dev.shreyaspatil.noty.simpleapp.R
+
+inline fun <reified T : ViewModel> Fragment.hiltNotyMainNavGraphViewModels() =
+    hiltNavGraphViewModels<T>(R.id.nav_graph)
