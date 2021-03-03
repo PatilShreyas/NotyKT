@@ -60,12 +60,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Failed -> FailureDialog(viewState.message)
         is ViewState.Success -> {
-            navController.navigate(
-                route = Screen.Notes.route,
-                builder = {
-                    launchSingleTop = true
-                }
-            )
+            navController.navigateUp()
         }
     }
 
@@ -107,7 +102,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-
+                val isUserNameValid = remember { mutableStateOf(false) }
                 val username = remember { mutableStateOf(TextFieldValue()) }
                 TextField(
                     modifier = Modifier
@@ -124,9 +119,13 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = username.value,
-                    onValueChange = { username.value = it }
+                    onValueChange = {
+                        isUserNameValid.value = it.text.isNotEmpty()
+                        username.value = it
+                    },
+                    isErrorValue = !isUserNameValid.value
                 )
-
+                val isPasswordValid = remember { mutableStateOf(false) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
                 TextField(
                     modifier = Modifier
@@ -143,11 +142,19 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
-                    onValueChange = { password.value = it }
+                    onValueChange = {
+                        isPasswordValid.value = it.text.length > 7
+                        password.value = it
+                    },
+                    isErrorValue = !isPasswordValid.value
                 )
 
                 Button(
-                    onClick = { loginViewModel.login(username.value.text, password.value.text) },
+                    onClick = {
+                        if (isUserNameValid.value && isPasswordValid.value) {
+                            loginViewModel.login(username.value.text, password.value.text)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)

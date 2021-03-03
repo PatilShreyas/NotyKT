@@ -31,7 +31,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
+import androidx.navigation.navOptions
 import dev.shreyaspatil.noty.composeapp.component.NotesList
+import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
@@ -73,6 +75,11 @@ fun NotesScreen(
                 elevation = 0.dp,
                 actions = {
                     ThemeSwitchAction(toggleTheme)
+                    AboutAction{
+                        lifecycleScope.launch {
+                            navigateToAbout(navController)
+                        }
+                    }
                     LogoutAction(
                         onLogout = {
                             lifecycleScope.launch {
@@ -122,5 +129,11 @@ private fun navigateToLogin(navController: NavHostController) {
                 inclusive = true
             }
         }
+    )
+}
+
+private fun navigateToAbout(navController: NavHostController){
+    navController.navigate(
+        Screen.About.route
     )
 }

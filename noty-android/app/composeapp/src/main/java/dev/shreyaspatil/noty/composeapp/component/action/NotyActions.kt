@@ -72,3 +72,15 @@ fun LogoutAction(onLogout: () -> Unit) {
             .clickable(onClick = onLogout)
     )
 }
+
+@Composable
+fun AboutAction(onClick: () -> Unit){
+    val icon = vectorResource(R.drawable.ic_baseline_info)
+    Icon(
+        icon,
+        "About",
+        Modifier
+            .padding(end = 8.dp)
+            .clickable(onClick = onClick)
+    )
+}

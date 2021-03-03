@@ -16,17 +16,22 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.AmbientContext
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.composeapp.view.screen.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -60,6 +65,9 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
             val noteId = it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID)
                 ?: throw IllegalStateException("'noteId' shouldn't be null")
             NoteDetailsScreen(navController, noteDetailViewModel(noteId))
+        }
+        composable(Screen.About.route){
+            AboutScreen(navController = navController)
         }
     }
 }

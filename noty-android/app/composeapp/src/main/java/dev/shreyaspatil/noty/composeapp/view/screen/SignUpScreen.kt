@@ -94,7 +94,7 @@ fun SignUpScreen(
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-
+                val isUserNameValid = remember { mutableStateOf(false) }
                 val username = remember { mutableStateOf(TextFieldValue()) }
                 TextField(
                     modifier = Modifier
@@ -111,9 +111,12 @@ fun SignUpScreen(
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = username.value,
-                    onValueChange = { username.value = it }
+                    onValueChange = {
+                        isUserNameValid.value = it.text.length > 7
+                        username.value = it },
+                    isErrorValue = !isUserNameValid.value
                 )
-
+                val isPasswordValid = remember { mutableStateOf(false) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
                 TextField(
                     modifier = Modifier
@@ -130,9 +133,13 @@ fun SignUpScreen(
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
-                    onValueChange = { password.value = it }
+                    onValueChange = {
+                        isPasswordValid.value = it.text.length > 7
+                        password.value = it },
+                    isErrorValue = !isPasswordValid.value
                 )
 
+                val isConfirmPasswordValid = remember { mutableStateOf(false) }
                 val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
 
                 TextField(
@@ -150,11 +157,15 @@ fun SignUpScreen(
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     value = confirmPassword.value,
-                    onValueChange = { confirmPassword.value = it }
+                    onValueChange = {
+                        isConfirmPasswordValid.value = it.text == password.value.text
+                        confirmPassword.value = it },
+                    isErrorValue = !isConfirmPasswordValid.value
                 )
 
                 Button(
                     onClick = {
+                        if (!isUserNameValid.value || !isPasswordValid.value || !isConfirmPasswordValid.value) return@Button
                         viewModel.register(username.value.text, password.value.text)
                     },
                     modifier = Modifier
