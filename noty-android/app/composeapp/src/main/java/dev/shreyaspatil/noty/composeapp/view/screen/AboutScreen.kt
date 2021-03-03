@@ -209,9 +209,13 @@ fun VisitCard() {
 
             val context = AmbientContext.current
             val visitUrl = stringResource(id = R.string.text_repo_url)
-            Box(Modifier.clickable(onClick = {
-                IntentUtils.launchBrowser(context = context, visitUrl)
-            })){
+            Box(
+                Modifier.clickable(
+                    onClick = {
+                        IntentUtils.launchBrowser(context = context, visitUrl)
+                    }
+                )
+            ) {
                 Text(
                     text = visitUrl,
                     textAlign = TextAlign.Center,

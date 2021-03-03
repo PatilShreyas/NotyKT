@@ -113,7 +113,8 @@ fun SignUpScreen(
                     value = username.value,
                     onValueChange = {
                         isUserNameValid.value = it.text.length > 7
-                        username.value = it },
+                        username.value = it
+                    },
                     isErrorValue = !isUserNameValid.value
                 )
                 val isPasswordValid = remember { mutableStateOf(false) }
@@ -135,7 +136,8 @@ fun SignUpScreen(
                     value = password.value,
                     onValueChange = {
                         isPasswordValid.value = it.text.length > 7
-                        password.value = it },
+                        password.value = it
+                    },
                     isErrorValue = !isPasswordValid.value
                 )
 
@@ -159,13 +161,19 @@ fun SignUpScreen(
                     value = confirmPassword.value,
                     onValueChange = {
                         isConfirmPasswordValid.value = it.text == password.value.text
-                        confirmPassword.value = it },
+                        confirmPassword.value = it
+                    },
                     isErrorValue = !isConfirmPasswordValid.value
                 )
 
                 Button(
                     onClick = {
-                        if (!isUserNameValid.value || !isPasswordValid.value || !isConfirmPasswordValid.value) return@Button
+                        if (!isUserNameValid.value ||
+                            !isPasswordValid.value ||
+                            !isConfirmPasswordValid.value
+                        ) {
+                            return@Button
+                        }
                         viewModel.register(username.value.text, password.value.text)
                     },
                     modifier = Modifier

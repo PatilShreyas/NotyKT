@@ -27,5 +27,5 @@ sealed class Screen(val route: String, val name: String) {
     }
 
     object AddNote : Screen("note/new", "New note")
-    object About: Screen("about","About")
+    object About : Screen("about", "About")
 }

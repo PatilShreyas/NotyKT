@@ -31,7 +31,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
-import androidx.navigation.navOptions
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
@@ -75,7 +74,7 @@ fun NotesScreen(
                 elevation = 0.dp,
                 actions = {
                     ThemeSwitchAction(toggleTheme)
-                    AboutAction{
+                    AboutAction {
                         lifecycleScope.launch {
                             navigateToAbout(navController)
                         }
@@ -132,7 +131,7 @@ private fun navigateToLogin(navController: NavHostController) {
     )
 }
 
-private fun navigateToAbout(navController: NavHostController){
+private fun navigateToAbout(navController: NavHostController) {
     navController.navigate(
         Screen.About.route
     )

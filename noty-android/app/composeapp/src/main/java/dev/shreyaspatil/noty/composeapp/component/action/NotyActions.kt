@@ -74,7 +74,7 @@ fun LogoutAction(onLogout: () -> Unit) {
 }
 
 @Composable
-fun AboutAction(onClick: () -> Unit){
+fun AboutAction(onClick: () -> Unit) {
     val icon = vectorResource(R.drawable.ic_baseline_info)
     Icon(
         icon,
