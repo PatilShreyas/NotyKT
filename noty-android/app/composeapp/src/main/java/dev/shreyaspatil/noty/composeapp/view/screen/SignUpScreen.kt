@@ -163,7 +163,8 @@ fun SignUpScreen(
                     backgroundColor = MaterialTheme.colors.background,
                     value = confirmPassword.value,
                     onValueChange = {
-                        isConfirmPasswordValid = it.text == password.value.text
+                        isConfirmPasswordValid = AuthValidator
+                            .isPasswordAndConfirmPasswordSame(password.value.text, it.text)
                         confirmPassword.value = it
                     },
                     isErrorValue = !isConfirmPasswordValid
