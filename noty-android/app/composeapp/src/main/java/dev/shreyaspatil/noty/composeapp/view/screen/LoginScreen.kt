@@ -27,8 +27,10 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -103,7 +105,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-                val isUserNameValid = remember { mutableStateOf(false) }
+                var isUserNameValid: Boolean by remember { mutableStateOf(false) }
                 val username = remember { mutableStateOf(TextFieldValue()) }
                 TextField(
                     modifier = Modifier
@@ -121,12 +123,12 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     backgroundColor = MaterialTheme.colors.background,
                     value = username.value,
                     onValueChange = {
-                        isUserNameValid.value = AuthValidator.isValidUsername(it.text)
+                        isUserNameValid = AuthValidator.isValidUsername(it.text)
                         username.value = it
                     },
-                    isErrorValue = !isUserNameValid.value
+                    isErrorValue = !isUserNameValid
                 )
-                val isPasswordValid = remember { mutableStateOf(false) }
+                var isPasswordValid: Boolean by remember { mutableStateOf(false) }
                 val password = remember { mutableStateOf(TextFieldValue()) }
                 TextField(
                     modifier = Modifier
@@ -144,15 +146,15 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
                     onValueChange = {
-                        isPasswordValid.value = AuthValidator.isValidPassword(it.text)
+                        isPasswordValid = AuthValidator.isValidPassword(it.text)
                         password.value = it
                     },
-                    isErrorValue = !isPasswordValid.value
+                    isErrorValue = !isPasswordValid
                 )
 
                 Button(
                     onClick = {
-                        if (isUserNameValid.value && isPasswordValid.value) {
+                        if (isUserNameValid && isPasswordValid) {
                             loginViewModel.login(username.value.text, password.value.text)
                         }
                     },
