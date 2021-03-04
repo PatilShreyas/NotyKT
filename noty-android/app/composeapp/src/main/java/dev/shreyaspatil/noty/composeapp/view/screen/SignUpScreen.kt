@@ -43,6 +43,7 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.ui.typography
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.utils.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -112,7 +113,7 @@ fun SignUpScreen(
                     backgroundColor = MaterialTheme.colors.background,
                     value = username.value,
                     onValueChange = {
-                        isUserNameValid.value = it.text.length > 7
+                        isUserNameValid.value = AuthValidator.isValidUsername(it.text)
                         username.value = it
                     },
                     isErrorValue = !isUserNameValid.value
@@ -135,7 +136,7 @@ fun SignUpScreen(
                     backgroundColor = MaterialTheme.colors.background,
                     value = password.value,
                     onValueChange = {
-                        isPasswordValid.value = it.text.length > 7
+                        isPasswordValid.value = AuthValidator.isValidPassword(it.text)
                         password.value = it
                     },
                     isErrorValue = !isPasswordValid.value

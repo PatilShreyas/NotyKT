@@ -75,9 +75,9 @@ fun NotesScreen(
                 actions = {
                     ThemeSwitchAction(toggleTheme)
                     AboutAction {
-                        lifecycleScope.launch {
-                            navigateToAbout(navController)
-                        }
+                        navController.navigate(
+                            Screen.About.route
+                        )
                     }
                     LogoutAction(
                         onLogout = {
@@ -128,11 +128,5 @@ private fun navigateToLogin(navController: NavHostController) {
                 inclusive = true
             }
         }
-    )
-}
-
-private fun navigateToAbout(navController: NavHostController) {
-    navController.navigate(
-        Screen.About.route
     )
 }
