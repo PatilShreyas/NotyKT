@@ -82,8 +82,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             ConstraintLayout(
                 Modifier
                     .fillMaxSize()
-                    .background(Color.White)
-            ) {
+                    .background(MaterialTheme.colors.surface)) {
                 val (
                     logoRef,
                     titleRef,
@@ -109,7 +108,6 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 Text(
                     text = "Welcome\nback",
                     style = typography.h4,
-                    color = Color.Black,
                     modifier = Modifier.constrainAs(titleRef) {
                         top.linkTo(logoRef.bottom, margin = 30.dp)
                         start.linkTo(parent.start, margin = 16.dp)
@@ -182,7 +180,6 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
                 Text(
                     text = buildAnnotatedString {
-                        pushStyle(SpanStyle(color = Color.Black))
                         append("Don't have an account? Signup")
                         addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
                         toAnnotatedString()

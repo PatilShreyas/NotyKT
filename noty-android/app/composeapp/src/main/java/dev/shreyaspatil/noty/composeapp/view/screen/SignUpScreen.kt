@@ -80,8 +80,7 @@ fun SignUpScreen(
             ConstraintLayout(
                 Modifier
                     .fillMaxSize()
-                    .background(Color.White)
-            ) {
+                    .background(MaterialTheme.colors.surface)) {
 
                 val (
                     titleRef,
@@ -95,7 +94,6 @@ fun SignUpScreen(
                 Text(
                     text = "Create\naccount",
                     style = typography.h4,
-                    color = Color.Black,
                     modifier = Modifier.constrainAs(titleRef) {
                         top.linkTo(parent.top, margin = 60.dp)
                         start.linkTo(parent.start, margin = 16.dp)
@@ -198,7 +196,6 @@ fun SignUpScreen(
                 }
                 Text(
                     text = buildAnnotatedString {
-                        pushStyle(SpanStyle(color = Color.Black))
                         append("Already have an account? Login")
                         addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
                     },

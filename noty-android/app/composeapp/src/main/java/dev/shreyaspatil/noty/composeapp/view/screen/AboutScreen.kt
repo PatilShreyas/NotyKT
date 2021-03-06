@@ -39,7 +39,6 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -99,7 +98,7 @@ fun AboutAppBar(navController: NavController) {
                 )
             }
         },
-        backgroundColor = MaterialTheme.colors.onBackground,
+        backgroundColor = MaterialTheme.colors.background,
         contentColor = MaterialTheme.colors.onPrimary,
         elevation = 0.dp
     )
@@ -131,7 +130,10 @@ fun AboutColumn() {
                 text = "Noty",
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
-                style = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black)
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.onBackground
+                )
             )
         }
         item {
@@ -141,7 +143,6 @@ fun AboutColumn() {
             Text(
                 text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
                 textAlign = TextAlign.Center,
-                color = Color.Black,
                 style = MaterialTheme.typography.subtitle2
             )
         }

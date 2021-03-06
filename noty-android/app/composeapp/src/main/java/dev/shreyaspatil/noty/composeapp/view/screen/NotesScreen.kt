@@ -75,7 +75,7 @@ fun NotesScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 },
-                backgroundColor = MaterialTheme.colors.onBackground,
+                backgroundColor = MaterialTheme.colors.background,
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
