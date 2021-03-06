@@ -46,7 +46,7 @@ const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 fun NotyNavigation(toggleTheme: () -> Unit) {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = Screen.Notes.route, route= NOTY_NAV_HOST_ROUTE) {
+    NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
         composable(Screen.SignUp.route) {
             SignUpScreen(navController, it.hiltNavGraphViewModel())
         }

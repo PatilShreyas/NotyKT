@@ -80,7 +80,8 @@ fun SignUpScreen(
             ConstraintLayout(
                 Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.surface)) {
+                    .background(MaterialTheme.colors.surface)
+            ) {
 
                 val (
                     titleRef,

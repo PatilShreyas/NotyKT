@@ -82,7 +82,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             ConstraintLayout(
                 Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.surface)) {
+                    .background(MaterialTheme.colors.surface)
+            ) {
                 val (
                     logoRef,
                     titleRef,
