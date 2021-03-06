@@ -114,8 +114,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-                var isUserNameValid: Boolean by remember { mutableStateOf(false) }
-                val username = remember { mutableStateOf(TextFieldValue()) }
+                var username by remember { mutableStateOf(TextFieldValue()) }
+                val isValidUsername = AuthValidator.isValidUsername(username.text)
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,15 +130,16 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = username.value,
+                    value = username,
                     onValueChange = {
-                        isUserNameValid = AuthValidator.isValidUsername(it.text)
-                        username.value = it
+                        username = it
                     },
-                    isErrorValue = !isUserNameValid
+                    isErrorValue = !isValidUsername
                 )
-                var isPasswordValid: Boolean by remember { mutableStateOf(false) }
-                val password = remember { mutableStateOf(TextFieldValue()) }
+
+                var password by remember { mutableStateOf(TextFieldValue()) }
+                val isValidPassword = AuthValidator.isValidPassword(password.text)
+
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,18 +155,17 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
-                    value = password.value,
+                    value = password,
                     onValueChange = {
-                        isPasswordValid = AuthValidator.isValidPassword(it.text)
-                        password.value = it
+                        password = it
                     },
-                    isErrorValue = !isPasswordValid
+                    isErrorValue = !isValidPassword
                 )
 
                 Button(
                     onClick = {
-                        if (isUserNameValid && isPasswordValid) {
-                            loginViewModel.login(username.value.text, password.value.text)
+                        if (isValidUsername && isValidPassword) {
+                            loginViewModel.login(username.text, password.text)
                         }
                     },
                     modifier = Modifier

@@ -18,9 +18,17 @@ package dev.shreyaspatil.noty.composeapp.view.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ConstraintLayout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -100,8 +108,10 @@ fun SignUpScreen(
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-                var isUserNameValid: Boolean by remember { mutableStateOf(false) }
-                val username = remember { mutableStateOf(TextFieldValue()) }
+
+                var username by remember { mutableStateOf(TextFieldValue()) }
+                val isValidUsername = AuthValidator.isValidUsername(username.text)
+
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,15 +126,16 @@ fun SignUpScreen(
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = username.value,
+                    value = username,
                     onValueChange = {
-                        isUserNameValid = AuthValidator.isValidUsername(it.text)
-                        username.value = it
+                        username = it
                     },
-                    isErrorValue = !isUserNameValid
+                    isErrorValue = !isValidUsername
                 )
-                var isPasswordValid: Boolean by remember { mutableStateOf(false) }
-                val password = remember { mutableStateOf(TextFieldValue()) }
+
+                var password by remember { mutableStateOf(TextFieldValue()) }
+                val isValidPassword = AuthValidator.isValidPassword(password.text)
+
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -140,16 +151,18 @@ fun SignUpScreen(
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
-                    value = password.value,
+                    value = password,
                     onValueChange = {
-                        isPasswordValid = AuthValidator.isValidPassword(it.text)
-                        password.value = it
+                        password = it
                     },
-                    isErrorValue = !isPasswordValid
+                    isErrorValue = !isValidPassword
                 )
 
-                var isConfirmPasswordValid: Boolean by remember { mutableStateOf(false) }
-                val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
+                var confirmPassword by remember { mutableStateOf(TextFieldValue()) }
+                val isValidConfirmPassword = AuthValidator.isPasswordAndConfirmPasswordSame(
+                    password.text,
+                    confirmPassword.text
+                )
 
                 TextField(
                     modifier = Modifier
@@ -166,24 +179,18 @@ fun SignUpScreen(
                     ),
                     backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
-                    value = confirmPassword.value,
+                    value = confirmPassword,
                     onValueChange = {
-                        isConfirmPasswordValid = AuthValidator
-                            .isPasswordAndConfirmPasswordSame(password.value.text, it.text)
-                        confirmPassword.value = it
+                        confirmPassword = it
                     },
-                    isErrorValue = !isConfirmPasswordValid
+                    isErrorValue = !isValidConfirmPassword
                 )
 
                 Button(
                     onClick = {
-                        if (!isUserNameValid ||
-                            !isPasswordValid ||
-                            !isConfirmPasswordValid
-                        ) {
-                            return@Button
+                        if (isValidUsername && isValidPassword && isValidConfirmPassword) {
+                            viewModel.register(username.text, password.text)
                         }
-                        viewModel.register(username.value.text, password.value.text)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
