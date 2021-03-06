@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -139,6 +140,7 @@ fun SignUpScreen(
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
+                    visualTransformation = PasswordVisualTransformation(),
                     value = password.value,
                     onValueChange = {
                         isPasswordValid = AuthValidator.isValidPassword(it.text)
@@ -164,6 +166,7 @@ fun SignUpScreen(
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
+                    visualTransformation = PasswordVisualTransformation(),
                     value = confirmPassword.value,
                     onValueChange = {
                         isConfirmPasswordValid = AuthValidator

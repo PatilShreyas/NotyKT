@@ -47,6 +47,7 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -153,6 +154,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
+                    visualTransformation = PasswordVisualTransformation(),
                     value = password.value,
                     onValueChange = {
                         isPasswordValid = AuthValidator.isValidPassword(it.text)
