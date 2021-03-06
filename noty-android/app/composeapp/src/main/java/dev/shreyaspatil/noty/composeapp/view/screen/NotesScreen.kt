@@ -17,7 +17,12 @@
 package dev.shreyaspatil.noty.composeapp.view.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.*
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -37,6 +42,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
+import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -124,7 +130,7 @@ private fun navigateToLogin(navController: NavHostController) {
     navController.navigate(
         Screen.Login.route,
         builder = {
-            popUpTo(Screen.Notes.route) {
+            popUpTo(NOTY_NAV_HOST_ROUTE) {
                 inclusive = true
             }
         }
