@@ -28,9 +28,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import dev.shreyaspatil.noty.composeapp.view.Screen
-import dev.shreyaspatil.noty.composeapp.view.screen.*
+import dev.shreyaspatil.noty.composeapp.view.screen.AboutScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.AddNoteScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.LoginScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.NoteDetailsScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.NotesScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.SignUpScreen
+import dev.shreyaspatil.noty.composeapp.view.screen.noteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+
+const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
@@ -38,7 +46,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 fun NotyNavigation(toggleTheme: () -> Unit) {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = Screen.Notes.route) {
+    NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
         composable(Screen.SignUp.route) {
             SignUpScreen(navController, it.hiltNavGraphViewModel())
         }
@@ -60,6 +68,9 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
             val noteId = it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID)
                 ?: throw IllegalStateException("'noteId' shouldn't be null")
             NoteDetailsScreen(navController, noteDetailViewModel(noteId))
+        }
+        composable(Screen.About.route) {
+            AboutScreen(navController = navController)
         }
     }
 }

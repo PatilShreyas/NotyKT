@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view
+package dev.shreyaspatil.noty.composeapp.utils
 
-sealed class Screen(val route: String, val name: String) {
-    object SignUp : Screen("signup", "Sign Up")
-    object Login : Screen("login", "Login")
-    object Notes : Screen("notes", "Notes")
-    object NotesDetail : Screen("note/{noteId}", "Note details") {
-        fun route(noteId: String) = "note/$noteId"
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 
-        const val ARG_NOTE_ID: String = "noteId"
-    }
-
-    object AddNote : Screen("note/new", "New note")
-    object About : Screen("about", "About")
+object IntentUtils {
+    fun launchBrowser(context: Context, url: String) =
+        Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
+            context.startActivity(it)
+        }
 }

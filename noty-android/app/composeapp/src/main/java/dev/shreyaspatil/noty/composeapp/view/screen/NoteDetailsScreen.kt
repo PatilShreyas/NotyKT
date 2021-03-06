@@ -22,7 +22,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
@@ -102,7 +109,7 @@ fun NoteDetailsScreen(
                             )
                         }
                     },
-                    backgroundColor = MaterialTheme.colors.onBackground,
+                    backgroundColor = MaterialTheme.colors.background,
                     contentColor = MaterialTheme.colors.onPrimary,
                     elevation = 0.dp,
                     actions = {

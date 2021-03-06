@@ -19,16 +19,27 @@ package dev.shreyaspatil.noty.composeapp.view.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ConstraintLayout
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeightIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -36,6 +47,7 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +59,7 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.ui.typography
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.utils.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -60,12 +73,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Failed -> FailureDialog(viewState.message)
         is ViewState.Success -> {
-            navController.navigate(
-                route = Screen.Notes.route,
-                builder = {
-                    launchSingleTop = true
-                }
-            )
+            navController.navigateUp()
         }
     }
 
@@ -74,7 +82,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             ConstraintLayout(
                 Modifier
                     .fillMaxSize()
-                    .background(Color.White)
+                    .background(MaterialTheme.colors.surface)
             ) {
                 val (
                     logoRef,
@@ -101,14 +109,13 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 Text(
                     text = "Welcome\nback",
                     style = typography.h4,
-                    color = Color.Black,
                     modifier = Modifier.constrainAs(titleRef) {
                         top.linkTo(logoRef.bottom, margin = 30.dp)
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-
-                val username = remember { mutableStateOf(TextFieldValue()) }
+                var username by remember { mutableStateOf(TextFieldValue()) }
+                val isValidUsername = AuthValidator.isValidUsername(username.text)
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -123,11 +130,16 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = username.value,
-                    onValueChange = { username.value = it }
+                    value = username,
+                    onValueChange = {
+                        username = it
+                    },
+                    isErrorValue = !isValidUsername
                 )
 
-                val password = remember { mutableStateOf(TextFieldValue()) }
+                var password by remember { mutableStateOf(TextFieldValue()) }
+                val isValidPassword = AuthValidator.isValidPassword(password.text)
+
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -142,12 +154,20 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         fontSize = 16.sp
                     ),
                     backgroundColor = MaterialTheme.colors.background,
-                    value = password.value,
-                    onValueChange = { password.value = it }
+                    visualTransformation = PasswordVisualTransformation(),
+                    value = password,
+                    onValueChange = {
+                        password = it
+                    },
+                    isErrorValue = !isValidPassword
                 )
 
                 Button(
-                    onClick = { loginViewModel.login(username.value.text, password.value.text) },
+                    onClick = {
+                        if (isValidUsername && isValidPassword) {
+                            loginViewModel.login(username.text, password.text)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
@@ -161,7 +181,6 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
                 Text(
                     text = buildAnnotatedString {
-                        pushStyle(SpanStyle(color = Color.Black))
                         append("Don't have an account? Signup")
                         addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
                         toAnnotatedString()
