@@ -40,8 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
+import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.typography
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -65,6 +67,7 @@ fun SignUpScreen(
                 route = Screen.Notes.route,
                 builder = {
                     launchSingleTop = true
+                    popUpTo(NOTY_NAV_HOST_ROUTE) { inclusive = true }
                 }
             )
         }
