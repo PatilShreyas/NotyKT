@@ -20,12 +20,12 @@ buildscript {
         kotlinSerializerVersion = "1.0.1"
         ktlintVersion = "10.0.0"
         coroutinesVersion = "1.4.2"
-        ktorVersion = "1.5.1"
+        ktorVersion = "1.5.2"
         exposedVersion = "0.28.1"
         postgresVersion = "42.2.18"
         logbackVersion = "1.2.3"
         daggerVersion = "2.33"
-        testContainerVersion = "1.15.1"
+        testContainerVersion = "1.15.2"
         kotestVersion = "4.4.1"
     }
 
