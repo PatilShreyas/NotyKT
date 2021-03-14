@@ -79,7 +79,6 @@ dependencies {
     implementation "androidx.security:security-crypto:$securityCryptoVersion"
 
     // Hilt + JetPack
-    api "androidx.hilt:hilt-lifecycle-viewmodel:$jetpackHiltVersion"
     api "androidx.hilt:hilt-work:$jetpackHiltVersion"
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"
 
