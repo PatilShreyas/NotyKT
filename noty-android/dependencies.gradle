@@ -47,7 +47,7 @@ ext {
     lottieComposeVersion = "1.0.0-beta03-1"
 
     // DI
-    daggerHiltVersion = "2.31.2-alpha"
+    daggerHiltVersion = "2.33-beta"
     jetpackHiltVersion = "1.0.0-beta01"
 
     // Networking

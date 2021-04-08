@@ -39,11 +39,10 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -62,7 +61,7 @@ fun AboutScreen(navController: NavController) {
         topBar = {
             AboutAppBar(navController = navController)
         },
-        bodyContent = {
+        content = {
             AboutColumn()
         }
     )
@@ -92,7 +91,7 @@ fun AboutAppBar(navController: NavController) {
                 }
             ) {
                 Icon(
-                    vectorResource(R.drawable.ic_baseline_arrow_back),
+                    painterResource(R.drawable.ic_baseline_arrow_back),
                     "Back",
                     tint = MaterialTheme.colors.onPrimary
                 )
@@ -208,7 +207,7 @@ fun VisitCard() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val context = AmbientContext.current
+            val context = LocalContext.current
             val visitUrl = stringResource(id = R.string.text_repo_url)
             Box(
                 Modifier.clickable(
