@@ -104,6 +104,8 @@ dependencies {
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
 
+    implementation "androidx.constraintlayout:constraintlayout-compose:$composeConstraintLayoutVersion"
+
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
 
@@ -143,6 +145,9 @@ dependencies {
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:$composeNavVersion"
+
+    // Hilt Compose Navigation
+    implementation "androidx.hilt:hilt-navigation-compose:$hiltComposeNavVersion"
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"

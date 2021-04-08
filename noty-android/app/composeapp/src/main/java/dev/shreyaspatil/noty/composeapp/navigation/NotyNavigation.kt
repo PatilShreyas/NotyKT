@@ -17,11 +17,7 @@
 package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.AmbientContext
-import androidx.hilt.navigation.HiltViewModelFactory
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavBackStackEntry
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -48,16 +44,16 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
 
     NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
         composable(Screen.SignUp.route) {
-            SignUpScreen(navController, it.hiltNavGraphViewModel())
+            SignUpScreen(navController, hiltNavGraphViewModel())
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController, it.hiltNavGraphViewModel())
+            LoginScreen(navController, hiltNavGraphViewModel())
         }
         composable(Screen.AddNote.route) {
-            AddNoteScreen(navController, it.hiltNavGraphViewModel())
+            AddNoteScreen(navController, hiltNavGraphViewModel())
         }
         composable(Screen.Notes.route) {
-            NotesScreen(toggleTheme, navController, it.hiltNavGraphViewModel())
+            NotesScreen(toggleTheme, navController, hiltNavGraphViewModel())
         }
         composable(
             Screen.NotesDetail.route,
@@ -73,10 +69,4 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
             AboutScreen(navController = navController)
         }
     }
-}
-
-@Composable
-inline fun <reified VM : ViewModel> NavBackStackEntry.hiltNavGraphViewModel(): VM {
-    val viewModelFactory = HiltViewModelFactory(AmbientContext.current, this)
-    return ViewModelProvider(this, viewModelFactory).get(VM::class.java)
 }

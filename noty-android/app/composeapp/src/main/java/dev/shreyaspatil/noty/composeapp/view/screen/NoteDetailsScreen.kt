@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.view.screen
 
 import android.app.Activity
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,15 +39,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientContext
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.core.app.ShareCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dagger.hilt.android.EntryPointAccessors
@@ -55,7 +56,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
-import dev.shreyaspatil.noty.composeapp.utils.toast
+import dev.shreyaspatil.noty.composeapp.utils.ShowToast
 import dev.shreyaspatil.noty.composeapp.view.MainActivity
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
@@ -71,7 +72,7 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
-    val activity = AmbientContext.current as Activity
+    val activity = LocalContext.current as Activity
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
     val deleteState = viewModel.deleteNoteState.collectAsState(initial = null)
@@ -103,7 +104,7 @@ fun NoteDetailsScreen(
                             }
                         ) {
                             Icon(
-                                vectorResource(R.drawable.ic_back),
+                                painterResource(R.drawable.ic_back),
                                 "Back",
                                 tint = MaterialTheme.colors.onPrimary
                             )
@@ -126,20 +127,20 @@ fun NoteDetailsScreen(
                     }
                 )
             },
-            bodyContent = {
+            content = {
                 LazyColumn {
                     item {
                         TextField(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                                .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                                .background(MaterialTheme.colors.background),
                             label = { Text(text = "Title") },
                             textStyle = TextStyle(
                                 color = MaterialTheme.colors.onPrimary,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 24.sp
                             ),
-                            backgroundColor = MaterialTheme.colors.background,
                             value = titleText.value,
                             onValueChange = { titleText.value = it }
                         )
@@ -149,13 +150,13 @@ fun NoteDetailsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                                .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                                .background(MaterialTheme.colors.background),
                             label = { Text(text = "Write something...") },
                             textStyle = TextStyle(
                                 color = MaterialTheme.colors.onPrimary,
                                 fontSize = 16.sp
                             ),
-                            backgroundColor = MaterialTheme.colors.background,
                             value = noteText.value,
                             onValueChange = { noteText.value = it }
                         )
@@ -180,7 +181,7 @@ fun NoteDetailsScreen(
                         backgroundColor = MaterialTheme.colors.primary
                     )
                 } else {
-                    toast("Note title or note text are not valid!")
+                    ShowToast("Note title or note text are not valid!")
                 }
             }
         )
@@ -219,7 +220,7 @@ fun shareNote(activity: Activity, title: String, note: String) {
 @Composable
 fun noteDetailViewModel(noteId: String): NoteDetailViewModel {
     val factory = EntryPointAccessors.fromActivity(
-        AmbientContext.current as Activity,
+        LocalContext.current as Activity,
         MainActivity.ViewModelFactoryProvider::class.java
     ).noteDetailViewModelFactory()
 

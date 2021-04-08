@@ -19,12 +19,11 @@ package dev.shreyaspatil.noty.composeapp.view.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredHeightIn
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
@@ -43,7 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -51,6 +50,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
@@ -95,9 +95,9 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
 
                 Image(
                     contentDescription = "App Logo",
-                    bitmap = imageResource(id = noty_app_logo),
+                    painter = painterResource(id = noty_app_logo),
                     modifier = Modifier
-                        .preferredHeightIn(100.dp, 100.dp)
+                        .sizeIn(100.dp, 100.dp)
                         .constrainAs(logoRef) {
                             top.linkTo(parent.top, margin = 60.dp)
                             start.linkTo(parent.start, 16.dp)
@@ -122,19 +122,18 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(usernameRef) {
                             top.linkTo(titleRef.bottom, margin = 30.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Username") },
                     leadingIcon = { Icon(Icons.Outlined.Person, "User") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     value = username,
                     onValueChange = {
                         username = it
                     },
-                    isErrorValue = !isValidUsername
+                    isError = !isValidUsername
                 )
 
                 var password by remember { mutableStateOf(TextFieldValue()) }
@@ -146,20 +145,19 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(passwordRef) {
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Password") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
                     value = password,
                     onValueChange = {
                         password = it
                     },
-                    isErrorValue = !isValidPassword
+                    isError = !isValidPassword
                 )
 
                 Button(
@@ -191,8 +189,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                             top.linkTo(buttonSignupRef.bottom, margin = 24.dp)
                             start.linkTo(parent.start, margin = 16.dp)
                             end.linkTo(parent.end, margin = 16.dp)
-                        }
-                        .clickable(
+                        }.clickable(
                             onClick = {
                                 navController.navigate(Screen.SignUp.route)
                             }

@@ -71,6 +71,7 @@ dependencies {
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:$workmanagerVersion"
+    implementation "androidx.work:work-multiprocess:$workmanagerVersion"
 
     // Jetpack DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"

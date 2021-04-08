@@ -18,9 +18,9 @@ package dev.shreyaspatil.noty.composeapp.utils
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun toast(message: String) {
-    Toast.makeText(AmbientContext.current, message, Toast.LENGTH_SHORT).show()
+fun ShowToast(message: String) {
+    Toast.makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
 }

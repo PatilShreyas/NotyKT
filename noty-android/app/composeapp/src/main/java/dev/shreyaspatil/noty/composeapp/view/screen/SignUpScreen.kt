@@ -18,7 +18,6 @@ package dev.shreyaspatil.noty.composeapp.view.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,6 +46,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.popUpTo
@@ -118,19 +118,18 @@ fun SignUpScreen(
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(usernameRef) {
                             top.linkTo(titleRef.bottom, margin = 50.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Username") },
                     leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     value = username,
                     onValueChange = {
                         username = it
                     },
-                    isErrorValue = !isValidUsername
+                    isError = !isValidUsername
                 )
 
                 var password by remember { mutableStateOf(TextFieldValue()) }
@@ -142,20 +141,19 @@ fun SignUpScreen(
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(passwordRef) {
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
                     value = password,
                     onValueChange = {
                         password = it
                     },
-                    isErrorValue = !isValidPassword
+                    isError = !isValidPassword
                 )
 
                 var confirmPassword by remember { mutableStateOf(TextFieldValue()) }
@@ -170,20 +168,19 @@ fun SignUpScreen(
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(confirmPasswordRef) {
                             top.linkTo(passwordRef.bottom, margin = 16.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Confirm password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
                     value = confirmPassword,
                     onValueChange = {
                         confirmPassword = it
                     },
-                    isErrorValue = !isValidConfirmPassword
+                    isError = !isValidConfirmPassword
                 )
 
                 Button(

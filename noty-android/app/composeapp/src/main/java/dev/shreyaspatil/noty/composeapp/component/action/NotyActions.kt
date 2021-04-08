@@ -21,15 +21,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.R
 
 @Composable
 fun DeleteAction(onClick: () -> Unit) {
-    val icon = vectorResource(R.drawable.ic_delete)
+    val icon = painterResource(R.drawable.ic_delete)
     Icon(
-        imageVector = icon,
+        painter = icon,
         contentDescription = "Delete",
         modifier = Modifier
             .padding(end = 8.dp)
@@ -39,7 +39,7 @@ fun DeleteAction(onClick: () -> Unit) {
 
 @Composable
 fun ShareAction(onClick: () -> Unit) {
-    val icon = vectorResource(R.drawable.ic_share)
+    val icon = painterResource(R.drawable.ic_share)
     Icon(
         icon,
         "share",
@@ -51,7 +51,7 @@ fun ShareAction(onClick: () -> Unit) {
 
 @Composable
 fun ThemeSwitchAction(onToggle: () -> Unit) {
-    val icon = vectorResource(R.drawable.ic_day)
+    val icon = painterResource(R.drawable.ic_day)
     Icon(
         icon,
         "Theme switch",
@@ -63,7 +63,7 @@ fun ThemeSwitchAction(onToggle: () -> Unit) {
 
 @Composable
 fun LogoutAction(onLogout: () -> Unit) {
-    val icon = vectorResource(R.drawable.ic_logout)
+    val icon = painterResource(R.drawable.ic_logout)
     Icon(
         icon,
         "Logout",
@@ -75,7 +75,7 @@ fun LogoutAction(onLogout: () -> Unit) {
 
 @Composable
 fun AboutAction(onClick: () -> Unit) {
-    val icon = vectorResource(R.drawable.ic_baseline_info)
+    val icon = painterResource(R.drawable.ic_baseline_info)
     Icon(
         icon,
         "About",
