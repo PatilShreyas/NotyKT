@@ -68,6 +68,7 @@ android {
     }
 
     composeOptions {
+        kotlinCompilerVersion kotlinVersion
         kotlinCompilerExtensionVersion composeVersion
     }
 
@@ -143,6 +144,9 @@ dependencies {
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:$composeNavVersion"
+
+    // Hilt Compose Navigation
+    implementation "androidx.hilt:hilt-navigation-compose:$hiltComposeNavVersion"
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
