@@ -39,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -123,19 +122,18 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(usernameRef) {
                             top.linkTo(titleRef.bottom, margin = 30.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Username") },
                     leadingIcon = { Icon(Icons.Outlined.Person, "User") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     value = username,
                     onValueChange = {
                         username = it
                     },
-                    isErrorValue = !isValidUsername
+                    isError = !isValidUsername
                 )
 
                 var password by remember { mutableStateOf(TextFieldValue()) }
@@ -147,20 +145,19 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(passwordRef) {
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Password") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
                     value = password,
                     onValueChange = {
                         password = it
                     },
-                    isErrorValue = !isValidPassword
+                    isError = !isValidPassword
                 )
 
                 Button(

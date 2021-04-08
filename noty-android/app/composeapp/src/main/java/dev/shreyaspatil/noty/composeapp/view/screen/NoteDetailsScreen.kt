@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.view.screen
 
 import android.app.Activity
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -132,14 +133,14 @@ fun NoteDetailsScreen(
                         TextField(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                                .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                                .background(MaterialTheme.colors.background),
                             label = { Text(text = "Title") },
                             textStyle = TextStyle(
                                 color = MaterialTheme.colors.onPrimary,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 24.sp
                             ),
-                            backgroundColor = MaterialTheme.colors.background,
                             value = titleText.value,
                             onValueChange = { titleText.value = it }
                         )
@@ -149,13 +150,13 @@ fun NoteDetailsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-                                .padding(16.dp, 0.dp, 16.dp, 0.dp),
+                                .padding(16.dp, 0.dp, 16.dp, 0.dp)
+                                .background(MaterialTheme.colors.background),
                             label = { Text(text = "Write something...") },
                             textStyle = TextStyle(
                                 color = MaterialTheme.colors.onPrimary,
                                 fontSize = 16.sp
                             ),
-                            backgroundColor = MaterialTheme.colors.background,
                             value = noteText.value,
                             onValueChange = { noteText.value = it }
                         )

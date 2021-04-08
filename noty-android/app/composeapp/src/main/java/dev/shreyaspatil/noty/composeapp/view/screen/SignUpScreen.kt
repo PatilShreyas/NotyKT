@@ -118,19 +118,18 @@ fun SignUpScreen(
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(usernameRef) {
                             top.linkTo(titleRef.bottom, margin = 50.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Username") },
                     leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     value = username,
                     onValueChange = {
                         username = it
                     },
-                    isErrorValue = !isValidUsername
+                    isError = !isValidUsername
                 )
 
                 var password by remember { mutableStateOf(TextFieldValue()) }
@@ -142,20 +141,19 @@ fun SignUpScreen(
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(passwordRef) {
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
                     value = password,
                     onValueChange = {
                         password = it
                     },
-                    isErrorValue = !isValidPassword
+                    isError = !isValidPassword
                 )
 
                 var confirmPassword by remember { mutableStateOf(TextFieldValue()) }
@@ -170,20 +168,19 @@ fun SignUpScreen(
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(confirmPasswordRef) {
                             top.linkTo(passwordRef.bottom, margin = 16.dp)
-                        },
+                        }.background(MaterialTheme.colors.background),
                     label = { Text(text = "Confirm password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
                     textStyle = TextStyle(
                         color = MaterialTheme.colors.onPrimary,
                         fontSize = 16.sp
                     ),
-                    backgroundColor = MaterialTheme.colors.background,
                     visualTransformation = PasswordVisualTransformation(),
                     value = confirmPassword,
                     onValueChange = {
                         confirmPassword = it
                     },
-                    isErrorValue = !isValidConfirmPassword
+                    isError = !isValidConfirmPassword
                 )
 
                 Button(
