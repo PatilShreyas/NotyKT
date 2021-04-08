@@ -68,7 +68,6 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion kotlinVersion
         kotlinCompilerExtensionVersion composeVersion
     }
 
@@ -104,6 +103,8 @@ dependencies {
     // Android
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
+
+    implementation "androidx.constraintlayout:constraintlayout-compose:$composeConstraintLayoutVersion"
 
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"

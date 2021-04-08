@@ -29,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.AmbientLifecycleOwner
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
@@ -62,7 +62,7 @@ fun NotesScreen(
         return
     }
 
-    val lifecycleScope = AmbientLifecycleOwner.current.lifecycleScope
+    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
 
     Scaffold(
         topBar = {
@@ -96,7 +96,7 @@ fun NotesScreen(
                 }
             )
         },
-        bodyContent = {
+        content = {
             val notesState = viewModel.notes.collectAsState(initial = null).value
 
             val onNoteClicked: (Note) -> Unit = {
