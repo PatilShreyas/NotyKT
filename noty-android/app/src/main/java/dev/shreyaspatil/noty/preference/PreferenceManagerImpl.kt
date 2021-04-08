@@ -17,18 +17,21 @@
 package dev.shreyaspatil.noty.preference
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.preferencesKey
-import androidx.datastore.preferences.createDataStore
+import androidx.datastore.preferences.preferencesDataStore
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
+val Context.uiModePrefDataStore by preferencesDataStore("ui_mode_pref")
+
 class PreferenceManagerImpl(context: Context) : PreferenceManager {
-    private val dataStore = context.createDataStore(name = "ui_mode_pref")
+
+    private val dataStore = context.uiModePrefDataStore
 
     override val uiModeFlow: Flow<Boolean> = dataStore.data
         .catch {
@@ -47,6 +50,6 @@ class PreferenceManagerImpl(context: Context) : PreferenceManager {
     }
 
     companion object {
-        val IS_DARK_MODE = preferencesKey<Boolean>("dark_mode")
+        val IS_DARK_MODE = booleanPreferencesKey("dark_mode")
     }
 }
