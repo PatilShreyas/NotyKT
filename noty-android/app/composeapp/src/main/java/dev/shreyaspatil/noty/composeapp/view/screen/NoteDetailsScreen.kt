@@ -49,7 +49,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.navigate
 import dagger.hilt.android.EntryPointAccessors
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
