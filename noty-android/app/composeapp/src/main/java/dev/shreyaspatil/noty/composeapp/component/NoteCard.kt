@@ -17,7 +17,12 @@
 package dev.shreyaspatil.noty.composeapp.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -38,12 +43,13 @@ fun NoteCard(note: Note, onNoteClick: () -> Unit) {
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .wrapContentHeight()
-            .clickable { onNoteClick() },
+            .wrapContentHeight(),
         elevation = 0.dp
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable { onNoteClick() }
         ) {
             Text(
                 text = note.title,
@@ -56,7 +62,8 @@ fun NoteCard(note: Note, onNoteClick: () -> Unit) {
                 text = note.note,
                 style = typography.body1,
                 color = MaterialTheme.colors.onPrimary,
-                lineHeight = 24.sp
+                lineHeight = 24.sp,
+                maxLines = 2
             )
         }
     }
