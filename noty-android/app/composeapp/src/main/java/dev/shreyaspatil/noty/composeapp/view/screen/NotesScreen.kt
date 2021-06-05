@@ -34,8 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.popUpTo
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
@@ -100,6 +98,7 @@ fun NotesScreen(
             val notesState = viewModel.notes.collectAsState(initial = null).value
 
             val onNoteClicked: (Note) -> Unit = {
+                println("Note Clicked")
                 navController.navigate(Screen.NotesDetail.route(it.id))
             }
 
