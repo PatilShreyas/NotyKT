@@ -39,7 +39,7 @@ task stage {
 
 You will also need a [`Procfile`](https://github.com/PatilShreyas/NotyKT/blob/master/noty-api/Procfile) describing what to execute at the time of deployment.
 
-As we set up Gradle task in previous step, whenever Gradle task `state` is executed, built application artifacts are generated at the path `application/build/install/application/bin/application`. In the Procfile, just provide the name of the process and the generated executable file.
+As we set up Gradle task in previous step, whenever Gradle task `stage` is executed, built application artifacts are generated at the path `application/build/install/application/bin/application`. In the Procfile, just provide the name of the process and the generated executable file.
 
 ```Procfile
 web: application/build/install/application/bin/application
