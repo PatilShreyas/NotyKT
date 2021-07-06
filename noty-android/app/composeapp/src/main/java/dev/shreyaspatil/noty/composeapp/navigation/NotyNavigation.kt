@@ -17,7 +17,7 @@
 package dev.shreyaspatil.noty.composeapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltNavGraphViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,16 +44,16 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
 
     NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
         composable(Screen.SignUp.route) {
-            SignUpScreen(navController, hiltNavGraphViewModel())
+            SignUpScreen(navController, hiltViewModel())
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController, hiltNavGraphViewModel())
+            LoginScreen(navController, hiltViewModel())
         }
         composable(Screen.AddNote.route) {
-            AddNoteScreen(navController, hiltNavGraphViewModel())
+            AddNoteScreen(navController, hiltViewModel())
         }
         composable(Screen.Notes.route) {
-            NotesScreen(toggleTheme, navController, hiltNavGraphViewModel())
+            NotesScreen(toggleTheme, navController, hiltViewModel())
         }
         composable(
             Screen.NotesDetail.route,

@@ -16,7 +16,7 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.0-beta03'
+    androidGradlePluginVersion = '7.0.0-beta05'
 
     // Kotlin
     kotlinVersion = "1.5.10"
@@ -25,29 +25,29 @@ ext {
 
     // Android
     appcompatVersion = "1.3.0"
-    coreKtxVersion = "1.5.0"
+    coreKtxVersion = "1.6.0"
     constraintlayoutVersion = "2.0.4"
     swipeRefreshLayoutVersion = "1.1.0"
-    recyclerViewVersion = "1.2.0-alpha03"
+    recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.5.0'
     lifecycleVersion = "2.3.1"
     navigationVersion = "2.3.5"
     securityCryptoVersion = '1.1.0-alpha03'
     roomVersion = "2.3.0"
-    dataStoreVersion = '1.0.0-beta01'
+    dataStoreVersion = '1.0.0-rc01'
     legacySupportVersion = "1.0.0"
 
     // Design
-    materialDesignVersion = "1.3.0"
+    materialDesignVersion = "1.4.0"
 
     // Lottie Animation
-    lottieVersion = "3.6.1"
+    lottieVersion = "3.7.0"
 
     // Lottie Animation (Compose)
     lottieComposeVersion = "1.0.0-beta07-1"
 
     // DI
-    daggerHiltVersion = "2.36"
+    daggerHiltVersion = "2.37"
     jetpackHiltVersion = "1.0.0"
 
     // Networking
@@ -61,16 +61,16 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.0.0-beta08"
+    composeVersion = "1.0.0-rc01"
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.0-alpha07"
 
     // Jetpack Compose Navigation
-    composeNavVersion = "2.4.0-alpha02"
+    composeNavVersion = "2.4.0-alpha04"
 
     // Hilt Compose Navigation
-    hiltComposeNavVersion = "1.0.0-alpha02"
+    hiltComposeNavVersion = "1.0.0-alpha03"
 
     // Testing
     jUnitVersion = "4.13.2"
