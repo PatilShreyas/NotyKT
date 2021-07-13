@@ -19,7 +19,7 @@ buildscript {
         kotlinVersion = "1.5.20"
         kotlinSerializerVersion = "1.2.2"
         ktlintVersion = "10.1.0"
-        coroutinesVersion = "1.5.1"
+        coroutinesVersion = "1.5.1-native-mt"
         ktorVersion = "1.6.1"
         exposedVersion = "0.32.1"
         postgresVersion = "42.2.23"
