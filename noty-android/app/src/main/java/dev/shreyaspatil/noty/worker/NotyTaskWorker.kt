@@ -12,7 +12,7 @@ import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.di.RemoteRepository
-import dev.shreyaspatil.noty.utils.getEnum
+import dev.shreyaspatil.noty.utils.ext.getEnum
 import kotlinx.coroutines.flow.first
 
 @HiltWorker

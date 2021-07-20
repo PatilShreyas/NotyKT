@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils
+package dev.shreyaspatil.noty.utils.validator
 
-import android.graphics.drawable.Drawable
-import android.widget.TextView
+import androidx.core.text.trimmedLength
 
-fun TextView.setDrawableLeft(drawable: Drawable?) {
-    setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+object AuthValidator {
+    fun isValidUsername(username: String): Boolean = username.trimmedLength() in (4..30)
+    fun isValidPassword(password: String): Boolean = password.trimmedLength() in (8..50)
+
+    fun isPasswordAndConfirmPasswordSame(
+        password: String,
+        confirmedPassword: String
+    ): Boolean = password.trim() == confirmedPassword.trim()
 }

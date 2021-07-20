@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils
+package dev.shreyaspatil.noty.utils.ext
 
-import androidx.work.Data
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 
-fun <T> Data.Builder.putEnum(key: String, value: T) = apply { putString(key, value.toString()) }
-
-inline fun <reified T : Enum<T>> Data.getEnum(key: String): T? {
-    val enumValue = getString(key)
-    return runCatching { enumValueOf<T>(enumValue!!) }.getOrNull()
-}
+fun <T> Flow<T>.shareWhileObserved(coroutineScope: CoroutineScope) = shareIn(
+    scope = coroutineScope,
+    started = SharingStarted.WhileSubscribed(),
+    replay = 1
+)
