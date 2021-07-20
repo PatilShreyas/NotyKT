@@ -59,7 +59,7 @@ import dev.shreyaspatil.noty.composeapp.utils.ShowToast
 import dev.shreyaspatil.noty.composeapp.view.MainActivity
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.utils.NoteValidator
+import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi

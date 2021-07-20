@@ -54,7 +54,7 @@ import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.typography
 import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.utils.AuthValidator
+import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 

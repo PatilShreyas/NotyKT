@@ -16,8 +16,8 @@
 
 package dev.shreyaspatil.noty.utils
 
-import android.app.Activity
 import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -27,7 +27,7 @@ import android.provider.MediaStore
 @JvmField
 val DEFAULT_FILENAME = "${System.currentTimeMillis()}.png"
 
-fun saveBitmap(activity: Activity, bitmap: Bitmap, filename: String = DEFAULT_FILENAME): Uri? {
+fun saveBitmap(context: Context, bitmap: Bitmap, filename: String = DEFAULT_FILENAME): Uri? {
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
         put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
@@ -37,7 +37,7 @@ fun saveBitmap(activity: Activity, bitmap: Bitmap, filename: String = DEFAULT_FI
         }
     }
 
-    val contentResolver = activity.contentResolver
+    val contentResolver = context.contentResolver
 
     val imageUri: Uri? = contentResolver.insert(
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,

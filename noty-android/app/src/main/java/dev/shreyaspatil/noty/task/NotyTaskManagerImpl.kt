@@ -22,7 +22,7 @@ import androidx.work.WorkInfo.State
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
-import dev.shreyaspatil.noty.utils.putEnum
+import dev.shreyaspatil.noty.utils.ext.putEnum
 import dev.shreyaspatil.noty.worker.NotySyncWorker
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import kotlinx.coroutines.flow.Flow

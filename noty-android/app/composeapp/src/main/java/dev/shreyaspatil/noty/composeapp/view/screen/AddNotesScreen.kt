@@ -48,7 +48,7 @@ import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.utils.NoteValidator
+import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 

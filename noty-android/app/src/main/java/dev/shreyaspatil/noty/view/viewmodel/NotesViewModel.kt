@@ -29,7 +29,7 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.shareWhileObserved
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject

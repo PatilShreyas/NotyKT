@@ -23,7 +23,7 @@ import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.utils.shareWhileObserved
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

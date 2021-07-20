@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils
+package dev.shreyaspatil.noty.utils.ext
 
-import androidx.core.text.trimmedLength
+import android.graphics.drawable.Drawable
+import android.widget.TextView
 
-object NoteValidator {
-    fun isValidNote(title: String, note: String) = (title.trimmedLength() >= 4 && note.isNotBlank())
+fun TextView.setDrawableLeft(drawable: Drawable?) {
+    setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
 }

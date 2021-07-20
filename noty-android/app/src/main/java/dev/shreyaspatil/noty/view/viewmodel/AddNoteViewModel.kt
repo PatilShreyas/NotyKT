@@ -25,7 +25,7 @@ import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.shareWhileObserved
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow

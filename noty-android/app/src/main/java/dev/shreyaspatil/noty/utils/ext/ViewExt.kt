@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils
+package dev.shreyaspatil.noty.utils.ext
 
-import androidx.core.text.trimmedLength
+import android.view.View
 
-object AuthValidator {
-    fun isValidUsername(username: String): Boolean = username.trimmedLength() in (4..30)
-    fun isValidPassword(password: String): Boolean = password.trimmedLength() in (8..50)
+fun View.show() {
+    visibility = View.VISIBLE
+}
 
-    fun isPasswordAndConfirmPasswordSame(
-        password: String,
-        confirmedPassword: String
-    ): Boolean = password.trim() == confirmedPassword.trim()
+fun View.hide() {
+    visibility = View.GONE
 }

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils
+package dev.shreyaspatil.noty.utils.ext
 
-import android.view.View
+import androidx.work.Data
 
-fun View.show() {
-    visibility = View.VISIBLE
-}
+fun <T> Data.Builder.putEnum(key: String, value: T) = apply { putString(key, value.toString()) }
 
-fun View.hide() {
-    visibility = View.GONE
+inline fun <reified T : Enum<T>> Data.getEnum(key: String): T? {
+    val enumValue = getString(key)
+    return runCatching { enumValueOf<T>(enumValue!!) }.getOrNull()
 }

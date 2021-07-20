@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils
+package dev.shreyaspatil.noty.utils.validator
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import androidx.core.text.trimmedLength
 
-fun <T> Flow<T>.shareWhileObserved(coroutineScope: CoroutineScope) = shareIn(
-    scope = coroutineScope,
-    started = SharingStarted.WhileSubscribed(),
-    replay = 1
-)
+object NoteValidator {
+    fun isValidNote(title: String, note: String) = (title.trimmedLength() >= 4 && note.isNotBlank())
+}
