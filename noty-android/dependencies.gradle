@@ -34,7 +34,7 @@ ext {
     navigationVersion = "2.3.5"
     securityCryptoVersion = '1.1.0-alpha03'
     roomVersion = "2.3.0"
-    dataStoreVersion = '1.0.0-rc01'
+    dataStoreVersion = '1.0.0-rc02'
     legacySupportVersion = "1.0.0"
 
     // Design
@@ -71,6 +71,8 @@ ext {
 
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0-alpha03"
+
+    lifecycleViewModelComposeVersion = "1.0.0-alpha07"
 
     // Testing
     jUnitVersion = "4.13.2"
