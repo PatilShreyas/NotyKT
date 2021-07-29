@@ -18,23 +18,27 @@ package dev.shreyaspatil.noty.composeapp.component.anim
 
 import androidx.annotation.RawRes
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieAnimationSpec
-import com.airbnb.lottie.compose.rememberLottieAnimationState
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
-fun LottieAnimation(@RawRes resId: Int, modifier: Modifier = Modifier) {
-    val animationSpec = remember { LottieAnimationSpec.RawRes(resId) }
-    val animationState = rememberLottieAnimationState(
-        autoPlay = true,
-        repeatCount = Integer.MAX_VALUE
+fun LottieAnimation(
+    @RawRes resId: Int,
+    modifier: Modifier = Modifier,
+    iterations: Int = LottieConstants.IterateForever,
+    restartOnPlay: Boolean = true
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(resId))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = iterations,
+        restartOnPlay = restartOnPlay
     )
 
-    LottieAnimation(
-        animationSpec,
-        animationState = animationState,
-        modifier = modifier
-    )
+    LottieAnimation(composition, progress, modifier = modifier)
 }
