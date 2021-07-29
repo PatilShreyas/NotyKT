@@ -49,4 +49,3 @@ fun assistedViewModelFactory() = EntryPointAccessors.fromActivity(
     LocalContext.current as Activity,
     MainActivity.ViewModelFactoryProvider::class.java
 )
-

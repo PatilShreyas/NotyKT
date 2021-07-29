@@ -63,9 +63,12 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
             )
         ) {
             val noteId = requireNotNull(it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID))
-            NoteDetailsScreen(navController, assistedViewModel {
-                NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
-            })
+            NoteDetailsScreen(
+                navController,
+                assistedViewModel {
+                    NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
+                }
+            )
         }
         composable(Screen.About.route) {
             AboutScreen(navController = navController)

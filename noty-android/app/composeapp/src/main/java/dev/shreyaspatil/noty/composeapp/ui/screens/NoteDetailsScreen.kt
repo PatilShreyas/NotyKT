@@ -209,4 +209,3 @@ fun shareNote(activity: Activity, title: String, note: String) {
 
     activity.startActivity(Intent.createChooser(intent, null))
 }
-
