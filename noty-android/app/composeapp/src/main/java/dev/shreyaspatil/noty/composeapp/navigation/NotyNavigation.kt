@@ -23,14 +23,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
-import dev.shreyaspatil.noty.composeapp.view.Screen
-import dev.shreyaspatil.noty.composeapp.view.screen.AboutScreen
-import dev.shreyaspatil.noty.composeapp.view.screen.AddNoteScreen
+import dev.shreyaspatil.noty.composeapp.ui.Screen
+import dev.shreyaspatil.noty.composeapp.ui.screens.AboutScreen
+import dev.shreyaspatil.noty.composeapp.ui.screens.AddNoteScreen
+import dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailsScreen
+import dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen
+import dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen
+import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
 import dev.shreyaspatil.noty.composeapp.view.screen.LoginScreen
-import dev.shreyaspatil.noty.composeapp.view.screen.NoteDetailsScreen
-import dev.shreyaspatil.noty.composeapp.view.screen.NotesScreen
-import dev.shreyaspatil.noty.composeapp.view.screen.SignUpScreen
-import dev.shreyaspatil.noty.composeapp.view.screen.noteDetailViewModel
+import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -61,9 +62,10 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
                 navArgument(Screen.NotesDetail.ARG_NOTE_ID) { type = NavType.StringType }
             )
         ) {
-            val noteId = it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID)
-                ?: throw IllegalStateException("'noteId' shouldn't be null")
-            NoteDetailsScreen(navController, noteDetailViewModel(noteId))
+            val noteId = requireNotNull(it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID))
+            NoteDetailsScreen(navController, assistedViewModel {
+                NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
+            })
         }
         composable(Screen.About.route) {
             AboutScreen(navController = navController)
