@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.screen
+package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import android.app.Activity
 import android.content.Intent
@@ -47,17 +47,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ShareCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import dagger.hilt.android.EntryPointAccessors
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.utils.ShowToast
-import dev.shreyaspatil.noty.composeapp.view.MainActivity
-import dev.shreyaspatil.noty.composeapp.view.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
@@ -99,7 +95,7 @@ fun NoteDetailsScreen(
                         IconButton(
                             modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp),
                             onClick = {
-                                navController.navigate(Screen.Notes.route)
+                                navController.navigateUp()
                             }
                         ) {
                             Icon(
@@ -212,16 +208,4 @@ fun shareNote(activity: Activity, title: String, note: String) {
         .intent
 
     activity.startActivity(Intent.createChooser(intent, null))
-}
-
-@InternalCoroutinesApi
-@ExperimentalCoroutinesApi
-@Composable
-fun noteDetailViewModel(noteId: String): NoteDetailViewModel {
-    val factory = EntryPointAccessors.fromActivity(
-        LocalContext.current as Activity,
-        MainActivity.ViewModelFactoryProvider::class.java
-    ).noteDetailViewModelFactory()
-
-    return viewModel(factory = NoteDetailViewModel.provideFactory(factory, noteId))
 }

@@ -16,19 +16,16 @@
 
 package dev.shreyaspatil.noty.composeapp.ui
 
-import androidx.compose.ui.graphics.Color
+sealed class Screen(val route: String, val name: String) {
+    object SignUp : Screen("signup", "Sign Up")
+    object Login : Screen("login", "Login")
+    object Notes : Screen("notes", "Notes")
+    object NotesDetail : Screen("note/{noteId}", "Note details") {
+        fun route(noteId: String) = "note/$noteId"
 
-// primary color
-val primary = Color(0xFF7885FF)
+        const val ARG_NOTE_ID: String = "noteId"
+    }
 
-// for bg
-val bgDay = Color(0xfff3f7f9)
-val bgNight = Color(0xff121212)
-
-// for card colors
-val day = Color(0xffffffff)
-val night = Color(0xff1A191E)
-
-// for text colors
-val black = Color(0xff000000)
-val white = Color(0xffffffff)
+    object AddNote : Screen("note/new", "New note")
+    object About : Screen("about", "About")
+}

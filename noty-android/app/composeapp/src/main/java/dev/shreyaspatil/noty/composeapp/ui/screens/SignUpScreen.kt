@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.screen
+package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,8 +51,8 @@ import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
-import dev.shreyaspatil.noty.composeapp.ui.typography
-import dev.shreyaspatil.noty.composeapp.view.Screen
+import dev.shreyaspatil.noty.composeapp.ui.Screen
+import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.anim.LottieAnimation
-import dev.shreyaspatil.noty.composeapp.ui.typography
+import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 
 @Composable
 fun LoaderDialog() {

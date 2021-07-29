@@ -47,7 +47,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -55,8 +54,8 @@ import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
-import dev.shreyaspatil.noty.composeapp.ui.typography
-import dev.shreyaspatil.noty.composeapp.view.Screen
+import dev.shreyaspatil.noty.composeapp.ui.Screen
+import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
@@ -72,7 +71,10 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
         is ViewState.Loading -> LoaderDialog()
         is ViewState.Failed -> FailureDialog(viewState.message)
         is ViewState.Success -> {
-            navController.navigateUp()
+            navController.navigate(Screen.Notes.route) {
+                launchSingleTop = true
+                popUpTo(Screen.Login.route) { inclusive = true }
+            }
         }
     }
 
@@ -113,15 +115,16 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         start.linkTo(parent.start, margin = 16.dp)
                     }
                 )
-                var username by remember { mutableStateOf(TextFieldValue()) }
-                val isValidUsername = AuthValidator.isValidUsername(username.text)
+                var username by remember { mutableStateOf("") }
+                val isValidUsername = AuthValidator.isValidUsername(username)
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(usernameRef) {
                             top.linkTo(titleRef.bottom, margin = 30.dp)
-                        }.background(MaterialTheme.colors.background),
+                        }
+                        .background(MaterialTheme.colors.background),
                     label = { Text(text = "Username") },
                     leadingIcon = { Icon(Icons.Outlined.Person, "User") },
                     textStyle = TextStyle(
@@ -135,8 +138,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     isError = !isValidUsername
                 )
 
-                var password by remember { mutableStateOf(TextFieldValue()) }
-                val isValidPassword = AuthValidator.isValidPassword(password.text)
+                var password by remember { mutableStateOf("") }
+                val isValidPassword = AuthValidator.isValidPassword(password)
 
                 TextField(
                     modifier = Modifier
@@ -144,7 +147,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(passwordRef) {
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        }.background(MaterialTheme.colors.background),
+                        }
+                        .background(MaterialTheme.colors.background),
                     label = { Text(text = "Password") },
                     leadingIcon = { Icon(Icons.Outlined.Lock, "Password") },
                     textStyle = TextStyle(
@@ -162,7 +166,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 Button(
                     onClick = {
                         if (isValidUsername && isValidPassword) {
-                            loginViewModel.login(username.text, password.text)
+                            loginViewModel.login(username, password)
                         }
                     },
                     modifier = Modifier
@@ -188,7 +192,8 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                             top.linkTo(buttonSignupRef.bottom, margin = 24.dp)
                             start.linkTo(parent.start, margin = 16.dp)
                             end.linkTo(parent.end, margin = 16.dp)
-                        }.clickable(
+                        }
+                        .clickable(
                             onClick = {
                                 navController.navigate(Screen.SignUp.route)
                             }

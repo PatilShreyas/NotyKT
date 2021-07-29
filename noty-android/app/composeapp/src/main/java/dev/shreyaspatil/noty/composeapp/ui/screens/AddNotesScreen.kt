@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.screen
+package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight

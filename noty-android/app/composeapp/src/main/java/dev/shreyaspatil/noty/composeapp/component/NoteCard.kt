@@ -43,13 +43,13 @@ fun NoteCard(note: Note, onNoteClick: () -> Unit) {
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .clickable { onNoteClick() },
         elevation = 0.dp
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { onNoteClick() }
         ) {
             Text(
                 text = note.title,
