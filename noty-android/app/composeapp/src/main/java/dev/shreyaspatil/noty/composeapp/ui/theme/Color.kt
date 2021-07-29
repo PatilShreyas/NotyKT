@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.ui
+package dev.shreyaspatil.noty.composeapp.ui.theme
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Shapes
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 
-val shapes = Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(4.dp),
-    large = RoundedCornerShape(0.dp)
-)
+// primary color
+val primary = Color(0xFF7885FF)
+
+// for bg
+val bgDay = Color(0xfff3f7f9)
+val bgNight = Color(0xff121212)
+
+// for card colors
+val day = Color(0xffffffff)
+val night = Color(0xff1A191E)
+
+// for text colors
+val black = Color(0xff000000)
+val white = Color(0xffffffff)

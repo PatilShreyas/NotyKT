@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.view.screen
+package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.FloatingActionButton
@@ -40,8 +40,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
-import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
-import dev.shreyaspatil.noty.composeapp.view.Screen
+import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -129,9 +128,7 @@ private fun navigateToLogin(navController: NavHostController) {
     navController.navigate(
         Screen.Login.route,
         builder = {
-            popUpTo(NOTY_NAV_HOST_ROUTE) {
-                inclusive = true
-            }
+            launchSingleTop = true
         }
     )
 }
