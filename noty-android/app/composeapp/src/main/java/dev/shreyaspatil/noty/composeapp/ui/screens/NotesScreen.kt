@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -26,40 +27,49 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
-import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
+import dev.shreyaspatil.noty.composeapp.ui.MainActivity
 import dev.shreyaspatil.noty.composeapp.ui.Screen
-import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
-fun NotesScreen(
-    toggleTheme: () -> Unit,
-    navController: NavHostController,
-    viewModel: NotesViewModel
-) {
+fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     if (!viewModel.isUserLoggedIn()) {
         navigateToLogin(navController)
         return
     }
 
     val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
+
+    val currentActivity = LocalContext.current as MainActivity
+    val darkMode by currentActivity.preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
+
+    val switchTheme: () -> Unit = {
+        lifecycleScope.launch { currentActivity.preferenceManager.setDarkMode(!darkMode) }
+    }
 
     Scaffold(
         topBar = {
@@ -76,7 +86,7 @@ fun NotesScreen(
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
-                    ThemeSwitchAction(toggleTheme)
+                    ThemeSwitchAction(switchTheme)
                     AboutAction {
                         navController.navigate(
                             Screen.About.route
@@ -94,20 +104,24 @@ fun NotesScreen(
             )
         },
         content = {
-            val notesState = viewModel.notes.collectAsState(initial = null).value
+            val notesState = viewModel.notes.collectAsState(initial = ViewState.loading()).value
+            val syncState = viewModel.syncState.collectAsState(initial = ViewState.loading()).value
 
-            val onNoteClicked: (Note) -> Unit = {
-                println("Note Clicked")
-                navController.navigate(Screen.NotesDetail.route(it.id))
+            val isRefreshing = (notesState is ViewState.Loading) or (syncState is ViewState.Loading)
+
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = { viewModel.syncNotes() }
+            ) {
+                when (notesState) {
+                    is ViewState.Success -> NotesList(notesState.data) { note ->
+                        navController.navigate(Screen.NotesDetail.route(note.id))
+                    }
+                    is ViewState.Failed -> FailureDialog(notesState.message)
+                }
             }
 
-            when (notesState) {
-                is ViewState.Loading, null -> LoaderDialog()
-                is ViewState.Success -> NotesList(notesState.data, onNoteClicked)
-                is ViewState.Failed -> FailureDialog(notesState.message)
-            }
-
-            viewModel.syncNotes()
+            LaunchedEffect(true) { viewModel.syncNotes() }
         },
         floatingActionButton = {
             FloatingActionButton(
