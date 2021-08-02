@@ -40,7 +40,6 @@ import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,22 +69,17 @@ class MainActivity : AppCompatActivity() {
     private fun NotyMain() {
         val darkMode by preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
 
-        val toggleTheme: () -> Unit = {
-            lifecycleScope.launch { preferenceManager.setDarkMode(!darkMode) }
-        }
-
         NotyTheme(darkTheme = darkMode) {
-            // A surface container using the 'background' color from the theme
             Surface(color = MaterialTheme.colors.background) {
-                NotyNavigation(toggleTheme = toggleTheme)
+                NotyNavigation()
             }
         }
     }
 
     private fun observeUiTheme() {
         lifecycleScope.launchWhenStarted {
-            preferenceManager.uiModeFlow.collect {
-                val mode = when (it) {
+            preferenceManager.uiModeFlow.collect { isDarkMode ->
+                val mode = when (isDarkMode) {
                     true -> AppCompatDelegate.MODE_NIGHT_YES
                     false -> AppCompatDelegate.MODE_NIGHT_NO
                 }

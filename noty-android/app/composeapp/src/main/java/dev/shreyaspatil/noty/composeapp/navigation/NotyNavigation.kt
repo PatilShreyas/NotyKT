@@ -40,7 +40,7 @@ const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
-fun NotyNavigation(toggleTheme: () -> Unit) {
+fun NotyNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
@@ -54,7 +54,7 @@ fun NotyNavigation(toggleTheme: () -> Unit) {
             AddNoteScreen(navController, hiltViewModel())
         }
         composable(Screen.Notes.route) {
-            NotesScreen(toggleTheme, navController, hiltViewModel())
+            NotesScreen(navController, hiltViewModel())
         }
         composable(
             Screen.NotesDetail.route,
