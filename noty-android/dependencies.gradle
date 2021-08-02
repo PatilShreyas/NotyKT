@@ -74,6 +74,9 @@ ext {
 
     lifecycleViewModelComposeVersion = "1.0.0-alpha07"
 
+    // Accompanist
+    accompanistVersion = "0.15.0"
+
     // Testing
     jUnitVersion = "4.13.2"
     androidJUnitVersion = "1.1.2"
