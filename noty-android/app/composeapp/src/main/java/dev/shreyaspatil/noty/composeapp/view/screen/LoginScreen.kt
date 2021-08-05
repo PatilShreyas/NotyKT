@@ -26,13 +26,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,20 +39,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
+import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
+import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue
+import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -116,8 +110,9 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                     }
                 )
                 var username by remember { mutableStateOf("") }
-                val isValidUsername = AuthValidator.isValidUsername(username)
-                TextField(
+                var isValidUsername by remember { mutableStateOf(false) }
+
+                UsernameTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
@@ -125,23 +120,17 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                             top.linkTo(titleRef.bottom, margin = 30.dp)
                         }
                         .background(MaterialTheme.colors.background),
-                    label = { Text(text = "Username") },
-                    leadingIcon = { Icon(Icons.Outlined.Person, "User") },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 16.sp
-                    ),
                     value = username,
-                    onValueChange = {
-                        username = it
-                    },
-                    isError = !isValidUsername
+                    onTextChange = {
+                        username = it.data
+                        isValidUsername = it is TextFieldValue.Valid
+                    }
                 )
 
                 var password by remember { mutableStateOf("") }
-                val isValidPassword = AuthValidator.isValidPassword(password)
+                var isValidPassword by remember { mutableStateOf(false) }
 
-                TextField(
+                PasswordTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
@@ -149,18 +138,11 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
                         }
                         .background(MaterialTheme.colors.background),
-                    label = { Text(text = "Password") },
-                    leadingIcon = { Icon(Icons.Outlined.Lock, "Password") },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 16.sp
-                    ),
-                    visualTransformation = PasswordVisualTransformation(),
                     value = password,
-                    onValueChange = {
-                        password = it
-                    },
-                    isError = !isValidPassword
+                    onTextChange = {
+                        password = it.data
+                        isValidPassword = it is TextFieldValue.Valid
+                    }
                 )
 
                 Button(
