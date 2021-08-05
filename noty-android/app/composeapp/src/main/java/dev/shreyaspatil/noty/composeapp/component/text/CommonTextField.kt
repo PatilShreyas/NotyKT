@@ -50,5 +50,3 @@ fun NotyTextField(
         visualTransformation = visualTransformation
     )
 }
-
-

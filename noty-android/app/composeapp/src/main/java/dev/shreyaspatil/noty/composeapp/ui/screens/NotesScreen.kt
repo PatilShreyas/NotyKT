@@ -65,7 +65,9 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
 
     val currentActivity = LocalContext.current as MainActivity
-    val darkMode by currentActivity.preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
+    val darkMode by currentActivity.preferenceManager
+        .uiModeFlow
+        .collectAsState(isSystemInDarkTheme())
 
     val switchTheme: () -> Unit = {
         lifecycleScope.launch { currentActivity.preferenceManager.setDarkMode(!darkMode) }
