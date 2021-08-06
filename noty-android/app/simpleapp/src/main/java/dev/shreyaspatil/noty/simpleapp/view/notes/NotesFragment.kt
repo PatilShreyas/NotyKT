@@ -27,7 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
@@ -93,7 +93,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.notes.first().let { notesState ->
                 when {
-                    notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
+                    notesState is UIDataState.Success -> notesListAdapter.submitList(notesState.data)
                     notesListAdapter.itemCount == 0 -> syncNotes()
                 }
             }
@@ -109,12 +109,12 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notes.asLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
-                is ViewState.Success -> onNotesLoaded(it.data).also {
+                is UIDataState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is UIDataState.Success -> onNotesLoaded(it.data).also {
                     binding.swipeRefreshNotes.isRefreshing = false
                 }
 
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     toast("Error: ${it.message}")
                 }
@@ -125,9 +125,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeSync() {
         viewModel.syncState.asLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
-                is ViewState.Success -> binding.swipeRefreshNotes.isRefreshing = false
-                is ViewState.Failed -> {
+                is UIDataState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is UIDataState.Success -> binding.swipeRefreshNotes.isRefreshing = false
+                is UIDataState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     toast("Sync Error: ${it.message}")
                 }
@@ -239,7 +239,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private suspend fun shouldSyncNotes() = viewModel.notes.first()
-        .let { state -> state is ViewState.Failed || notesListAdapter.itemCount == 0 }
+        .let { state -> state is UIDataState.Failed || notesListAdapter.itemCount == 0 }
 
     override fun getViewBinding(
         inflater: LayoutInflater,

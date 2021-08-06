@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.LoginFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
@@ -47,12 +47,12 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
     private fun initData() {
         viewModel.authFlow.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
-                is ViewState.Success -> {
+                is UIDataState.Loading -> showProgressDialog()
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     onAuthSuccess()
                 }
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     hideProgressDialog()
                     showErrorDialog(
                         title = getString(R.string.dialog_title_login_failed),

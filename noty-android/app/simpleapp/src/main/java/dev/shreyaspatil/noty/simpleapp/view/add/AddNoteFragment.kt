@@ -24,7 +24,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
@@ -81,14 +81,14 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
     private fun observeAddNoteResult() {
         viewModel.addNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
+                is UIDataState.Loading -> showProgressDialog()
 
-                is ViewState.Success -> {
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     findNavController().navigateUp()
                 }
 
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     hideProgressDialog()
                     showErrorDialog("Failed to add a note", viewState.message)
                 }

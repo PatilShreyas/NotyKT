@@ -49,7 +49,7 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -67,9 +67,9 @@ fun AddNoteScreen(
     val addNoteState = viewModel.addNoteState.collectAsState(initial = null).value
 
     when (addNoteState) {
-        is ViewState.Loading -> LoaderDialog()
-        is ViewState.Success -> navController.navigateUp()
-        is ViewState.Failed -> FailureDialog(addNoteState.message)
+        is UIDataState.Loading -> LoaderDialog()
+        is UIDataState.Success -> navController.navigateUp()
+        is UIDataState.Failed -> FailureDialog(addNoteState.message)
     }
 
     Scaffold(

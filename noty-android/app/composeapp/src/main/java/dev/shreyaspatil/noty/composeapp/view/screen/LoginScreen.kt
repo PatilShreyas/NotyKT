@@ -51,7 +51,7 @@ import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -62,9 +62,9 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
     val viewState = loginViewModel.authFlow.collectAsState(initial = null).value
 
     when (viewState) {
-        is ViewState.Loading -> LoaderDialog()
-        is ViewState.Failed -> FailureDialog(viewState.message)
-        is ViewState.Success -> {
+        is UIDataState.Loading -> LoaderDialog()
+        is UIDataState.Failed -> FailureDialog(viewState.message)
+        is UIDataState.Success -> {
             navController.navigate(Screen.Notes.route) {
                 launchSingleTop = true
                 popUpTo(Screen.Login.route) { inclusive = true }

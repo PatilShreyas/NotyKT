@@ -48,7 +48,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.ui.Screen
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -103,24 +103,24 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
         content = {
             var isSynced by rememberSaveable { mutableStateOf(false) }
 
-            val notesState = viewModel.notes.collectAsState(initial = ViewState.loading()).value
-            val syncState = viewModel.syncState.collectAsState(initial = ViewState.loading()).value
+            val notesState = viewModel.notes.collectAsState(initial = UIDataState.loading()).value
+            val syncState = viewModel.syncState.collectAsState(initial = UIDataState.loading()).value
 
             // Check whether it's already synced in the past composition
             // Or also check whether current state is also successful or not
-            isSynced = isSynced || syncState is ViewState.Success
+            isSynced = isSynced || syncState is UIDataState.Success
 
-            val isRefreshing = (notesState is ViewState.Loading) or (syncState is ViewState.Loading)
+            val isRefreshing = (notesState is UIDataState.Loading) or (syncState is UIDataState.Loading)
 
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing),
                 onRefresh = { viewModel.syncNotes() }
             ) {
                 when (notesState) {
-                    is ViewState.Success -> NotesList(notesState.data) { note ->
+                    is UIDataState.Success -> NotesList(notesState.data) { note ->
                         navController.navigate(Screen.NotesDetail.route(note.id))
                     }
-                    is ViewState.Failed -> FailureDialog(notesState.message)
+                    is UIDataState.Failed -> FailureDialog(notesState.message)
                 }
             }
 

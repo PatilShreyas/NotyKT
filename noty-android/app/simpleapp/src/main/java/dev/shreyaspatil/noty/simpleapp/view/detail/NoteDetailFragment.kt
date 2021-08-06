@@ -32,7 +32,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
@@ -110,12 +110,12 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteUpdate() {
         viewModel.updateNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
-                is ViewState.Success -> {
+                is UIDataState.Loading -> showProgressDialog()
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     hideProgressDialog()
                     toast("Error: ${viewState.message}")
                 }
@@ -126,12 +126,12 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteDeletion() {
         viewModel.deleteNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
-                is ViewState.Success -> {
+                is UIDataState.Loading -> showProgressDialog()
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> hideProgressDialog()
+                is UIDataState.Failed -> hideProgressDialog()
             }
         }
     }

@@ -48,7 +48,7 @@ import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -62,8 +62,8 @@ fun SignUpScreen(
     val viewState = viewModel.authFlow.collectAsState(initial = null).value
 
     when (viewState) {
-        is ViewState.Loading -> LoaderDialog()
-        is ViewState.Success -> {
+        is UIDataState.Loading -> LoaderDialog()
+        is UIDataState.Success -> {
             navController.navigate(
                 route = Screen.Notes.route,
                 builder = {
@@ -72,7 +72,7 @@ fun SignUpScreen(
                 }
             )
         }
-        is ViewState.Failed -> FailureDialog(viewState.message)
+        is UIDataState.Failed -> FailureDialog(viewState.message)
     }
 
     LazyColumn {

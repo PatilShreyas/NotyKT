@@ -57,7 +57,7 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
 import dev.shreyaspatil.noty.composeapp.utils.ShowToast
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -161,10 +161,10 @@ fun NoteDetailsScreen(
             }
         )
 
-        val registerOnStateChanged: @Composable (ViewState<Unit>?) -> Unit = { state ->
+        val registerOnStateChanged: @Composable (UIDataState<Unit>?) -> Unit = { state ->
             when (state) {
-                is ViewState.Success -> navController.navigateUp()
-                is ViewState.Failed -> FailureDialog(state.message)
+                is UIDataState.Success -> navController.navigateUp()
+                is UIDataState.Failed -> FailureDialog(state.message)
             }
         }
 

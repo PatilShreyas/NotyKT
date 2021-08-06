@@ -27,7 +27,7 @@ import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import kotlinx.coroutines.Dispatchers
@@ -55,17 +55,17 @@ class NotesViewModel @Inject constructor(
 
     private var syncJob: Job? = null
 
-    private val _syncState = MutableSharedFlow<ViewState<Unit>>()
-    val syncState: SharedFlow<ViewState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
+    private val _syncState = MutableSharedFlow<UIDataState<Unit>>()
+    val syncState: SharedFlow<UIDataState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
 
-    val notes: SharedFlow<ViewState<List<Note>>> = notyNoteRepository.getAllNotes()
+    val notes: SharedFlow<UIDataState<List<Note>>> = notyNoteRepository.getAllNotes()
         .distinctUntilChanged()
         .map { result ->
             when (result) {
-                is ResponseResult.Success -> ViewState.success(result.data)
-                is ResponseResult.Error -> ViewState.failed(result.message)
+                is ResponseResult.Success -> UIDataState.success(result.data)
+                is ResponseResult.Error -> UIDataState.failed(result.message)
             }
-        }.onStart { emit(ViewState.loading()) }
+        }.onStart { emit(UIDataState.loading()) }
         .shareWhileObserved(viewModelScope)
 
     fun syncNotes() {
@@ -76,9 +76,9 @@ class NotesViewModel @Inject constructor(
             try {
                 notyTaskManager.observeTask(taskId).collect { taskState ->
                     val viewState = when (taskState) {
-                        TaskState.SCHEDULED -> ViewState.loading()
-                        TaskState.COMPLETED, TaskState.CANCELLED -> ViewState.success(Unit)
-                        TaskState.FAILED -> ViewState.failed("Failed")
+                        TaskState.SCHEDULED -> UIDataState.loading()
+                        TaskState.COMPLETED, TaskState.CANCELLED -> UIDataState.success(Unit)
+                        TaskState.FAILED -> UIDataState.failed("Failed")
                     }
 
                     _syncState.emit(viewState)

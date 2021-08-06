@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.core.view
+package dev.shreyaspatil.noty.core.ui
 
 /**
  * State for managing UI operations.
  */
-sealed class ViewState<T> {
-    class Loading<T> : ViewState<T>()
-    class Success<T>(val data: T) : ViewState<T>()
-    class Failed<T>(val message: String) : ViewState<T>()
+sealed class UIDataState<T> {
+    class Loading<T> : UIDataState<T>()
+    class Success<T>(val data: T) : UIDataState<T>()
+    class Failed<T>(val message: String) : UIDataState<T>()
 
     companion object {
         fun <T> loading() = Loading<T>()
