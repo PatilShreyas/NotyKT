@@ -32,15 +32,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -49,7 +47,6 @@ import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
-import dev.shreyaspatil.noty.composeapp.ui.MainActivity
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -67,16 +64,9 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
         return
     }
 
-    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
+    val scope = rememberCoroutineScope()
 
-    val currentActivity = LocalContext.current as MainActivity
-    val darkMode by currentActivity.preferenceManager
-        .uiModeFlow
-        .collectAsState(isSystemInDarkTheme())
-
-    val switchTheme: () -> Unit = {
-        lifecycleScope.launch { currentActivity.preferenceManager.setDarkMode(!darkMode) }
-    }
+    val isInDarkMode = isSystemInDarkTheme()
 
     Scaffold(
         topBar = {
@@ -93,7 +83,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
-                    ThemeSwitchAction(switchTheme)
+                    ThemeSwitchAction { viewModel.setDarkMode(!isInDarkMode) }
                     AboutAction {
                         navController.navigate(
                             Screen.About.route
@@ -101,7 +91,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                     }
                     LogoutAction(
                         onLogout = {
-                            lifecycleScope.launch {
+                            scope.launch {
                                 viewModel.clearUserSession()
                                 navigateToLogin(navController)
                             }
