@@ -24,13 +24,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,21 +35,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
+import dev.shreyaspatil.noty.composeapp.component.text.ConfirmPasswordTextField
+import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
+import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue.Valid
+import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
-import dev.shreyaspatil.noty.core.view.ViewState
-import dev.shreyaspatil.noty.utils.validator.AuthValidator
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -68,8 +62,8 @@ fun SignUpScreen(
     val viewState = viewModel.authFlow.collectAsState(initial = null).value
 
     when (viewState) {
-        is ViewState.Loading -> LoaderDialog()
-        is ViewState.Success -> {
+        is UIDataState.Loading -> LoaderDialog()
+        is UIDataState.Success -> {
             navController.navigate(
                 route = Screen.Notes.route,
                 builder = {
@@ -78,7 +72,7 @@ fun SignUpScreen(
                 }
             )
         }
-        is ViewState.Failed -> FailureDialog(viewState.message)
+        is UIDataState.Failed -> FailureDialog(viewState.message)
     }
 
     LazyColumn {
@@ -107,84 +101,65 @@ fun SignUpScreen(
                     }
                 )
 
-                var username by remember { mutableStateOf(TextFieldValue()) }
-                val isValidUsername = AuthValidator.isValidUsername(username.text)
+                var username by remember { mutableStateOf("") }
+                var isValidUsername by remember { mutableStateOf(false) }
 
-                TextField(
+                UsernameTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(usernameRef) {
-                            top.linkTo(titleRef.bottom, margin = 50.dp)
-                        }.background(MaterialTheme.colors.background),
-                    label = { Text(text = "Username") },
-                    leadingIcon = { Icon(Icons.Outlined.Person, "Person") },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 16.sp
-                    ),
+                            top.linkTo(titleRef.bottom, margin = 30.dp)
+                        }
+                        .background(MaterialTheme.colors.background),
                     value = username,
-                    onValueChange = {
-                        username = it
-                    },
-                    isError = !isValidUsername
+                    onTextChange = {
+                        username = it.data
+                        isValidUsername = it is Valid
+                    }
                 )
 
-                var password by remember { mutableStateOf(TextFieldValue()) }
-                val isValidPassword = AuthValidator.isValidPassword(password.text)
+                var password by remember { mutableStateOf("") }
+                var isValidPassword by remember { mutableStateOf(false) }
 
-                TextField(
+                PasswordTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(passwordRef) {
                             top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        }.background(MaterialTheme.colors.background),
-                    label = { Text(text = "Password") },
-                    leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 16.sp
-                    ),
-                    visualTransformation = PasswordVisualTransformation(),
+                        }
+                        .background(MaterialTheme.colors.background),
                     value = password,
-                    onValueChange = {
-                        password = it
-                    },
-                    isError = !isValidPassword
+                    onTextChange = {
+                        password = it.data
+                        isValidPassword = it is Valid
+                    }
                 )
 
-                var confirmPassword by remember { mutableStateOf(TextFieldValue()) }
-                val isValidConfirmPassword = AuthValidator.isPasswordAndConfirmPasswordSame(
-                    password.text,
-                    confirmPassword.text
-                )
+                var confirmPassword by remember { mutableStateOf("") }
+                var isValidConfirmPassword by remember { mutableStateOf(false) }
 
-                TextField(
+                ConfirmPasswordTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .constrainAs(confirmPasswordRef) {
                             top.linkTo(passwordRef.bottom, margin = 16.dp)
-                        }.background(MaterialTheme.colors.background),
-                    label = { Text(text = "Confirm password") },
-                    leadingIcon = { Icon(Icons.Outlined.Lock, "Lock") },
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colors.onPrimary,
-                        fontSize = 16.sp
-                    ),
-                    visualTransformation = PasswordVisualTransformation(),
+                        }
+                        .background(MaterialTheme.colors.background),
                     value = confirmPassword,
-                    onValueChange = {
-                        confirmPassword = it
-                    },
-                    isError = !isValidConfirmPassword
+                    expectedValue = password,
+                    onTextChange = {
+                        confirmPassword = it.data
+                        isValidConfirmPassword = it is Valid
+                    }
                 )
 
                 Button(
                     onClick = {
                         if (isValidUsername && isValidPassword && isValidConfirmPassword) {
-                            viewModel.register(username.text, password.text)
+                            viewModel.register(username, password)
                         }
                     },
                     modifier = Modifier

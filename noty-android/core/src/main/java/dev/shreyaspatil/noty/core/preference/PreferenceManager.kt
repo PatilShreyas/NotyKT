@@ -16,8 +16,8 @@
 
 package dev.shreyaspatil.noty.core.preference
 
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Singleton
 
 /**
  * Preference Manager for the application.
@@ -25,6 +25,12 @@ import kotlinx.coroutines.flow.Flow
  */
 @Singleton
 interface PreferenceManager {
+    /**
+     * Flow of the UI mode preference
+     *
+     * true - Dark mode enabled
+     * false - Dark mode disabled (i.e. Light mode)
+     */
     val uiModeFlow: Flow<Boolean>
 
     /**

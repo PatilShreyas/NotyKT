@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -26,40 +28,45 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
-import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.ui.Screen
-import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
-fun NotesScreen(
-    toggleTheme: () -> Unit,
-    navController: NavHostController,
-    viewModel: NotesViewModel
-) {
+fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     if (!viewModel.isUserLoggedIn()) {
         navigateToLogin(navController)
         return
     }
 
-    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
+    val scope = rememberCoroutineScope()
+
+    val isInDarkMode = isSystemInDarkTheme()
 
     Scaffold(
         topBar = {
@@ -76,7 +83,7 @@ fun NotesScreen(
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
-                    ThemeSwitchAction(toggleTheme)
+                    ThemeSwitchAction { viewModel.setDarkMode(!isInDarkMode) }
                     AboutAction {
                         navController.navigate(
                             Screen.About.route
@@ -84,7 +91,7 @@ fun NotesScreen(
                     }
                     LogoutAction(
                         onLogout = {
-                            lifecycleScope.launch {
+                            scope.launch {
                                 viewModel.clearUserSession()
                                 navigateToLogin(navController)
                             }
@@ -94,20 +101,34 @@ fun NotesScreen(
             )
         },
         content = {
-            val notesState = viewModel.notes.collectAsState(initial = null).value
+            var isSynced by rememberSaveable { mutableStateOf(false) }
 
-            val onNoteClicked: (Note) -> Unit = {
-                println("Note Clicked")
-                navController.navigate(Screen.NotesDetail.route(it.id))
+            val notes = viewModel.notes.collectAsState(UIDataState.loading()).value
+            val syncState = viewModel.syncState.collectAsState(UIDataState.loading()).value
+
+            // Check whether it's already synced in the past composition
+            // Or also check whether current state is also successful or not
+            isSynced = isSynced || syncState is UIDataState.Success
+
+            val isRefreshing = (notes is UIDataState.Loading) or (syncState is UIDataState.Loading)
+
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = { viewModel.syncNotes() }
+            ) {
+                when (notes) {
+                    is UIDataState.Success -> NotesList(notes.data) { note ->
+                        navController.navigate(Screen.NotesDetail.route(note.id))
+                    }
+                    is UIDataState.Failed -> FailureDialog(notes.message)
+                }
             }
 
-            when (notesState) {
-                is ViewState.Loading, null -> LoaderDialog()
-                is ViewState.Success -> NotesList(notesState.data, onNoteClicked)
-                is ViewState.Failed -> FailureDialog(notesState.message)
+            LaunchedEffect(true) {
+                if (!isSynced) {
+                    viewModel.syncNotes()
+                }
             }
-
-            viewModel.syncNotes()
         },
         floatingActionButton = {
             FloatingActionButton(

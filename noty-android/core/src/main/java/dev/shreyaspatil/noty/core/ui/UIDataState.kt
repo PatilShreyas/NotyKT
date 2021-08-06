@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.ui.theme
+package dev.shreyaspatil.noty.core.ui
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+/**
+ * State for managing UI operations.
+ */
+sealed class UIDataState<T> {
+    class Loading<T> : UIDataState<T>()
+    class Success<T>(val data: T) : UIDataState<T>()
+    class Failed<T>(val message: String) : UIDataState<T>()
 
-val primary = Color(0xFF7885FF)
-
-val backgroundDay = Color(0xfff3f7f9)
-val backgroundNight = Color(0xff1A191E)
-
-val surfaceDay = Color(0xffffffff)
-val surfaceNight = Color(0xFF38353F)
-
-val black = Color(0xff000000)
-val white = Color(0xffffffff)
-
-@Composable
-fun getTextFieldHintColor(): Color = if (isSystemInDarkTheme()) Color.LightGray else Color.Gray
+    companion object {
+        fun <T> loading() = Loading<T>()
+        fun <T> success(data: T) = Success(data)
+        fun <T> failed(message: String) = Failed<T>(message)
+    }
+}

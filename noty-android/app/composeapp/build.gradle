@@ -143,6 +143,9 @@ dependencies {
     // Compose Lifecycle
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
 
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanistVersion"
+
     // Navigation
     implementation "androidx.navigation:navigation-compose:$composeNavVersion"
 

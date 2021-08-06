@@ -22,7 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,15 +37,15 @@ class RegisterViewModel @Inject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    private val _authFlow = MutableSharedFlow<ViewState<String>>()
-    val authFlow: SharedFlow<ViewState<String>> = _authFlow.shareWhileObserved(viewModelScope)
+    private val _authFlow = MutableSharedFlow<UIDataState<String>>()
+    val authFlow: SharedFlow<UIDataState<String>> = _authFlow.shareWhileObserved(viewModelScope)
 
     fun register(
         username: String,
         password: String
     ) {
         viewModelScope.launch {
-            _authFlow.emit(ViewState.loading())
+            _authFlow.emit(UIDataState.loading())
 
             val responseState = notyUserRepository.addUser(username, password)
 
@@ -53,10 +53,10 @@ class RegisterViewModel @Inject constructor(
                 is ResponseResult.Success -> {
                     val authCredential = responseState.data
                     saveToken(authCredential.token)
-                    ViewState.success("Registration Successful")
+                    UIDataState.success("Registration Successful")
                 }
 
-                is ResponseResult.Error -> ViewState.failed(responseState.message)
+                is ResponseResult.Error -> UIDataState.failed(responseState.message)
             }
 
             _authFlow.emit(viewState)

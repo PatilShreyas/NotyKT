@@ -17,6 +17,7 @@
 package dev.shreyaspatil.noty.composeapp.utils
 
 import android.app.Activity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -29,6 +30,7 @@ import dev.shreyaspatil.noty.composeapp.ui.MainActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
+@ExperimentalAnimationApi
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 @Composable
@@ -42,6 +44,7 @@ inline fun <reified VM : ViewModel> assistedViewModel(
     return viewModel(viewModelStoreOwner, factory = factory)
 }
 
+@ExperimentalAnimationApi
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 @Composable
