@@ -31,6 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -108,8 +111,14 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
             )
         },
         content = {
+            var isSynced by rememberSaveable { mutableStateOf(false) }
+
             val notesState = viewModel.notes.collectAsState(initial = ViewState.loading()).value
             val syncState = viewModel.syncState.collectAsState(initial = ViewState.loading()).value
+
+            // Check whether it's already synced in the past composition
+            // Or also check whether current state is also successful or not
+            isSynced = isSynced || syncState is ViewState.Success
 
             val isRefreshing = (notesState is ViewState.Loading) or (syncState is ViewState.Loading)
 
@@ -125,7 +134,11 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                 }
             }
 
-            LaunchedEffect(true) { viewModel.syncNotes() }
+            LaunchedEffect(true) {
+                if (!isSynced) {
+                    viewModel.syncNotes()
+                }
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
