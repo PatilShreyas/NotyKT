@@ -25,8 +25,8 @@ import androidx.compose.runtime.Composable
 private val DarkColorPalette = darkColors(
     primary = primary,
     primaryVariant = primary,
-    background = bgNight,
-    surface = night,
+    background = backgroundNight,
+    surface = surfaceNight,
     onBackground = white,
     onPrimary = white
 )
@@ -34,19 +34,15 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = primary,
     primaryVariant = primary,
-    background = bgDay,
-    surface = day,
+    background = backgroundDay,
+    surface = surfaceDay,
     onBackground = black,
     onPrimary = black
 )
 
 @Composable
 fun NotyTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+    val colors = if (darkTheme) DarkColorPalette else LightColorPalette
 
     MaterialTheme(
         colors = colors,

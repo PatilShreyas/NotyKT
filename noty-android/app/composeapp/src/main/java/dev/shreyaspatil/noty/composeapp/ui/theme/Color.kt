@@ -16,19 +16,20 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-// primary color
 val primary = Color(0xFF7885FF)
 
-// for bg
-val bgDay = Color(0xfff3f7f9)
-val bgNight = Color(0xff121212)
+val backgroundDay = Color(0xfff3f7f9)
+val backgroundNight = Color(0xff1A191E)
 
-// for card colors
-val day = Color(0xffffffff)
-val night = Color(0xff1A191E)
+val surfaceDay = Color(0xffffffff)
+val surfaceNight = Color(0xFF38353F)
 
-// for text colors
 val black = Color(0xff000000)
 val white = Color(0xffffffff)
+
+@Composable
+fun getTextFieldHintColor(): Color = if (isSystemInDarkTheme()) Color.LightGray else Color.Gray
