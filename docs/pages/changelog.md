@@ -8,12 +8,12 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 This release includes User experience improvements in the Jetpack Compose Application. No change in simple app.
 
-### 🔮 What's New?**
+### 🔮 What's New?
 
 - [[#117](https://github.com/PatilShreyas/NotyKT/issues/117)] Added screen: **About** for the details regarding application.
 - [[#118](https://github.com/PatilShreyas/NotyKT/issues/118)] Added ***Swipe to refresh*** support in Notes screen to re-load the notes.
 
-### ✅ Bug Fixes / Improvements**
+### ✅ Bug Fixes / Improvements
 
 All below fixes and improvements are done in the Compose application.
 
@@ -26,7 +26,7 @@ All below fixes and improvements are done in the Compose application.
 - [[#197](https://github.com/PatilShreyas/NotyKT/issues/197)] Improved UI/UX of the input Text fields throughout the application.
 - Fix: Back button pressed in note details screen creates new Notes screen instead of going back.
 
-### 🎯 Codebase Improvements**
+### 🎯 Codebase Improvements
 
 - [[#117](https://github.com/PatilShreyas/NotyKT/issues/117)] Create re-usable Composable components to reduce the repetitive code.
 - Migrated to the latest version of Dagger 2.31.2.
