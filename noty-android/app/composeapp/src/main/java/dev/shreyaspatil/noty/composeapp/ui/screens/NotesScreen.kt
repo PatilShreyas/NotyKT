@@ -103,24 +103,24 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
         content = {
             var isSynced by rememberSaveable { mutableStateOf(false) }
 
-            val notesState = viewModel.notes.collectAsState(initial = UIDataState.loading()).value
-            val syncState = viewModel.syncState.collectAsState(initial = UIDataState.loading()).value
+            val notes = viewModel.notes.collectAsState(UIDataState.loading()).value
+            val syncState = viewModel.syncState.collectAsState(UIDataState.loading()).value
 
             // Check whether it's already synced in the past composition
             // Or also check whether current state is also successful or not
             isSynced = isSynced || syncState is UIDataState.Success
 
-            val isRefreshing = (notesState is UIDataState.Loading) or (syncState is UIDataState.Loading)
+            val isRefreshing = (notes is UIDataState.Loading) or (syncState is UIDataState.Loading)
 
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing),
                 onRefresh = { viewModel.syncNotes() }
             ) {
-                when (notesState) {
-                    is UIDataState.Success -> NotesList(notesState.data) { note ->
+                when (notes) {
+                    is UIDataState.Success -> NotesList(notes.data) { note ->
                         navController.navigate(Screen.NotesDetail.route(note.id))
                     }
-                    is UIDataState.Failed -> FailureDialog(notesState.message)
+                    is UIDataState.Failed -> FailureDialog(notes.message)
                 }
             }
 

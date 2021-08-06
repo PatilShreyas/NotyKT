@@ -19,7 +19,12 @@ package dev.shreyaspatil.noty.simpleapp.view.notes
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.asLiveData
@@ -33,11 +38,12 @@ import dev.shreyaspatil.noty.simpleapp.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
-import dev.shreyaspatil.noty.utils.*
+import dev.shreyaspatil.noty.utils.ConnectionState
 import dev.shreyaspatil.noty.utils.ext.hide
 import dev.shreyaspatil.noty.utils.ext.setDrawableLeft
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import dev.shreyaspatil.noty.utils.ext.show
+import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -91,9 +97,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private fun loadNotes() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.notes.first().let { notesState ->
+            viewModel.notes.first().let { notes ->
                 when {
-                    notesState is UIDataState.Success -> notesListAdapter.submitList(notesState.data)
+                    notes is UIDataState.Success -> notesListAdapter.submitList(notes.data)
                     notesListAdapter.itemCount == 0 -> syncNotes()
                 }
             }
