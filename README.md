@@ -8,6 +8,7 @@
 ![Release](https://github.com/PatilShreyas/NotyKT/workflows/Release/badge.svg)
 
 [![GitHub license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Android Weekly](https://img.shields.io/badge/Android%20Weekly-%23473-2CA3E6.svg?style=flat)](http://androidweekly.net/issues/issue-473)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
 [![GitHub stars](https://img.shields.io/github/stars/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/network/members)
