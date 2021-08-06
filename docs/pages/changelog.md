@@ -29,7 +29,6 @@ All below fixes and improvements are done in the Compose application.
 ### 🎯 Codebase Improvements
 
 - [[#117](https://github.com/PatilShreyas/NotyKT/issues/117)] Create re-usable Composable components to reduce the repetitive code.
-- Migrated to the latest version of Dagger 2.31.2.
 - Using the stable release of Jetpack Compose 1.0.1 with Kotlin 1.5.21.
 - Renamed color components of theme.
 - Use Hilt Compose navigation.
