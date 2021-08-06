@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -37,6 +38,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 
+@ExperimentalAnimationApi
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable

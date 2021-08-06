@@ -39,7 +39,6 @@ fun NoteTitleField(
         textStyle = MaterialTheme.typography.h6,
         maxLines = 2
     )
-
 }
 
 @ExperimentalAnimationApi
@@ -56,5 +55,4 @@ fun NoteField(
         onTextChange = onTextChange,
         textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Light)
     )
-
 }

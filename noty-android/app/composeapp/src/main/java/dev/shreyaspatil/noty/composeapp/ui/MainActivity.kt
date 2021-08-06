@@ -20,6 +20,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -41,6 +42,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
+@ExperimentalAnimationApi
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi

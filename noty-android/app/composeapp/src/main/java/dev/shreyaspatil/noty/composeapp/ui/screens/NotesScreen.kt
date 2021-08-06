@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.FloatingActionButton
@@ -53,6 +54,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
