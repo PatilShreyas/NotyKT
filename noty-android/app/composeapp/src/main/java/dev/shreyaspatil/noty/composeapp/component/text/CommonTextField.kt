@@ -16,16 +16,25 @@
 
 package dev.shreyaspatil.noty.composeapp.component.text
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.shreyaspatil.noty.composeapp.ui.theme.getTextFieldHintColor
 
 @Composable
 fun NotyTextField(
@@ -49,4 +58,34 @@ fun NotyTextField(
         isError = isError,
         visualTransformation = visualTransformation
     )
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun BasicNotyTextField(
+    modifier: Modifier = Modifier,
+    value: String = "",
+    label: String = "",
+    textStyle: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal),
+    onTextChange: (String) -> Unit,
+    maxLines: Int = Int.MAX_VALUE
+) {
+
+    Box(modifier = modifier.padding(4.dp)) {
+        AnimatedVisibility(visible = value.isBlank()) {
+            Text(
+                text = label,
+                color = getTextFieldHintColor(),
+                fontSize = textStyle.fontSize,
+                fontWeight = textStyle.fontWeight
+            )
+        }
+        BasicTextField(
+            value = value,
+            onValueChange = onTextChange,
+            textStyle = textStyle.copy(color = MaterialTheme.colors.onPrimary),
+            maxLines = maxLines,
+            cursorBrush = SolidColor(MaterialTheme.colors.primary)
+        )
+    }
 }
