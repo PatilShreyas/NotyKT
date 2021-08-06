@@ -42,7 +42,7 @@ class SessionManagerImpl(context: Context) : SessionManager {
     override fun getToken(): String? = sharedPreferences.getString(KEY_TOKEN, null)
 
     companion object {
-        const val FILE_NAME = "auth_shared_pref"
-        const val KEY_TOKEN = "auth_token"
+        private const val FILE_NAME = "auth_shared_pref"
+        private const val KEY_TOKEN = "auth_token"
     }
 }
