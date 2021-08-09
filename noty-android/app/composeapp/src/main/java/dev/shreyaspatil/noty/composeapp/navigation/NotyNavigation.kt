@@ -31,7 +31,7 @@ import dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen
 import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
-import dev.shreyaspatil.noty.composeapp.view.screen.LoginScreen
+import dev.shreyaspatil.noty.composeapp.ui.screens.LoginScreen
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
