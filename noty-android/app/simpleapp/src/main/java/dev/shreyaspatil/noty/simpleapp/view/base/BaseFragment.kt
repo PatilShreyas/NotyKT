@@ -82,8 +82,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
     val applicationContext: Context
         get() = requireContext().applicationContext
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
         progressDialog?.dismiss()
         progressDialog = null
