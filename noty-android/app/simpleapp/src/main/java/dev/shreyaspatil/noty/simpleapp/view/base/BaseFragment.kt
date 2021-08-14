@@ -25,8 +25,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.viewbinding.ViewBinding
-import dev.shreyaspatil.noty.simpleapp.view.custom.ProgressDialog
 import dev.shreyaspatil.noty.simpleapp.view.custom.ErrorDialog
+import dev.shreyaspatil.noty.simpleapp.view.custom.ProgressDialog
 
 abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
 
@@ -79,7 +79,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun applicationContext(): Context = requireActivity().applicationContext
+    val applicationContext: Context
+        get() = requireContext().applicationContext
 
     override fun onDestroy() {
         super.onDestroy()
