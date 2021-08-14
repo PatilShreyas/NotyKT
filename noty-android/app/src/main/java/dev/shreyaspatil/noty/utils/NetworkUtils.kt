@@ -63,7 +63,8 @@ fun Context.observeConnectivityAsFlow() = callbackFlow {
  */
 val Context.currentConnectivityState: ConnectionState
     get() {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return getCurrentConnectivityState(connectivityManager)
     }
 
