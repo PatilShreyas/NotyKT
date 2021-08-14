@@ -39,6 +39,7 @@ import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.utils.ConnectionState
+import dev.shreyaspatil.noty.utils.currentConnectivityState
 import dev.shreyaspatil.noty.utils.ext.hide
 import dev.shreyaspatil.noty.utils.ext.setDrawableLeft
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
@@ -46,7 +47,6 @@ import dev.shreyaspatil.noty.utils.ext.show
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -57,8 +57,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     override val viewModel: NotesViewModel by hiltNotyMainNavGraphViewModels()
 
     private val notesListAdapter = NotesListAdapter(::onNoteClicked)
-
-    private lateinit var connectionState: Flow<ConnectionState>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -149,15 +147,13 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun observeConnectivity() {
-        connectionState = applicationContext()
+        applicationContext
             .observeConnectivityAsFlow()
             .shareWhileObserved(viewLifecycleOwner.lifecycleScope)
-            .also { flow ->
-                flow.asLiveData().observe(viewLifecycleOwner) { state ->
-                    when (state) {
-                        ConnectionState.Available -> onConnectivityAvailable()
-                        ConnectionState.Unavailable -> onConnectivityUnavailable()
-                    }
+            .asLiveData().observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    ConnectionState.Available -> onConnectivityAvailable()
+                    ConnectionState.Unavailable -> onConnectivityUnavailable()
                 }
             }
     }
@@ -239,10 +235,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         }
     }
 
-    private suspend fun isConnected(): Boolean {
-        return this::connectionState.isInitialized &&
-            connectionState.first() is ConnectionState.Available
-    }
+    private fun isConnected(): Boolean =
+        applicationContext.currentConnectivityState === ConnectionState.Available
 
     private suspend fun shouldSyncNotes() = viewModel.notes.first()
         .let { state -> state is UIDataState.Failed || notesListAdapter.itemCount == 0 }
