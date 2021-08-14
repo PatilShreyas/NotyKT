@@ -279,6 +279,11 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        binding.notesRecyclerView.adapter = null
+        super.onDestroyView()
+    }
+
     companion object {
         const val ANIMATION_DURATION = 2000L
     }
