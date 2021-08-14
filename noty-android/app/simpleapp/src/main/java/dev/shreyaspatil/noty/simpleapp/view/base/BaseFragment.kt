@@ -83,13 +83,14 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         get() = requireContext().applicationContext
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
         progressDialog?.dismiss()
         progressDialog = null
 
         errorDialog?.dismiss()
         errorDialog = null
+
+        super.onDestroyView()
     }
 
     protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
