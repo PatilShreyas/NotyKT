@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
 import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
@@ -119,11 +121,14 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                     viewModel.syncNotes()
                 }
             ) {
-                when (notes) {
-                    is UIDataState.Success -> NotesList(notes.data) { note ->
-                        navController.navigate(Screen.NotesDetail.route(note.id))
+                Column {
+                    ConnectivityStatus()
+                    when (notes) {
+                        is UIDataState.Success -> NotesList(notes.data) { note ->
+                            navController.navigate(Screen.NotesDetail.route(note.id))
+                        }
+                        is UIDataState.Failed -> FailureDialog(notes.message)
                     }
-                    is UIDataState.Failed -> FailureDialog(notes.message)
                 }
             }
 

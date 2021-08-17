@@ -21,7 +21,6 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -40,12 +39,11 @@ fun Context.observeConnectivityAsFlow() = callbackFlow {
 
     val callback = NetworkCallback { connectionState -> trySend(connectionState) }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        connectivityManager.registerDefaultNetworkCallback(callback)
-    } else {
-        val builder = NetworkRequest.Builder()
-        connectivityManager.registerNetworkCallback(builder.build(), callback)
-    }
+    val networkRequest = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .build()
+
+    connectivityManager.registerNetworkCallback(networkRequest, callback)
 
     // Set current state
     val currentState = getCurrentConnectivityState(connectivityManager)
