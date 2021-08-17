@@ -91,13 +91,13 @@ fun ConnectivityStatusBox(isConnected: Boolean) {
         modifier = Modifier
             .background(backgroundColor)
             .fillMaxWidth()
-            .padding(8.dp), Alignment.Center
+            .padding(8.dp),
+        contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(painterResource(id = iconResource), "Connectivity Icon", tint = Color.White)
             Spacer(modifier = Modifier.size(8.dp))
             Text(message, color = Color.White, fontSize = 15.sp)
         }
-
     }
 }
