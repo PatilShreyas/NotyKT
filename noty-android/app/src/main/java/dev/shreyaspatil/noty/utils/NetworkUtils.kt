@@ -67,21 +67,14 @@ val Context.currentConnectivityState: ConnectionState
     }
 
 private fun getCurrentConnectivityState(connectivityManager: ConnectivityManager): ConnectionState {
-    var currentState: ConnectionState = ConnectionState.Unavailable
-
     // Retrieve current status of connectivity
-    connectivityManager.allNetworks.forEach { network ->
-        val networkCapability = connectivityManager.getNetworkCapabilities(network)
-
-        networkCapability?.let {
-            if (it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-                currentState = ConnectionState.Available
-                return@forEach
-            }
-        }
+    val connected = connectivityManager.allNetworks.any { network ->
+        connectivityManager.getNetworkCapabilities(network)
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            ?: false
     }
 
-    return currentState
+    return if (connected) ConnectionState.Available else ConnectionState.Unavailable
 }
 
 @Suppress("FunctionName")
