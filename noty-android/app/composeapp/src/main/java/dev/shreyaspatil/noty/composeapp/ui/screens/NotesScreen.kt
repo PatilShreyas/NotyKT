@@ -62,7 +62,9 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @Composable
 fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
-    if (!viewModel.isUserLoggedIn()) {
+    val isUserLoggedIn by viewModel.userLoggedInState.collectAsState()
+
+    if (!isUserLoggedIn) {
         navigateToLogin(navController)
         return
     }
@@ -94,10 +96,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                     }
                     LogoutAction(
                         onLogout = {
-                            scope.launch {
-                                viewModel.clearUserSession()
-                                navigateToLogin(navController)
-                            }
+                            scope.launch { viewModel.clearUserSession() }
                         }
                     )
                 }
