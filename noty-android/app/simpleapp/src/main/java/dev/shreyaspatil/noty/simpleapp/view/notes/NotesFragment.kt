@@ -159,9 +159,13 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun checkAuthentication() {
-        if (!viewModel.isUserLoggedIn()) {
-            logout()
-        }
+        viewModel.userLoggedInState
+            .shareWhileObserved(viewLifecycleOwner.lifecycleScope)
+            .asLiveData().observe(viewLifecycleOwner) { isLoggedIn ->
+                if (!isLoggedIn) {
+                    logout()
+                }
+            }
     }
 
     private fun onNoteClicked(note: Note) {
