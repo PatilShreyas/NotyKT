@@ -97,7 +97,7 @@ fun AddNoteScreen(
                         )
                     }
                 },
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
             )
