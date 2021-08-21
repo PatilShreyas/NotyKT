@@ -45,7 +45,6 @@ import dev.shreyaspatil.noty.composeapp.component.text.ConfirmPasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue.Valid
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
-import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.core.ui.UIDataState
@@ -64,13 +63,10 @@ fun SignUpScreen(
     when (viewState) {
         is UIDataState.Loading -> LoaderDialog()
         is UIDataState.Success -> {
-            navController.navigate(
-                route = Screen.Notes.route,
-                builder = {
-                    launchSingleTop = true
-                    popUpTo(NOTY_NAV_HOST_ROUTE) { inclusive = true }
-                }
-            )
+            navController.navigate(Screen.Notes.route) {
+                launchSingleTop = true
+                popUpTo(Screen.SignUp.route) { inclusive = true }
+            }
         }
         is UIDataState.Failed -> FailureDialog(viewState.message)
     }
