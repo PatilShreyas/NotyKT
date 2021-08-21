@@ -34,7 +34,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -57,6 +59,9 @@ class NotesViewModel @Inject constructor(
 
     private val _syncState = MutableSharedFlow<UIDataState<Unit>>()
     val syncState: SharedFlow<UIDataState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
+
+    private val _loggedInState = MutableStateFlow(isUserLoggedIn())
+    val userLoggedInState: StateFlow<Boolean> = _loggedInState
 
     val notes: SharedFlow<UIDataState<List<Note>>> = notyNoteRepository.getAllNotes()
         .distinctUntilChanged()
@@ -89,12 +94,13 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    fun isUserLoggedIn() = sessionManager.getToken() != null
+    private fun isUserLoggedIn() = sessionManager.getToken() != null
 
     suspend fun clearUserSession() = withContext(Dispatchers.IO) {
         sessionManager.saveToken(null)
         notyTaskManager.abortAllTasks()
         notyNoteRepository.deleteAllNotes()
+        _loggedInState.value = false
     }
 
     suspend fun isDarkModeEnabled() = preferenceManager.uiModeFlow.first()
