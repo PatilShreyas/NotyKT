@@ -84,7 +84,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                         modifier = Modifier.fillMaxWidth()
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
