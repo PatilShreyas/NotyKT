@@ -21,6 +21,8 @@ This release includes User experience improvements in the Jetpack Compose Applic
 
 - [[#201](https://github.com/PatilShreyas/NotyKT/issues/201)] Optimized APK size by enabling R8.
 - [[#206](https://github.com/PatilShreyas/NotyKT/issues/206)] Fixed memory leak of `mAdapter` in simple app.
+- Set flag `android:exported="true"` for Activity to support Android 12 and above.
+- Provide content padding to `LazyColumn` _(to achieve same behavior as `clipToPadding` in RecyclerView)_.
 - Cleaned up code.
 
 ---
