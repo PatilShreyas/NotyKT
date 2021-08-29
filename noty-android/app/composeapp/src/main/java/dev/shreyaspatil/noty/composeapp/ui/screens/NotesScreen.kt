@@ -49,6 +49,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
+import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
@@ -61,7 +62,9 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @Composable
 fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
-    if (!viewModel.isUserLoggedIn()) {
+    val isUserLoggedIn by viewModel.userLoggedInState.collectAsState()
+
+    if (!isUserLoggedIn) {
         navigateToLogin(navController)
         return
     }
@@ -81,7 +84,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                         modifier = Modifier.fillMaxWidth()
                     )
                 },
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
                 actions = {
@@ -93,10 +96,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                     }
                     LogoutAction(
                         onLogout = {
-                            scope.launch {
-                                viewModel.clearUserSession()
-                                navigateToLogin(navController)
-                            }
+                            scope.launch { viewModel.clearUserSession() }
                         }
                     )
                 }
@@ -157,6 +157,7 @@ private fun navigateToLogin(navController: NavHostController) {
     navController.navigate(
         Screen.Login.route,
         builder = {
+            popUpTo(NOTY_NAV_HOST_ROUTE)
             launchSingleTop = true
         }
     )

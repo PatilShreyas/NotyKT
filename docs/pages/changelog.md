@@ -4,6 +4,29 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v1.2.0_ (2021-08-29)
+
+This release includes User experience improvements in the Jetpack Compose Application. Minor fixes in Simple app.
+
+### 🔮 What's New?
+
+- [[#209](https://github.com/PatilShreyas/NotyKT/issues/209)] Added connectivity indicator in compose app.
+
+### ✅ Bug Fixes / Improvements
+
+- [[#202](https://github.com/PatilShreyas/NotyKT/issues/202)] Fixed continuous flickering issue after Signup/Login in compose app.
+- [[#203](https://github.com/PatilShreyas/NotyKT/issues/203)] Avoided/Fixed re-syncing of notes after configuration changes in compose app.
+
+### 🎯 Codebase Improvements
+
+- [[#201](https://github.com/PatilShreyas/NotyKT/issues/201)] Optimized APK size by enabling R8.
+- [[#206](https://github.com/PatilShreyas/NotyKT/issues/206)] Fixed memory leak of `mAdapter` in simple app.
+- Set flag `android:exported="true"` for Activity to support Android 12 and above.
+- Provide content padding to `LazyColumn` _(to achieve same behavior as `clipToPadding` in RecyclerView)_.
+- Cleaned up code.
+
+---
+
 ## _v1.1.0_ (2021-08-06)
 
 This release includes User experience improvements in the Jetpack Compose Application. No change in simple app.

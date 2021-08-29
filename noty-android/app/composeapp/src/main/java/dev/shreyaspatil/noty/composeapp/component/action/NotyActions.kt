@@ -32,7 +32,7 @@ fun DeleteAction(onClick: () -> Unit) {
         painter = icon,
         contentDescription = "Delete",
         modifier = Modifier
-            .padding(end = 8.dp)
+            .padding(8.dp)
             .clickable(onClick = onClick)
     )
 }
@@ -44,7 +44,7 @@ fun ShareAction(onClick: () -> Unit) {
         icon,
         "share",
         Modifier
-            .padding(end = 8.dp)
+            .padding(8.dp)
             .clickable(onClick = onClick)
     )
 }
@@ -56,7 +56,7 @@ fun ThemeSwitchAction(onToggle: () -> Unit) {
         icon,
         "Theme switch",
         Modifier
-            .padding(end = 8.dp)
+            .padding(8.dp)
             .clickable(onClick = onToggle)
     )
 }
@@ -68,7 +68,7 @@ fun LogoutAction(onLogout: () -> Unit) {
         icon,
         "Logout",
         Modifier
-            .padding(end = 8.dp)
+            .padding(8.dp)
             .clickable(onClick = onLogout)
     )
 }
@@ -80,7 +80,7 @@ fun AboutAction(onClick: () -> Unit) {
         icon,
         "About",
         Modifier
-            .padding(end = 8.dp)
+            .padding(8.dp)
             .clickable(onClick = onClick)
     )
 }

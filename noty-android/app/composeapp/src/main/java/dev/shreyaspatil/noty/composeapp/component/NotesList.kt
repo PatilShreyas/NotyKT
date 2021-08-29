@@ -16,14 +16,16 @@
 
 package dev.shreyaspatil.noty.composeapp.component
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
 fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
-    LazyColumn {
+    LazyColumn(contentPadding = PaddingValues(vertical = 4.dp)) {
         items(
             items = notes,
             itemContent = { note ->

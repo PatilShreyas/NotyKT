@@ -105,7 +105,7 @@ fun NoteDetailsScreen(
                             )
                         }
                     },
-                    backgroundColor = MaterialTheme.colors.background,
+                    backgroundColor = MaterialTheme.colors.surface,
                     contentColor = MaterialTheme.colors.onPrimary,
                     elevation = 0.dp,
                     actions = {
@@ -119,12 +119,11 @@ fun NoteDetailsScreen(
                     Modifier.scrollable(
                         rememberScrollState(),
                         orientation = Orientation.Vertical
-                    )
+                    ).padding(16.dp)
                 ) {
                     NoteTitleField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp, 0.dp, 16.dp, 0.dp)
                             .background(MaterialTheme.colors.background),
                         value = titleText,
                         onTextChange = { titleText = it }
@@ -134,7 +133,7 @@ fun NoteDetailsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            .padding(16.dp, 8.dp, 16.dp, 0.dp)
+                            .padding(top = 8.dp)
                             .background(MaterialTheme.colors.background),
                         value = noteText,
                         onTextChange = { noteText = it }

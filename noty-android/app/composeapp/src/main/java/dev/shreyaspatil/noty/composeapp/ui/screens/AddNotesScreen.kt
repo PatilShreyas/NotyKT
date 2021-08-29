@@ -97,7 +97,7 @@ fun AddNoteScreen(
                         )
                     }
                 },
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = MaterialTheme.colors.surface,
                 contentColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp,
             )
@@ -107,13 +107,12 @@ fun AddNoteScreen(
                 Modifier.scrollable(
                     rememberScrollState(),
                     orientation = Orientation.Vertical
-                )
+                ).padding(16.dp)
             ) {
 
                 NoteTitleField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
                         .background(MaterialTheme.colors.background),
                     value = titleText.value,
                     onTextChange = { titleText.value = it },
@@ -123,7 +122,7 @@ fun AddNoteScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
-                        .padding(16.dp, 8.dp, 16.dp, 0.dp)
+                        .padding(top = 8.dp)
                         .background(MaterialTheme.colors.background),
                     value = noteText.value,
                     onTextChange = { noteText.value = it }

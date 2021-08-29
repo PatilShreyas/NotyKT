@@ -16,7 +16,7 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.0'
+    androidGradlePluginVersion = '7.0.1'
 
     // Kotlin
     kotlinVersion = "1.5.21"
@@ -67,7 +67,7 @@ ext {
     composeConstraintLayoutVersion = "1.0.0-beta01"
 
     // Jetpack Compose Navigation
-    composeNavVersion = "2.4.0-alpha05"
+    composeNavVersion = "2.4.0-alpha07"
 
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0-alpha03"
