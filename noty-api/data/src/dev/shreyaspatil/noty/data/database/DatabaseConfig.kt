@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Shreyas Patil
+ * Copyright 2021 Shreyas Patil
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.api.di
+package dev.shreyaspatil.noty.data.database
 
-import dagger.Component
-import dev.shreyaspatil.noty.api.controller.AuthController
-import dev.shreyaspatil.noty.api.controller.NotesController
-import io.ktor.util.*
-import javax.inject.Singleton
-
-@KtorExperimentalAPI
-@Singleton
-@Component
-interface ControllerComp {
-    fun authController(): AuthController
-    fun notesController(): NotesController
-}
+class DatabaseConfig(
+    val host: String,
+    val port: String,
+    val name: String,
+    val user: String,
+    val password: String
+)

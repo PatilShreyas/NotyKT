@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Shreyas Patil
+ * Copyright 2021 Shreyas Patil
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,18 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.api
+package dev.shreyaspatil.noty.api.plugin
 
-import dev.shreyaspatil.noty.api.plugin.*
-import dev.shreyaspatil.noty.data.database.initDatabase
+import dev.shreyaspatil.noty.api.route.AuthApi
+import dev.shreyaspatil.noty.api.route.NoteApi
 import io.ktor.application.*
+import io.ktor.routing.*
 import io.ktor.util.*
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
-
-@KtorExperimentalAPI
-fun Application.module() {
-    configureDI()
-    configureCORS()
-    configureAuthentication()
-    configureStatusPages()
-    configureContentNegotiation()
-    configureRouting()
-
-    init()
-}
-
-@KtorExperimentalAPI
-fun Application.init() {
-    val dbConfig = appComponent.configComponent().databaseConfig()
-    initDatabase(dbConfig)
+@OptIn(KtorExperimentalAPI::class)
+fun Application.configureRouting() {
+    routing {
+        AuthApi()
+        NoteApi()
+    }
 }

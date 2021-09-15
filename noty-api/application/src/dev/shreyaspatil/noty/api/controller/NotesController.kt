@@ -24,16 +24,19 @@ import dev.shreyaspatil.noty.api.model.response.Note
 import dev.shreyaspatil.noty.api.model.response.NoteResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.dao.NoteDao
+import dev.shreyaspatil.noty.data.model.User
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Controller for notes management
  */
+@Singleton
 class NotesController @Inject constructor(private val noteDao: NoteDao) {
 
-    fun getNotesByUser(userId: String): NotesResponse {
+    fun getNotesByUser(user: User): NotesResponse {
         return try {
-            val notes = noteDao.getNotesByUser(userId)
+            val notes = noteDao.getAllByUser(user.id)
 
             NotesResponse.success(notes.map { Note(it.id, it.title, it.note, it.created) })
         } catch (uae: UnauthorizedActivityException) {
@@ -41,32 +44,30 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         }
     }
 
-    fun addNote(userId: String, note: NoteRequest): NoteResponse {
+    fun addNote(user: User, note: NoteRequest): NoteResponse {
         return try {
             val noteTitle = note.title.trim()
             val noteText = note.note.trim()
 
             validateNoteOrThrowException(noteTitle, noteText)
 
-            val noteId = noteDao.addNote(userId, noteTitle, noteText)
+            val noteId = noteDao.add(user.id, noteTitle, noteText)
             NoteResponse.success(noteId)
         } catch (bre: BadRequestException) {
             NoteResponse.failed(bre.message)
-        } catch (uae: UnauthorizedActivityException) {
-            NoteResponse.unauthorized(uae.message)
         }
     }
 
-    fun updateNote(userId: String, noteId: String, note: NoteRequest): NoteResponse {
+    fun updateNote(user: User, noteId: String, note: NoteRequest): NoteResponse {
         return try {
             val noteTitle = note.title.trim()
             val noteText = note.note.trim()
 
             validateNoteOrThrowException(noteTitle, noteText)
             checkNoteExistsOrThrowException(noteId)
-            checkOwnerOrThrowException(userId, noteId)
+            checkOwnerOrThrowException(user.id, noteId)
 
-            val id = noteDao.updateNoteById(noteId, noteTitle, noteText)
+            val id = noteDao.update(noteId, noteTitle, noteText)
             NoteResponse.success(id)
         } catch (uae: UnauthorizedActivityException) {
             NoteResponse.unauthorized(uae.message)
@@ -77,12 +78,12 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         }
     }
 
-    fun deleteNote(userId: String, noteId: String): NoteResponse {
+    fun deleteNote(user: User, noteId: String): NoteResponse {
         return try {
             checkNoteExistsOrThrowException(noteId)
-            checkOwnerOrThrowException(userId, noteId)
+            checkOwnerOrThrowException(user.id, noteId)
 
-            if (noteDao.deleteNoteById(noteId)) {
+            if (noteDao.deleteById(noteId)) {
                 NoteResponse.success(noteId)
             } else {
                 NoteResponse.failed("Error Occurred")
@@ -97,13 +98,13 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
     }
 
     private fun checkNoteExistsOrThrowException(noteId: String) {
-        if (!noteDao.isExist(noteId)) {
+        if (!noteDao.exists(noteId)) {
             throw NoteNotFoundException("Note not exist with ID '$noteId'")
         }
     }
 
     private fun checkOwnerOrThrowException(userId: String, noteId: String) {
-        if (!noteDao.isOwner(noteId, userId)) {
+        if (!noteDao.isNoteOwnedByUser(noteId, userId)) {
             throw UnauthorizedActivityException("Access denied")
         }
     }

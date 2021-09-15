@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Shreyas Patil
+ * Copyright 2021 Shreyas Patil
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.api
+package dev.shreyaspatil.noty.api.di.component
 
-import dev.shreyaspatil.noty.api.plugin.*
-import dev.shreyaspatil.noty.data.database.initDatabase
+import dagger.BindsInstance
+import dagger.Component
 import io.ktor.application.*
 import io.ktor.util.*
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
-
 @KtorExperimentalAPI
-fun Application.module() {
-    configureDI()
-    configureCORS()
-    configureAuthentication()
-    configureStatusPages()
-    configureContentNegotiation()
-    configureRouting()
+@Component
+interface AppComponent {
+    fun application(): Application
 
-    init()
-}
+    fun controllerComponent(): ControllerComponent
+    fun configComponent(): ConfigComponent
+    fun daoComponent(): DaoComponent
 
-@KtorExperimentalAPI
-fun Application.init() {
-    val dbConfig = appComponent.configComponent().databaseConfig()
-    initDatabase(dbConfig)
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun withApplication(application: Application): Builder
+        fun build(): AppComponent
+    }
 }

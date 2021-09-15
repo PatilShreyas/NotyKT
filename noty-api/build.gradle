@@ -24,13 +24,14 @@ buildscript {
         exposedVersion = "0.34.1"
         postgresVersion = "42.2.23"
         logbackVersion = "1.2.5"
-        daggerVersion = "2.37"
+        daggerVersion = "2.38.1"
         testContainerVersion = "1.16.0"
         kotestVersion = "4.6.2"
     }
 
     repositories {
-        jcenter()
+        mavenCentral()
+        google()
         maven {
             url("https://plugins.gradle.org/m2/")
         }
@@ -93,7 +94,7 @@ subprojects {
     repositories {
         mavenCentral()
         mavenLocal()
-        jcenter()
+        google()
     }
 
     dependencies {

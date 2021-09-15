@@ -21,37 +21,43 @@ import dev.shreyaspatil.noty.data.entity.EntityUser
 import dev.shreyaspatil.noty.data.model.User
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserDao @Inject constructor() {
+interface UserDao {
+    fun addUser(username: String, password: String): User
+    fun findByUUID(uuid: UUID): User?
+    fun findByUsernameAndPassword(username: String, password: String): User?
+    fun exists(uuid: UUID): Boolean
+    fun isUsernameAvailable(username: String): Boolean
+}
 
-    fun addUser(username: String, password: String): User = transaction {
+@Singleton
+class UserDaoImpl @Inject constructor() : UserDao {
+
+    override fun addUser(username: String, password: String): User = transaction {
         EntityUser.new {
             this.username = username
             this.password = password
         }
     }.let { User.fromEntity(it) }
 
-    fun getUserByUuid(uuid: UUID): User? = transaction {
+    override fun findByUUID(uuid: UUID): User? = transaction {
         EntityUser.findById(uuid)
     }?.let { User.fromEntity(it) }
 
-    fun getByUsernameAndPassword(username: String, password: String): User? = transaction {
+    override fun findByUsernameAndPassword(username: String, password: String): User? = transaction {
         EntityUser.find {
             (Users.username eq username) and (Users.password eq password)
         }.firstOrNull()
     }?.let { User.fromEntity(it) }
 
-    fun isUsernameAvailable(username: String): Boolean {
+    override fun isUsernameAvailable(username: String): Boolean {
         return transaction {
             EntityUser.find { Users.username eq username }.firstOrNull()
         } == null
     }
 
-    fun isUserExists(id: String): Boolean {
-        return transaction {
-            EntityUser.find { Users.id eq UUID.fromString(id) }.firstOrNull()
-        } != null
-    }
+    override fun exists(uuid: UUID): Boolean = findByUUID(uuid) != null
 }
