@@ -94,7 +94,7 @@ subprojects {
     repositories {
         mavenCentral()
         mavenLocal()
-        jcenter()
+        google()
     }
 
     dependencies {
