@@ -25,20 +25,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * Initializes dev.shreyaspatil.noty.data.database connection with application
  */
-fun initDatabase(
-    host: String,
-    port: String,
-    databaseName: String,
-    user: String,
-    password: String
-) {
+fun initDatabase(databaseConfig: DatabaseConfig) {
     val tables = arrayOf(Users, Notes)
 
     Database.connect(
-        url = "jdbc:postgresql://$host:$port/$databaseName",
+        url = with(databaseConfig) { "jdbc:postgresql://$host:$port/$name" },
         driver = "org.postgresql.Driver",
-        user = user,
-        password = password
+        user = databaseConfig.user,
+        password = databaseConfig.password
     )
 
     transaction {
