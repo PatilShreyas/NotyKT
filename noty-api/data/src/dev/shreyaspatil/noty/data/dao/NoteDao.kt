@@ -24,9 +24,20 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class NoteDao @Inject constructor() {
-    fun addNote(userId: String, title: String, note: String): String = transaction {
+interface NoteDao {
+    fun add(userId: String, title: String, note: String): String
+    fun getAllByUser(userId: String): List<Note>
+    fun update(id: String, title: String, note: String): String
+    fun deleteById(id: String): Boolean
+    fun isNoteOwnedByUser(id: String, userId: String): Boolean
+    fun exists(id: String): Boolean
+}
+
+@Singleton
+class NoteDaoImpl @Inject constructor() : NoteDao {
+    override fun add(userId: String, title: String, note: String): String = transaction {
         EntityNote.new {
             this.user = EntityUser[UUID.fromString(userId)]
             this.title = title
@@ -34,20 +45,20 @@ class NoteDao @Inject constructor() {
         }.id.value.toString()
     }
 
-    fun getNotesByUser(userId: String): List<Note> = transaction {
+    override fun getAllByUser(userId: String): List<Note> = transaction {
         EntityNote.find { Notes.user eq UUID.fromString(userId) }
             .sortedByDescending { it.id }
             .map { Note.fromEntity(it) }
     }
 
-    fun updateNoteById(id: String, title: String, noteText: String): String = transaction {
+    override fun update(id: String, title: String, note: String): String = transaction {
         EntityNote[UUID.fromString(id)].apply {
             this.title = title
-            this.note = noteText
+            this.note = note
         }.id.value.toString()
     }
 
-    fun deleteNoteById(id: String): Boolean = transaction {
+    override fun deleteById(id: String): Boolean = transaction {
         val eNote = EntityNote.findById(UUID.fromString(id))
         eNote?.run {
             delete()
@@ -56,13 +67,13 @@ class NoteDao @Inject constructor() {
         return@transaction false
     }
 
-    fun isOwner(noteId: String, userId: String): Boolean = transaction {
+    override fun isNoteOwnedByUser(id: String, userId: String): Boolean = transaction {
         EntityNote.find {
-            (Notes.id eq UUID.fromString(noteId)) and (Notes.user eq UUID.fromString(userId))
+            (Notes.id eq UUID.fromString(id)) and (Notes.user eq UUID.fromString(userId))
         }.firstOrNull() != null
     }
 
-    fun isExist(id: String): Boolean = transaction {
+    override fun exists(id: String): Boolean = transaction {
         EntityNote.findById(UUID.fromString(id)) != null
     }
 }
