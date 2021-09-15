@@ -16,11 +16,13 @@
 
 package dev.shreyaspatil.noty.api.route
 
+import dagger.Lazy
 import dev.shreyaspatil.noty.api.controller.AuthController
 import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
 import dev.shreyaspatil.noty.api.model.response.generateHttpResponse
+import dev.shreyaspatil.noty.api.plugin.controllers
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -28,15 +30,16 @@ import io.ktor.routing.*
 import io.ktor.util.*
 
 @KtorExperimentalAPI
-fun Route.auth(authController: AuthController) {
+fun Route.AuthApi(authController: Lazy<AuthController> = controllers.authController()) {
 
     route("/auth") {
+        controllers
         post("/register") {
             val authRequest = runCatching { call.receive<AuthRequest>() }.getOrElse {
                 throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
             }
 
-            val authResponse = authController.register(authRequest.username, authRequest.password)
+            val authResponse = authController.get().register(authRequest.username, authRequest.password)
             val response = generateHttpResponse(authResponse)
 
             call.respond(response.code, response.body)
@@ -47,7 +50,7 @@ fun Route.auth(authController: AuthController) {
                 throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
             }
 
-            val authResponse = authController.login(authRequest.username, authRequest.password)
+            val authResponse = authController.get().login(authRequest.username, authRequest.password)
             val response = generateHttpResponse(authResponse)
 
             call.respond(response.code, response.body)

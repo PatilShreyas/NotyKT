@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Shreyas Patil
+ * Copyright 2021 Shreyas Patil
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.api.di
+package dev.shreyaspatil.noty.api.di.component
 
-import dagger.Component
+import dagger.Lazy
+import dagger.Subcomponent
+import dev.shreyaspatil.noty.api.auth.JWTController
 import dev.shreyaspatil.noty.api.controller.AuthController
 import dev.shreyaspatil.noty.api.controller.NotesController
+import dev.shreyaspatil.noty.api.di.module.ConfigModule
+import dev.shreyaspatil.noty.api.di.module.ControllerModule
+import dev.shreyaspatil.noty.api.di.module.DaoModule
+import dev.shreyaspatil.noty.api.di.module.EncryptorModule
 import io.ktor.util.*
 import javax.inject.Singleton
 
 @KtorExperimentalAPI
 @Singleton
-@Component
-interface ControllerComp {
-    fun authController(): AuthController
-    fun notesController(): NotesController
+@Subcomponent(modules = [ConfigModule::class, EncryptorModule::class, ControllerModule::class, DaoModule::class])
+interface ControllerComponent {
+    fun authController(): Lazy<AuthController>
+    fun notesController(): Lazy<NotesController>
+    fun jwtController(): Lazy<JWTController>
 }

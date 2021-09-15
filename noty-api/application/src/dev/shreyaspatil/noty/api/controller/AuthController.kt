@@ -16,23 +16,27 @@
 
 package dev.shreyaspatil.noty.api.controller
 
-import dev.shreyaspatil.noty.api.auth.NotyJWT
+import dev.shreyaspatil.noty.api.auth.Encryptor
+import dev.shreyaspatil.noty.api.auth.JWTController
 import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
-import dev.shreyaspatil.noty.api.utils.hash
 import dev.shreyaspatil.noty.api.utils.isAlphaNumeric
 import dev.shreyaspatil.noty.data.dao.UserDao
 import io.ktor.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Controller for authentication i.e. User's management
  */
 @KtorExperimentalAPI
-class AuthController @Inject constructor(private val userDao: UserDao) {
-
-    private val jwt = NotyJWT.instance
+@Singleton
+class AuthController @Inject constructor(
+    private val userDao: UserDao,
+    private val jwt: JWTController,
+    private val encryptor: Encryptor
+) {
 
     fun register(username: String, password: String): AuthResponse {
         return try {
@@ -42,7 +46,7 @@ class AuthController @Inject constructor(private val userDao: UserDao) {
                 throw BadRequestException("Username is not available")
             }
 
-            val user = userDao.addUser(username, hash(password))
+            val user = userDao.addUser(username, encryptor.encrypt(password))
             AuthResponse.success(jwt.sign(user.id), "Registration successful")
         } catch (bre: BadRequestException) {
             AuthResponse.failed(bre.message)
@@ -53,7 +57,7 @@ class AuthController @Inject constructor(private val userDao: UserDao) {
         return try {
             validateCredentialsOrThrowException(username, password)
 
-            val user = userDao.getByUsernameAndPassword(username, hash(password))
+            val user = userDao.findByUsernameAndPassword(username, encryptor.encrypt(password))
                 ?: throw UnauthorizedActivityException("Invalid credentials")
 
             AuthResponse.success(jwt.sign(user.id), "Login successful")
