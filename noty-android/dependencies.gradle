@@ -64,7 +64,7 @@ ext {
     composeVersion = "1.0.1"
 
     // Constrain Layout (Compose)
-    composeConstraintLayoutVersion = "1.0.0-beta01"
+    composeConstraintLayoutVersion = "1.0.0-beta02"
 
     // Jetpack Compose Navigation
     composeNavVersion = "2.4.0-alpha07"
