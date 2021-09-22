@@ -20,7 +20,7 @@ ext {
 
     // Kotlin
     kotlinVersion = "1.5.21"
-    ktlintVersion = "10.1.0"
+    ktlintVersion = "10.2.0"
     coroutinesVersion = "1.5.1"
 
     // Android
@@ -29,7 +29,7 @@ ext {
     constraintlayoutVersion = "2.1.0"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
-    workmanagerVersion = '2.5.0'
+    workmanagerVersion = '2.6.0'
     lifecycleVersion = "2.3.1"
     navigationVersion = "2.3.5"
     securityCryptoVersion = '1.1.0-alpha03'
@@ -44,7 +44,7 @@ ext {
     lottieVersion = "4.0.0"
 
     // Lottie Animation (Compose)
-    lottieComposeVersion = "4.0.0"
+    lottieComposeVersion = "4.1.0"
 
     // DI
     daggerHiltVersion = "2.38.1"
@@ -61,10 +61,10 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.0.1"
+    composeVersion = "1.0.2"
 
     // Constrain Layout (Compose)
-    composeConstraintLayoutVersion = "1.0.0-beta01"
+    composeConstraintLayoutVersion = "1.0.0-beta02"
 
     // Jetpack Compose Navigation
     composeNavVersion = "2.4.0-alpha07"
@@ -75,7 +75,7 @@ ext {
     lifecycleViewModelComposeVersion = "1.0.0-alpha07"
 
     // Accompanist
-    accompanistVersion = "0.15.0"
+    accompanistVersion = "0.18.0"
 
     // Testing
     jUnitVersion = "4.13.2"
