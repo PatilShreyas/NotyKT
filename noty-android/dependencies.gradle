@@ -80,5 +80,5 @@ ext {
     // Testing
     jUnitVersion = "4.13.2"
     androidJUnitVersion = "1.1.2"
-    espressoVersion = "3.3.0"
+    espressoVersion = "3.4.0"
 }
