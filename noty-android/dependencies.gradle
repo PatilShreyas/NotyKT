@@ -67,7 +67,7 @@ ext {
     composeConstraintLayoutVersion = "1.0.0-beta02"
 
     // Jetpack Compose Navigation
-    composeNavVersion = "2.4.0-alpha07"
+    composeNavVersion = "2.4.0-alpha10"
 
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0-alpha03"
