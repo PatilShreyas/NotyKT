@@ -20,7 +20,7 @@ ext {
 
     // Kotlin
     kotlinVersion = "1.5.21"
-    ktlintVersion = "10.1.0"
+    ktlintVersion = "10.2.0"
     coroutinesVersion = "1.5.2"
 
     // Android
@@ -72,7 +72,7 @@ ext {
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0-alpha03"
 
-    lifecycleViewModelComposeVersion = "1.0.0-alpha07"
+    lifecycleViewModelComposeVersion = "2.4.0-beta01"
 
     // Accompanist
     accompanistVersion = "0.18.0"
