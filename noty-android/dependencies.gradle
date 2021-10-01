@@ -16,7 +16,7 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.1'
+    androidGradlePluginVersion = '7.0.2'
 
     // Kotlin
     kotlinVersion = "1.5.30"
