@@ -16,10 +16,10 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.1'
+    androidGradlePluginVersion = '7.0.2'
 
     // Kotlin
-    kotlinVersion = "1.5.21"
+    kotlinVersion = "1.5.30"
     ktlintVersion = "10.2.0"
     coroutinesVersion = "1.5.2"
 
@@ -47,7 +47,7 @@ ext {
     lottieComposeVersion = "4.1.0"
 
     // DI
-    daggerHiltVersion = "2.38.1"
+    daggerHiltVersion = "2.39"
     jetpackHiltVersion = "1.0.0"
 
     // Networking
@@ -61,10 +61,10 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.0.2"
+    composeVersion = "1.0.3"
 
     // Constrain Layout (Compose)
-    composeConstraintLayoutVersion = "1.0.0-beta02"
+    composeConstraintLayoutVersion = "1.0.0-rc01"
 
     // Jetpack Compose Navigation
     composeNavVersion = "2.4.0-alpha07"
@@ -75,7 +75,7 @@ ext {
     lifecycleViewModelComposeVersion = "2.4.0-beta01"
 
     // Accompanist
-    accompanistVersion = "0.18.0"
+    accompanistVersion = "0.19.0"
 
     // Testing
     jUnitVersion = "4.13.2"
