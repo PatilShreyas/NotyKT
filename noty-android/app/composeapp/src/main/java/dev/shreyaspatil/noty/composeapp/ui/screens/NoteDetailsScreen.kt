@@ -71,7 +71,6 @@ import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -249,5 +248,4 @@ suspend fun shareNoteImage(bitmap: Bitmap, context: Context) {
             Toast.LENGTH_SHORT
         ).show()
     }
-
 }

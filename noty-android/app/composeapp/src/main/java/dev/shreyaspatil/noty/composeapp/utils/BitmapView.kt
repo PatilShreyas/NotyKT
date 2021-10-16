@@ -85,7 +85,6 @@ fun CaptureBitmap(
     return ::captureBitmap
 }
 
-
 @Preview
 @Composable
 fun ComposableBitmapPreview() {
@@ -132,7 +131,6 @@ fun ComposableBitmapPreview() {
                         ).show()
                     }
                 }
-
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -142,9 +140,7 @@ fun ComposableBitmapPreview() {
             Text(text = "Share")
         }
     }
-
 }
-
 
 suspend fun saveImage(image: Bitmap, context: Context): Uri? =
     withContext(Dispatchers.IO) {
