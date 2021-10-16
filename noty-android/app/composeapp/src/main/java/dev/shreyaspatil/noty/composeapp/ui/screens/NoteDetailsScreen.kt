@@ -62,7 +62,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
-import dev.shreyaspatil.noty.composeapp.utils.BitmapContainer
+import dev.shreyaspatil.noty.composeapp.utils.CaptureBitmap
 import dev.shreyaspatil.noty.composeapp.utils.ShowToast
 import dev.shreyaspatil.noty.composeapp.utils.saveImage
 import dev.shreyaspatil.noty.composeapp.utils.shareImageUri
@@ -92,7 +92,7 @@ fun NoteDetailsScreen(
     if (note != null) {
         var titleText by remember { mutableStateOf(note.title) }
         var noteText by remember { mutableStateOf(note.note) }
-        var bitmapCaptureCallback: () -> Bitmap? = { null }
+        var snapShot: () -> Bitmap? = { null }
 
         Scaffold(
             topBar = {
@@ -135,17 +135,15 @@ fun NoteDetailsScreen(
                             shareActions = listOf(
                                 ShareActionItem(
                                     label = "Text",
-                                    iconId = R.drawable.share_image,
                                     onActionClick = {
                                         shareNote(activity, titleText, noteText)
                                     }
                                 ),
                                 ShareActionItem(
                                     label = "Image",
-                                    iconId = R.drawable.share_image,
                                     onActionClick = {
                                         coroutineScope.launch {
-                                            val bitmap = bitmapCaptureCallback.invoke()
+                                            val bitmap = snapShot.invoke()
                                             if (bitmap == null) {
                                                 Toast.makeText(
                                                     activity,
@@ -164,7 +162,7 @@ fun NoteDetailsScreen(
                 )
             },
             content = {
-                bitmapCaptureCallback = BitmapContainer {
+                snapShot = CaptureBitmap {
                     Column(
                         Modifier
                             .scrollable(

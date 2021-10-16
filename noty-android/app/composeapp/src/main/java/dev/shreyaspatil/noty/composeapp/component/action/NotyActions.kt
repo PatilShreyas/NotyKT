@@ -60,7 +60,6 @@ fun ShareAction(onClick: () -> Unit) {
 
 data class ShareActionItem(
     val label: String,
-    val iconId: Int,
     val onActionClick: () -> Unit,
 )
 
@@ -85,13 +84,6 @@ fun ShareDropdown(
                 }
             ) {
                 Row {
-                    Icon(
-                        painter = painterResource(id = shareAction.iconId),
-                        contentDescription = "",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
                     Text(text = shareAction.label)
                 }
             }

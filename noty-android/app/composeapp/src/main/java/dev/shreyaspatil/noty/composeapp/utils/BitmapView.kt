@@ -53,7 +53,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 @Composable
-fun BitmapContainer(
+fun CaptureBitmap(
     content: @Composable () -> Unit,
 ): () -> Bitmap {
 
@@ -94,7 +94,7 @@ fun ComposableBitmapPreview() {
     val (viewBitmap, setViewBitmap) = remember { mutableStateOf<Bitmap?>(null) }
 
     Column {
-        val captureBitmap = BitmapContainer(
+        val captureBitmap = CaptureBitmap(
             content = {
                 Button(
                     onClick = {
