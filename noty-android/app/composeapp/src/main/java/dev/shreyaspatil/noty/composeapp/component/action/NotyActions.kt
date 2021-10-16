@@ -17,10 +17,19 @@
 package dev.shreyaspatil.noty.composeapp.component.action
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.R
@@ -47,6 +56,48 @@ fun ShareAction(onClick: () -> Unit) {
             .padding(8.dp)
             .clickable(onClick = onClick)
     )
+}
+
+data class ShareActionItem(
+    val label: String,
+    val iconId: Int,
+    val onActionClick: () -> Unit,
+)
+
+@Composable
+fun ShareDropdown(
+    expanded: Boolean,
+    shareActions: List<ShareActionItem>,
+    onDismissRequest: () -> Unit
+) {
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismissRequest,
+        modifier = Modifier
+            .wrapContentHeight()
+            .width(100.dp)
+    ) {
+        shareActions.forEachIndexed { index, shareAction ->
+            DropdownMenuItem(
+                onClick = {
+                    shareAction.onActionClick.invoke()
+                    onDismissRequest.invoke()
+                }
+            ) {
+                Row {
+                    Icon(
+                        painter = painterResource(id = shareAction.iconId),
+                        contentDescription = "",
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = shareAction.label)
+                }
+            }
+        }
+    }
+
 }
 
 @Composable
