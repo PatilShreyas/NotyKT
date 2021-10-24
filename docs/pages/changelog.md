@@ -4,6 +4,28 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v1.3.0_ (2021-10-24)
+
+This release includes new feature and some fixes in the Jetpack Compose Application.
+
+### 🔮 What's New?
+
+- [[#119](https://github.com/PatilShreyas/NotyKT/issues/119)] Added support in the Jetpack Compose app to Share note as an Image (_Contributed by [@ch8n](https://github.com/ch8n)_).
+
+### ✅ Bug Fixes / Improvements
+
+- Fixed saving/syncing note information
+
+### 🎯 Codebase Improvements
+
+- Extracted out common used utility code of `composeapp` and `simpleapp` into a common utility functions.
+- Created a common `@Composable` component `Capturable` for capturing composable component in the form of a Bitmap.
+- Updated Jetpack Compose to 1.0.4 and Kotlin version to 1.5.31.
+
+_**Many Thanks to superstar ⭐ contributor [@ch8n](https://github.com/ch8n) for the [PR](https://github.com/PatilShreyas/NotyKT/pull/269)**_
+
+---
+
 ## _v1.2.0_ (2021-08-29)
 
 This release includes User experience improvements in the Jetpack Compose Application. Minor fixes in Simple app.
