@@ -54,7 +54,6 @@ fun Capturable(
                     Surface(color = MaterialTheme.colors.background) {
                         content()
                     }
-
                 }
             }
         }

@@ -16,11 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
-import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -44,7 +39,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,9 +46,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ShareCompat
 import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.component.Capturable
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareActionItem
@@ -62,16 +56,16 @@ import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
-import dev.shreyaspatil.noty.composeapp.utils.CaptureBitmap
 import dev.shreyaspatil.noty.composeapp.utils.ShowToast
-import dev.shreyaspatil.noty.composeapp.utils.saveImage
-import dev.shreyaspatil.noty.composeapp.utils.shareImageUri
 import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.utils.saveBitmap
+import dev.shreyaspatil.noty.utils.share.shareImage
+import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @ExperimentalAnimationApi
 @InternalCoroutinesApi
@@ -81,7 +75,7 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
-    val activity = LocalContext.current as Activity
+    val context = LocalContext.current
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
     val deleteState = viewModel.deleteNoteState.collectAsState(initial = null)
@@ -91,7 +85,7 @@ fun NoteDetailsScreen(
     if (note != null) {
         var titleText by remember { mutableStateOf(note.title) }
         var noteText by remember { mutableStateOf(note.note) }
-        var snapShot: () -> Bitmap? = { null }
+        var captureNoteImageRequestKey: Int? by remember { mutableStateOf(null) }
 
         Scaffold(
             topBar = {
@@ -121,7 +115,6 @@ fun NoteDetailsScreen(
                     elevation = 0.dp,
                     actions = {
                         var dropdownExpanded by remember { mutableStateOf(false) }
-                        val coroutineScope = rememberCoroutineScope()
                         DeleteAction(onClick = { viewModel.deleteNote() })
                         ShareAction(onClick = {
                             dropdownExpanded = true
@@ -135,24 +128,13 @@ fun NoteDetailsScreen(
                                 ShareActionItem(
                                     label = "Text",
                                     onActionClick = {
-                                        shareNote(activity, titleText, noteText)
+                                        context.shareNoteText(titleText, noteText)
                                     }
                                 ),
                                 ShareActionItem(
                                     label = "Image",
                                     onActionClick = {
-                                        coroutineScope.launch {
-                                            val bitmap = snapShot.invoke()
-                                            if (bitmap == null) {
-                                                Toast.makeText(
-                                                    activity,
-                                                    "Something Went Wrong!",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                return@launch
-                                            }
-                                            shareNoteImage(bitmap, activity)
-                                        }
+                                        captureNoteImageRequestKey = Random.nextInt(Int.MAX_VALUE)
                                     }
                                 ),
                             )
@@ -161,7 +143,15 @@ fun NoteDetailsScreen(
                 )
             },
             content = {
-                snapShot = CaptureBitmap {
+                Capturable(
+                    captureNoteImageRequestKey,
+                    onBitmapCaptured = { bitmap ->
+                        val uri = saveBitmap(context, bitmap)
+                        if (uri != null) {
+                            context.shareImage(uri)
+                        }
+                    }
+                ) {
                     Column(
                         Modifier
                             .scrollable(
@@ -219,33 +209,5 @@ fun NoteDetailsScreen(
 
         registerOnStateChanged(updateState.value)
         registerOnStateChanged(deleteState.value)
-    }
-}
-
-fun shareNote(activity: Activity, title: String, note: String) {
-    val shareMsg = activity.getString(
-        R.string.text_message_share,
-        title,
-        note
-    )
-
-    val intent = ShareCompat.IntentBuilder(activity)
-        .setType("text/plain")
-        .setText(shareMsg)
-        .intent
-
-    activity.startActivity(Intent.createChooser(intent, null))
-}
-
-suspend fun shareNoteImage(bitmap: Bitmap, context: Context) {
-    val uri = saveImage(bitmap, context)
-    if (uri != null) {
-        shareImageUri(context, uri)
-    } else {
-        Toast.makeText(
-            context,
-            "uri is null",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 }
