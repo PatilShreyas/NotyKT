@@ -16,8 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import android.app.Activity
-import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -48,20 +46,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ShareCompat
 import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.component.Capturable
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
+import dev.shreyaspatil.noty.composeapp.component.action.ShareActionItem
+import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
 import dev.shreyaspatil.noty.composeapp.utils.ShowToast
 import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.utils.saveBitmap
+import dev.shreyaspatil.noty.utils.share.shareImage
+import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlin.random.Random
 
 @ExperimentalAnimationApi
 @InternalCoroutinesApi
@@ -71,7 +75,7 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
-    val activity = LocalContext.current as Activity
+    val context = LocalContext.current
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
     val deleteState = viewModel.deleteNoteState.collectAsState(initial = null)
@@ -81,6 +85,7 @@ fun NoteDetailsScreen(
     if (note != null) {
         var titleText by remember { mutableStateOf(note.title) }
         var noteText by remember { mutableStateOf(note.note) }
+        var captureNoteImageRequestKey: Int? by remember { mutableStateOf(null) }
 
         Scaffold(
             topBar = {
@@ -109,35 +114,70 @@ fun NoteDetailsScreen(
                     contentColor = MaterialTheme.colors.onPrimary,
                     elevation = 0.dp,
                     actions = {
+                        var dropdownExpanded by remember { mutableStateOf(false) }
                         DeleteAction(onClick = { viewModel.deleteNote() })
-                        ShareAction(onClick = { shareNote(activity, titleText, noteText) })
+                        ShareAction(onClick = {
+                            dropdownExpanded = true
+                        })
+                        ShareDropdown(
+                            expanded = dropdownExpanded,
+                            onDismissRequest = {
+                                dropdownExpanded = false
+                            },
+                            shareActions = listOf(
+                                ShareActionItem(
+                                    label = "Text",
+                                    onActionClick = {
+                                        context.shareNoteText(titleText, noteText)
+                                    }
+                                ),
+                                ShareActionItem(
+                                    label = "Image",
+                                    onActionClick = {
+                                        captureNoteImageRequestKey = Random.nextInt(Int.MAX_VALUE)
+                                    }
+                                ),
+                            )
+                        )
                     }
                 )
             },
             content = {
-                Column(
-                    Modifier.scrollable(
-                        rememberScrollState(),
-                        orientation = Orientation.Vertical
-                    ).padding(16.dp)
+                Capturable(
+                    captureNoteImageRequestKey,
+                    onBitmapCaptured = { bitmap ->
+                        val uri = saveBitmap(context, bitmap)
+                        if (uri != null) {
+                            context.shareImage(uri)
+                        }
+                    }
                 ) {
-                    NoteTitleField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colors.background),
-                        value = titleText,
-                        onTextChange = { titleText = it }
-                    )
+                    Column(
+                        Modifier
+                            .scrollable(
+                                rememberScrollState(),
+                                orientation = Orientation.Vertical
+                            )
+                            .padding(16.dp)
+                    ) {
+                        NoteTitleField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colors.background),
+                            value = titleText,
+                            onTextChange = { titleText = it }
+                        )
 
-                    NoteField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(top = 8.dp)
-                            .background(MaterialTheme.colors.background),
-                        value = noteText,
-                        onTextChange = { noteText = it }
-                    )
+                        NoteField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(top = 8.dp)
+                                .background(MaterialTheme.colors.background),
+                            value = noteText,
+                            onTextChange = { noteText = it }
+                        )
+                    }
                 }
             },
             floatingActionButton = {
@@ -170,19 +210,4 @@ fun NoteDetailsScreen(
         registerOnStateChanged(updateState.value)
         registerOnStateChanged(deleteState.value)
     }
-}
-
-fun shareNote(activity: Activity, title: String, note: String) {
-    val shareMsg = activity.getString(
-        R.string.text_message_share,
-        title,
-        note
-    )
-
-    val intent = ShareCompat.IntentBuilder(activity)
-        .setType("text/plain")
-        .setText(shareMsg)
-        .intent
-
-    activity.startActivity(Intent.createChooser(intent, null))
 }

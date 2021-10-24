@@ -17,12 +17,15 @@
 package dev.shreyaspatil.noty.simpleapp.view.detail
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.widget.addTextChangedListener
@@ -36,8 +39,10 @@ import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.utils.saveBitmap
+import dev.shreyaspatil.noty.utils.share.shareImage
+import dev.shreyaspatil.noty.utils.share.shareNoteText
+import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -164,18 +169,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         val title = binding.noteLayout.fieldTitle.text.toString()
         val note = binding.noteLayout.fieldNote.text.toString()
 
-        val shareMsg = getString(
-            R.string.text_message_share,
-            title,
-            note
-        )
-
-        val intent = ShareCompat.IntentBuilder(requireActivity())
-            .setType("text/plain")
-            .setText(shareMsg)
-            .intent
-
-        startActivity(Intent.createChooser(intent, null))
+        requireContext().shareNoteText(title, note)
     }
 
     private fun shareImage() {
@@ -191,12 +185,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             return
         }
 
-        val intent = ShareCompat.IntentBuilder(requireActivity())
-            .setType("image/jpeg")
-            .setStream(imageUri)
-            .intent
-
-        startActivity(Intent.createChooser(intent, null))
+        requireContext().shareImage(imageUri)
     }
 
     private fun isStoragePermissionGranted(): Boolean = ContextCompat.checkSelfPermission(
