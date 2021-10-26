@@ -21,7 +21,7 @@ buildscript {
         ktlintVersion = "10.2.0"
         coroutinesVersion = "1.5.2"
         ktorVersion = "1.6.4"
-        exposedVersion = "0.35.3"
+        exposedVersion = "0.36.1"
         postgresVersion = "42.3.0"
         logbackVersion = "1.2.6"
         daggerVersion = "2.39.1"
