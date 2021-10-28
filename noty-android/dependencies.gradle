@@ -72,7 +72,7 @@ ext {
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0-alpha03"
 
-    lifecycleViewModelComposeVersion = "2.4.0-rc01"
+    lifecycleViewModelComposeVersion = "2.4.0"
 
     // Accompanist
     accompanistVersion = "0.20.0"
