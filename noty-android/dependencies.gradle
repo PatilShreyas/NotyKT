@@ -25,7 +25,7 @@ ext {
 
     // Android
     appcompatVersion = "1.3.1"
-    coreKtxVersion = "1.6.0"
+    coreKtxVersion = "1.7.0"
     constraintlayoutVersion = "2.1.1"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
