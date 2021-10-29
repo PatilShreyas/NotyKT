@@ -71,13 +71,13 @@ fun SignUpScreen(
         is UIDataState.Failed -> FailureDialog(viewState.message)
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.surface)
+    ) {
         item {
-            ConstraintLayout(
-                Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.surface)
-            ) {
+            ConstraintLayout() {
 
                 val (
                     titleRef,

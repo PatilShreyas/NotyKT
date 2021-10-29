@@ -72,13 +72,14 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
         }
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.surface)
+    ) {
         item {
-            ConstraintLayout(
-                Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.surface)
-            ) {
+            ConstraintLayout()
+            {
                 val (
                     logoRef,
                     titleRef,
