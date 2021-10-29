@@ -78,8 +78,7 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
             .background(MaterialTheme.colors.surface)
     ) {
         item {
-            ConstraintLayout()
-            {
+            ConstraintLayout() {
                 val (
                     logoRef,
                     titleRef,
