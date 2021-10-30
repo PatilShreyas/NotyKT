@@ -69,7 +69,8 @@ fun BasicNotyTextField(
     label: String = "",
     textStyle: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal),
     onTextChange: (String) -> Unit,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    textFieldModifier: Modifier = Modifier
 ) {
 
     Box(modifier = modifier.padding(4.dp)) {
@@ -82,7 +83,7 @@ fun BasicNotyTextField(
             )
         }
         BasicTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = textFieldModifier.fillMaxWidth(),
             value = value,
             onValueChange = onTextChange,
             textStyle = textStyle.copy(color = MaterialTheme.colors.onPrimary),
