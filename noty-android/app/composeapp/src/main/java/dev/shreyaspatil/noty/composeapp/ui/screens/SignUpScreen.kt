@@ -27,6 +27,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +46,7 @@ import dev.shreyaspatil.noty.composeapp.component.text.ConfirmPasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue.Valid
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
+import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.core.ui.UIDataState
@@ -62,12 +64,6 @@ fun SignUpScreen(
 
     when (viewState) {
         is UIDataState.Loading -> LoaderDialog()
-        is UIDataState.Success -> {
-            navController.navigate(Screen.Notes.route) {
-                launchSingleTop = true
-                popUpTo(Screen.SignUp.route) { inclusive = true }
-            }
-        }
         is UIDataState.Failed -> FailureDialog(viewState.message)
     }
 
@@ -186,6 +182,15 @@ fun SignUpScreen(
                             }
                         )
                 )
+            }
+        }
+    }
+
+    LaunchedEffect(viewState?.isSuccess) {
+        if (viewState?.isSuccess == true) {
+            navController.navigate(Screen.Notes.route) {
+                launchSingleTop = true
+                popUpTo(NOTY_NAV_HOST_ROUTE)
             }
         }
     }
