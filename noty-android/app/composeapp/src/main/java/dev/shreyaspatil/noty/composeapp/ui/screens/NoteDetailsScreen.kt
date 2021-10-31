@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -75,6 +78,10 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
+
+    val focusRequester = remember {
+        FocusRequester()
+    }
     val context = LocalContext.current
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
@@ -88,6 +95,9 @@ fun NoteDetailsScreen(
         var captureNoteImageRequestKey: Int? by remember { mutableStateOf(null) }
 
         Scaffold(
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .focusable(true),
             topBar = {
                 TopAppBar(
                     title = {
@@ -134,6 +144,7 @@ fun NoteDetailsScreen(
                                 ShareActionItem(
                                     label = "Image",
                                     onActionClick = {
+                                        focusRequester.requestFocus()
                                         captureNoteImageRequestKey = Random.nextInt(Int.MAX_VALUE)
                                     }
                                 ),

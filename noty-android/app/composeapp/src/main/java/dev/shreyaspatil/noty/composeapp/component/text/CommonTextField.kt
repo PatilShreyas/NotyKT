@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.composeapp.component.text
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.MaterialTheme
@@ -68,7 +69,8 @@ fun BasicNotyTextField(
     label: String = "",
     textStyle: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal),
     onTextChange: (String) -> Unit,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
+    textFieldModifier: Modifier = Modifier
 ) {
 
     Box(modifier = modifier.padding(4.dp)) {
@@ -81,6 +83,7 @@ fun BasicNotyTextField(
             )
         }
         BasicTextField(
+            modifier = textFieldModifier.fillMaxWidth(),
             value = value,
             onValueChange = onTextChange,
             textStyle = textStyle.copy(color = MaterialTheme.colors.onPrimary),
