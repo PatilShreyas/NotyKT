@@ -88,7 +88,7 @@ fun FailureDialog(failureMessage: String, onDismissed: () -> Unit = {}) {
                             .height(80.dp)
                             .padding(16.dp),
 
-                        ) {
+                    ) {
                         Text(style = typography.subtitle1, color = Color.White, text = "OK")
                     }
                 }
@@ -147,7 +147,7 @@ fun ConfirmationDialog(
                             modifier = Modifier
                                 .padding(horizontal = 4.dp),
 
-                            ) {
+                        ) {
                             Text(
                                 style = typography.button,
                                 color = MaterialTheme.colors.primary,
@@ -162,7 +162,7 @@ fun ConfirmationDialog(
                             modifier = Modifier
                                 .padding(horizontal = 4.dp),
 
-                            ) {
+                        ) {
                             Text(
                                 style = typography.button,
                                 color = MaterialTheme.colors.primary,

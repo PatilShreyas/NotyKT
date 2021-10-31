@@ -56,6 +56,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareActionItem
 import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
+import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
@@ -79,9 +80,7 @@ fun NoteDetailsScreen(
     viewModel: NoteDetailViewModel
 ) {
 
-    val focusRequester = remember {
-        FocusRequester()
-    }
+    val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
@@ -93,6 +92,17 @@ fun NoteDetailsScreen(
         var titleText by remember { mutableStateOf(note.title) }
         var noteText by remember { mutableStateOf(note.note) }
         var captureNoteImageRequestKey: Int? by remember { mutableStateOf(null) }
+        var showDeleteNoteConfirmation by remember { mutableStateOf(false) }
+
+        if (showDeleteNoteConfirmation) {
+            ConfirmationDialog(
+                title = "Delete?",
+                message = "Sure want to delete this note?",
+                onConfirmedYes = { viewModel.deleteNote() },
+                onConfirmedNo = { showDeleteNoteConfirmation = false },
+                onDismissed = { showDeleteNoteConfirmation = false }
+            )
+        }
 
         Scaffold(
             modifier = Modifier
@@ -125,15 +135,11 @@ fun NoteDetailsScreen(
                     elevation = 0.dp,
                     actions = {
                         var dropdownExpanded by remember { mutableStateOf(false) }
-                        DeleteAction(onClick = { viewModel.deleteNote() })
-                        ShareAction(onClick = {
-                            dropdownExpanded = true
-                        })
+                        DeleteAction(onClick = { showDeleteNoteConfirmation = true })
+                        ShareAction(onClick = { dropdownExpanded = true })
                         ShareDropdown(
                             expanded = dropdownExpanded,
-                            onDismissRequest = {
-                                dropdownExpanded = false
-                            },
+                            onDismissRequest = { dropdownExpanded = false },
                             shareActions = listOf(
                                 ShareActionItem(
                                     label = "Text",
