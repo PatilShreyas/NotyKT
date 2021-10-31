@@ -66,11 +66,6 @@ import kotlinx.coroutines.launch
 fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     val isUserLoggedIn by viewModel.userLoggedInState.collectAsState()
 
-    if (!isUserLoggedIn) {
-        navigateToLogin(navController)
-        return
-    }
-
     val scope = rememberCoroutineScope()
 
     val isInDarkMode = isSystemInDarkTheme()
@@ -163,6 +158,12 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
             }
         }
     )
+
+    LaunchedEffect(key1 = isUserLoggedIn) {
+        if (!isUserLoggedIn) {
+            navigateToLogin(navController)
+        }
+    }
 }
 
 private fun navigateToLogin(navController: NavHostController) {
