@@ -16,14 +16,23 @@
 
 package dev.shreyaspatil.noty.composeapp.component.dialog
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -81,6 +90,85 @@ fun FailureDialog(failureMessage: String, onDismissed: () -> Unit = {}) {
 
                     ) {
                         Text(style = typography.subtitle1, color = Color.White, text = "OK")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ConfirmationDialog(
+    title: String,
+    message: String,
+    onConfirmedYes: () -> Unit,
+    onConfirmedNo: () -> Unit,
+    onDismissed: () -> Unit
+) {
+    var isDismissed by remember { mutableStateOf(false) }
+
+    if (!isDismissed) {
+        Dialog(onDismissRequest = {}) {
+            Surface {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        bottom = 8.dp,
+                        start = 16.dp,
+                        end = 16.dp
+                    )
+                ) {
+                    Text(
+                        text = title,
+                        color = MaterialTheme.colors.onSurface,
+                        style = MaterialTheme.typography.body1,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = message,
+                        color = MaterialTheme.colors.onSurface,
+                        style = MaterialTheme.typography.body2,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TextButton(
+                            onClick = {
+                                onConfirmedYes()
+                                isDismissed = true
+                            },
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp),
+
+                        ) {
+                            Text(
+                                style = typography.button,
+                                color = MaterialTheme.colors.primary,
+                                text = "Yes"
+                            )
+                        }
+                        TextButton(
+                            onClick = {
+                                onConfirmedNo()
+                                isDismissed = true
+                            },
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp),
+
+                        ) {
+                            Text(
+                                style = typography.button,
+                                color = MaterialTheme.colors.primary,
+                                text = "No"
+                            )
+                        }
                     }
                 }
             }
