@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -48,6 +49,7 @@ import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
+import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
@@ -64,14 +66,23 @@ import kotlinx.coroutines.launch
 fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     val isUserLoggedIn by viewModel.userLoggedInState.collectAsState()
 
-    if (!isUserLoggedIn) {
-        navigateToLogin(navController)
-        return
-    }
-
     val scope = rememberCoroutineScope()
 
     val isInDarkMode = isSystemInDarkTheme()
+
+    var showLogoutConfirmationDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutConfirmationDialog) {
+        ConfirmationDialog(
+            title = "Logout?",
+            message = "Sure want to logout?",
+            onConfirmedYes = {
+                scope.launch { viewModel.clearUserSession() }
+            },
+            onConfirmedNo = { showLogoutConfirmationDialog = false },
+            onDismissed = { showLogoutConfirmationDialog = false }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -94,11 +105,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
                             Screen.About.route
                         )
                     }
-                    LogoutAction(
-                        onLogout = {
-                            scope.launch { viewModel.clearUserSession() }
-                        }
-                    )
+                    LogoutAction(onLogout = { showLogoutConfirmationDialog = true })
                 }
             )
         },
@@ -151,6 +158,12 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
             }
         }
     )
+
+    LaunchedEffect(key1 = isUserLoggedIn) {
+        if (!isUserLoggedIn) {
+            navigateToLogin(navController)
+        }
+    }
 }
 
 private fun navigateToLogin(navController: NavHostController) {
