@@ -23,7 +23,7 @@ buildscript {
         ktorVersion = "1.6.4"
         exposedVersion = "0.36.2"
         postgresVersion = "42.3.1"
-        logbackVersion = "1.2.6"
+        logbackVersion = "1.2.7"
         daggerVersion = "2.40.1"
         testContainerVersion = "1.16.2"
         kotestVersion = "4.6.3"
