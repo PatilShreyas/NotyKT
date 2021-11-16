@@ -13,7 +13,7 @@ This release includes few improvements and fixes in the Jetpack Compose Applicat
 - [[#281](https://github.com/PatilShreyas/NotyKT/issues/281)] Earlier, After signup, navigating back takes to log in screen. Now it closes the app.
 - [[#282](https://github.com/PatilShreyas/NotyKT/issues/282)] Show proper cards with proper shadow in About screen. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
 - [[#284](https://github.com/PatilShreyas/NotyKT/issues/284)] Removed focus (cursor) from fields while sharing image of a note. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
-- [[#285](https://github.com/PatilShreyas/NotyKT/issues/285)] Improved dark mode visibility. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
+- [[#286](https://github.com/PatilShreyas/NotyKT/issues/286)] Improved dark mode visibility. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
 - [[#294](https://github.com/PatilShreyas/NotyKT/issues/294)] Earlier, flickering (recompositions) were happening after performing navigation through screens.
 
 ### ✅ Improvements
