@@ -23,7 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -87,14 +87,13 @@ fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel
                 Image(
                     contentDescription = "App Logo",
                     painter = painterResource(id = noty_app_logo),
-                    modifier = Modifier
-                        .sizeIn(100.dp, 100.dp)
+                    modifier = Modifier.size(92.dp)
                         .constrainAs(logoRef) {
                             top.linkTo(parent.top, margin = 60.dp)
                             start.linkTo(parent.start, 16.dp)
                             end.linkTo(parent.end, 16.dp)
                         },
-                    contentScale = ContentScale.Inside
+                    contentScale = ContentScale.FillBounds
                 )
 
                 Text(
