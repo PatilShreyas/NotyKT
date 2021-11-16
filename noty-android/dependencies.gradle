@@ -30,7 +30,7 @@ ext {
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.7.0'
-    lifecycleVersion = "2.3.1"
+    lifecycleVersion = "2.4.0"
     navigationVersion = "2.3.5"
     securityCryptoVersion = '1.1.0-alpha03'
     roomVersion = "2.3.0"
@@ -41,13 +41,13 @@ ext {
     materialDesignVersion = "1.4.0"
 
     // Lottie Animation
-    lottieVersion = "4.2.0"
+    lottieVersion = "4.2.1"
 
     // Lottie Animation (Compose)
-    lottieComposeVersion = "4.2.0"
+    lottieComposeVersion = "4.2.1"
 
     // DI
-    daggerHiltVersion = "2.40"
+    daggerHiltVersion = "2.40.1"
     jetpackHiltVersion = "1.0.0"
 
     // Networking

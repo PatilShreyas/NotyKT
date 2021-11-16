@@ -18,11 +18,15 @@ package dev.shreyaspatil.noty.composeapp.component.text
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -46,18 +50,28 @@ fun NotyTextField(
     color: Color = MaterialTheme.colors.onPrimary,
     leadingIcon: @Composable() (() -> Unit)? = null,
     isError: Boolean = false,
+    helperText: String = "",
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
-    OutlinedTextField(
-        value = value,
-        label = { Text(text = label) },
-        modifier = modifier,
-        onValueChange = onValueChange,
-        leadingIcon = leadingIcon,
-        textStyle = TextStyle(color, fontSize = fontSize),
-        isError = isError,
-        visualTransformation = visualTransformation
-    )
+    Surface(modifier) {
+        Column {
+            OutlinedTextField(
+                value = value,
+                label = { Text(text = label) },
+                modifier = Modifier.fillMaxWidth(),
+                onValueChange = onValueChange,
+                leadingIcon = leadingIcon,
+                textStyle = TextStyle(color, fontSize = fontSize),
+                isError = isError,
+                visualTransformation = visualTransformation,
+                shape = RoundedCornerShape(8.dp)
+            )
+            if (helperText.isNotEmpty()) {
+                Spacer(modifier = Modifier.padding(2.dp))
+                Text(text = helperText, style = MaterialTheme.typography.caption)
+            }
+        }
+    }
 }
 
 @ExperimentalAnimationApi
@@ -68,24 +82,25 @@ fun BasicNotyTextField(
     label: String = "",
     textStyle: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal),
     onTextChange: (String) -> Unit,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
 ) {
-
-    Box(modifier = modifier.padding(4.dp)) {
-        AnimatedVisibility(visible = value.isBlank()) {
-            Text(
-                text = label,
-                color = getTextFieldHintColor(),
-                fontSize = textStyle.fontSize,
-                fontWeight = textStyle.fontWeight
-            )
+    BasicTextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = onTextChange,
+        textStyle = textStyle.copy(color = MaterialTheme.colors.onPrimary),
+        maxLines = maxLines,
+        cursorBrush = SolidColor(MaterialTheme.colors.primary),
+        decorationBox = { inlineTextField ->
+            AnimatedVisibility(visible = value.isBlank()) {
+                Text(
+                    text = label,
+                    color = getTextFieldHintColor(),
+                    fontSize = textStyle.fontSize,
+                    fontWeight = textStyle.fontWeight
+                )
+            }
+            inlineTextField()
         }
-        BasicTextField(
-            value = value,
-            onValueChange = onTextChange,
-            textStyle = textStyle.copy(color = MaterialTheme.colors.onPrimary),
-            maxLines = maxLines,
-            cursorBrush = SolidColor(MaterialTheme.colors.primary)
-        )
-    }
+    )
 }

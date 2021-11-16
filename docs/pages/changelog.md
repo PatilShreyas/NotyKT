@@ -4,6 +4,34 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v1.3.1_ (2021-11-16)
+
+This release includes few improvements and fixes in the Jetpack Compose Application to make it better.
+
+### 🐛 Bug Fixes
+
+- [[#281](https://github.com/PatilShreyas/NotyKT/issues/281)] Earlier, After signup, navigating back takes to log in screen. Now it closes the app.
+- [[#282](https://github.com/PatilShreyas/NotyKT/issues/282)] Show proper cards with proper shadow in About screen. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
+- [[#284](https://github.com/PatilShreyas/NotyKT/issues/284)] Removed focus (cursor) from fields while sharing image of a note. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
+- [[#286](https://github.com/PatilShreyas/NotyKT/issues/286)] Improved dark mode visibility. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
+- [[#294](https://github.com/PatilShreyas/NotyKT/issues/294)] Earlier, flickering (recompositions) were happening after performing navigation through screens.
+
+### ✅ Improvements
+
+- [[#280](https://github.com/PatilShreyas/NotyKT/issues/280)] Provided helper message for input fields like username and password for better UX in Login/Signup screens. 
+- [[#283](https://github.com/PatilShreyas/NotyKT/issues/283)] Improved touch region area of note input fields. (_Contributed by [@yogeshpaliyal](https://github.com/yogeshpaliyal)_)
+- [[#287](https://github.com/PatilShreyas/NotyKT/issues/287)] Show confirmation dialog before deleting a note.
+- [[#297](https://github.com/PatilShreyas/NotyKT/issues/297)] Show confirmation dialog before logging out.
+
+### 🎯 Codebase Improvements
+
+- Used `decorationBox` property of Composable TextField to show/hide placeholder instead of manually handling in a box.
+- Removed `jcenter()` from Gradle repositories (_Contributed by [@sairajsawant](https://github.com/sairajsawant)_)
+
+_**Many Thanks to superstar ⭐ contributors [@yogeshpaliyal](https://github.com/yogeshpaliyal), [@sairajsawant](https://github.com/sairajsawant) for contributing PRs and [@kasem-sm](https://github.com/kasem-sm) for raising issues**_
+
+---
+
 ## _v1.3.0_ (2021-10-24)
 
 This release includes new feature and some fixes in the Jetpack Compose Application.

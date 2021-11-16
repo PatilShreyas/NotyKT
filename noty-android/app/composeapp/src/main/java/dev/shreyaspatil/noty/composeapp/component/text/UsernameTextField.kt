@@ -48,6 +48,7 @@ fun UsernameTextField(
         },
         modifier = modifier,
         leadingIcon = { Icon(Icons.Outlined.Person, "User") },
-        isError = !isValid && startedTyping
+        isError = !isValid && startedTyping,
+        helperText = "Minimum 4 characters required"
     )
 }

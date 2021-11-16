@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -119,11 +118,6 @@ class NoteDetailViewModel @AssistedInject constructor(
     private fun scheduleNoteDelete(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("NoteDetailViewModel", "onCleared")
-    }
-
     @AssistedFactory
     interface Factory {
         fun create(noteId: String): NoteDetailViewModel
@@ -135,7 +129,7 @@ class NoteDetailViewModel @AssistedInject constructor(
             assistedFactory: Factory,
             noteId: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(noteId) as T
             }
         }

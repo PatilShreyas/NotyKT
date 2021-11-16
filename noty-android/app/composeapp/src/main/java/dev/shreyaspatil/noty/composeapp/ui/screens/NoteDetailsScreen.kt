@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -53,6 +56,7 @@ import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareActionItem
 import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
+import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
@@ -75,6 +79,8 @@ fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
+
+    val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
 
     val updateState = viewModel.updateNoteState.collectAsState(initial = null)
@@ -86,8 +92,22 @@ fun NoteDetailsScreen(
         var titleText by remember { mutableStateOf(note.title) }
         var noteText by remember { mutableStateOf(note.note) }
         var captureNoteImageRequestKey: Int? by remember { mutableStateOf(null) }
+        var showDeleteNoteConfirmation by remember { mutableStateOf(false) }
+
+        if (showDeleteNoteConfirmation) {
+            ConfirmationDialog(
+                title = "Delete?",
+                message = "Sure want to delete this note?",
+                onConfirmedYes = { viewModel.deleteNote() },
+                onConfirmedNo = { showDeleteNoteConfirmation = false },
+                onDismissed = { showDeleteNoteConfirmation = false }
+            )
+        }
 
         Scaffold(
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .focusable(true),
             topBar = {
                 TopAppBar(
                     title = {
@@ -115,15 +135,11 @@ fun NoteDetailsScreen(
                     elevation = 0.dp,
                     actions = {
                         var dropdownExpanded by remember { mutableStateOf(false) }
-                        DeleteAction(onClick = { viewModel.deleteNote() })
-                        ShareAction(onClick = {
-                            dropdownExpanded = true
-                        })
+                        DeleteAction(onClick = { showDeleteNoteConfirmation = true })
+                        ShareAction(onClick = { dropdownExpanded = true })
                         ShareDropdown(
                             expanded = dropdownExpanded,
-                            onDismissRequest = {
-                                dropdownExpanded = false
-                            },
+                            onDismissRequest = { dropdownExpanded = false },
                             shareActions = listOf(
                                 ShareActionItem(
                                     label = "Text",
@@ -134,6 +150,7 @@ fun NoteDetailsScreen(
                                 ShareActionItem(
                                     label = "Image",
                                     onActionClick = {
+                                        focusRequester.requestFocus()
                                         captureNoteImageRequestKey = Random.nextInt(Int.MAX_VALUE)
                                     }
                                 ),
