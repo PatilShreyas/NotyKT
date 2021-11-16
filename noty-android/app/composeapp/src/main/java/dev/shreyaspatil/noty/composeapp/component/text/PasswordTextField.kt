@@ -51,7 +51,8 @@ fun PasswordTextField(
         modifier = modifier,
         leadingIcon = { Icon(Icons.Outlined.Password, "Password") },
         visualTransformation = PasswordVisualTransformation(),
-        isError = !isValid && startedTyping
+        isError = !isValid && startedTyping,
+        helperText = "Minimum 8 characters required"
     )
 }
 
