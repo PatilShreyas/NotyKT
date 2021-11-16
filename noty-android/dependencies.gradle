@@ -41,10 +41,10 @@ ext {
     materialDesignVersion = "1.4.0"
 
     // Lottie Animation
-    lottieVersion = "4.2.0"
+    lottieVersion = "4.2.1"
 
     // Lottie Animation (Compose)
-    lottieComposeVersion = "4.2.0"
+    lottieComposeVersion = "4.2.1"
 
     // DI
     daggerHiltVersion = "2.40.1"
