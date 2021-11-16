@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         val darkMode by preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
 
         NotyTheme(darkTheme = darkMode) {
-            Surface(color = MaterialTheme.colors.background) {
+            Surface {
                 NotyNavigation()
             }
         }
