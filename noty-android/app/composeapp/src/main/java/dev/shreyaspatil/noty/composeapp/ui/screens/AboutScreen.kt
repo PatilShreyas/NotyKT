@@ -92,13 +92,13 @@ fun AboutAppBar(navController: NavController) {
                 }
             ) {
                 Icon(
-                    painterResource(R.drawable.ic_baseline_arrow_back),
+                    painterResource(R.drawable.ic_back),
                     "Back",
                     tint = MaterialTheme.colors.onPrimary
                 )
             }
         },
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onPrimary,
         elevation = 0.dp
     )

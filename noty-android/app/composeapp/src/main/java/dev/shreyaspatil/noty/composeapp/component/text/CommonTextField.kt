@@ -96,8 +96,7 @@ fun BasicNotyTextField(
                 Text(
                     text = label,
                     color = getTextFieldHintColor(),
-                    fontSize = textStyle.fontSize,
-                    fontWeight = textStyle.fontWeight
+                    style = textStyle
                 )
             }
             inlineTextField()

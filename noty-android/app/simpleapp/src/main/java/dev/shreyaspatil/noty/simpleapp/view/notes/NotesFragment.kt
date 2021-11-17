@@ -40,10 +40,13 @@ import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
 import dev.shreyaspatil.noty.utils.ConnectionState
 import dev.shreyaspatil.noty.utils.currentConnectivityState
+import dev.shreyaspatil.noty.utils.ext.DialogComponents
 import dev.shreyaspatil.noty.utils.ext.hide
+import dev.shreyaspatil.noty.utils.ext.navigate
 import dev.shreyaspatil.noty.utils.ext.setDrawableLeft
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import dev.shreyaspatil.noty.utils.ext.show
+import dev.shreyaspatil.noty.utils.ext.showDialog
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -174,10 +177,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         )
     }
 
-    private fun logout() {
-        findNavController().navigate(R.id.action_notesFragment_to_loginFragment)
-    }
-
     private fun onConnectivityUnavailable() {
         with(binding) {
             swipeRefreshNotes.isEnabled = false
@@ -275,12 +274,33 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             R.id.action_dark_mode -> viewModel.setDarkMode(true)
             R.id.action_about ->
                 findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
-            R.id.action_logout -> lifecycleScope.launch {
-                viewModel.clearUserSession()
-                logout()
-            }
+            R.id.action_logout -> confirmLogout()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun confirmLogout() {
+        showDialog(
+            dialogComponents = DialogComponents(
+                title = "Logout?",
+                message = "Sure want to logout?",
+                positiveActionText = "Yes",
+                positiveAction = { _, _ ->
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.clearUserSession()
+                        logout()
+                    }
+                },
+                negativeActionText = "No",
+                negativeAction = { dialog, _ ->
+                    dialog.dismiss()
+                }
+            )
+        )
+    }
+
+    private fun logout() {
+        navigate(NotesFragmentDirections.actionNotesFragmentToLoginFragment())
     }
 
     override fun onDestroyView() {

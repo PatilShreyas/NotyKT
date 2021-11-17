@@ -16,13 +16,18 @@
 
 package dev.shreyaspatil.noty.utils.ext
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
 
-fun <T> Flow<T>.shareWhileObserved(coroutineScope: CoroutineScope, replay: Int = 1) = shareIn(
-    scope = coroutineScope,
-    started = SharingStarted.WhileSubscribed(),
-    replay = replay
-)
+fun Fragment.navigate(
+    destination: NavDirections
+) {
+    if (isAdded) {
+        with(view?.findNavController()) {
+            this?.currentDestination?.getAction(destination.actionId)?.let {
+                navigate(destination)
+            }
+        }
+    } else return
+}

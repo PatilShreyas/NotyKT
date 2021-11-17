@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -38,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.anim.LottieAnimation
@@ -105,73 +107,61 @@ fun ConfirmationDialog(
     onConfirmedNo: () -> Unit,
     onDismissed: () -> Unit
 ) {
+
     var isDismissed by remember { mutableStateOf(false) }
 
     if (!isDismissed) {
-        Dialog(onDismissRequest = {}) {
-            Surface {
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    modifier = Modifier.padding(
-                        top = 16.dp,
-                        bottom = 8.dp,
-                        start = 16.dp,
-                        end = 16.dp
-                    )
+        AlertDialog(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onDismissRequest = onDismissed,
+            title = {
+                Text(text = title)
+            },
+            text = {
+                Text(
+                    text = message,
+                    fontSize = 15.sp
+                )
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = title,
-                        color = MaterialTheme.colors.onSurface,
-                        style = MaterialTheme.typography.body1,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Text(
-                        text = message,
-                        color = MaterialTheme.colors.onSurface,
-                        style = MaterialTheme.typography.body2,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
+                    TextButton(
+                        onClick = {
+                            onConfirmedYes()
+                            isDismissed = true
+                        },
+                        modifier = Modifier
+                            .padding(4.dp),
                     ) {
-                        TextButton(
-                            onClick = {
-                                onConfirmedYes()
-                                isDismissed = true
-                            },
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp),
-
-                        ) {
-                            Text(
-                                style = typography.button,
-                                color = MaterialTheme.colors.primary,
-                                text = "Yes"
+                        Text(
+                            text = "Yes",
+                            style = MaterialTheme.typography.button.copy(
+                                fontWeight = FontWeight.Medium
                             )
-                        }
-                        TextButton(
-                            onClick = {
-                                onConfirmedNo()
-                                isDismissed = true
-                            },
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp),
-
-                        ) {
-                            Text(
-                                style = typography.button,
-                                color = MaterialTheme.colors.primary,
-                                text = "No"
+                        )
+                    }
+                    TextButton(
+                        onClick = {
+                            onConfirmedNo()
+                            isDismissed = true
+                        },
+                        modifier = Modifier
+                            .padding(4.dp),
+                    ) {
+                        Text(
+                            text = "No",
+                            style = MaterialTheme.typography.button.copy(
+                                fontWeight = FontWeight.Medium
                             )
-                        }
+                        )
                     }
                 }
-            }
-        }
+            },
+        )
     }
 }
