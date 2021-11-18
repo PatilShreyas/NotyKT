@@ -39,16 +39,15 @@ import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.utils.ext.DialogComponents
 import dev.shreyaspatil.noty.utils.ext.showDialog
 import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -216,18 +215,16 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     private fun confirmNoteDeletion() {
         showDialog(
-            dialogComponents = DialogComponents(
-                title = "Delete?",
-                message = "Sure want to delete the note?",
-                positiveActionText = "Yes",
-                positiveAction = { _, _ ->
-                    viewModel.deleteNote()
-                },
-                negativeActionText = "No",
-                negativeAction = { dialog, _ ->
-                    dialog.dismiss()
-                }
-            )
+            title = "Delete?",
+            message = "Sure want to delete the note?",
+            positiveActionText = "Yes",
+            positiveAction = { _, _ ->
+                viewModel.deleteNote()
+            },
+            negativeActionText = "No",
+            negativeAction = { dialog, _ ->
+                dialog.dismiss()
+            }
         )
     }
 }

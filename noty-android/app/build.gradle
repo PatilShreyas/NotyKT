@@ -76,11 +76,7 @@ dependencies {
 
     // JetPack Security
     implementation "androidx.security:security-crypto:$securityCryptoVersion"
-
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
+    
     // Hilt + JetPack
     api "androidx.hilt:hilt-work:$jetpackHiltVersion"
     kapt "androidx.hilt:hilt-compiler:$jetpackHiltVersion"

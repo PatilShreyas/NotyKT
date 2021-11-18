@@ -21,30 +21,26 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-data class DialogComponents(
-    val title: String? = null,
-    val message: String? = null,
-    val positiveActionText: String? = null,
-    val positiveAction: (d: DialogInterface, i: Int) -> Unit = { _, _ -> },
-    val negativeActionText: String? = null,
-    val negativeAction: (d: DialogInterface, i: Int) -> Unit = { _, _ -> },
-    val isDismissAble: Boolean = true
-)
-
 fun Fragment.showDialog(
-    dialogComponents: DialogComponents
+    title: String? = null,
+    message: String? = null,
+    positiveActionText: String? = null,
+    positiveAction: (d: DialogInterface, i: Int) -> Unit = { _, _ -> },
+    negativeActionText: String? = null,
+    negativeAction: (d: DialogInterface, i: Int) -> Unit = { _, _ -> },
+    isDismissAble: Boolean = true
 ) {
     val dialog: AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(dialogComponents.title)
-            .setMessage(dialogComponents.message)
-            .setPositiveButton(dialogComponents.positiveActionText) { d, i ->
-                dialogComponents.positiveAction(d, i)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positiveActionText) { d, i ->
+                positiveAction(d, i)
             }
-            .setNegativeButton(dialogComponents.negativeActionText) { d, i ->
-                dialogComponents.negativeAction(d, i)
+            .setNegativeButton(negativeActionText) { d, i ->
+                negativeAction(d, i)
             }
-            .setCancelable(dialogComponents.isDismissAble)
+            .setCancelable(isDismissAble)
             .create()
     dialog.show()
 }

@@ -36,7 +36,7 @@ fun NoteTitleField(
         value = value,
         label = "Title",
         onTextChange = onTextChange,
-        textStyle = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
+        textStyle = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
         maxLines = 2
     )
 }
