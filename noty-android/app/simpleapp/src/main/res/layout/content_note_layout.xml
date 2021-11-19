@@ -34,7 +34,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_16"
-            android:layout_marginTop="@dimen/dimen_32"
             android:layout_marginEnd="@dimen/dimen_16"
             android:background="@color/background"
             android:fontFamily="@font/gilroy_bold"

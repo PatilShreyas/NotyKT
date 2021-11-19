@@ -36,7 +36,7 @@ fun NoteTitleField(
         value = value,
         label = "Title",
         onTextChange = onTextChange,
-        textStyle = MaterialTheme.typography.h6,
+        textStyle = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
         maxLines = 2
     )
 }
@@ -51,7 +51,7 @@ fun NoteField(
     BasicNotyTextField(
         modifier,
         value = value,
-        label = "Write here",
+        label = "Write note here",
         onTextChange = onTextChange,
         textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Light)
     )

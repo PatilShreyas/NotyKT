@@ -21,8 +21,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
 
-fun <T> Flow<T>.shareWhileObserved(coroutineScope: CoroutineScope) = shareIn(
+fun <T> Flow<T>.shareWhileObserved(coroutineScope: CoroutineScope, replay: Int = 1) = shareIn(
     scope = coroutineScope,
     started = SharingStarted.WhileSubscribed(),
-    replay = 1
+    replay = replay
 )

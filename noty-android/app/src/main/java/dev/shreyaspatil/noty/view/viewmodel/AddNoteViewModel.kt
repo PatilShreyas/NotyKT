@@ -26,11 +26,11 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
@@ -42,7 +42,7 @@ class AddNoteViewModel @Inject constructor(
     var job: Job? = null
 
     private val _addNoteState = MutableSharedFlow<UIDataState<String>>()
-    val addNoteState = _addNoteState.shareWhileObserved(viewModelScope)
+    val addNoteState = _addNoteState.shareWhileObserved(viewModelScope, 0)
 
     fun addNote(title: String, note: String) {
         job?.cancel()

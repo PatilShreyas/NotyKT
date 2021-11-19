@@ -122,7 +122,7 @@ fun AddNoteScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
-                        .padding(top = 8.dp)
+                        .padding(top = 32.dp)
                         .background(MaterialTheme.colors.background),
                     value = noteText.value,
                     onTextChange = { noteText.value = it }
