@@ -44,7 +44,7 @@ ext {
     lottieVersion = "4.2.1"
 
     // Lottie Animation (Compose)
-    lottieComposeVersion = "4.2.1"
+    lottieComposeVersion = "4.2.2"
 
     // DI
     daggerHiltVersion = "2.40.2"
