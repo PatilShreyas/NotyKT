@@ -4,6 +4,32 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v1.3.2_ (2021-11-30)
+
+This release includes a few improvements and fixes in the Jetpack Compose and Simple Application to make them better. All features mentioned below are contributed by [@kasem-sm](https://github.com/kasem-sm)
+
+### 🐛 Bug Fixes
+
+- [[#329](https://github.com/PatilShreyas/NotyKT/issues/329)] Fix crashes when user clicks logout (in Simple App).
+- [[#337](https://github.com/PatilShreyas/NotyKT/issues/337)] Fix not able to add note again once already added.
+
+### ✅ Improvements
+ 
+- [[#338](https://github.com/PatilShreyas/NotyKT/issues/338)] Show confirmation dialog on note deletion and logout in Simple app.
+- [[#339](https://github.com/PatilShreyas/NotyKT/issues/339)] Fixed Save note button hides behind the keyboard in note detail and add new note screen.
+- [[#336](https://github.com/PatilShreyas/NotyKT/issues/336)] Improved touch region for icons in compose app.
+- [[#336](https://github.com/PatilShreyas/NotyKT/issues/336)] Changed background color at About Screen to match with the background color at Note Detail Screen.
+- [[#336](https://github.com/PatilShreyas/NotyKT/issues/336)] Improved style of text fields for notes in Compose app.
+
+### 🎯 Codebase Improvements
+
+- Replaced `lifecycleScope.launch` with `viewLifecycleOwner.lifecycleScope`.
+- Refactored Noty Dialogs's `ConfirmationDialog` to use Default `AlertDialog` composable instead of Default Dialog composable.
+
+_**Many Thanks to superstar ⭐ contributor [@kasem-sm](https://github.com/kasem-sm) for contributing and for making this project better!**_
+
+---
+
 ## _v1.3.1_ (2021-11-16)
 
 This release includes few improvements and fixes in the Jetpack Compose Application to make it better.
