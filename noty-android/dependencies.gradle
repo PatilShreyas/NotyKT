@@ -70,7 +70,7 @@ ext {
     composeNavVersion = "2.4.0-beta02"
 
     // Hilt Compose Navigation
-    hiltComposeNavVersion = "1.0.0-beta01"
+    hiltComposeNavVersion = "1.0.0-rc01"
 
     lifecycleViewModelComposeVersion = "2.4.0"
 
