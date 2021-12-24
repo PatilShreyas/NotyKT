@@ -27,6 +27,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
 
+/**
+ * Source of data of notes from from local database
+ */
 class NotyLocalNoteRepository @Inject constructor(
     private val notesDao: NotesDao
 ) : NotyNoteRepository {
