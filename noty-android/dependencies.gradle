@@ -16,56 +16,72 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.0.0-alpha03'
+    androidGradlePluginVersion = '7.0.4'
 
     // Kotlin
-    kotlinVersion = "1.4.10"
-    ktlintVersion = "9.3.0"
-    coroutinesVersion = "1.4.1"
+    kotlinVersion = "1.5.31"
+    ktlintVersion = "10.2.0"
+    coroutinesVersion = "1.6.0"
 
     // Android
-    appcompatVersion = "1.3.0-alpha02"
-    coreKtxVersion = "1.3.2"
-    constraintlayoutVersion = "2.0.4"
+    appcompatVersion = "1.4.0"
+    coreKtxVersion = "1.7.0"
+    constraintlayoutVersion = "2.1.2"
     swipeRefreshLayoutVersion = "1.1.0"
-    recyclerViewVersion = "1.2.0-alpha03"
-    workmanagerVersion = "2.5.0-beta01"
-    lifecycleVersion = "2.2.0"
-    navigationVersion = "2.3.2"
-    securityCryptoVersion = "1.1.0-alpha02"
-    roomVersion = "2.2.5"
-    dataStoreVersion = "1.0.0-alpha04"
+    recyclerViewVersion = "1.2.1"
+    workmanagerVersion = '2.7.1'
+    lifecycleVersion = "2.4.0"
+    navigationVersion = "2.3.5"
+    securityCryptoVersion = '1.1.0-alpha03'
+    roomVersion = "2.4.0"
+    dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
 
     // Design
-    materialDesignVersion = "1.2.1"
+    materialDesignVersion = "1.4.0"
 
     // Lottie Animation
-    lottieVersion = "3.5.0"
+    lottieVersion = "4.2.2"
+
+    // Lottie Animation (Compose)
+    lottieComposeVersion = "4.2.2"
 
     // DI
-    daggerHiltVersion = "2.30.1-alpha"
-    jetpackHiltVersion = "1.0.0-alpha02"
-    assistedInjectVersion = "0.6.0"
+    daggerHiltVersion = "2.40.5"
+    jetpackHiltVersion = "1.0.0"
 
     // Networking
     retrofitVersion = "2.9.0"
     okHttpVersion = "4.9.0"
 
     // Moshi
-    moshiVersion = "1.11.0"
+    moshiVersion = "1.12.0"
 
     // Other utility
-    leakCanaryVersion = "2.4"
+    leakCanaryVersion = "2.7"
     javaxInjectVersion = "1"
 
+    // Jetpack Compose
+    composeVersion = "1.0.5"
+
+    // Constrain Layout (Compose)
+    composeConstraintLayoutVersion = "1.0.0-rc02"
+
+    // Jetpack Compose Navigation
+    composeNavVersion = "2.4.0-rc01"
+
+    // Hilt Compose Navigation
+    hiltComposeNavVersion = "1.0.0-rc01"
+
+    lifecycleViewModelComposeVersion = "2.4.0"
+
+    // Accompanist
+    accompanistVersion = "0.20.3"
+
     // Testing
-    jUnitVersion = "4.13.1"
+    jUnitVersion = "4.13.2"
     kotestVersion = "4.3.2"
     mockkVersion = "1.10.4"
-    androidJUnitVersion = "1.1.2"
+    androidJUnitVersion = "1.1.3"
     espressoVersion = "3.3.0"
-
-    // Jetpack Compose
-    composeVersion = "1.0.0-alpha04"
 }

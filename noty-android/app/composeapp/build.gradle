@@ -17,6 +17,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -33,11 +35,27 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        stage {}
+        dev {}
     }
 
     compileOptions {
@@ -56,7 +74,6 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion composeVersion
-        kotlinCompilerVersion kotlinVersion
     }
 
     lintOptions {
@@ -64,23 +81,81 @@ android {
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+configurations {
+    devDebugImplementation {}
+}
+
 dependencies {
+    // Kotlin Stdlib
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    // Core Module
     implementation project(":core")
+
+    // Common App Module
+    implementation project(":app")
 
     // Android
     implementation "androidx.core:core-ktx:$coreKtxVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
 
+    implementation "androidx.constraintlayout:constraintlayout-compose:$composeConstraintLayoutVersion"
+
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
 
+    // Lottie Compose
+    implementation "com.airbnb.android:lottie-compose:$lottieComposeVersion"
+
     // Compose
+    implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
+    implementation "androidx.compose.foundation:foundation:$composeVersion"
+    implementation "androidx.compose.foundation:foundation-layout:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
-    implementation "androidx.ui:ui-tooling:$composeVersion"
+    implementation "androidx.compose.material:material-icons-core:$composeVersion"
+    implementation "androidx.compose.material:material-icons-extended:$composeVersion"
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+    implementation "androidx.compose.ui:ui-test:$composeVersion"
+
+    // Dagger + Hilt
+    implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
+
+    // Hilt + Jetpack
+    implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
+
+    // Hilt + Navigation
+    implementation "androidx.hilt:hilt-navigation-fragment:$jetpackHiltVersion"
+
+    // WorkManager
+    implementation "androidx.work:work-runtime-ktx:$workmanagerVersion"
 
     // Lifecycle
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+
+    // Compose Lifecycle
+    implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
+
+    // Accompanist
+    implementation "com.google.accompanist:accompanist-swiperefresh:$accompanistVersion"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-compose:$composeNavVersion"
+
+    // Hilt Compose Navigation
+    implementation "androidx.hilt:hilt-navigation-compose:$hiltComposeNavVersion"
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
@@ -90,5 +165,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Leak Canary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }

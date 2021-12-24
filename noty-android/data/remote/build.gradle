@@ -26,8 +26,7 @@ android {
     defaultConfig {
         minSdkVersion ProjectConfig.minSdkVersion
         targetSdkVersion ProjectConfig.targetSdkVersion
-        versionCode ProjectConfig.versionCode
-        versionName ProjectConfig.versionName
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     compileOptions {

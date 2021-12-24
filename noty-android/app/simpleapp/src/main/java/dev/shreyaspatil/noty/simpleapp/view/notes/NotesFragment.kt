@@ -19,24 +19,35 @@ package dev.shreyaspatil.noty.simpleapp.view.notes
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.simpleapp.view.notes.adapter.NotesListAdapter
-import dev.shreyaspatil.noty.utils.*
+import dev.shreyaspatil.noty.utils.ConnectionState
+import dev.shreyaspatil.noty.utils.currentConnectivityState
+import dev.shreyaspatil.noty.utils.ext.hide
+import dev.shreyaspatil.noty.utils.ext.setDrawableLeft
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import dev.shreyaspatil.noty.utils.ext.show
+import dev.shreyaspatil.noty.utils.ext.showDialog
+import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -44,11 +55,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
-    override val viewModel: NotesViewModel by viewModels()
+    override val viewModel: NotesViewModel by hiltNotyMainNavGraphViewModels()
 
     private val notesListAdapter = NotesListAdapter(::onNoteClicked)
-
-    private lateinit var connectionState: Flow<ConnectionState>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,9 +96,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 
     private fun loadNotes() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.notes.first().let { notesState ->
+            viewModel.notes.first().let { notes ->
                 when {
-                    notesState is ViewState.Success -> notesListAdapter.submitList(notesState.data)
+                    notes is UIDataState.Success -> notesListAdapter.submitList(notes.data)
                     notesListAdapter.itemCount == 0 -> syncNotes()
                 }
             }
@@ -105,12 +114,12 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeNotes() {
         viewModel.notes.asLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
-                is ViewState.Success -> onNotesLoaded(it.data).also {
+                is UIDataState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is UIDataState.Success -> onNotesLoaded(it.data).also {
                     binding.swipeRefreshNotes.isRefreshing = false
                 }
 
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     toast("Error: ${it.message}")
                 }
@@ -121,9 +130,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     private fun observeSync() {
         viewModel.syncState.asLiveData().observe(viewLifecycleOwner) {
             when (it) {
-                is ViewState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
-                is ViewState.Success -> binding.swipeRefreshNotes.isRefreshing = false
-                is ViewState.Failed -> {
+                is UIDataState.Loading -> binding.swipeRefreshNotes.isRefreshing = true
+                is UIDataState.Success -> binding.swipeRefreshNotes.isRefreshing = false
+                is UIDataState.Failed -> {
                     binding.swipeRefreshNotes.isRefreshing = false
                     toast("Sync Error: ${it.message}")
                 }
@@ -139,33 +148,31 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
     }
 
     private fun observeConnectivity() {
-        connectionState = applicationContext()
+        applicationContext
             .observeConnectivityAsFlow()
             .shareWhileObserved(viewLifecycleOwner.lifecycleScope)
-            .also { flow ->
-                flow.asLiveData().observe(viewLifecycleOwner) { state ->
-                    when (state) {
-                        ConnectionState.Available -> onConnectivityAvailable()
-                        ConnectionState.Unavailable -> onConnectivityUnavailable()
-                    }
+            .asLiveData().observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    ConnectionState.Available -> onConnectivityAvailable()
+                    ConnectionState.Unavailable -> onConnectivityUnavailable()
                 }
             }
     }
 
     private fun checkAuthentication() {
-        if (!viewModel.isUserLoggedIn()) {
-            logout()
-        }
+        viewModel.userLoggedInState
+            .shareWhileObserved(viewLifecycleOwner.lifecycleScope)
+            .asLiveData().observe(viewLifecycleOwner) { isLoggedIn ->
+                if (!isLoggedIn) {
+                    logout()
+                }
+            }
     }
 
     private fun onNoteClicked(note: Note) {
         findNavController().navigate(
             NotesFragmentDirections.actionNotesFragmentToNoteDetailFragment(note.id)
         )
-    }
-
-    private fun logout() {
-        findNavController().navigate(R.id.action_notesFragment_to_loginFragment)
     }
 
     private fun onConnectivityUnavailable() {
@@ -229,13 +236,11 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
         }
     }
 
-    private suspend fun isConnected(): Boolean {
-        return this::connectionState.isInitialized &&
-            connectionState.first() is ConnectionState.Available
-    }
+    private fun isConnected(): Boolean =
+        applicationContext.currentConnectivityState === ConnectionState.Available
 
     private suspend fun shouldSyncNotes() = viewModel.notes.first()
-        .let { state -> state is ViewState.Failed || notesListAdapter.itemCount == 0 }
+        .let { state -> state is UIDataState.Failed || notesListAdapter.itemCount == 0 }
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -267,12 +272,43 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             R.id.action_dark_mode -> viewModel.setDarkMode(true)
             R.id.action_about ->
                 findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
-            R.id.action_logout -> lifecycleScope.launch {
-                viewModel.clearUserSession()
-                logout()
-            }
+            R.id.action_logout -> confirmLogout()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun confirmLogout() {
+        showDialog(
+            title = "Logout?",
+            message = "Sure want to logout?",
+            positiveActionText = "Yes",
+            positiveAction = { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.clearUserSession()
+                    logout()
+                }
+            },
+            negativeActionText = "No",
+            negativeAction = { dialog, _ ->
+                dialog.dismiss()
+            }
+        )
+    }
+
+    private fun logout() {
+        val destination = NotesFragmentDirections.actionNotesFragmentToLoginFragment()
+        if (isAdded) {
+            with(findNavController()) {
+                currentDestination?.getAction(destination.actionId)?.let {
+                    navigate(destination)
+                }
+            }
+        } else return
+    }
+
+    override fun onDestroyView() {
+        binding.notesRecyclerView.adapter = null
+        super.onDestroyView()
     }
 
     companion object {

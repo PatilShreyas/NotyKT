@@ -16,8 +16,10 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -25,14 +27,28 @@ import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.shareWhileObserved
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class NotesViewModel @ViewModelInject constructor(
+@HiltViewModel
+class NotesViewModel @Inject constructor(
     @LocalRepository private val notyNoteRepository: NotyNoteRepository,
     private val sessionManager: SessionManager,
     private val preferenceManager: PreferenceManager,
@@ -41,17 +57,20 @@ class NotesViewModel @ViewModelInject constructor(
 
     private var syncJob: Job? = null
 
-    private val _syncState = MutableSharedFlow<ViewState<Unit>>()
-    val syncState: SharedFlow<ViewState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
+    private val _syncState = MutableSharedFlow<UIDataState<Unit>>()
+    val syncState: SharedFlow<UIDataState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
 
-    val notes: SharedFlow<ViewState<List<Note>>> = notyNoteRepository.getAllNotes()
+    private val _loggedInState = MutableStateFlow(isUserLoggedIn())
+    val userLoggedInState: StateFlow<Boolean> = _loggedInState
+
+    val notes: SharedFlow<UIDataState<List<Note>>> = notyNoteRepository.getAllNotes()
         .distinctUntilChanged()
         .map { result ->
             when (result) {
-                is ResponseResult.Success -> ViewState.success(result.data)
-                is ResponseResult.Error -> ViewState.failed(result.message)
+                is ResponseResult.Success -> UIDataState.success(result.data)
+                is ResponseResult.Error -> UIDataState.failed(result.message)
             }
-        }.onStart { emit(ViewState.loading()) }
+        }.onStart { emit(UIDataState.loading()) }
         .shareWhileObserved(viewModelScope)
 
     fun syncNotes() {
@@ -59,24 +78,29 @@ class NotesViewModel @ViewModelInject constructor(
         syncJob = viewModelScope.launch {
             val taskId = notyTaskManager.syncNotes()
 
-            notyTaskManager.observeTask(taskId).collect { taskState ->
-                val viewState = when (taskState) {
-                    TaskState.SCHEDULED -> ViewState.loading()
-                    TaskState.COMPLETED, TaskState.CANCELLED -> ViewState.success(Unit)
-                    TaskState.FAILED -> ViewState.failed("Failed")
-                }
+            try {
+                notyTaskManager.observeTask(taskId).collect { taskState ->
+                    val viewState = when (taskState) {
+                        TaskState.SCHEDULED -> UIDataState.loading()
+                        TaskState.COMPLETED, TaskState.CANCELLED -> UIDataState.success(Unit)
+                        TaskState.FAILED -> UIDataState.failed("Failed")
+                    }
 
-                _syncState.emit(viewState)
+                    _syncState.emit(viewState)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Can't find work by ID '$taskId'")
             }
         }
     }
 
-    fun isUserLoggedIn() = sessionManager.getToken() != null
+    private fun isUserLoggedIn() = sessionManager.getToken() != null
 
     suspend fun clearUserSession() = withContext(Dispatchers.IO) {
         sessionManager.saveToken(null)
         notyTaskManager.abortAllTasks()
         notyNoteRepository.deleteAllNotes()
+        _loggedInState.value = false
     }
 
     suspend fun isDarkModeEnabled() = preferenceManager.uiModeFlow.first()
@@ -85,5 +109,9 @@ class NotesViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             preferenceManager.setDarkMode(enable)
         }
+    }
+
+    companion object {
+        const val TAG = "NotesViewModel"
     }
 }

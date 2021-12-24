@@ -12,7 +12,7 @@ _Dedicated to all Android Developers with_ ❤️.
 
 [📄 _**Visit the documentation of this project**_](https://patilshreyas.github.io/NotyKT/) to get more information in detail.
 
-***You can Install and test latest Covid19 Notifier app from below 👇***
+***You can Install and test latest NotyKT app from below 👇***
 
 [![Noty Simple App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Simple%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-simple.apk)
 [![Noty Compose App](https://img.shields.io/github/v/release/patilshreyas/notykt?color=7885FF&label=Compose%20App&logo=android&style=for-the-badge)](https://github.com/patilshreyas/notykt/releases/latest/download/noty-android-compose.apk)
@@ -25,8 +25,8 @@ The codebase focuses on following key things:
 - [x] Offline Capability - Notes ✈️
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
+- [x] Jetpack Compose UI
 - [ ] Tests ***(WIP)***
-- [ ] Jetpack Compose UI ***(WIP)***
 
 ## About this project 💡
 
@@ -81,6 +81,7 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 - [Moshi Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/moshi) - A Converter which uses Moshi for serialization to and from JSON.
 - [Material Components for Android](https://github.com/material-components/material-components-android) - Modular and customizable Material Design UI components for Android.
 - [Jetpack Compose UI Toolkit](https://developer.android.com/jetpack/compose) - Modern UI development toolkit.
+- [Accompanist](https://google.github.io/accompanist/) - Accompanist is a group of libraries that aim to supplement Jetpack Compose with features that are commonly required by developers but not yet available.
 - [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android
 
 ## Modules

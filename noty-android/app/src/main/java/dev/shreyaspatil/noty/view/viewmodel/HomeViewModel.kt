@@ -16,10 +16,12 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * Currently not in use
  */
-class HomeViewModel @ViewModelInject constructor() : ViewModel()
+@HiltViewModel
+class HomeViewModel @Inject constructor() : ViewModel()

@@ -19,10 +19,10 @@ package dev.shreyaspatil.noty.task
 import androidx.lifecycle.asFlow
 import androidx.work.*
 import androidx.work.WorkInfo.State
+import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
-import dev.shreyaspatil.noty.core.model.NotyTask
-import dev.shreyaspatil.noty.utils.putEnum
+import dev.shreyaspatil.noty.utils.ext.putEnum
 import dev.shreyaspatil.noty.worker.NotySyncWorker
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import kotlinx.coroutines.flow.Flow
@@ -68,8 +68,7 @@ class NotyTaskManagerImpl @Inject constructor(
     override fun getTaskState(taskId: UUID): TaskState? = runCatching {
         workManager.getWorkInfoById(taskId)
             .get()
-            .state
-            .let(this::mapWorkInfoStateToTaskState)
+            .let { mapWorkInfoStateToTaskState(it.state) }
     }.getOrNull()
 
     override fun observeTask(taskId: UUID): Flow<TaskState> {

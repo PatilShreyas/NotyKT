@@ -15,7 +15,6 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="dev.shreyaspatil.noty.simpleapp">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -33,6 +32,7 @@
         <activity
             android:name=".view.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|navigation|screenSize|screenLayout"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

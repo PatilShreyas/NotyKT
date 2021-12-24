@@ -32,8 +32,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.simpleapp.databinding.MainActivityBinding
-import dev.shreyaspatil.noty.utils.hide
-import dev.shreyaspatil.noty.utils.show
+import dev.shreyaspatil.noty.utils.ext.hide
+import dev.shreyaspatil.noty.utils.ext.show
 import javax.inject.Inject
 
 @AndroidEntryPoint

@@ -19,32 +19,34 @@ package dev.shreyaspatil.noty.simpleapp.view.detail
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.content.Intent
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat
-import androidx.core.view.drawToBitmap
-import androidx.lifecycle.asLiveData
 import dagger.hilt.android.AndroidEntryPoint
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
-import dev.shreyaspatil.noty.core.view.ViewState
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
-import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.utils.ext.showDialog
+import dev.shreyaspatil.noty.utils.saveBitmap
+import dev.shreyaspatil.noty.utils.share.shareImage
+import dev.shreyaspatil.noty.utils.share.shareNoteText
+import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import dev.shreyaspatil.noty.utils.hide
-import dev.shreyaspatil.noty.utils.show
-import dev.shreyaspatil.noty.utils.NoteValidator
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 
 @ExperimentalCoroutinesApi
@@ -54,7 +56,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private val args: NoteDetailFragmentArgs by navArgs()
 
     @Inject
-    lateinit var viewModelAssistedFactory: NoteDetailViewModel.AssistedFactory
+    lateinit var viewModelAssistedFactory: NoteDetailViewModel.Factory
 
     override val viewModel: NoteDetailViewModel by viewModels {
         args.noteId?.let { noteId ->
@@ -62,7 +64,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
-    val requestLauncher = registerForActivityResult(
+    private val requestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) shareImage() else showErrorDialog(
@@ -114,12 +116,12 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteUpdate() {
         viewModel.updateNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
-                is ViewState.Success -> {
+                is UIDataState.Loading -> showProgressDialog()
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     hideProgressDialog()
                     toast("Error: ${viewState.message}")
                 }
@@ -130,12 +132,12 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
     private fun observeNoteDeletion() {
         viewModel.deleteNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
-                is ViewState.Success -> {
+                is UIDataState.Loading -> showProgressDialog()
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     findNavController().navigateUp()
                 }
-                is ViewState.Failed -> hideProgressDialog()
+                is UIDataState.Failed -> hideProgressDialog()
             }
         }
     }
@@ -168,18 +170,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         val title = binding.noteLayout.fieldTitle.text.toString()
         val note = binding.noteLayout.fieldNote.text.toString()
 
-        val shareMsg = getString(
-            R.string.text_message_share,
-            title,
-            note
-        )
-
-        val intent = ShareCompat.IntentBuilder.from(requireActivity())
-            .setType("text/plain")
-            .setText(shareMsg)
-            .intent
-
-        startActivity(Intent.createChooser(intent, null))
+        requireContext().shareNoteText(title, note)
     }
 
     private fun shareImage() {
@@ -195,12 +186,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
             return
         }
 
-        val intent = ShareCompat.IntentBuilder.from(requireActivity())
-            .setType("image/jpeg")
-            .setStream(imageUri)
-            .intent
-
-        startActivity(Intent.createChooser(intent, null))
+        requireContext().shareImage(imageUri)
     }
 
     private fun isStoragePermissionGranted(): Boolean = ContextCompat.checkSelfPermission(
@@ -215,7 +201,7 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_delete -> viewModel.deleteNote()
+            R.id.action_delete -> confirmNoteDeletion()
             R.id.action_share_text -> shareText()
             R.id.action_share_image -> shareImage()
         }
@@ -226,4 +212,19 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = NoteDetailFragmentBinding.inflate(inflater, container, false)
+
+    private fun confirmNoteDeletion() {
+        showDialog(
+            title = "Delete?",
+            message = "Sure want to delete the note?",
+            positiveActionText = "Yes",
+            positiveAction = { _, _ ->
+                viewModel.deleteNote()
+            },
+            negativeActionText = "No",
+            negativeAction = { dialog, _ ->
+                dialog.dismiss()
+            }
+        )
+    }
 }

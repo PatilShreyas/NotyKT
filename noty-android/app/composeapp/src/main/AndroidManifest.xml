@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2020 Shreyas Patil
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +17,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.shreyaspatil.noty.composeapp">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
+        android:name=".NotyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Noty">
+        android:theme="@style/AppTheme">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|navigation|screenSize|screenLayout"
+            android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Noty.NoActionBar">
+            android:theme="@style/AppTheme.Splash"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

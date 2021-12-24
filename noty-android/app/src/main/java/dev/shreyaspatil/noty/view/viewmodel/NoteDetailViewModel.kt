@@ -16,24 +16,28 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.*
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
-import com.squareup.inject.assisted.dagger2.AssistedModule
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.Module
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ActivityRetainedComponent
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.shareWhileObserved
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -45,8 +49,8 @@ class NoteDetailViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            noteRepository.getNoteById(noteId).first()
-                .let { _note.emit(it) }
+            noteRepository.getNoteById(noteId).firstOrNull()
+                ?.let { _note.emit(it) }
         }
     }
 
@@ -55,16 +59,16 @@ class NoteDetailViewModel @AssistedInject constructor(
     private val _note = MutableSharedFlow<Note>()
     val note: SharedFlow<Note> = _note.shareWhileObserved(viewModelScope)
 
-    private val _updateNoteState = MutableSharedFlow<ViewState<Unit>>()
+    private val _updateNoteState = MutableSharedFlow<UIDataState<Unit>>()
     val updateNoteState = _updateNoteState.shareWhileObserved(viewModelScope)
 
-    private val _deleteNoteState = MutableSharedFlow<ViewState<Unit>>()
+    private val _deleteNoteState = MutableSharedFlow<UIDataState<Unit>>()
     val deleteNoteState = _deleteNoteState.shareWhileObserved(viewModelScope)
 
     fun updateNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            _updateNoteState.emit(ViewState.loading())
+            _updateNoteState.emit(UIDataState.loading())
 
             val viewState = when (val result = noteRepository.updateNote(noteId, title, note)) {
                 is ResponseResult.Success -> {
@@ -76,9 +80,9 @@ class NoteDetailViewModel @AssistedInject constructor(
                         scheduleNoteUpdate(noteId)
                     }
 
-                    ViewState.success(Unit)
+                    UIDataState.success(Unit)
                 }
-                is ResponseResult.Error -> ViewState.failed(result.message)
+                is ResponseResult.Error -> UIDataState.failed(result.message)
             }
 
             _updateNoteState.emit(viewState)
@@ -88,7 +92,7 @@ class NoteDetailViewModel @AssistedInject constructor(
     fun deleteNote() {
         job?.cancel()
         job = viewModelScope.launch {
-            _updateNoteState.emit(ViewState.loading())
+            _updateNoteState.emit(UIDataState.loading())
 
             val viewState = when (val result = noteRepository.deleteNote(noteId)) {
                 is ResponseResult.Success -> {
@@ -97,9 +101,9 @@ class NoteDetailViewModel @AssistedInject constructor(
                     if (!NotyNoteRepository.isTemporaryNote(noteId)) {
                         scheduleNoteDelete(noteId)
                     }
-                    ViewState.success(Unit)
+                    UIDataState.success(Unit)
                 }
-                is ResponseResult.Error -> ViewState.failed(result.message)
+                is ResponseResult.Error -> UIDataState.failed(result.message)
             }
             _deleteNoteState.emit(viewState)
         }
@@ -114,24 +118,24 @@ class NoteDetailViewModel @AssistedInject constructor(
     private fun scheduleNoteDelete(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-    @AssistedInject.Factory
-    interface AssistedFactory {
+    @AssistedFactory
+    interface Factory {
         fun create(noteId: String): NoteDetailViewModel
     }
 
+    @Suppress("UNCHECKED_CAST")
     companion object {
         fun provideFactory(
-            assistedFactory: AssistedFactory,
+            assistedFactory: Factory,
             noteId: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(noteId) as T
             }
         }
     }
 }
 
-@AssistedModule
 @Module
-@InstallIn(FragmentComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 interface AssistedInjectModule

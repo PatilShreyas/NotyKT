@@ -20,15 +20,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.RegisterFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
-import dev.shreyaspatil.noty.utils.AuthValidator
+import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
+import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -36,7 +36,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel>() {
 
-    override val viewModel: RegisterViewModel by viewModels()
+    override val viewModel: RegisterViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,12 +47,12 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel
     private fun initData() {
         viewModel.authFlow.asLiveData().observe(viewLifecycleOwner) { viewState ->
             when (viewState) {
-                is ViewState.Loading -> showProgressDialog()
-                is ViewState.Success -> {
+                is UIDataState.Loading -> showProgressDialog()
+                is UIDataState.Success -> {
                     hideProgressDialog()
                     onAuthSuccess()
                 }
-                is ViewState.Failed -> {
+                is UIDataState.Failed -> {
                     hideProgressDialog()
                     showErrorDialog(
                         title = getString(R.string.dialog_title_signup_failed),

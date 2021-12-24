@@ -16,44 +16,46 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
-import dev.shreyaspatil.noty.core.view.ViewState
+import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.shareWhileObserved
+import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
-class AddNoteViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AddNoteViewModel @Inject constructor(
     @LocalRepository private val noteRepository: NotyNoteRepository,
     private val notyTaskManager: NotyTaskManager
 ) : ViewModel() {
 
     var job: Job? = null
 
-    private val _addNoteState = MutableSharedFlow<ViewState<String>>()
-    val addNoteState = _addNoteState.shareWhileObserved(viewModelScope)
+    private val _addNoteState = MutableSharedFlow<UIDataState<String>>()
+    val addNoteState = _addNoteState.shareWhileObserved(viewModelScope, 0)
 
     fun addNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            _addNoteState.emit(ViewState.loading())
+            _addNoteState.emit(UIDataState.loading())
 
             val state = when (val result = noteRepository.addNote(title, note)) {
                 is ResponseResult.Success -> {
                     val noteId = result.data
                     scheduleNoteCreate(noteId)
-                    ViewState.success(noteId)
+                    UIDataState.success(noteId)
                 }
-                is ResponseResult.Error -> ViewState.failed(result.message)
+                is ResponseResult.Error -> UIDataState.failed(result.message)
             }
 
             _addNoteState.emit(state)
