@@ -31,10 +31,10 @@ class AuthInterceptorTest : BehaviorSpec({
     val interceptor = AuthInterceptor(sessionManager)
 
     // Init mocks
-    val modifiedRequest: Request = mockk()
+    val expectedRequest: Request = mockk()
     val requestBuilder: Request.Builder = mockk {
         every { header(any(), any()) } returns this
-        every { build() } returns modifiedRequest
+        every { build() } returns expectedRequest
     }
     val chain: Interceptor.Chain = mockk {
         every { proceed(any()) } returns mockk()
@@ -56,7 +56,7 @@ class AuthInterceptorTest : BehaviorSpec({
             }
 
             Then("The chain should proceed with the new request") {
-                verify { chain.proceed(modifiedRequest) }
+                verify { chain.proceed(expectedRequest) }
             }
         }
     }
