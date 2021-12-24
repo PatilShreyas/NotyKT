@@ -28,23 +28,22 @@ import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.di.EmptyContext
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
@@ -52,7 +51,8 @@ class NotesViewModel @Inject constructor(
     @LocalRepository private val notyNoteRepository: NotyNoteRepository,
     private val sessionManager: SessionManager,
     private val preferenceManager: PreferenceManager,
-    private val notyTaskManager: NotyTaskManager
+    private val notyTaskManager: NotyTaskManager,
+    @EmptyContext private val coroutineContext: CoroutineContext
 ) : ViewModel() {
 
     private var syncJob: Job? = null
@@ -75,7 +75,7 @@ class NotesViewModel @Inject constructor(
 
     fun syncNotes() {
         syncJob?.cancel()
-        syncJob = viewModelScope.launch {
+        syncJob = viewModelScope.launch(coroutineContext) {
             val taskId = notyTaskManager.syncNotes()
 
             try {
@@ -96,17 +96,19 @@ class NotesViewModel @Inject constructor(
 
     private fun isUserLoggedIn() = sessionManager.getToken() != null
 
-    suspend fun clearUserSession() = withContext(Dispatchers.IO) {
-        sessionManager.saveToken(null)
-        notyTaskManager.abortAllTasks()
-        notyNoteRepository.deleteAllNotes()
-        _loggedInState.value = false
+    fun clearUserSession() {
+        viewModelScope.launch(coroutineContext) {
+            sessionManager.saveToken(null)
+            notyTaskManager.abortAllTasks()
+            notyNoteRepository.deleteAllNotes()
+            _loggedInState.value = false
+        }
     }
 
     suspend fun isDarkModeEnabled() = preferenceManager.uiModeFlow.first()
 
     fun setDarkMode(enable: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineContext) {
             preferenceManager.setDarkMode(enable)
         }
     }
