@@ -40,6 +40,12 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -87,4 +93,8 @@ dependencies {
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "io.kotest:kotest-runner-junit5:$kotestVersion"
+    testImplementation "io.kotest:kotest-assertions-core:$kotestVersion"
+    testImplementation "io.kotest:kotest-property:$kotestVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
 }
