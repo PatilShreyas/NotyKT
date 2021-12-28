@@ -20,7 +20,7 @@ ext {
 
     // Kotlin
     kotlinVersion = "1.5.31"
-    ktlintVersion = "10.2.0"
+    ktlintVersion = "10.2.1"
     coroutinesVersion = "1.6.0"
 
     // Android
