@@ -24,7 +24,7 @@ ext {
     coroutinesVersion = "1.6.0"
 
     // Android
-    appcompatVersion = "1.4.0"
+    appcompatVersion = "1.4.1"
     coreKtxVersion = "1.7.0"
     constraintlayoutVersion = "2.1.2"
     swipeRefreshLayoutVersion = "1.1.0"
