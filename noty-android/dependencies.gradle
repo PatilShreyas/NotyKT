@@ -38,7 +38,7 @@ ext {
     legacySupportVersion = "1.0.0"
 
     // Design
-    materialDesignVersion = "1.4.0"
+    materialDesignVersion = "1.5.0"
 
     // Lottie Animation
     lottieVersion = "4.2.2"
