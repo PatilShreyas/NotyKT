@@ -98,7 +98,8 @@ class NoteDetailViewModelTest : BehaviorSpec({
             )
 
             val updateStates = mutableListOf<UIDataState<Unit>>()
-            val collectUpdateStates = launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
+            val collectUpdateStates =
+                launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
 
             When("Note is updated") {
                 viewModel.updateNote(title, note)
@@ -128,7 +129,8 @@ class NoteDetailViewModelTest : BehaviorSpec({
             )
 
             val updateStates = mutableListOf<UIDataState<Unit>>()
-            val collectUpdateStates = launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
+            val collectUpdateStates =
+                launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
 
             When("Note is updated") {
                 viewModel.updateNote(title, note)
@@ -178,7 +180,8 @@ class NoteDetailViewModelTest : BehaviorSpec({
             coEvery { repository.deleteNote(noteId) } returns ResponseResult.success(noteId)
 
             val deleteStates = mutableListOf<UIDataState<Unit>>()
-            val collectDeleteStates = launch { viewModel.deleteNoteState.drop(1).toList(deleteStates) }
+            val collectDeleteStates =
+                launch { viewModel.deleteNoteState.drop(1).toList(deleteStates) }
 
             When("Note is deleted") {
                 viewModel.deleteNote()
@@ -206,7 +209,9 @@ class NoteDetailViewModelTest : BehaviorSpec({
             coEvery { repository.deleteNote(noteId) } returns ResponseResult.error("Error")
 
             val deleteStates = mutableListOf<UIDataState<Unit>>()
-            val collectDeleteStates = launch { viewModel.deleteNoteState.drop(1).toList(deleteStates) }
+            val collectDeleteStates = launch {
+                viewModel.deleteNoteState.drop(1).toList(deleteStates)
+            }
 
             When("Note is deleted") {
                 viewModel.deleteNote()
