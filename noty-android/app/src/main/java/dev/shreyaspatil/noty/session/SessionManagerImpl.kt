@@ -26,9 +26,8 @@ import dev.shreyaspatil.noty.core.session.SessionManager
 class SessionManagerImpl(private val sharedPreferences: SharedPreferences) : SessionManager {
 
     override fun saveToken(token: String?) {
-        sharedPreferences.edit {
+        sharedPreferences.edit(commit = true) {
             putString(KEY_TOKEN, token)
-            commit()
         }
     }
 
