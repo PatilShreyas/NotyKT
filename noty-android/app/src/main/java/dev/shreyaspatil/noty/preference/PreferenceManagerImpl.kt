@@ -27,7 +27,6 @@ import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import java.io.IOException
 import javax.inject.Inject
 
 val Context.uiModePrefDataStore by preferencesDataStore("ui_mode_pref")
@@ -38,12 +37,8 @@ class PreferenceManagerImpl @Inject constructor(
 
     override val uiModeFlow: Flow<Boolean> = dataStore.data
         .catch {
-            if (it is IOException) {
-                it.printStackTrace()
-                emit(emptyPreferences())
-            } else {
-                throw it
-            }
+            it.printStackTrace()
+            emit(emptyPreferences())
         }.map { preference -> preference[IS_DARK_MODE] ?: false }
 
     override suspend fun setDarkMode(enable: Boolean) {
