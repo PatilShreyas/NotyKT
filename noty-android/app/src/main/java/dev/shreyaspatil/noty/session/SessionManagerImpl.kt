@@ -17,20 +17,13 @@
 package dev.shreyaspatil.noty.session
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import dev.shreyaspatil.noty.core.session.SessionManager
 
-class SessionManagerImpl(context: Context) : SessionManager {
-
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        context,
-        FILE_NAME,
-        MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+class SessionManagerImpl(private val sharedPreferences: SharedPreferences) : SessionManager {
 
     override fun saveToken(token: String?) {
         sharedPreferences.edit {
@@ -42,7 +35,20 @@ class SessionManagerImpl(context: Context) : SessionManager {
     override fun getToken(): String? = sharedPreferences.getString(KEY_TOKEN, null)
 
     companion object {
-        private const val FILE_NAME = "auth_shared_pref"
         private const val KEY_TOKEN = "auth_token"
+    }
+}
+
+object NotySharedPreferencesFactory {
+    private const val FILE_NAME_SESSION_PREF = "auth_shared_pref"
+
+    fun sessionPreferences(context: Context): SharedPreferences {
+        return EncryptedSharedPreferences.create(
+            context,
+            FILE_NAME_SESSION_PREF,
+            MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build(),
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
     }
 }

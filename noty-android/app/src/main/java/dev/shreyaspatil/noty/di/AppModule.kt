@@ -26,6 +26,7 @@ import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.preference.PreferenceManagerImpl
 import dev.shreyaspatil.noty.preference.uiModePrefDataStore
+import dev.shreyaspatil.noty.session.NotySharedPreferencesFactory
 import dev.shreyaspatil.noty.session.SessionManagerImpl
 import javax.inject.Singleton
 
@@ -42,7 +43,7 @@ class AppModule {
     @Singleton
     @Provides
     fun provideSessionManager(application: Application): SessionManager {
-        return SessionManagerImpl(application)
+        return SessionManagerImpl(NotySharedPreferencesFactory.sessionPreferences(application))
     }
 
     @Singleton
