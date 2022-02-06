@@ -23,6 +23,8 @@ ext {
     ktlintVersion = "10.2.1"
     coroutinesVersion = "1.6.0"
 
+    jacocoVersion = "0.8.7"
+
     // Android
     appcompatVersion = "1.4.1"
     coreKtxVersion = "1.7.0"

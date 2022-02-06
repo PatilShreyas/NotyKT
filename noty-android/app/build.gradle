@@ -45,6 +45,10 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.all {
             useJUnitPlatform()
+            reports {
+                junitXml.enabled = true
+                html.enabled = true
+            }
         }
     }
 }
