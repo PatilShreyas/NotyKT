@@ -57,7 +57,6 @@ import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @InternalCoroutinesApi
@@ -76,9 +75,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
         ConfirmationDialog(
             title = "Logout?",
             message = "Sure want to logout?",
-            onConfirmedYes = {
-                scope.launch { viewModel.clearUserSession() }
-            },
+            onConfirmedYes = { viewModel.clearUserSession() },
             onConfirmedNo = { showLogoutConfirmationDialog = false },
             onDismissed = { showLogoutConfirmationDialog = false }
         )

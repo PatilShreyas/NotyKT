@@ -33,6 +33,7 @@ buildscript {
         classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerHiltVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
+        classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
     }
 }
 
@@ -49,6 +50,12 @@ allprojects {
 
 subprojects {
     apply plugin: 'org.jlleitschuh.gradle.ktlint'
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = jacocoVersion
+        reportsDirectory.set(layout.buildDirectory.dir("jacocoReports"))
+    }
 
     ktlint {
         debug = false
