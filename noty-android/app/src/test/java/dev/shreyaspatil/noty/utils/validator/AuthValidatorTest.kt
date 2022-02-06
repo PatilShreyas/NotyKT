@@ -89,7 +89,10 @@ class AuthValidatorTest : BehaviorSpec({
             val confirmPassword = "password1234"
 
             When("They are checked whether they are same") {
-                val areSame = AuthValidator.isPasswordAndConfirmPasswordSame(password, confirmPassword)
+                val areSame = AuthValidator.isPasswordAndConfirmPasswordSame(
+                    password = password,
+                    confirmedPassword = confirmPassword
+                )
 
                 Then("They should be the same") {
                     areSame shouldBe true
@@ -102,7 +105,10 @@ class AuthValidatorTest : BehaviorSpec({
             val confirmPassword = "confirmPassword"
 
             When("They are checked whether they are same") {
-                val areSame = AuthValidator.isPasswordAndConfirmPasswordSame(password, confirmPassword)
+                val areSame = AuthValidator.isPasswordAndConfirmPasswordSame(
+                    password = password,
+                    confirmedPassword = confirmPassword
+                )
 
                 Then("They should NOT be the same") {
                     areSame shouldBe false
