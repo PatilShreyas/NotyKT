@@ -16,8 +16,6 @@
 
 package dev.shreyaspatil.noty.utils.validator
 
-import androidx.core.text.trimmedLength
-
 object NoteValidator {
-    fun isValidNote(title: String, note: String) = (title.trimmedLength() >= 4 && note.isNotBlank())
+    fun isValidNote(title: String, note: String) = (title.trim().length >= 4 && note.isNotBlank())
 }
