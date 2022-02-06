@@ -26,7 +26,7 @@ The codebase focuses on following key things:
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
 - [x] Jetpack Compose UI
-- [ ] Tests ***(WIP)***
+- [x] Tests
 
 ## About this project 💡
 
