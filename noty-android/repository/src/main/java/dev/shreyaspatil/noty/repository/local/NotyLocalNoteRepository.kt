@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.repository.local
 
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.data.local.dao.NotesDao
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
@@ -39,15 +39,15 @@ class NotyLocalNoteRepository @Inject constructor(
         .filterNotNull()
         .map { Note(it.noteId, it.title, it.note, it.created) }
 
-    override fun getAllNotes(): Flow<ResponseResult<List<Note>>> = notesDao.getAllNotes()
+    override fun getAllNotes(): Flow<Either<List<Note>>> = notesDao.getAllNotes()
         .map { notes -> notes.map { Note(it.noteId, it.title, it.note, it.created) } }
-        .transform { notes -> emit(ResponseResult.success(notes)) }
-        .catch { emit(ResponseResult.success(emptyList())) }
+        .transform { notes -> emit(Either.success(notes)) }
+        .catch { emit(Either.success(emptyList())) }
 
     override suspend fun addNote(
         title: String,
         note: String
-    ): ResponseResult<String> = runCatching {
+    ): Either<String> = runCatching {
         val tempNoteId = NotyNoteRepository.generateTemporaryId()
         notesDao.addNote(
             NoteEntity(
@@ -57,8 +57,8 @@ class NotyLocalNoteRepository @Inject constructor(
                 System.currentTimeMillis()
             )
         )
-        ResponseResult.success(tempNoteId)
-    }.getOrDefault(ResponseResult.error("Unable to create a new note"))
+        Either.success(tempNoteId)
+    }.getOrDefault(Either.error("Unable to create a new note"))
 
     override suspend fun addNotes(notes: List<Note>) = notes.map {
         NoteEntity(it.id, it.title, it.note, it.created)
@@ -70,15 +70,15 @@ class NotyLocalNoteRepository @Inject constructor(
         noteId: String,
         title: String,
         note: String
-    ): ResponseResult<String> = runCatching {
+    ): Either<String> = runCatching {
         notesDao.updateNoteById(noteId, title, note)
-        ResponseResult.success(noteId)
-    }.getOrDefault(ResponseResult.error("Unable to update a note"))
+        Either.success(noteId)
+    }.getOrDefault(Either.error("Unable to update a note"))
 
-    override suspend fun deleteNote(noteId: String): ResponseResult<String> = runCatching {
+    override suspend fun deleteNote(noteId: String): Either<String> = runCatching {
         notesDao.deleteNoteById(noteId)
-        ResponseResult.success(noteId)
-    }.getOrDefault(ResponseResult.error("Unable to delete a note"))
+        Either.success(noteId)
+    }.getOrDefault(Either.error("Unable to delete a note"))
 
     override suspend fun deleteAllNotes() = notesDao.deleteAllNotes()
 

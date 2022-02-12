@@ -37,7 +37,7 @@ interface NotyNoteRepository {
     /**
      * Returns all notes.
      */
-    fun getAllNotes(): Flow<ResponseResult<List<Note>>>
+    fun getAllNotes(): Flow<Either<List<Note>>>
 
     /**
      * Adds a new note
@@ -45,7 +45,7 @@ interface NotyNoteRepository {
      * @param title Title of a note
      * @param note Body of a note
      */
-    suspend fun addNote(title: String, note: String): ResponseResult<String>
+    suspend fun addNote(title: String, note: String): Either<String>
 
     /**
      * Adds a list of notes. Replaces notes if already exists
@@ -63,12 +63,12 @@ interface NotyNoteRepository {
         noteId: String,
         title: String,
         note: String
-    ): ResponseResult<String>
+    ): Either<String>
 
     /**
      * Deletes a new note having ID [noteId]
      */
-    suspend fun deleteNote(noteId: String): ResponseResult<String>
+    suspend fun deleteNote(noteId: String): Either<String>
 
     /**
      * Deletes all notes.
