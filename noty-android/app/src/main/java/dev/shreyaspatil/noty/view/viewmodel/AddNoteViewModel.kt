@@ -16,52 +16,72 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
-import javax.inject.Inject
+import dev.shreyaspatil.noty.utils.validator.NoteValidator
+import dev.shreyaspatil.noty.view.state.AddNoteState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
     @LocalRepository private val noteRepository: NotyNoteRepository,
     private val notyTaskManager: NotyTaskManager
-) : ViewModel() {
+) : BaseViewModel<AddNoteState>(initialState = AddNoteState()) {
 
-    var job: Job? = null
+    private var job: Job? = null
 
-    private val _addNoteState = MutableSharedFlow<UIDataState<String>>()
-    val addNoteState = _addNoteState.shareWhileObserved(viewModelScope, 0)
-
-    fun addNote(title: String, note: String) {
+    fun addNote() {
         job?.cancel()
         job = viewModelScope.launch {
-            _addNoteState.emit(UIDataState.loading())
+            val title = state.value.title.trim()
+            val note = state.value.note.trim()
 
-            val state = when (val result = noteRepository.addNote(title, note)) {
-                is ResponseResult.Success -> {
+            setState { state -> state.copy(isAdding = true) }
+
+            val result = noteRepository.addNote(title, note)
+            setState { state -> state.copy(isAdding = false) }
+
+            when (result) {
+                is Either.Success -> {
                     val noteId = result.data
                     scheduleNoteCreate(noteId)
-                    UIDataState.success(noteId)
+                    setState { state -> state.copy(added = true) }
                 }
-                is ResponseResult.Error -> UIDataState.failed(result.message)
+                is Either.Error -> {
+                    setState { state -> state.copy(errorMessage = result.message) }
+                }
             }
-
-            _addNoteState.emit(state)
         }
     }
 
     private fun scheduleNoteCreate(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.create(noteId))
+
+    fun setTitle(title: String) {
+        setState { state -> state.copy(title = title) }
+        validateNote()
+    }
+
+    fun setNote(note: String) {
+        setState { state -> state.copy(note = note) }
+        validateNote()
+    }
+
+    private fun validateNote() {
+        val isValid = NoteValidator.isValidNote(currentState.title, currentState.note)
+        setState { state -> state.copy(showSave = isValid) }
+    }
+
+    fun resetState() {
+        setState { AddNoteState() }
+    }
 }
