@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.Orientation
@@ -67,13 +66,8 @@ import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.random.Random
 
-@ExperimentalAnimationApi
-@InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,

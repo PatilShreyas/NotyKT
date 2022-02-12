@@ -28,7 +28,6 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.view.state.NotesState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -39,7 +38,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class NotesViewModel @Inject constructor(
     @LocalRepository private val notyNoteRepository: NotyNoteRepository,

@@ -22,7 +22,6 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import dev.shreyaspatil.noty.core.connectivity.ConnectionState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -34,7 +33,6 @@ val Context.connectivityManager get(): ConnectivityManager {
 /**
  * Network Utility to observe availability or unavailability of Internet connection
  */
-@ExperimentalCoroutinesApi
 fun ConnectivityManager.observeConnectivityAsFlow() = callbackFlow {
     trySend(currentConnectivityState)
 

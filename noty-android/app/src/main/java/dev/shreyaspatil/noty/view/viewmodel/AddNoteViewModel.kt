@@ -25,12 +25,10 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.state.AddNoteState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
     @LocalRepository private val noteRepository: NotyNoteRepository,

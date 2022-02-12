@@ -29,9 +29,7 @@ import dev.shreyaspatil.noty.utils.ext.setError
 import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
 import dev.shreyaspatil.noty.view.state.RegisterState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, RegisterViewModel>() {
 

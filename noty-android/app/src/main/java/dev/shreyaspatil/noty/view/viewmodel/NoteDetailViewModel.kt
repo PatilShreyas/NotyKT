@@ -33,12 +33,10 @@ import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.state.NoteDetailState
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
 class NoteDetailViewModel @AssistedInject constructor(
     private val notyTaskManager: NotyTaskManager,
     @LocalRepository private val noteRepository: NotyNoteRepository,

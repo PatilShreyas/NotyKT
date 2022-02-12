@@ -28,9 +28,7 @@ import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
 import dev.shreyaspatil.noty.view.state.AddNoteState
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteState, AddNoteViewModel>() {
 

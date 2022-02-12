@@ -29,9 +29,7 @@ import dev.shreyaspatil.noty.utils.ext.setError
 import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
 import dev.shreyaspatil.noty.view.state.LoginState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewModel>() {
 

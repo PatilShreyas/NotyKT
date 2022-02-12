@@ -42,10 +42,8 @@ import dev.shreyaspatil.noty.utils.ext.show
 import dev.shreyaspatil.noty.utils.ext.showDialog
 import dev.shreyaspatil.noty.view.state.NotesState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewModel>() {
 

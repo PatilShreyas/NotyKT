@@ -28,9 +28,7 @@ import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
 import dev.shreyaspatil.noty.view.state.AboutState
 import dev.shreyaspatil.noty.view.viewmodel.AboutViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AboutFragment : BaseFragment<FragmentAboutBinding, AboutState, AboutViewModel>() {
     override val viewModel: AboutViewModel by hiltNotyMainNavGraphViewModels()

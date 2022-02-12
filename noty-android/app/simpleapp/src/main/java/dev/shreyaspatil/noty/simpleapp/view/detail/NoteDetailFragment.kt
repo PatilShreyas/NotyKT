@@ -43,10 +43,8 @@ import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.view.state.NoteDetailState
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class NoteDetailFragment :
     BaseFragment<NoteDetailFragmentBinding, NoteDetailState, NoteDetailViewModel>() {

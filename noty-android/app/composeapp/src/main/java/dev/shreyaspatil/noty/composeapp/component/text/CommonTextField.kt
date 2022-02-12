@@ -17,7 +17,6 @@
 package dev.shreyaspatil.noty.composeapp.component.text
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,7 +73,6 @@ fun NotyTextField(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun BasicNotyTextField(
     modifier: Modifier = Modifier,

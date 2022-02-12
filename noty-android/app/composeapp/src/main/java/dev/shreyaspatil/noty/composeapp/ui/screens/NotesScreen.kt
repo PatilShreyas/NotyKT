@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,12 +54,7 @@ import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 
-@ExperimentalAnimationApi
-@InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 @Composable
 fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     val isUserLoggedIn by viewModel.userLoggedInState.collectAsState()

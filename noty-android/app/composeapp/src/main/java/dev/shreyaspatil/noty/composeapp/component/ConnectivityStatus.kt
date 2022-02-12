@@ -17,7 +17,6 @@
 package dev.shreyaspatil.noty.composeapp.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -46,12 +45,9 @@ import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.ui.theme.green
 import dev.shreyaspatil.noty.composeapp.ui.theme.red
 import dev.shreyaspatil.noty.composeapp.utils.connectivityState
-import dev.shreyaspatil.noty.core.connectivity.ConnectionState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import dev.shreyaspatil.noty.utils.ConnectionState
 import kotlinx.coroutines.delay
 
-@ExperimentalAnimationApi
-@ExperimentalCoroutinesApi
 @Composable
 fun ConnectivityStatus() {
     val connection by connectivityState()

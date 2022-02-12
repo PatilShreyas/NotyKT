@@ -22,11 +22,9 @@ import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.state.LoginState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val notyUserRepository: NotyUserRepository,

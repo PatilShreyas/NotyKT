@@ -25,7 +25,6 @@ import dev.shreyaspatil.noty.core.connectivity.ConnectionState
 import dev.shreyaspatil.noty.utils.connectivityManager
 import dev.shreyaspatil.noty.utils.currentConnectivityState
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Composable
 fun currentConnectionState(): ConnectionState {
@@ -33,7 +32,6 @@ fun currentConnectionState(): ConnectionState {
     return remember { connectivityManager.currentConnectivityState }
 }
 
-@ExperimentalCoroutinesApi
 @Composable
 fun connectivityState(): State<ConnectionState> {
     val connectivityManager = LocalContext.current.connectivityManager
