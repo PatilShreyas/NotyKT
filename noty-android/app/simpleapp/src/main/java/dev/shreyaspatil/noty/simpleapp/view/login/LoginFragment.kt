@@ -16,89 +16,68 @@
 
 package dev.shreyaspatil.noty.simpleapp.view.login
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.asLiveData
+import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.LoginFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
-import dev.shreyaspatil.noty.utils.validator.AuthValidator
+import dev.shreyaspatil.noty.utils.ext.setError
+import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
+import dev.shreyaspatil.noty.view.state.LoginState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class LoginFragment : BaseFragment<LoginFragmentBinding, LoginViewModel>() {
+class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewModel>() {
 
     override val viewModel: LoginViewModel by hiltNotyMainNavGraphViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initData()
-        initViews()
-    }
-
-    private fun initData() {
-        viewModel.authFlow.asLiveData().observe(viewLifecycleOwner) { viewState ->
-            when (viewState) {
-                is UIDataState.Loading -> showProgressDialog()
-                is UIDataState.Success -> {
-                    hideProgressDialog()
-                    onAuthSuccess()
-                }
-                is UIDataState.Failed -> {
-                    hideProgressDialog()
-                    showErrorDialog(
-                        title = getString(R.string.dialog_title_login_failed),
-                        message = viewState.message
-                    )
-                }
+    override fun initView() {
+        with(binding) {
+            buttonLogin.setOnClickListener { viewModel.login() }
+            textSignUpButton.setOnClickListener {
+                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            }
+            textFieldUsername.editText?.addTextChangedListener {
+                viewModel.setUsername(it.toStringOrEmpty())
+            }
+            textFieldPassword.editText?.addTextChangedListener {
+                viewModel.setPassword(it.toStringOrEmpty())
             }
         }
     }
 
-    private fun initViews() {
-        binding.buttonLogin.setOnClickListener { onLoginClicked() }
-        binding.textSignUpButton.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+    override fun render(state: LoginState) {
+        showProgressDialog(state.isLoading)
+
+        binding.textFieldUsername.setError(state.isValidUsername == false) {
+            getString(R.string.message_field_username_invalid)
+        }
+
+        binding.textFieldPassword.setError(state.isValidPassword == false) {
+            getString(R.string.message_field_password_invalid)
+        }
+
+        if (state.isLoggedIn) {
+            navigateToNotesScreen()
+        }
+
+        val errorMessage = state.error
+        if (errorMessage != null) {
+            showErrorDialog(
+                title = getString(R.string.dialog_title_login_failed),
+                message = errorMessage
+            )
         }
     }
 
-    private fun onLoginClicked() {
-        val username = binding.textFieldUsername.editText?.text.toString()
-        val password = binding.textFieldPassword.editText?.text.toString()
-
-        if (validate(username, password)) {
-            viewModel.login(username, password)
-        }
-    }
-
-    private fun onAuthSuccess() {
+    private fun navigateToNotesScreen() {
         findNavController().navigate(R.id.action_loginFragment_to_notesFragment)
-    }
-
-    private fun validate(username: String, password: String): Boolean {
-        return with(binding) {
-            when {
-                !AuthValidator.isValidUsername(username) -> {
-                    textFieldUsername.error = getString(R.string.message_field_username_invalid)
-                    false
-                }
-
-                !AuthValidator.isValidPassword(password) -> {
-                    textFieldPassword.error = getString(R.string.message_field_password_invalid)
-                    false
-                }
-
-                else -> true
-            }
-        }
     }
 
     override fun getViewBinding(

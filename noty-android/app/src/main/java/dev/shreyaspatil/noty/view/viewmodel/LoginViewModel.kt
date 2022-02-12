@@ -16,17 +16,13 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
-import dev.shreyaspatil.noty.core.ui.UIDataState
-import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import dev.shreyaspatil.noty.utils.validator.AuthValidator
+import dev.shreyaspatil.noty.view.state.LoginState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,32 +31,48 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val notyUserRepository: NotyUserRepository,
     private val sessionManager: SessionManager
-) : ViewModel() {
+) : BaseViewModel<LoginState>(initialState = LoginState()) {
 
-    private val _authFlow = MutableSharedFlow<UIDataState<String>>()
-    val authFlow: SharedFlow<UIDataState<String>> = _authFlow.shareWhileObserved(viewModelScope)
+    fun setUsername(username: String) {
+        setState { state -> state.copy(username = username) }
+    }
 
-    fun login(
-        username: String,
-        password: String
-    ) {
+    fun setPassword(password: String) {
+        setState { state -> state.copy(password = password) }
+    }
+
+    fun login() {
+        if (!validateCredentials()) return
+
         viewModelScope.launch {
-            _authFlow.emit(UIDataState.loading())
+            val username = currentState.username
+            val password = currentState.password
 
-            val responseState = notyUserRepository.getUserByUsernameAndPassword(username, password)
+            setState { state -> state.copy(isLoading = true) }
 
-            val viewState = when (responseState) {
-                is ResponseResult.Success -> {
-                    val authCredential = responseState.data
-                    saveToken(authCredential.token)
-                    UIDataState.success("Authentication Successful")
-                }
+            val response = notyUserRepository.getUserByUsernameAndPassword(username, password)
 
-                is ResponseResult.Error -> UIDataState.failed(responseState.message)
+            response.onSuccess { authCredential ->
+                saveToken(authCredential.token)
+                setState { state -> state.copy(isLoading = false, isLoggedIn = true) }
+            }.onFailure { message ->
+                setState { state -> state.copy(isLoading = false, error = message) }
             }
-
-            _authFlow.emit(viewState)
         }
+    }
+
+    private fun validateCredentials(): Boolean {
+        val isValidUsername = AuthValidator.isValidUsername(currentState.username)
+        val isValidPassword = AuthValidator.isValidPassword(currentState.password)
+
+        setState { state ->
+            state.copy(
+                isValidUsername = isValidUsername,
+                isValidPassword = isValidPassword
+            )
+        }
+
+        return isValidUsername && isValidPassword
     }
 
     private fun saveToken(token: String) {
