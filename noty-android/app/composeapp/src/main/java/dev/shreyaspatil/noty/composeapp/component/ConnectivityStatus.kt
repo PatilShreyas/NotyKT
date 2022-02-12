@@ -46,7 +46,7 @@ import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.ui.theme.green
 import dev.shreyaspatil.noty.composeapp.ui.theme.red
 import dev.shreyaspatil.noty.composeapp.utils.connectivityState
-import dev.shreyaspatil.noty.utils.ConnectionState
+import dev.shreyaspatil.noty.core.connectivity.ConnectionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 
