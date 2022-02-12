@@ -22,12 +22,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dev.shreyaspatil.noty.connectivity.ConnectivityObserverImpl
+import dev.shreyaspatil.noty.core.connectivity.ConnectivityObserver
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.preference.PreferenceManagerImpl
 import dev.shreyaspatil.noty.preference.uiModePrefDataStore
 import dev.shreyaspatil.noty.session.NotySharedPreferencesFactory
 import dev.shreyaspatil.noty.session.SessionManagerImpl
+import dev.shreyaspatil.noty.utils.connectivityManager
 import javax.inject.Singleton
 
 @Module
@@ -44,6 +47,12 @@ class AppModule {
     @Provides
     fun provideSessionManager(application: Application): SessionManager {
         return SessionManagerImpl(NotySharedPreferencesFactory.sessionPreferences(application))
+    }
+
+    @Singleton
+    @Provides
+    fun provideConnectivityObserver(application: Application): ConnectivityObserver {
+        return ConnectivityObserverImpl(application.connectivityManager)
     }
 
     @Singleton
