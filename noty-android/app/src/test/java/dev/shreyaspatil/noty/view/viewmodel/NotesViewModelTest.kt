@@ -19,7 +19,7 @@ package dev.shreyaspatil.noty.view.viewmodel
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
@@ -34,9 +34,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
@@ -49,8 +47,8 @@ class NotesViewModelTest : BehaviorSpec({
 
     val repository: NotyNoteRepository = mockk(relaxUnitFun = true) {
         every { getAllNotes() } returns flowOf(
-            ResponseResult.success(listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))),
-            ResponseResult.error("Failed to retrieve notes")
+            Either.success(listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))),
+            Either.error("Failed to retrieve notes")
         )
     }
     val sessionManager: SessionManager = mockk(relaxUnitFun = true) {

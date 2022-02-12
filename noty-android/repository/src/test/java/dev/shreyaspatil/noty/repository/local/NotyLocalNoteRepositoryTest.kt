@@ -17,8 +17,8 @@
 package dev.shreyaspatil.noty.repository.local
 
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.repository.ResponseResult.Error
-import dev.shreyaspatil.noty.core.repository.ResponseResult.Success
+import dev.shreyaspatil.noty.core.repository.Either.Error
+import dev.shreyaspatil.noty.core.repository.Either.Success
 import dev.shreyaspatil.noty.data.local.dao.NotesDao
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import io.kotest.core.spec.style.BehaviorSpec

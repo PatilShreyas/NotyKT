@@ -19,7 +19,7 @@ package dev.shreyaspatil.noty.view.viewmodel
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.fakes.note
@@ -31,9 +31,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
@@ -63,7 +61,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
         val note = "Updated body of a note"
 
         And("Note is not yet synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns ResponseResult.success(
+            coEvery { repository.updateNote(noteId, title, note) } returns Either.success(
                 data = "TMP_$noteId"
             )
 
@@ -93,7 +91,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Note is synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns ResponseResult.success(
+            coEvery { repository.updateNote(noteId, title, note) } returns Either.success(
                 data = noteId
             )
 
@@ -124,7 +122,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Error occurs") {
-            coEvery { repository.updateNote(noteId, title, note) } returns ResponseResult.error(
+            coEvery { repository.updateNote(noteId, title, note) } returns Either.error(
                 message = "Error occurred"
             )
 
@@ -150,7 +148,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
 
     Given("A note for deletion") {
         And("Note is not yet synced") {
-            coEvery { repository.deleteNote(noteId) } returns ResponseResult.success("TMP_$noteId")
+            coEvery { repository.deleteNote(noteId) } returns Either.success("TMP_$noteId")
 
             val deleteStates = mutableListOf<UIDataState<Unit>>()
             val collectDeleteStates = launch { viewModel.deleteNoteState.toList(deleteStates) }
@@ -177,7 +175,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Note is synced") {
-            coEvery { repository.deleteNote(noteId) } returns ResponseResult.success(noteId)
+            coEvery { repository.deleteNote(noteId) } returns Either.success(noteId)
 
             val deleteStates = mutableListOf<UIDataState<Unit>>()
             val collectDeleteStates =
@@ -206,7 +204,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Error occurs") {
-            coEvery { repository.deleteNote(noteId) } returns ResponseResult.error("Error")
+            coEvery { repository.deleteNote(noteId) } returns Either.error("Error")
 
             val deleteStates = mutableListOf<UIDataState<Unit>>()
             val collectDeleteStates = launch {

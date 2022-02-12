@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.view.viewmodel
 
 import dev.shreyaspatil.noty.core.model.AuthCredential
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import io.kotest.core.spec.style.BehaviorSpec
@@ -29,8 +29,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
@@ -53,7 +51,7 @@ class LoginViewModelTest : BehaviorSpec({
             val token = "Bearer TOKEN_ABC"
 
             coEvery { repository.getUserByUsernameAndPassword(username, password) }
-                .returns(ResponseResult.success(AuthCredential(token)))
+                .returns(Either.success(AuthCredential(token)))
 
             val states = mutableListOf<UIDataState<String>>()
             val collectStatesJob = launch { viewModel.authFlow.toList(states) }
@@ -80,7 +78,7 @@ class LoginViewModelTest : BehaviorSpec({
 
         And("Credentials are Invalid") {
             coEvery { repository.getUserByUsernameAndPassword(username, password) }
-                .returns(ResponseResult.error("Invalid credentials"))
+                .returns(Either.error("Invalid credentials"))
 
             val states = mutableListOf<UIDataState<String>>()
             val collectStatesJob = launch { viewModel.authFlow.drop(1).toList(states) }

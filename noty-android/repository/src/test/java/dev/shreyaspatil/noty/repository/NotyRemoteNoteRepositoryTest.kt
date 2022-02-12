@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.repository
 
 import com.squareup.moshi.adapter
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
@@ -52,7 +52,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response should be returned") {
-                    val notes = (response as ResponseResult.Success).data
+                    val notes = (response as Either.Success).data
                     notes shouldHaveSize 1
                     notes.first() shouldBe Note("1111", "Lorem Ipsum", "Hey there", 0)
                 }
@@ -67,7 +67,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Error response should be returned") {
-                    val message = (response as ResponseResult.Error).message
+                    val message = (response as Either.Error).message
                     message shouldBe "Failed to perform operation"
                 }
             }
@@ -82,7 +82,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response should be returned") {
-                    val id = (response as ResponseResult.Success).data
+                    val id = (response as Either.Success).data
                     id shouldBe "1111"
                 }
             }
@@ -95,7 +95,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Error response should be returned") {
-                    val message = (response as ResponseResult.Error).message
+                    val message = (response as Either.Error).message
                     message shouldBe "Failed to perform operation"
                 }
             }
@@ -119,7 +119,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response should be returned") {
-                    val id = (response as ResponseResult.Success).data
+                    val id = (response as Either.Success).data
                     id shouldBe "1111"
                 }
             }
@@ -141,7 +141,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Error response should be returned") {
-                    val message = (response as ResponseResult.Error).message
+                    val message = (response as Either.Error).message
                     message shouldBe "Failed to perform operation"
                 }
             }
@@ -156,7 +156,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response should be returned") {
-                    val id = (response as ResponseResult.Success).data
+                    val id = (response as Either.Success).data
                     id shouldBe "1111"
                 }
             }
@@ -171,7 +171,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Error response should be returned") {
-                    val message = (response as ResponseResult.Error).message
+                    val message = (response as Either.Error).message
                     message shouldBe "Failed to perform operation"
                 }
             }

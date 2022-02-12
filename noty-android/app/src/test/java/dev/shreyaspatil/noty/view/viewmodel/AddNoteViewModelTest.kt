@@ -19,7 +19,7 @@ package dev.shreyaspatil.noty.view.viewmodel
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import io.kotest.core.spec.style.BehaviorSpec
@@ -31,7 +31,6 @@ import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
@@ -54,7 +53,7 @@ class AddNoteViewModelTest : BehaviorSpec({
         val note = "Hey there, this is not content"
 
         And("Note addition is successful") {
-            coEvery { repository.addNote(title, note) } returns ResponseResult.success("note-11")
+            coEvery { repository.addNote(title, note) } returns Either.success("note-11")
             val states = mutableListOf<UIDataState<String>>()
             val collectAddNoteStateJob = launch { viewModel.addNoteState.toList(states) }
 
@@ -81,7 +80,7 @@ class AddNoteViewModelTest : BehaviorSpec({
         }
 
         And("Note addition is failed") {
-            coEvery { repository.addNote(title, note) } returns ResponseResult.error("Failed")
+            coEvery { repository.addNote(title, note) } returns Either.error("Failed")
             val states = mutableListOf<UIDataState<String>>()
             val collectAddNoteStateJob = launch { viewModel.addNoteState.toList(states) }
 

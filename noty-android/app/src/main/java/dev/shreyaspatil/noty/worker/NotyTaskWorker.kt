@@ -9,7 +9,7 @@ import dagger.assisted.AssistedInject
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.di.RemoteRepository
 import dev.shreyaspatil.noty.utils.ext.getEnum
@@ -38,7 +38,7 @@ class NotyTaskWorker @AssistedInject constructor(
     private suspend fun addNote(tempNoteId: String): Result {
         val note = fetchLocalNote(tempNoteId)
         val response = remoteNoteRepository.addNote(note.title, note.note)
-        return if (response is ResponseResult.Success) {
+        return if (response is Either.Success) {
             // `response.data` will be a noteId received from API.
             localNoteRepository.updateNoteId(tempNoteId, response.data)
             Result.success()
@@ -48,12 +48,12 @@ class NotyTaskWorker @AssistedInject constructor(
     private suspend fun updateNote(noteId: String): Result {
         val note = fetchLocalNote(noteId)
         val response = remoteNoteRepository.updateNote(note.id, note.title, note.note)
-        return if (response is ResponseResult.Success) Result.success() else Result.retry()
+        return if (response is Either.Success) Result.success() else Result.retry()
     }
 
     private suspend fun deleteNote(noteId: String): Result {
         val response = remoteNoteRepository.deleteNote(noteId)
-        return if (response is ResponseResult.Success) Result.success() else Result.retry()
+        return if (response is Either.Success) Result.success() else Result.retry()
     }
 
     private suspend fun fetchLocalNote(noteId: String): Note =

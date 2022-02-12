@@ -17,7 +17,7 @@
 package dev.shreyaspatil.noty.repository
 
 import com.squareup.moshi.adapter
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
@@ -46,7 +46,7 @@ class DefaultNotyUserRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response with token should be returned") {
-                    val credentials = (response as ResponseResult.Success).data
+                    val credentials = (response as Either.Success).data
                     credentials.token shouldBe "Bearer ABCD"
                 }
             }
@@ -59,7 +59,7 @@ class DefaultNotyUserRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response with error message should be returned") {
-                    val message = (response as ResponseResult.Error).message
+                    val message = (response as Either.Error).message
                     message shouldBe "Invalid credentials"
                 }
             }
@@ -77,7 +77,7 @@ class DefaultNotyUserRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response with token should be returned") {
-                    val credentials = (response as ResponseResult.Success).data
+                    val credentials = (response as Either.Success).data
                     credentials.token shouldBe "Bearer ABCD"
                 }
             }
@@ -93,7 +93,7 @@ class DefaultNotyUserRepositoryTest : BehaviorSpec({
                 }
 
                 Then("Valid response with error message should be returned") {
-                    val message = (response as ResponseResult.Error).message
+                    val message = (response as Either.Error).message
                     message shouldBe "Invalid credentials"
                 }
             }
