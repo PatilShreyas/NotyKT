@@ -16,101 +16,74 @@
 
 package dev.shreyaspatil.noty.simpleapp.view.register
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.asLiveData
+import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.RegisterFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
-import dev.shreyaspatil.noty.utils.validator.AuthValidator
+import dev.shreyaspatil.noty.utils.ext.setError
+import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
+import dev.shreyaspatil.noty.view.state.RegisterState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterViewModel>() {
+class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, RegisterViewModel>() {
 
     override val viewModel: RegisterViewModel by hiltNotyMainNavGraphViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initData()
-        initViews()
-    }
-
-    private fun initData() {
-        viewModel.authFlow.asLiveData().observe(viewLifecycleOwner) { viewState ->
-            when (viewState) {
-                is UIDataState.Loading -> showProgressDialog()
-                is UIDataState.Success -> {
-                    hideProgressDialog()
-                    onAuthSuccess()
-                }
-                is UIDataState.Failed -> {
-                    hideProgressDialog()
-                    showErrorDialog(
-                        title = getString(R.string.dialog_title_signup_failed),
-                        message = viewState.message
-                    )
-                }
+    override fun initView() {
+        with(binding) {
+            buttonRegister.setOnClickListener { viewModel.register() }
+            backButton.setOnClickListener { navigateUp() }
+            textLoginButton.setOnClickListener { navigateUp() }
+            textFieldUsername.editText?.addTextChangedListener {
+                viewModel.setUsername(it.toStringOrEmpty())
+            }
+            textFieldPassword.editText?.addTextChangedListener {
+                viewModel.setPassword(it.toStringOrEmpty())
+            }
+            textFieldConfirmPassword.editText?.addTextChangedListener {
+                viewModel.setConfirmPassword(it.toStringOrEmpty())
             }
         }
     }
 
-    private fun initViews() {
-        binding.buttonRegister.setOnClickListener { onRegisterClicked() }
-        binding.backButton.setOnClickListener { navigateUp() }
-        binding.textLoginButton.setOnClickListener { navigateUp() }
-    }
+    override fun render(state: RegisterState) {
+        showProgressDialog(state.isLoading)
 
-    private fun onRegisterClicked() {
-        val username = binding.textFieldUsername.editText?.text.toString()
-        val password = binding.textFieldPassword.editText?.text.toString()
-        val confirmPassword = binding.textFieldConfirmPassword.editText?.text.toString()
+        binding.textFieldUsername.setError(state.isValidUsername == false) {
+            getString(R.string.message_field_username_invalid)
+        }
 
-        if (validate(username, password, confirmPassword)) {
-            viewModel.register(username, password)
+        binding.textFieldPassword.setError(state.isValidPassword == false) {
+            getString(R.string.message_field_password_invalid)
+        }
+
+        binding.textFieldConfirmPassword.setError(state.isValidConfirmPassword == false) {
+            getString(R.string.message_password_mismatched)
+        }
+
+        if (state.isLoggedIn) {
+            navigateToNotesScreen()
+        }
+
+        val errorMessage = state.error
+        if (errorMessage != null) {
+            showErrorDialog(
+                title = getString(R.string.dialog_title_signup_failed),
+                message = errorMessage
+            )
         }
     }
 
-    private fun onAuthSuccess() {
+    private fun navigateToNotesScreen() {
         findNavController().navigate(R.id.action_registerFragment_to_notesFragment)
-    }
-
-    private fun validate(username: String, password: String, confirmPassword: String): Boolean {
-        return with(binding) {
-            when {
-                !AuthValidator.isValidUsername(username) -> {
-                    textFieldUsername.error = getString(R.string.message_field_username_invalid)
-                    false
-                }
-
-                !AuthValidator.isValidPassword(password) -> {
-                    textFieldPassword.error = getString(R.string.message_field_password_invalid)
-                    false
-                }
-
-                !AuthValidator.isValidPassword(confirmPassword) -> {
-                    textFieldConfirmPassword.error = getString(
-                        R.string.message_field_password_invalid
-                    )
-                    false
-                }
-
-                !AuthValidator.isPasswordAndConfirmPasswordSame(password, confirmPassword) -> {
-                    textFieldConfirmPassword.error = getString(R.string.message_password_mismatched)
-                    false
-                }
-
-                else -> true
-            }
-        }
     }
 
     private fun navigateUp() = findNavController().navigateUp()
