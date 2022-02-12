@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
@@ -33,14 +32,9 @@ import dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen
 import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 
 const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 
-@ExperimentalAnimationApi
-@InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 @Composable
 fun NotyNavigation() {
     val navController = rememberNavController()

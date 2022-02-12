@@ -20,7 +20,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -36,15 +35,9 @@ import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
-@ExperimentalAnimationApi
 @AndroidEntryPoint
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
     @Inject

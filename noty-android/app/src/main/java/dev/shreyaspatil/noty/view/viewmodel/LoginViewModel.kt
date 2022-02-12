@@ -24,13 +24,11 @@ import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val notyUserRepository: NotyUserRepository,
