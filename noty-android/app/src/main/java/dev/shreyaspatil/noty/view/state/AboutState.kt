@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.view.viewmodel
+package dev.shreyaspatil.noty.view.state
 
-import dev.shreyaspatil.noty.view.state.AboutState
-
-class AboutViewModel : BaseViewModel<AboutState>(initialState = AboutState)
+object AboutState : State
