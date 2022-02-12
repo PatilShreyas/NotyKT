@@ -16,11 +16,9 @@
 
 package dev.shreyaspatil.noty.utils.validator
 
-import androidx.core.text.trimmedLength
-
 object AuthValidator {
-    fun isValidUsername(username: String): Boolean = username.trimmedLength() in (4..30)
-    fun isValidPassword(password: String): Boolean = password.trimmedLength() in (8..50)
+    fun isValidUsername(username: String): Boolean = username.trim().length in (4..30)
+    fun isValidPassword(password: String): Boolean = password.trim().length in (8..50)
 
     fun isPasswordAndConfirmPasswordSame(
         password: String,

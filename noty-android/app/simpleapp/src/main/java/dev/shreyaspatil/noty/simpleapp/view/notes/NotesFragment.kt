@@ -282,12 +282,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
             title = "Logout?",
             message = "Sure want to logout?",
             positiveActionText = "Yes",
-            positiveAction = { _, _ ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.clearUserSession()
-                    logout()
-                }
-            },
+            positiveAction = { _, _ -> viewModel.clearUserSession() },
             negativeActionText = "No",
             negativeAction = { dialog, _ ->
                 dialog.dismiss()

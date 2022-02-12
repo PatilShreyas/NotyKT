@@ -92,7 +92,7 @@ class NoteDetailViewModel @AssistedInject constructor(
     fun deleteNote() {
         job?.cancel()
         job = viewModelScope.launch {
-            _updateNoteState.emit(UIDataState.loading())
+            _deleteNoteState.emit(UIDataState.loading())
 
             val viewState = when (val result = noteRepository.deleteNote(noteId)) {
                 is ResponseResult.Success -> {

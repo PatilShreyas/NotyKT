@@ -16,6 +16,10 @@
 
 apply plugin: 'kotlin'
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     // Kotlin Stdlib
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -29,6 +33,12 @@ dependencies {
     // Moshi
     api "com.squareup.moshi:moshi-kotlin:$moshiVersion"
     api "com.squareup.moshi:moshi-adapters:$moshiVersion"
+
+    // Testing
+    testImplementation "io.kotest:kotest-runner-junit5:$kotestVersion"
+    testImplementation "io.kotest:kotest-assertions-core:$kotestVersion"
+    testImplementation "io.kotest:kotest-property:$kotestVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
 }
 
 sourceCompatibility = "1.8"

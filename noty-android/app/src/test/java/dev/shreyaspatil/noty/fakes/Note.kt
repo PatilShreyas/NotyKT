@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.data.remote
+package dev.shreyaspatil.noty.fakes
 
-import org.junit.Assert.*
-import org.junit.Test
+import dev.shreyaspatil.noty.core.model.Note
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-}
+fun note(noteId: String) = Note(
+    id = noteId,
+    title = "Lorem Ipsum",
+    note = "Hey there! This is note content",
+    created = 1L
+)
