@@ -16,7 +16,10 @@
 
 package dev.shreyaspatil.noty.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -24,7 +27,7 @@ import kotlinx.coroutines.flow.Flow
 interface NotesDao {
 
     @Query("SELECT * FROM notes WHERE noteId = :noteId")
-    fun getNoteById(noteId: String): Flow<NoteEntity>
+    fun getNoteById(noteId: String): Flow<NoteEntity?>
 
     @Query("SELECT * FROM notes ORDER BY created DESC")
     fun getAllNotes(): Flow<List<NoteEntity>>

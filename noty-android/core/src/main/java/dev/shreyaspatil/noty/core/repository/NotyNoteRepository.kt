@@ -17,9 +17,9 @@
 package dev.shreyaspatil.noty.core.repository
 
 import dev.shreyaspatil.noty.core.model.Note
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import java.util.*
+import javax.inject.Singleton
 
 /**
  * Repository for notes.

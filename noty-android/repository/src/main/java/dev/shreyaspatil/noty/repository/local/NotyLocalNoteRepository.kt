@@ -23,6 +23,7 @@ import dev.shreyaspatil.noty.data.local.dao.NotesDao
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class NotyLocalNoteRepository @Inject constructor(
 ) : NotyNoteRepository {
 
     override fun getNoteById(noteId: String): Flow<Note> = notesDao.getNoteById(noteId)
+        .filterNotNull()
         .map { Note(it.noteId, it.title, it.note, it.created) }
 
     override fun getAllNotes(): Flow<ResponseResult<List<Note>>> = notesDao.getAllNotes()
