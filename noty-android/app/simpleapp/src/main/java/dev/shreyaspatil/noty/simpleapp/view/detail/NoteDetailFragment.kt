@@ -46,10 +46,8 @@ import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailViewModel>() {
 

@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.component.text
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-@ExperimentalAnimationApi
 @Composable
 fun NoteTitleField(
     modifier: Modifier = Modifier,
@@ -41,7 +39,6 @@ fun NoteTitleField(
     )
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun NoteField(
     modifier: Modifier = Modifier,

@@ -17,7 +17,6 @@
 package dev.shreyaspatil.noty.composeapp.utils
 
 import android.app.Activity
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -27,12 +26,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.EntryPointAccessors
 import dev.shreyaspatil.noty.composeapp.ui.MainActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 
-@ExperimentalAnimationApi
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
 @Composable
 inline fun <reified VM : ViewModel> assistedViewModel(
     viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
@@ -44,9 +38,6 @@ inline fun <reified VM : ViewModel> assistedViewModel(
     return viewModel(viewModelStoreOwner, factory = factory)
 }
 
-@ExperimentalAnimationApi
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
 @Composable
 fun assistedViewModelFactory() = EntryPointAccessors.fromActivity(
     LocalContext.current as Activity,

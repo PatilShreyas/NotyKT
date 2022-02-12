@@ -55,9 +55,7 @@ import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 @Composable
 fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
 

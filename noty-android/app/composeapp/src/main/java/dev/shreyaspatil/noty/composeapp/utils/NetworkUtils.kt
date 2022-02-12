@@ -24,8 +24,6 @@ import androidx.compose.ui.platform.LocalContext
 import dev.shreyaspatil.noty.utils.ConnectionState
 import dev.shreyaspatil.noty.utils.currentConnectivityState
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
@@ -34,7 +32,6 @@ fun currentConnectionState(): ConnectionState {
     return remember { context.currentConnectivityState }
 }
 
-@ExperimentalCoroutinesApi
 @Composable
 fun connectivityState(): State<ConnectionState> {
     val context = LocalContext.current
