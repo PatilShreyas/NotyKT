@@ -23,40 +23,40 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.utils.ext.showDialog
+import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
 import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
-import dev.shreyaspatil.noty.utils.validator.NoteValidator
+import dev.shreyaspatil.noty.view.state.NoteDetailState
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailViewModel>() {
+class NoteDetailFragment :
+    BaseFragment<NoteDetailFragmentBinding, NoteDetailState, NoteDetailViewModel>() {
 
     private val args: NoteDetailFragmentArgs by navArgs()
 
     @Inject
     lateinit var viewModelAssistedFactory: NoteDetailViewModel.Factory
+
+    private var isNoteLoaded = false
 
     override val viewModel: NoteDetailViewModel by viewModels {
         args.noteId?.let { noteId ->
@@ -73,97 +73,43 @@ class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailVie
         )
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onStart() {
-        super.onStart()
-        observeNote()
-        observeNoteUpdate()
-        observeNoteDeletion()
-    }
-
-    private fun initViews() {
+    override fun initView() {
         binding.run {
-            fabSave.setOnClickListener { onNoteSaveClicked() }
-            noteLayout.fieldTitle.addTextChangedListener { onNoteContentChanged() }
-            noteLayout.fieldNote.addTextChangedListener { onNoteContentChanged() }
-        }
-    }
-
-    private fun onNoteSaveClicked() {
-        val (title, note) = getNoteContent()
-        viewModel.updateNote(title, note)
-    }
-
-    private fun observeNote() {
-        viewModel.note.asLiveData().observe(viewLifecycleOwner) {
-            binding.run {
-                binding.noteLayout.fieldTitle.setText(it.title)
-                binding.noteLayout.fieldNote.setText(it.note)
-                fabSave.isEnabled = true
+            fabSave.setOnClickListener { viewModel.updateNote() }
+            noteLayout.run {
+                fieldTitle.addTextChangedListener { viewModel.setTitle(it.toStringOrEmpty()) }
+                fieldNote.addTextChangedListener { viewModel.setNote(it.toStringOrEmpty()) }
             }
         }
     }
 
-    private fun observeNoteUpdate() {
-        viewModel.updateNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
-            when (viewState) {
-                is UIDataState.Loading -> showProgressDialog()
-                is UIDataState.Success -> {
-                    hideProgressDialog()
-                    findNavController().navigateUp()
-                }
-                is UIDataState.Failed -> {
-                    hideProgressDialog()
-                    toast("Error: ${viewState.message}")
-                }
-            }
+    override fun render(state: NoteDetailState) {
+        showProgressDialog(state.isLoading)
+
+        binding.fabSave.isVisible = state.canUpdate
+
+        val title = state.title
+        val note = state.note
+
+        if (title != null && note != null && !isNoteLoaded) {
+            isNoteLoaded = true
+            binding.noteLayout.fieldTitle.setText(title)
+            binding.noteLayout.fieldNote.setText(note)
         }
-    }
 
-    private fun observeNoteDeletion() {
-        viewModel.deleteNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
-            when (viewState) {
-                is UIDataState.Loading -> showProgressDialog()
-                is UIDataState.Success -> {
-                    hideProgressDialog()
-                    findNavController().navigateUp()
-                }
-                is UIDataState.Failed -> hideProgressDialog()
-            }
+        if (state.finished) {
+            findNavController().navigateUp()
         }
-    }
 
-    private fun onNoteContentChanged() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            val previousNote = viewModel.note.first()
-
-            val (newTitle, newNote) = getNoteContent()
-
-            if ((
-                previousNote.title != newTitle.trim() ||
-                    previousNote.note.trim() != newNote.trim()
-                ) &&
-                NoteValidator.isValidNote(newTitle, newNote)
-            ) {
-                binding.fabSave.show()
-            } else binding.fabSave.hide()
+        val errorMessage = state.error
+        if (errorMessage != null) {
+            toast("Error: $errorMessage")
         }
-    }
-
-    private fun getNoteContent() = binding.noteLayout.let {
-        Pair(
-            it.fieldTitle.text.toString(),
-            it.fieldNote.text.toString()
-        )
     }
 
     private fun shareText() {

@@ -28,15 +28,13 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import dev.shreyaspatil.noty.utils.validator.NoteValidator
+import dev.shreyaspatil.noty.view.state.NoteDetailState
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -45,67 +43,98 @@ class NoteDetailViewModel @AssistedInject constructor(
     private val notyTaskManager: NotyTaskManager,
     @LocalRepository private val noteRepository: NotyNoteRepository,
     @Assisted private val noteId: String
-) : ViewModel() {
+) : BaseViewModel<NoteDetailState>(initialState = NoteDetailState()) {
+
+    private var job: Job? = null
+    private val currentNote = CompletableDeferred<Note>()
 
     init {
+        loadNote()
+    }
+
+    fun setTitle(title: String) {
+        setState { state -> state.copy(title = title) }
+        validateNote()
+    }
+
+    fun setNote(note: String) {
+        setState { state -> state.copy(note = note) }
+        validateNote()
+    }
+
+    private fun loadNote() {
         viewModelScope.launch {
-            noteRepository.getNoteById(noteId).firstOrNull()
-                ?.let { _note.emit(it) }
+            setState { state -> state.copy(isLoading = true) }
+            val note = noteRepository.getNoteById(noteId).firstOrNull()
+            if (note != null) {
+                currentNote.complete(note)
+                setState { state ->
+                    state.copy(isLoading = false, title = note.title, note = note.note)
+                }
+            } else {
+                setState { state -> state.copy(isLoading = false, finished = true) }
+            }
         }
     }
 
-    private var job: Job? = null
+    fun updateNote() {
+        val title = currentState.title?.trim() ?: return
+        val note = currentState.note?.trim() ?: return
 
-    private val _note = MutableSharedFlow<Note>()
-    val note: SharedFlow<Note> = _note.shareWhileObserved(viewModelScope)
-
-    private val _updateNoteState = MutableSharedFlow<UIDataState<Unit>>()
-    val updateNoteState = _updateNoteState.shareWhileObserved(viewModelScope)
-
-    private val _deleteNoteState = MutableSharedFlow<UIDataState<Unit>>()
-    val deleteNoteState = _deleteNoteState.shareWhileObserved(viewModelScope)
-
-    fun updateNote(title: String, note: String) {
         job?.cancel()
         job = viewModelScope.launch {
-            _updateNoteState.emit(UIDataState.loading())
+            setState { state -> state.copy(isLoading = true) }
 
-            val viewState = when (val result = noteRepository.updateNote(noteId, title, note)) {
-                is ResponseResult.Success -> {
-                    val noteId = result.data
+            val response = noteRepository.updateNote(noteId, title, note)
 
-                    if (NotyNoteRepository.isTemporaryNote(noteId)) {
-                        scheduleNoteCreate(noteId)
-                    } else {
-                        scheduleNoteUpdate(noteId)
-                    }
+            setState { state -> state.copy(isLoading = false) }
 
-                    UIDataState.success(Unit)
+            response.onSuccess { noteId ->
+                if (NotyNoteRepository.isTemporaryNote(noteId)) {
+                    scheduleNoteCreate(noteId)
+                } else {
+                    scheduleNoteUpdate(noteId)
                 }
-                is ResponseResult.Error -> UIDataState.failed(result.message)
+                setState { state -> state.copy(finished = true) }
+            }.onFailure { message ->
+                setState { state -> state.copy(error = message) }
             }
-
-            _updateNoteState.emit(viewState)
         }
     }
 
     fun deleteNote() {
         job?.cancel()
         job = viewModelScope.launch {
-            _deleteNoteState.emit(UIDataState.loading())
+            setState { state -> state.copy(isLoading = true) }
 
-            val viewState = when (val result = noteRepository.deleteNote(noteId)) {
-                is ResponseResult.Success -> {
-                    val noteId = result.data
+            val response = noteRepository.deleteNote(noteId)
 
-                    if (!NotyNoteRepository.isTemporaryNote(noteId)) {
-                        scheduleNoteDelete(noteId)
-                    }
-                    UIDataState.success(Unit)
+            setState { state -> state.copy(isLoading = false) }
+
+            response.onSuccess { noteId ->
+                if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                    scheduleNoteDelete(noteId)
                 }
-                is ResponseResult.Error -> UIDataState.failed(result.message)
+                setState { state -> state.copy(finished = true) }
+            }.onFailure { message ->
+                setState { state -> state.copy(error = message) }
             }
-            _deleteNoteState.emit(viewState)
+        }
+    }
+
+    private fun validateNote() {
+        try {
+            val oldTitle = currentNote.getCompleted().title
+            val oldNote = currentNote.getCompleted().note
+
+            val title = currentState.title
+            val note = currentState.note
+
+            val isValid = title != null && note != null && NoteValidator.isValidNote(title, note)
+            val areOldAndUpdatedNoteSame = oldTitle == title?.trim() && oldNote == note?.trim()
+
+            setState { state -> state.copy(canUpdate = isValid && !areOldAndUpdatedNoteSame) }
+        } catch (error: Throwable) {
         }
     }
 
