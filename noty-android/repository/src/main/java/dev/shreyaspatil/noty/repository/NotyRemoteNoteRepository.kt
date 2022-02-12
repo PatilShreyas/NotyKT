@@ -23,7 +23,6 @@ import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
 import dev.shreyaspatil.noty.data.remote.model.response.State
 import dev.shreyaspatil.noty.data.remote.util.getResponse
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
@@ -34,7 +33,6 @@ import javax.inject.Singleton
 /**
  * Source of data of notes from network
  */
-@ExperimentalCoroutinesApi
 @Singleton
 class NotyRemoteNoteRepository @Inject internal constructor(
     private val notyService: NotyService

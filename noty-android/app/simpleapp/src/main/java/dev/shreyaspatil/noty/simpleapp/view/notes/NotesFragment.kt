@@ -47,11 +47,9 @@ import dev.shreyaspatil.noty.utils.ext.show
 import dev.shreyaspatil.noty.utils.ext.showDialog
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class NotesFragment : BaseFragment<NotesFragmentBinding, NotesViewModel>() {
 

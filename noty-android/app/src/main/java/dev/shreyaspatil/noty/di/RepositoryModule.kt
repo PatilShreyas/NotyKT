@@ -22,10 +22,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
-import dev.shreyaspatil.noty.repository.NotyRemoteNoteRepository
 import dev.shreyaspatil.noty.repository.DefaultNotyUserRepository
+import dev.shreyaspatil.noty.repository.NotyRemoteNoteRepository
 import dev.shreyaspatil.noty.repository.local.NotyLocalNoteRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Qualifier
 
 @Module
@@ -35,12 +34,10 @@ interface RepositoryModule {
     @Binds
     fun notyAuthRepository(notyAuthRepository: DefaultNotyUserRepository): NotyUserRepository
 
-    @ExperimentalCoroutinesApi
     @Binds
     @LocalRepository
     fun notyLocalNoteRepository(localRepository: NotyLocalNoteRepository): NotyNoteRepository
 
-    @ExperimentalCoroutinesApi
     @Binds
     @RemoteRepository
     fun notyRemoteNoteRepository(remoteRepository: NotyRemoteNoteRepository): NotyNoteRepository

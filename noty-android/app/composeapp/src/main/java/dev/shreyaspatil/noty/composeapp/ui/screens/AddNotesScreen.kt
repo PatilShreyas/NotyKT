@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -52,10 +51,7 @@ import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
 import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalAnimationApi
-@ExperimentalCoroutinesApi
 @Composable
 fun AddNoteScreen(
     navController: NavHostController,
