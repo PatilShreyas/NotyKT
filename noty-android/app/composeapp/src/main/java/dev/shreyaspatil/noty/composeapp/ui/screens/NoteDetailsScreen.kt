@@ -18,24 +18,20 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,181 +40,204 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import dev.shreyaspatil.noty.composeapp.R
-import dev.shreyaspatil.noty.composeapp.component.Capturable
+import dev.shreyaspatil.capturable.Capturable
+import dev.shreyaspatil.capturable.controller.CaptureController
+import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareActionItem
 import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
 import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
-import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
-import dev.shreyaspatil.noty.composeapp.utils.ShowToast
-import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
-import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import kotlin.random.Random
 
 @Composable
 fun NoteDetailsScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel
 ) {
-
-    val focusRequester = remember { FocusRequester() }
+    val state by viewModel.collectState()
     val context = LocalContext.current
 
-    val updateState = viewModel.updateNoteState.collectAsState(initial = null)
-    val deleteState = viewModel.deleteNoteState.collectAsState(initial = null)
+    var showDeleteNoteConfirmation by remember { mutableStateOf(false) }
 
-    val note = viewModel.note.collectAsState(initial = null).value
+    NoteDetailContent(
+        title = state.title ?: "",
+        note = state.note ?: "",
+        error = state.error,
+        showSaveButton = state.showSave,
+        onTitleChange = viewModel::setTitle,
+        onNoteChange = viewModel::setNote,
+        onSaveClick = viewModel::save,
+        onDeleteClick = { showDeleteNoteConfirmation = true },
+        onNavigateUp = { navController.navigateUp() },
+        onShareNoteAsText = { context.shareNoteText(state.title ?: "", state.note ?: "") },
+        onShareNoteAsImage = { bitmap ->
+            val uri = saveBitmap(context, bitmap.asAndroidBitmap())
+            if (uri != null) {
+                context.shareImage(uri)
+            }
+        }
+    )
 
-    if (note != null) {
-        var titleText by remember { mutableStateOf(note.title) }
-        var noteText by remember { mutableStateOf(note.note) }
-        var captureNoteImageRequestKey: Int? by remember { mutableStateOf(null) }
-        var showDeleteNoteConfirmation by remember { mutableStateOf(false) }
+    DeleteNoteConfirmation(
+        show = showDeleteNoteConfirmation,
+        onConfirm = viewModel::delete,
+        onDismiss = { showDeleteNoteConfirmation = false }
+    )
 
-        if (showDeleteNoteConfirmation) {
-            ConfirmationDialog(
-                title = "Delete?",
-                message = "Sure want to delete this note?",
-                onConfirmedYes = { viewModel.deleteNote() },
-                onConfirmedNo = { showDeleteNoteConfirmation = false },
-                onDismissed = { showDeleteNoteConfirmation = false }
+    LaunchedEffect(state.finished) {
+        if (state.finished) {
+            navController.navigateUp()
+        }
+    }
+}
+
+@Composable
+fun NoteDetailContent(
+    title: String,
+    note: String,
+    error: String?,
+    showSaveButton: Boolean,
+    onTitleChange: (String) -> Unit,
+    onNoteChange: (String) -> Unit,
+    onSaveClick: () -> Unit,
+    onNavigateUp: () -> Unit,
+    onDeleteClick: () -> Unit,
+    onShareNoteAsText: () -> Unit,
+    onShareNoteAsImage: (ImageBitmap) -> Unit,
+) {
+    val focusRequester = remember { FocusRequester() }
+    val captureController = rememberCaptureController()
+
+    NotyScaffold(
+        error = error,
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .focusable(true),
+        notyTopAppBar = {
+            NotyTopAppBar(
+                onNavigateUp = onNavigateUp,
+                actions = {
+                    NoteDetailActions(
+                        onDeleteClick = onDeleteClick,
+                        onShareNoteAsTextClick = onShareNoteAsText,
+                        onShareNoteAsImageClick = {
+                            focusRequester.requestFocus()
+                            captureController.capture()
+                        }
+                    )
+                }
+            )
+        },
+        content = {
+            NoteDetailBody(
+                captureController = captureController,
+                onCaptured = onShareNoteAsImage,
+                title = title,
+                onTitleChange = onTitleChange,
+                note = note,
+                onNoteChange = onNoteChange
+            )
+        },
+        floatingActionButton = {
+            if (showSaveButton) {
+                ExtendedFloatingActionButton(
+                    text = { Text("Save", color = Color.White) },
+                    icon = { Icon(Icons.Filled.Done, "Save", tint = Color.White) },
+                    onClick = onSaveClick,
+                    backgroundColor = MaterialTheme.colors.primary
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun NoteDetailActions(
+    onDeleteClick: () -> Unit,
+    onShareNoteAsTextClick: () -> Unit,
+    onShareNoteAsImageClick: () -> Unit
+) {
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    DeleteAction(onClick = onDeleteClick)
+    ShareAction(onClick = { dropdownExpanded = true })
+    ShareDropdown(
+        expanded = dropdownExpanded,
+        onDismissRequest = { dropdownExpanded = false },
+        shareActions = listOf(
+            ShareActionItem(
+                label = "Text",
+                onActionClick = onShareNoteAsTextClick
+            ),
+            ShareActionItem(
+                label = "Image",
+                onActionClick = onShareNoteAsImageClick
+            ),
+        )
+    )
+}
+
+@Composable
+private fun NoteDetailBody(
+    captureController: CaptureController,
+    onCaptured: (ImageBitmap) -> Unit,
+    title: String,
+    onTitleChange: (String) -> Unit,
+    note: String,
+    onNoteChange: (String) -> Unit
+) {
+    Capturable(
+        controller = captureController,
+        onCaptured = { bitmap, _ -> bitmap?.let(onCaptured) }
+    ) {
+        Column(
+            Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+            NoteTitleField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.background),
+                value = title,
+                onTextChange = onTitleChange
+            )
+
+            NoteField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(top = 32.dp)
+                    .background(MaterialTheme.colors.background),
+                value = note,
+                onTextChange = onNoteChange
             )
         }
+    }
+}
 
-        Scaffold(
-            modifier = Modifier
-                .focusRequester(focusRequester)
-                .focusable(true),
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Noty",
-                            textAlign = TextAlign.Start,
-                            color = MaterialTheme.colors.onPrimary,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
-                            onClick = { navController.navigateUp() }
-                        ) {
-                            Icon(
-                                painterResource(R.drawable.ic_back),
-                                "Back",
-                                tint = MaterialTheme.colors.onPrimary
-                            )
-                        }
-                    },
-                    backgroundColor = MaterialTheme.colors.surface,
-                    contentColor = MaterialTheme.colors.onPrimary,
-                    elevation = 0.dp,
-                    actions = {
-                        var dropdownExpanded by remember { mutableStateOf(false) }
-                        DeleteAction(onClick = { showDeleteNoteConfirmation = true })
-                        ShareAction(onClick = { dropdownExpanded = true })
-                        ShareDropdown(
-                            expanded = dropdownExpanded,
-                            onDismissRequest = { dropdownExpanded = false },
-                            shareActions = listOf(
-                                ShareActionItem(
-                                    label = "Text",
-                                    onActionClick = {
-                                        context.shareNoteText(titleText, noteText)
-                                    }
-                                ),
-                                ShareActionItem(
-                                    label = "Image",
-                                    onActionClick = {
-                                        focusRequester.requestFocus()
-                                        captureNoteImageRequestKey = Random.nextInt(Int.MAX_VALUE)
-                                    }
-                                ),
-                            )
-                        )
-                    }
-                )
-            },
-            content = {
-                Capturable(
-                    captureNoteImageRequestKey,
-                    onBitmapCaptured = { bitmap ->
-                        val uri = saveBitmap(context, bitmap)
-                        if (uri != null) {
-                            context.shareImage(uri)
-                        }
-                    }
-                ) {
-                    Column(
-                        Modifier
-                            .scrollable(
-                                rememberScrollState(),
-                                orientation = Orientation.Vertical
-                            )
-                            .padding(16.dp)
-                    ) {
-                        NoteTitleField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colors.background),
-                            value = titleText,
-                            onTextChange = { titleText = it }
-                        )
-
-                        NoteField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()
-                                .padding(top = 32.dp)
-                                .background(MaterialTheme.colors.background),
-                            value = noteText,
-                            onTextChange = { noteText = it }
-                        )
-                    }
-                }
-            },
-            floatingActionButton = {
-                if (NoteValidator.isValidNote(titleText, noteText)) {
-                    ExtendedFloatingActionButton(
-                        text = { Text("Save", color = Color.White) },
-                        icon = {
-                            Icon(
-                                Icons.Filled.Done,
-                                "Save",
-                                tint = Color.White
-                            )
-                        },
-                        onClick = { viewModel.updateNote(titleText.trim(), noteText.trim()) },
-                        backgroundColor = MaterialTheme.colors.primary
-                    )
-                } else {
-                    ShowToast("Note title or note text are not valid!")
-                }
-            }
+@Composable
+fun DeleteNoteConfirmation(show: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    if (show) {
+        ConfirmationDialog(
+            title = "Delete?",
+            message = "Sure want to delete this note?",
+            onConfirmedYes = onConfirm,
+            onConfirmedNo = onDismiss,
+            onDismissed = onDismiss
         )
-
-        val registerOnStateChanged: @Composable (UIDataState<Unit>?) -> Unit = { state ->
-            when (state) {
-                is UIDataState.Success -> navController.navigateUp()
-                is UIDataState.Failed -> FailureDialog(state.message)
-            }
-        }
-
-        registerOnStateChanged(updateState.value)
-        registerOnStateChanged(deleteState.value)
     }
 }
