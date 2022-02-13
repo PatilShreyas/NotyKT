@@ -35,8 +35,9 @@ import kotlinx.coroutines.flow.flowOf
 import java.util.*
 
 class NoteDetailViewModelTest : ViewModelBehaviorSpec({
+    val note = note("note-1234")
     val repository: NotyNoteRepository = mockk {
-        coEvery { getNoteById("note-1234") } returns flowOf(note("note-1234"))
+        coEvery { getNoteById("note-1234") } returns flowOf(note)
     }
 
     val scheduledTasks = mutableListOf<NotyTask>()
@@ -98,6 +99,24 @@ class NoteDetailViewModelTest : ViewModelBehaviorSpec({
                         this.title shouldBe title
                         this.note shouldBe note
                         showSave shouldBe true
+                    }
+                }
+            }
+        }
+
+        And("Note contents are same as existing note contents") {
+            val title = note.title
+            val note = note.note
+
+            When("When note contents are set") {
+                viewModel.setTitle(title)
+                viewModel.setNote(note)
+
+                Then("UI state should have validation details") {
+                    viewModel.withState {
+                        this.title shouldBe title
+                        this.note shouldBe note
+                        showSave shouldBe false
                     }
                 }
             }
