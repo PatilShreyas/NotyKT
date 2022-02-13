@@ -17,8 +17,13 @@
 package dev.shreyaspatil.noty.task
 
 import androidx.lifecycle.asFlow
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo.State
+import androidx.work.WorkManager
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
@@ -27,6 +32,7 @@ import dev.shreyaspatil.noty.worker.NotySyncWorker
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.takeWhile
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,6 +81,7 @@ class NotyTaskManagerImpl @Inject constructor(
         return workManager.getWorkInfoByIdLiveData(taskId)
             .asFlow()
             .map { mapWorkInfoStateToTaskState(it.state) }
+            .takeWhile { !it.isFinalState }
     }
 
     override fun abortAllTasks() {

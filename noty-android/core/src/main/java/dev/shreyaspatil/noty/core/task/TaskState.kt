@@ -18,4 +18,6 @@ package dev.shreyaspatil.noty.core.task
 
 enum class TaskState {
     SCHEDULED, CANCELLED, FAILED, COMPLETED;
+
+    val isFinalState: Boolean get() = this in listOf(CANCELLED, FAILED, COMPLETED)
 }

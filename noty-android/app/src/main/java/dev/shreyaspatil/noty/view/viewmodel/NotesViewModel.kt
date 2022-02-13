@@ -65,14 +65,14 @@ class NotesViewModel @Inject constructor(
             try {
                 notyTaskManager.observeTask(taskId).collect { taskState ->
                     when (taskState) {
-                        TaskState.SCHEDULED -> setState { state -> state.copy(isLoading = true) }
-                        TaskState.COMPLETED, TaskState.CANCELLED -> {
-                            setState { state -> state.copy(isLoading = false) }
+                        TaskState.SCHEDULED -> setState { state ->
+                            state.copy(isLoading = true)
                         }
-                        TaskState.FAILED -> {
-                            setState { state ->
-                                state.copy(isLoading = false, error = "Failed to sync notes")
-                            }
+                        TaskState.COMPLETED, TaskState.CANCELLED -> setState { state ->
+                            state.copy(isLoading = false)
+                        }
+                        TaskState.FAILED -> setState { state ->
+                            state.copy(isLoading = false, error = "Failed to sync notes")
                         }
                     }
                 }
@@ -82,7 +82,7 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    fun clearUserSession() {
+    fun logout() {
         viewModelScope.launch {
             sessionManager.saveToken(null)
             notyTaskManager.abortAllTasks()
