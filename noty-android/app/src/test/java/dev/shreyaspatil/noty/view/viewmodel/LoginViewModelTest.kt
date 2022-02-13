@@ -16,48 +16,104 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
+import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
 import dev.shreyaspatil.noty.core.model.AuthCredential
-import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.repository.Either
+import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
-import dev.shreyaspatil.noty.core.ui.UIDataState
-import io.kotest.core.spec.style.BehaviorSpec
+import dev.shreyaspatil.noty.testUtils.withState
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.setMain
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class LoginViewModelTest : BehaviorSpec({
-    testCoroutineDispatcher = true
-    Dispatchers.setMain(TestCoroutineDispatcher())
+class LoginViewModelTest : ViewModelBehaviorSpec({
 
     val repository: NotyUserRepository = mockk()
     val sessionManager: SessionManager = mockk(relaxUnitFun = true)
 
     val viewModel = LoginViewModel(repository, sessionManager)
 
-    Given("A user credentials") {
+    Given("The ViewModel") {
+        When("Initialized") {
+            Then("Initial state should be valid") {
+                viewModel.withState {
+                    isLoading shouldBe false
+                    isLoggedIn shouldBe false
+                    error shouldBe null
+                    username shouldBe ""
+                    password shouldBe ""
+                    isValidUsername shouldBe null
+                    isValidPassword shouldBe null
+                }
+            }
+        }
+    }
+
+    Given("A username and password") {
         val username = "johndoe"
         val password = "eodnhoj"
 
-        And("Credentials are valid") {
+        When("Username is set") {
+            viewModel.setUsername(username)
+
+            Then("Username should be updated in the current state") {
+                viewModel.withState { this.username shouldBe username }
+            }
+        }
+
+        When("Password is set") {
+            viewModel.setPassword(password)
+
+            Then("Password should be updated in the current state") {
+                viewModel.withState { this.password shouldBe password }
+            }
+        }
+    }
+
+    Given("A user credentials") {
+        And("The user provides incomplete credentials") {
+            val username = "john"
+            val password = "eod"
+
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
+
+            When("User logs in") {
+                viewModel.login()
+
+                Then("Credentials should be validated and state should be updated") {
+                    viewModel.withState {
+                        isValidUsername shouldBe true
+                        isValidPassword shouldBe false
+                    }
+                }
+
+                Then("User should NOT be get retrieved") {
+                    coVerify(exactly = 0) {
+                        repository.getUserByUsernameAndPassword(username, password)
+                    }
+                }
+            }
+        }
+
+        And("User uses valid credentials") {
+            val username = "johndoe1234"
+            val password = "4321eodnhoj"
+
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
+
             val token = "Bearer TOKEN_ABC"
 
             coEvery { repository.getUserByUsernameAndPassword(username, password) }
                 .returns(Either.success(AuthCredential(token)))
 
-            val states = mutableListOf<UIDataState<String>>()
-            val collectStatesJob = launch { viewModel.authFlow.toList(states) }
-
             When("User logs in") {
-                viewModel.login(username, password)
+                viewModel.login()
 
                 Then("User should be get retrieved") {
                     coVerify { repository.getUserByUsernameAndPassword(username, password) }
@@ -67,34 +123,45 @@ class LoginViewModelTest : BehaviorSpec({
                     verify { sessionManager.saveToken(eq(token)) }
                 }
 
-                Then("Valid UI states should be emitted") {
-                    collectStatesJob.cancel()
+                Then("Credentials should be validated") {
+                    viewModel.withState {
+                        isValidUsername shouldBe true
+                        isValidPassword shouldBe true
+                    }
+                }
 
-                    states[0].isLoading shouldBe true
-                    states[1].isSuccess shouldBe true
+                Then("Valid UI states should be updated") {
+                    viewModel.withState {
+                        isLoading shouldBe false
+                        isLoggedIn shouldBe true
+                        error shouldBe null
+                    }
                 }
             }
         }
 
-        And("Credentials are Invalid") {
-            coEvery { repository.getUserByUsernameAndPassword(username, password) }
-                .returns(Either.error("Invalid credentials"))
+        And("User uses valid credentials but repository returns") {
+            val username = "johndoe12345"
+            val password = "54321eodnhoj"
 
-            val states = mutableListOf<UIDataState<String>>()
-            val collectStatesJob = launch { viewModel.authFlow.drop(1).toList(states) }
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
+
+            coEvery { repository.getUserByUsernameAndPassword(username, password) }
+                .returns(Either.error("User not exist"))
 
             When("User logs in") {
-                viewModel.login(username, password)
+                viewModel.login()
 
                 Then("User should be get retrieved") {
                     coVerify { repository.getUserByUsernameAndPassword(username, password) }
                 }
 
-                Then("Valid UI states should be emitted") {
-                    collectStatesJob.cancel()
-
-                    states[0].isLoading shouldBe true
-                    states[1].isFailed shouldBe true
+                Then("State should contain error") {
+                    viewModel.withState {
+                        isLoggedIn shouldBe false
+                        error shouldBe "User not exist"
+                    }
                 }
             }
         }

@@ -51,10 +51,22 @@ class LoginViewModel @Inject constructor(
             val response = notyUserRepository.getUserByUsernameAndPassword(username, password)
 
             response.onSuccess { authCredential ->
-                saveToken(authCredential.token)
-                setState { state -> state.copy(isLoading = false, isLoggedIn = true) }
+                sessionManager.saveToken(authCredential.token)
+                setState { state ->
+                    state.copy(
+                        isLoading = false,
+                        isLoggedIn = true,
+                        error = null
+                    )
+                }
             }.onFailure { message ->
-                setState { state -> state.copy(isLoading = false, error = message) }
+                setState { state ->
+                    state.copy(
+                        isLoading = false,
+                        isLoggedIn = false,
+                        error = message
+                    )
+                }
             }
         }
     }
@@ -71,9 +83,5 @@ class LoginViewModel @Inject constructor(
         }
 
         return isValidUsername && isValidPassword
-    }
-
-    private fun saveToken(token: String) {
-        sessionManager.saveToken(token)
     }
 }
