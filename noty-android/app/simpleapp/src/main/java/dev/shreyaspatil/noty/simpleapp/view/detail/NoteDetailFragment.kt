@@ -78,7 +78,7 @@ class NoteDetailFragment :
 
     override fun initView() {
         binding.run {
-            fabSave.setOnClickListener { viewModel.updateNote() }
+            fabSave.setOnClickListener { viewModel.save() }
             noteLayout.run {
                 fieldTitle.addTextChangedListener { viewModel.setTitle(it.toStringOrEmpty()) }
                 fieldNote.addTextChangedListener { viewModel.setNote(it.toStringOrEmpty()) }
@@ -89,7 +89,7 @@ class NoteDetailFragment :
     override fun render(state: NoteDetailState) {
         showProgressDialog(state.isLoading)
 
-        binding.fabSave.isVisible = state.canUpdate
+        binding.fabSave.isVisible = state.showSave
 
         val title = state.title
         val note = state.note
@@ -163,7 +163,7 @@ class NoteDetailFragment :
             message = "Sure want to delete the note?",
             positiveActionText = "Yes",
             positiveAction = { _, _ ->
-                viewModel.deleteNote()
+                viewModel.delete()
             },
             negativeActionText = "No",
             negativeAction = { dialog, _ ->
