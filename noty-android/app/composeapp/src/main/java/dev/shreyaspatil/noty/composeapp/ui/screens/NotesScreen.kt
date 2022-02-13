@@ -36,11 +36,11 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
-import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
+import dev.shreyaspatil.noty.composeapp.component.note.NotesList
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE

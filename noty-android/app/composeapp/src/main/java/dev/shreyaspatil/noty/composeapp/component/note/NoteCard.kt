@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component
+package dev.shreyaspatil.noty.composeapp.component.note
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,8 +31,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 
 @Composable
 fun NoteCard(title: String, note: String, onNoteClick: () -> Unit) {
@@ -66,4 +68,10 @@ fun NoteCard(title: String, note: String, onNoteClick: () -> Unit) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewNoteCard() = NotyPreview {
+    NoteCard(title = "Lorem Ipsum", note = "Here is note body...", onNoteClick = {})
 }
