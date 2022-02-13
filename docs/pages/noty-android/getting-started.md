@@ -16,7 +16,7 @@ It connects with the Noty REST API to save and retrieve data.
 - [x] Clean and Simple Material UI 🎨
 - [x] Dark mode 🌗
 - [x] Jetpack Compose UI
-- [ ] Tests ***(WIP)***
+- [x] Tests
 
 ## 📙 Overview of Codebase
 
@@ -89,3 +89,7 @@ For single source of data. Implements `local` and `remote` modules.
 - [Accompanist](https://google.github.io/accompanist/) - Accompanist is a group of libraries that aim to supplement Jetpack Compose with features that are commonly required by developers but not yet available.
 
 - [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android
+
+- [Kotest](https://kotest.io/) - Kotest is a flexible and elegant multi-platform test framework for Kotlin with extensive assertions and integrated property testing
+
+- [Mockk](https://mockk.io/) - Mocking library for Kotlin
