@@ -224,7 +224,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
             title = "Logout?",
             message = "Sure want to logout?",
             positiveActionText = "Yes",
-            positiveAction = { _, _ -> viewModel.clearUserSession() },
+            positiveAction = { _, _ -> viewModel.logout() },
             negativeActionText = "No",
             negativeAction = { dialog, _ ->
                 dialog.dismiss()

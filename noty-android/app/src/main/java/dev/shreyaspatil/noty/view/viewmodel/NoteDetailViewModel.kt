@@ -33,6 +33,7 @@ import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.state.NoteDetailState
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -75,7 +76,7 @@ class NoteDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun updateNote() {
+    fun save() {
         val title = currentState.title?.trim() ?: return
         val note = currentState.note?.trim() ?: return
 
@@ -100,7 +101,7 @@ class NoteDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun deleteNote() {
+    fun delete() {
         job?.cancel()
         job = viewModelScope.launch {
             setState { state -> state.copy(isLoading = true) }
@@ -120,6 +121,7 @@ class NoteDetailViewModel @AssistedInject constructor(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun validateNote() {
         try {
             val oldTitle = currentNote.getCompleted().title
@@ -131,7 +133,7 @@ class NoteDetailViewModel @AssistedInject constructor(
             val isValid = title != null && note != null && NoteValidator.isValidNote(title, note)
             val areOldAndUpdatedNoteSame = oldTitle == title?.trim() && oldNote == note?.trim()
 
-            setState { state -> state.copy(canUpdate = isValid && !areOldAndUpdatedNoteSame) }
+            setState { state -> state.copy(showSave = isValid && !areOldAndUpdatedNoteSame) }
         } catch (error: Throwable) {
         }
     }

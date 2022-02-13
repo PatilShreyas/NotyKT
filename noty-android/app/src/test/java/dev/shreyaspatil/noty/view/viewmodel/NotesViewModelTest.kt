@@ -159,7 +159,7 @@ class NotesViewModelTest : BehaviorSpec({
 
     Given("User session") {
         When("Session is cleared") {
-            viewModel.clearUserSession()
+            viewModel.logout()
 
             Then("Token should get reset") {
                 verify { sessionManager.saveToken(null) }

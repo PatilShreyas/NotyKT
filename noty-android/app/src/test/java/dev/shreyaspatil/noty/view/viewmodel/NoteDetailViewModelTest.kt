@@ -69,7 +69,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
             val collectUpdateStates = launch { viewModel.updateNoteState.toList(updateStates) }
 
             When("Note is updated") {
-                viewModel.updateNote(title, note)
+                viewModel.save(title, note)
 
                 Then("Note should be get updated") {
                     coVerify { repository.updateNote(noteId, title, note) }
@@ -100,7 +100,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
                 launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
 
             When("Note is updated") {
-                viewModel.updateNote(title, note)
+                viewModel.save(title, note)
 
                 Then("Note should be get updated") {
                     coVerify { repository.updateNote(noteId, title, note) }
@@ -131,7 +131,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
                 launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
 
             When("Note is updated") {
-                viewModel.updateNote(title, note)
+                viewModel.save(title, note)
 
                 Then("Note should be get updated") {
                     coVerify { repository.updateNote(noteId, title, note) }
@@ -154,7 +154,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
             val collectDeleteStates = launch { viewModel.deleteNoteState.toList(deleteStates) }
 
             When("Note is deleted") {
-                viewModel.deleteNote()
+                viewModel.delete()
 
                 Then("Note should be get deleted") {
                     coVerify { repository.deleteNote(noteId) }
@@ -182,7 +182,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
                 launch { viewModel.deleteNoteState.drop(1).toList(deleteStates) }
 
             When("Note is deleted") {
-                viewModel.deleteNote()
+                viewModel.delete()
 
                 Then("Note should be get deleted") {
                     coVerify { repository.deleteNote(noteId) }
@@ -212,7 +212,7 @@ class NoteDetailViewModelTest : BehaviorSpec({
             }
 
             When("Note is deleted") {
-                viewModel.deleteNote()
+                viewModel.delete()
 
                 Then("Note should be get deleted") {
                     coVerify { repository.deleteNote(noteId) }
