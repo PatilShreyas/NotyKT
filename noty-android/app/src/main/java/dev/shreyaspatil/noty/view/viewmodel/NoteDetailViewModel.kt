@@ -32,14 +32,10 @@ import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.state.NoteDetailState
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
-@OptIn(ExperimentalCoroutinesApi::class)
 class NoteDetailViewModel @AssistedInject constructor(
     private val notyTaskManager: NotyTaskManager,
     @LocalRepository private val noteRepository: NotyNoteRepository,
@@ -47,7 +43,7 @@ class NoteDetailViewModel @AssistedInject constructor(
 ) : BaseViewModel<NoteDetailState>(initialState = NoteDetailState()) {
 
     private var job: Job? = null
-    private val currentNote = CompletableDeferred<Note>()
+    private lateinit var currentNote: Note
 
     init {
         loadNote()
@@ -68,7 +64,7 @@ class NoteDetailViewModel @AssistedInject constructor(
             setState { state -> state.copy(isLoading = true) }
             val note = noteRepository.getNoteById(noteId).firstOrNull()
             if (note != null) {
-                currentNote.complete(note)
+                currentNote = note
                 setState { state ->
                     state.copy(isLoading = false, title = note.title, note = note.note)
                 }
@@ -125,8 +121,8 @@ class NoteDetailViewModel @AssistedInject constructor(
 
     private fun validateNote() {
         try {
-            val oldTitle = currentNote.getCompleted().title
-            val oldNote = currentNote.getCompleted().note
+            val oldTitle = currentNote.title
+            val oldNote = currentNote.note
 
             val title = currentState.title
             val note = currentState.note
