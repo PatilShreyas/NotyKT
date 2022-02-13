@@ -85,7 +85,6 @@ class RegisterViewModelTest : ViewModelBehaviorSpec({
         }
     }
 
-
     Given("A user for registration") {
         And("User provides incomplete credentials") {
             val username = "joh"
