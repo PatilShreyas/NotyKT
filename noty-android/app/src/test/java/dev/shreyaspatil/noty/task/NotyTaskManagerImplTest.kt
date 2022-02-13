@@ -18,33 +18,29 @@ package dev.shreyaspatil.noty.task
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor
-import androidx.lifecycle.liveData
-import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import com.google.common.util.concurrent.ListenableFuture
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.task.TaskState
+import dev.shreyaspatil.noty.fakes.FakeWorkManager
 import dev.shreyaspatil.noty.utils.ext.getEnum
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import java.util.*
-import java.util.concurrent.Executor
-import java.util.concurrent.TimeUnit
 
 class NotyTaskManagerImplTest : BehaviorSpec() {
 
@@ -57,46 +53,36 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
         // LiveData's asFlow() method uses Main dispatcher under the hood
         Dispatchers.setMain(TestCoroutineDispatcher())
 
-        /**
-         * Useful for testing [NotyTaskManagerImpl.observeTask] method
-         */
-        val randomWorkId = UUID.randomUUID()
-
-        /**
-         * Useful for testing [NotyTaskManagerImpl.getTaskState] method
-         */
-        val workStates = listOf(
-            UUID.randomUUID() to WorkInfo.State.ENQUEUED,
-            UUID.randomUUID() to WorkInfo.State.RUNNING,
-            UUID.randomUUID() to WorkInfo.State.BLOCKED,
-            UUID.randomUUID() to WorkInfo.State.CANCELLED,
-            UUID.randomUUID() to WorkInfo.State.SUCCEEDED,
-            UUID.randomUUID() to WorkInfo.State.FAILED
-        )
-
-        /**
-         * Useful for capturing scheduled works
-         */
-        val workRequests = mutableListOf<OneTimeWorkRequest>()
-
-        val workManager: WorkManager = mockk {
-            every { enqueueUniqueWork(any(), any(), capture(workRequests)) } returns mockk()
-            every { cancelAllWork() } returns mockk()
-
-            workStates.forEach { (id, state) ->
-                every { getWorkInfoById(id) } returns futureWorkInfo(state)
-            }
-
-            every { getWorkInfoByIdLiveData(randomWorkId) } returns liveData {
-                emit(workInfo(WorkInfo.State.ENQUEUED))
-                emit(workInfo(WorkInfo.State.RUNNING))
-                emit(workInfo(WorkInfo.State.FAILED))
-            }
-        }
+        val workManager = spyk(FakeWorkManager())
+        val workRequests = workManager.oneTimeWorkRequests
 
         val manager = NotyTaskManagerImpl(workManager)
 
         Given("The tasks") {
+            val workStates = listOf(
+                UUID.randomUUID() to WorkInfo.State.ENQUEUED,
+                UUID.randomUUID() to WorkInfo.State.RUNNING,
+                UUID.randomUUID() to WorkInfo.State.BLOCKED,
+                UUID.randomUUID() to WorkInfo.State.CANCELLED,
+                UUID.randomUUID() to WorkInfo.State.SUCCEEDED,
+                UUID.randomUUID() to WorkInfo.State.FAILED
+            )
+
+            workStates.forEach { (id, state) -> workManager.fakeWorkStates[id] = state }
+
+            // To test observing work status flow
+            // Here delay is added because LiveData conflates the emitted result if emissions
+            // are too fast and that's the reason we have used Unconfined dispatcher here so that
+            // it can respect the delay.
+            workManager.fakeWorkStatesForObserve = flow {
+                emit(WorkInfo.State.ENQUEUED)
+                delay(100)
+                emit(WorkInfo.State.RUNNING)
+                delay(100)
+                emit(WorkInfo.State.FAILED)
+                delay(100)
+            }.flowOn(Dispatchers.Unconfined)
+
             When("Notes are synced") {
                 manager.syncNotes()
 
@@ -164,11 +150,10 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
             }
 
             When("The task is observed") {
-                val taskStates = manager.observeTask(randomWorkId).take(1).toList()
+                val taskStates = manager.observeTask(UUID.randomUUID()).toList()
 
                 Then("Valid task states should be emitted") {
-                    // Recently emitted value by LiveData will be collected by this Flow
-                    taskStates shouldBe listOf(TaskState.FAILED)
+                    taskStates shouldBe listOf(TaskState.SCHEDULED, TaskState.FAILED)
                 }
             }
 
@@ -208,18 +193,3 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
     }
 }
 
-fun futureWorkInfo(
-    state: WorkInfo.State
-): ListenableFuture<WorkInfo> = object : ListenableFuture<WorkInfo> {
-    override fun cancel(mayInterruptIfRunning: Boolean): Boolean = true
-    override fun isCancelled(): Boolean = true
-    override fun isDone(): Boolean = true
-    override fun get(): WorkInfo = workInfo(state)
-    override fun get(timeout: Long, unit: TimeUnit?): WorkInfo = TODO("Not needed")
-    override fun addListener(listener: Runnable?, executor: Executor?) = TODO("Not needed")
-}
-
-fun workInfo(state: WorkInfo.State): WorkInfo {
-    val fakeData = Data.Builder().build()
-    return WorkInfo(UUID.randomUUID(), state, fakeData, emptyList(), fakeData, 1)
-}
