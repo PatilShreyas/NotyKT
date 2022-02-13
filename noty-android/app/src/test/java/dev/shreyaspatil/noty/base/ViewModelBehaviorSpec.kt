@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.base
 
-import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.BehaviorSpec
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -29,16 +28,13 @@ import kotlinx.coroutines.test.setMain
  * Since we are using `viewModelScope` in the ViewModel which uses Main dispatcher, this spec
  * sets Test dispatcher as a Main dispatcher so that it becomes easy to test the ViewModel.
  */
-abstract class ViewModelBehaviorSpec(body: BehaviorSpec.() -> Unit = {}): BehaviorSpec(body) {
+abstract class ViewModelBehaviorSpec(body: BehaviorSpec.() -> Unit = {}) : BehaviorSpec({
     val dispatcher = TestCoroutineDispatcher()
 
-    init {
-        testCoroutineDispatcher = true
-        Dispatchers.setMain(dispatcher)
-    }
+    testCoroutineDispatcher = true
+    Dispatchers.setMain(dispatcher)
 
-    override fun afterSpec(spec: Spec) {
-        Dispatchers.resetMain()
-        super.afterSpec(spec)
-    }
-}
+    apply(body)
+
+    afterSpec { Dispatchers.resetMain() }
+})

@@ -16,71 +16,133 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
+import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
+import dev.shreyaspatil.noty.core.connectivity.ConnectionState
+import dev.shreyaspatil.noty.core.connectivity.ConnectivityObserver
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
-import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.Either
+import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
-import dev.shreyaspatil.noty.core.ui.UIDataState
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.collections.shouldHaveSize
+import dev.shreyaspatil.noty.fakes.note
+import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
+import dev.shreyaspatil.noty.testUtils.withState
+import dev.shreyaspatil.noty.view.state.NotesState
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.setMain
 import java.util.*
 
+@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 @OptIn(ExperimentalCoroutinesApi::class)
-class NotesViewModelTest : BehaviorSpec({
-    testCoroutineDispatcher = true
-    Dispatchers.setMain(TestCoroutineDispatcher())
+class NotesViewModelTest : ViewModelBehaviorSpec({
+    val fakeNotesFlow = MutableSharedFlow<Either<List<Note>>>(replay = 1)
 
     val repository: NotyNoteRepository = mockk(relaxUnitFun = true) {
-        every { getAllNotes() } returns flowOf(
-            Either.success(listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))),
-            Either.error("Failed to retrieve notes")
-        )
+        every { getAllNotes() } returns fakeNotesFlow
     }
     val sessionManager: SessionManager = mockk(relaxUnitFun = true) {
         every { getToken() } returns "TEST_TOKEN"
     }
     val preferenceManager: PreferenceManager = mockk(relaxUnitFun = true)
     val taskManager: NotyTaskManager = mockk(relaxUnitFun = true)
+    val connectivityObserver = spyk(FakeConnectivityObserver())
 
     val viewModel = NotesViewModel(
-        repository,
-        sessionManager,
-        preferenceManager,
-        taskManager
+        notyNoteRepository = repository,
+        sessionManager = sessionManager,
+        preferenceManager = preferenceManager,
+        notyTaskManager = taskManager,
+        connectivityObserver = connectivityObserver
     )
 
-    Given("Notes from repository") {
-        val notesState = mutableListOf<UIDataState<List<Note>>>()
-        When("Notes are observed") {
-            val collectNotesStateJob = launch { viewModel.notes.toList(notesState) }
+    Given("The ViewModel") {
+        val initialNotes = listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))
+        fakeNotesFlow.emit(Either.success(initialNotes))
 
-            Then("Note states should be valid") {
-                collectNotesStateJob.cancel()
+        When("Initialized") {
+            val expectedState = NotesState(
+                isLoading = false,
+                notes = initialNotes,
+                error = null,
+                isUserLoggedIn = true,
+                isConnectivityAvailable = true
+            )
 
-                notesState[0].isLoading shouldBe true
-                (notesState[1] as UIDataState.Success).data shouldHaveSize 1
-                (notesState[2] as UIDataState.Failed).message shouldBe "Failed to retrieve notes"
+            Then("Initial state should be valid") {
+                viewModel currentStateShouldBe expectedState
+            }
+
+            Then("Current session should be get checked") {
+                verify { sessionManager.getToken() }
+            }
+
+            Then("Notes should be get synced") {
+                verify { taskManager.syncNotes() }
+            }
+        }
+    }
+
+    Given("The list of notes") {
+        val notes = listOf(note("1"), note("2"), note("3"))
+
+        When("The notes are updated successfully") {
+            fakeNotesFlow.emit(Either.success(notes))
+
+            Then("Notes should be updated in the state") {
+                viewModel.withState {
+                    this.notes shouldBe notes
+                    isLoading shouldBe false
+                }
+            }
+        }
+
+        When("The notes are updated with failure") {
+            fakeNotesFlow.emit(Either.error("Error occurred"))
+
+            Then("Notes should be updated in the state") {
+                viewModel.withState {
+                    this.error shouldBe "Error occurred"
+                    isLoading shouldBe false
+                }
+            }
+        }
+    }
+
+    Given("The connectivity") {
+        When("The connectivity is available") {
+            connectivityObserver.fakeConnectionFlow.value = ConnectionState.Available
+
+            Then("The UI state should have connectivity state updated") {
+                viewModel.withState {
+                    isConnectivityAvailable shouldBe true
+                }
+            }
+        }
+
+        When("The connectivity is unavailable") {
+            connectivityObserver.fakeConnectionFlow.value = ConnectionState.Unavailable
+
+            Then("The UI state should have connectivity state updated") {
+                viewModel.withState {
+                    isConnectivityAvailable shouldBe false
+                }
             }
         }
     }
 
     Given("Notes available for syncing") {
-
         When("Sync for notes is requested") {
 
             And("Sync is successful") {
@@ -91,19 +153,10 @@ class NotesViewModelTest : BehaviorSpec({
                     TaskState.COMPLETED
                 )
 
-                val states = mutableListOf<UIDataState<Unit>>()
-                val collectStatesJob = launch { viewModel.syncState.toList(states) }
-
                 viewModel.syncNotes()
 
                 Then("UI state should be get updated") {
-                    collectStatesJob.cancel()
-
-                    // Loading should be the first state
-                    states[0].isLoading shouldBe true
-
-                    // Success should be the second state
-                    states[1].isSuccess shouldBe true
+                    viewModel.withState { isLoading shouldBe false }
                 }
             }
 
@@ -115,21 +168,13 @@ class NotesViewModelTest : BehaviorSpec({
                     TaskState.FAILED
                 )
 
-                val states = mutableListOf<UIDataState<Unit>>()
-
-                // Drop [1] emission because it's replay of previous state
-                val collectStatesJob = launch { viewModel.syncState.drop(1).toList(states) }
-
                 viewModel.syncNotes()
 
                 Then("UI state should be get updated") {
-                    collectStatesJob.cancel()
-
-                    // Loading should be the first state
-                    states[0].isLoading shouldBe true
-
-                    // Success should be the second state
-                    states[1].isFailed shouldBe true
+                    viewModel.withState {
+                        isLoading shouldBe false
+                        error shouldBe "Failed to sync notes"
+                    }
                 }
             }
         }
@@ -174,8 +219,15 @@ class NotesViewModelTest : BehaviorSpec({
             }
 
             Then("User logged in state should be changed to not logged in") {
-                viewModel.userLoggedInState.value shouldBe false
+                viewModel.withState { isUserLoggedIn shouldBe false }
             }
         }
     }
 })
+
+class FakeConnectivityObserver : ConnectivityObserver {
+    val fakeConnectionFlow = MutableStateFlow<ConnectionState>(ConnectionState.Available)
+
+    override val connectionState: Flow<ConnectionState> = fakeConnectionFlow
+    override var currentConnectionState: ConnectionState = ConnectionState.Available
+}
