@@ -140,7 +140,7 @@ class LoginViewModelTest : ViewModelBehaviorSpec({
             }
         }
 
-        And("User uses valid credentials but repository returns") {
+        And("Repository fails to fulfil the request") {
             val username = "johndoe12345"
             val password = "54321eodnhoj"
 

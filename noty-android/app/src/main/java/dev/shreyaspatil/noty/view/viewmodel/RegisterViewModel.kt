@@ -55,10 +55,12 @@ class RegisterViewModel @Inject constructor(
             val response = notyUserRepository.addUser(username, password)
 
             response.onSuccess { authCredential ->
-                saveToken(authCredential.token)
-                setState { state -> state.copy(isLoading = false, isLoggedIn = true) }
+                sessionManager.saveToken(authCredential.token)
+                setState { state -> state.copy(isLoading = false, isLoggedIn = true, error = null) }
             }.onFailure { message ->
-                setState { state -> state.copy(isLoading = false, error = message) }
+                setState { state ->
+                    state.copy(isLoading = false, error = message, isLoggedIn = false)
+                }
             }
         }
     }
@@ -84,9 +86,5 @@ class RegisterViewModel @Inject constructor(
         }
 
         return isValidUsername && isValidPassword && arePasswordAndConfirmPasswordSame
-    }
-
-    private fun saveToken(token: String) {
-        sessionManager.saveToken(token)
     }
 }
