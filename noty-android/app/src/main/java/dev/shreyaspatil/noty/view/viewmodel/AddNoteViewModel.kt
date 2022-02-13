@@ -20,7 +20,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
@@ -37,33 +36,6 @@ class AddNoteViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    fun addNote() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            val title = state.value.title.trim()
-            val note = state.value.note.trim()
-
-            setState { state -> state.copy(isAdding = true) }
-
-            val result = noteRepository.addNote(title, note)
-            setState { state -> state.copy(isAdding = false) }
-
-            when (result) {
-                is Either.Success -> {
-                    val noteId = result.data
-                    scheduleNoteCreate(noteId)
-                    setState { state -> state.copy(added = true) }
-                }
-                is Either.Error -> {
-                    setState { state -> state.copy(errorMessage = result.message) }
-                }
-            }
-        }
-    }
-
-    private fun scheduleNoteCreate(noteId: String) =
-        notyTaskManager.scheduleTask(NotyTask.create(noteId))
-
     fun setTitle(title: String) {
         setState { state -> state.copy(title = title) }
         validateNote()
@@ -73,6 +45,30 @@ class AddNoteViewModel @Inject constructor(
         setState { state -> state.copy(note = note) }
         validateNote()
     }
+
+    fun add() {
+        job?.cancel()
+        job = viewModelScope.launch {
+            val title = state.value.title.trim()
+            val note = state.value.note.trim()
+
+            setState { state -> state.copy(isAdding = true) }
+
+            val result = noteRepository.addNote(title, note)
+
+            result.onSuccess { noteId ->
+                scheduleNoteCreate(noteId)
+                setState { state -> state.copy(isAdding = false, added = true) }
+            }.onFailure { message ->
+                setState { state ->
+                    state.copy(isAdding = false, added = false, errorMessage = message)
+                }
+            }
+        }
+    }
+
+    private fun scheduleNoteCreate(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
     private fun validateNote() {
         val isValid = NoteValidator.isValidNote(currentState.title, currentState.note)

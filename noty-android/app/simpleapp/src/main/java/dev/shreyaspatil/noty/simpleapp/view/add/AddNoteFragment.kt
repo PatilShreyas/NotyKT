@@ -36,7 +36,7 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteState, AddNo
 
     override fun initView() {
         binding.run {
-            fabSave.setOnClickListener { viewModel.addNote() }
+            fabSave.setOnClickListener { viewModel.add() }
             noteLayout.run {
                 fieldTitle.addTextChangedListener { viewModel.setTitle(it.toStringOrEmpty()) }
                 fieldNote.addTextChangedListener { viewModel.setNote(it.toStringOrEmpty()) }

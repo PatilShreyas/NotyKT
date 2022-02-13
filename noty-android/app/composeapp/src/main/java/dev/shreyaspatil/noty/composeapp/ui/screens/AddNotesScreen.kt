@@ -57,7 +57,7 @@ fun AddNoteScreen(
         showSaveFab = state.showSave,
         onTitleChange = viewModel::setTitle,
         onNoteChange = viewModel::setNote,
-        onClickAddNote = viewModel::addNote,
+        onClickAddNote = viewModel::add,
         error = state.errorMessage,
         onNavigateUp = { navController.navigateUp() }
     )
