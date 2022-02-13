@@ -30,10 +30,12 @@ fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
             items = notes,
             itemContent = { note ->
                 NoteCard(
-                    note = note,
+                    title = note.title,
+                    note = note.note,
                     onNoteClick = { onClick(note) }
                 )
-            }
+            },
+            key = { Triple(it.id, it.title, it.note) }
         )
     }
 }
