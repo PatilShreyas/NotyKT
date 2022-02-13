@@ -31,8 +31,9 @@ import dev.shreyaspatil.noty.utils.ext.putEnum
 import dev.shreyaspatil.noty.worker.NotySyncWorker
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.flow.transformWhile
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +82,12 @@ class NotyTaskManagerImpl @Inject constructor(
         return workManager.getWorkInfoByIdLiveData(taskId)
             .asFlow()
             .map { mapWorkInfoStateToTaskState(it.state) }
-            .takeWhile { !it.isFinalState }
+            .transformWhile { taskState ->
+                emit(taskState)
+
+                // This is to terminate this flow when terminal state is arrived
+                !taskState.isTerminalState
+            }.distinctUntilChanged()
     }
 
     override fun abortAllTasks() {
