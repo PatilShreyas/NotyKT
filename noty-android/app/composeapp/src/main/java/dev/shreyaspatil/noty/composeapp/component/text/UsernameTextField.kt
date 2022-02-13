@@ -20,35 +20,24 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import dev.shreyaspatil.noty.utils.validator.AuthValidator
+import androidx.compose.ui.res.stringResource
+import dev.shreyaspatil.noty.composeapp.R
 
 @Composable
 fun UsernameTextField(
     modifier: Modifier = Modifier,
     value: String = "",
-    onTextChange: (TextFieldValue<String>) -> Unit,
+    isError: Boolean = false,
+    onValueChange: (String) -> Unit,
 ) {
-    var startedTyping by remember { mutableStateOf(false) }
-    var isValid by remember { mutableStateOf(false) }
-
     NotyTextField(
         value = value,
         label = "Username",
-        onValueChange = {
-            isValid = AuthValidator.isValidUsername(it)
-            onTextChange(if (isValid) TextFieldValue.Valid(it) else TextFieldValue.Invalid(it))
-            if (!startedTyping) {
-                startedTyping = true
-            }
-        },
+        onValueChange = onValueChange,
         modifier = modifier,
         leadingIcon = { Icon(Icons.Outlined.Person, "User") },
-        isError = !isValid && startedTyping,
-        helperText = "Minimum 4 characters required"
+        isError = isError,
+        helperText = stringResource(R.string.message_field_username_invalid)
     )
 }

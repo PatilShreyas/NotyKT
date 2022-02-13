@@ -20,65 +20,28 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import dev.shreyaspatil.noty.utils.validator.AuthValidator.isPasswordAndConfirmPasswordSame
-import dev.shreyaspatil.noty.utils.validator.AuthValidator.isValidPassword
+import dev.shreyaspatil.noty.composeapp.R
 
 @Composable
 fun PasswordTextField(
     modifier: Modifier = Modifier,
+    label: String = "Password",
     value: String = "",
-    onTextChange: (TextFieldValue<String>) -> Unit,
+    isError: Boolean = false,
+    onValueChange: (String) -> Unit,
 ) {
-    var startedTyping by remember { mutableStateOf(false) }
-    var isValid by remember { mutableStateOf(false) }
 
     NotyTextField(
         value = value,
-        label = "Password",
-        onValueChange = {
-            isValid = isValidPassword(it)
-            onTextChange(if (isValid) TextFieldValue.Valid(it) else TextFieldValue.Invalid(it))
-            if (!startedTyping) {
-                startedTyping = true
-            }
-        },
+        label = label,
+        onValueChange = onValueChange,
         modifier = modifier,
-        leadingIcon = { Icon(Icons.Outlined.Password, "Password") },
+        leadingIcon = { Icon(Icons.Outlined.Password, label) },
         visualTransformation = PasswordVisualTransformation(),
-        isError = !isValid && startedTyping,
-        helperText = "Minimum 8 characters required"
-    )
-}
-
-@Composable
-fun ConfirmPasswordTextField(
-    modifier: Modifier = Modifier,
-    value: String = "",
-    expectedValue: String = "",
-    onTextChange: (TextFieldValue<String>) -> Unit,
-) {
-    var startedTyping by remember { mutableStateOf(false) }
-    var isValid by remember { mutableStateOf(false) }
-
-    NotyTextField(
-        value = value,
-        label = "Confirm Password",
-        onValueChange = {
-            isValid = isValidPassword(it) && isPasswordAndConfirmPasswordSame(expectedValue, it)
-            onTextChange(if (isValid) TextFieldValue.Valid(it) else TextFieldValue.Invalid(it))
-            if (!startedTyping) {
-                startedTyping = true
-            }
-        },
-        modifier = modifier,
-        leadingIcon = { Icon(Icons.Outlined.Password, "Confirm Password") },
-        visualTransformation = PasswordVisualTransformation(),
-        isError = !isValid && startedTyping
+        isError = isError,
+        helperText = stringResource(R.string.message_field_password_invalid)
     )
 }
