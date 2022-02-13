@@ -38,6 +38,7 @@ ext {
     roomVersion = "2.4.1"
     dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
+    capturableVersion = "1.0.2"
 
     // Design
     materialDesignVersion = "1.5.0"
