@@ -144,11 +144,15 @@ class FakeWorkManager : WorkManager() {
         TODO("Not yet implemented")
     }
 
-    override fun getWorkInfosForUniqueWorkLiveData(uniqueWorkName: String): LiveData<MutableList<WorkInfo>> {
+    override fun getWorkInfosForUniqueWorkLiveData(
+        uniqueWorkName: String
+    ): LiveData<MutableList<WorkInfo>> {
         TODO("Not yet implemented")
     }
 
-    override fun getWorkInfosForUniqueWork(uniqueWorkName: String): ListenableFuture<MutableList<WorkInfo>> {
+    override fun getWorkInfosForUniqueWork(
+        uniqueWorkName: String
+    ): ListenableFuture<MutableList<WorkInfo>> {
         TODO("Not yet implemented")
     }
 
@@ -160,7 +164,6 @@ class FakeWorkManager : WorkManager() {
         TODO("Not yet implemented")
     }
 }
-
 
 fun futureWorkInfo(
     state: WorkInfo.State

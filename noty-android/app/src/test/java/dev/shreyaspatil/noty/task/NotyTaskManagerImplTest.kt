@@ -192,4 +192,3 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
         ArchTaskExecutor.getInstance().setDelegate(null)
     }
 }
-
