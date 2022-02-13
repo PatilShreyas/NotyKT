@@ -21,15 +21,15 @@ import dev.shreyaspatil.noty.core.model.AuthCredential
 import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
+import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
 import dev.shreyaspatil.noty.testUtils.withState
+import dev.shreyaspatil.noty.view.state.RegisterState
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class RegisterViewModelTest : ViewModelBehaviorSpec({
     val repository: NotyUserRepository = mockk()
     val sessionManager: SessionManager = mockk(relaxUnitFun = true)
@@ -38,18 +38,19 @@ class RegisterViewModelTest : ViewModelBehaviorSpec({
 
     Given("The ViewModel") {
         When("Initialized") {
+            val expectedState = RegisterState(
+                isLoading = false,
+                isLoggedIn = false,
+                error = null,
+                username = "",
+                password = "",
+                confirmPassword = "",
+                isValidUsername = null,
+                isValidPassword = null,
+                isValidConfirmPassword = null
+            )
             Then("Initial state should be valid") {
-                viewModel.withState {
-                    isLoading shouldBe false
-                    isLoggedIn shouldBe false
-                    error shouldBe null
-                    username shouldBe ""
-                    password shouldBe ""
-                    confirmPassword shouldBe ""
-                    isValidUsername shouldBe null
-                    isValidPassword shouldBe null
-                    isValidConfirmPassword shouldBe null
-                }
+                viewModel currentStateShouldBe expectedState
             }
         }
     }

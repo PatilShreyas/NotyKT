@@ -38,6 +38,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
+@OptIn(ExperimentalCoroutinesApi::class)
 class NoteDetailViewModel @AssistedInject constructor(
     private val notyTaskManager: NotyTaskManager,
     @LocalRepository private val noteRepository: NotyNoteRepository,
@@ -121,7 +123,6 @@ class NoteDetailViewModel @AssistedInject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private fun validateNote() {
         try {
             val oldTitle = currentNote.getCompleted().title

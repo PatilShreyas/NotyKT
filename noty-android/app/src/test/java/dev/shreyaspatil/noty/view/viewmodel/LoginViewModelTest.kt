@@ -21,7 +21,9 @@ import dev.shreyaspatil.noty.core.model.AuthCredential
 import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
+import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
 import dev.shreyaspatil.noty.testUtils.withState
+import dev.shreyaspatil.noty.view.state.LoginState
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -39,16 +41,17 @@ class LoginViewModelTest : ViewModelBehaviorSpec({
 
     Given("The ViewModel") {
         When("Initialized") {
+            val expectedState = LoginState(
+                isLoading = false,
+                isLoggedIn = false,
+                error = null,
+                username = "",
+                password = "",
+                isValidUsername = null,
+                isValidPassword = null
+            )
             Then("Initial state should be valid") {
-                viewModel.withState {
-                    isLoading shouldBe false
-                    isLoggedIn shouldBe false
-                    error shouldBe null
-                    username shouldBe ""
-                    password shouldBe ""
-                    isValidUsername shouldBe null
-                    isValidPassword shouldBe null
-                }
+                viewModel currentStateShouldBe expectedState
             }
         }
     }
