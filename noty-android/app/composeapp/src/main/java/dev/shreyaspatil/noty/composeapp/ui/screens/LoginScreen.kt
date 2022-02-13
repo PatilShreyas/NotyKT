@@ -19,171 +19,193 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
-import dev.shreyaspatil.noty.composeapp.R.drawable.noty_app_logo
+import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.component.button.NotyFullWidthButton
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
-import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
-import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
+import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController, loginViewModel: LoginViewModel) {
+fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
 
-    val viewState = loginViewModel.authFlow.collectAsState(initial = null).value
+    val state by viewModel.collectState()
 
-    when (viewState) {
-        is UIDataState.Loading -> LoaderDialog()
-        is UIDataState.Failed -> FailureDialog(viewState.message)
-    }
+    LoginContent(
+        isLoading = state.isLoading,
+        username = state.username,
+        password = state.password,
+        isValidUsername = state.isValidUsername ?: true,
+        isValidPassword = state.isValidPassword ?: true,
+        onUsernameChange = viewModel::setUsername,
+        onPasswordChange = viewModel::setPassword,
+        onLoginClick = viewModel::login,
+        onSignupClick = { navController.navigate(Screen.SignUp.route) },
+        error = state.error
+    )
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.surface)
-    ) {
-        item {
-            ConstraintLayout() {
-                val (
-                    logoRef,
-                    titleRef,
-                    usernameRef,
-                    passwordRef,
-                    buttonSignupRef,
-                    textLoginRef
-                ) = createRefs()
-
-                Image(
-                    contentDescription = "App Logo",
-                    painter = painterResource(id = noty_app_logo),
-                    modifier = Modifier.size(92.dp)
-                        .constrainAs(logoRef) {
-                            top.linkTo(parent.top, margin = 60.dp)
-                            start.linkTo(parent.start, 16.dp)
-                            end.linkTo(parent.end, 16.dp)
-                        },
-                    contentScale = ContentScale.FillBounds
-                )
-
-                Text(
-                    text = "Welcome\nback",
-                    style = typography.h4,
-                    modifier = Modifier.constrainAs(titleRef) {
-                        top.linkTo(logoRef.bottom, margin = 30.dp)
-                        start.linkTo(parent.start, margin = 16.dp)
-                    }
-                )
-                var username by remember { mutableStateOf("") }
-                var isValidUsername by remember { mutableStateOf(false) }
-
-                UsernameTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(usernameRef) {
-                            top.linkTo(titleRef.bottom, margin = 30.dp)
-                        }
-                        .background(MaterialTheme.colors.background),
-                    value = username,
-                    onTextChange = {
-                        username = it.data
-                        isValidUsername = it is TextFieldValue.Valid
-                    }
-                )
-
-                var password by remember { mutableStateOf("") }
-                var isValidPassword by remember { mutableStateOf(false) }
-
-                PasswordTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(passwordRef) {
-                            top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        }
-                        .background(MaterialTheme.colors.background),
-                    value = password,
-                    onTextChange = {
-                        password = it.data
-                        isValidPassword = it is TextFieldValue.Valid
-                    }
-                )
-
-                Button(
-                    onClick = {
-                        if (isValidUsername && isValidPassword) {
-                            loginViewModel.login(username, password)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(buttonSignupRef) {
-                            top.linkTo(passwordRef.bottom, margin = 40.dp)
-                        },
-                ) {
-                    Text(style = typography.subtitle1, color = Color.White, text = "Login")
-                }
-
-                Text(
-                    text = buildAnnotatedString {
-                        append("Don't have an account? Signup")
-                        addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
-                        toAnnotatedString()
-                    },
-                    style = typography.subtitle1,
-                    modifier = Modifier
-                        .constrainAs(textLoginRef) {
-                            top.linkTo(buttonSignupRef.bottom, margin = 24.dp)
-                            start.linkTo(parent.start, margin = 16.dp)
-                            end.linkTo(parent.end, margin = 16.dp)
-                        }
-                        .clickable(
-                            onClick = {
-                                navController.navigate(Screen.SignUp.route)
-                            }
-                        )
-                )
-            }
-        }
-    }
-
-    LaunchedEffect(viewState?.isSuccess) {
-        if (viewState?.isSuccess == true) {
+    LaunchedEffect(state.isLoggedIn) {
+        if (state.isLoggedIn) {
             navController.navigate(Screen.Notes.route) {
                 launchSingleTop = true
                 popUpTo(NOTY_NAV_HOST_ROUTE)
             }
         }
     }
+}
+
+@Composable
+fun LoginContent(
+    isLoading: Boolean,
+    username: String,
+    isValidUsername: Boolean,
+    password: String,
+    isValidPassword: Boolean,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onSignupClick: () -> Unit,
+    error: String?
+) {
+    if (isLoading) {
+        LoaderDialog()
+    }
+
+    if (error != null) {
+        FailureDialog(error)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.surface)
+            .verticalScroll(rememberScrollState())
+    ) {
+        TopGreeting()
+
+        LoginForm(
+            username = username,
+            isValidUsername = isValidUsername,
+            onUsernameChange = onUsernameChange,
+            password = password,
+            isValidPassword = isValidPassword,
+            onPasswordChange = onPasswordChange,
+            onLoginClick = onLoginClick
+        )
+
+        SignUpLink(Modifier.align(Alignment.CenterHorizontally), onClickSignUp = onSignupClick)
+    }
+}
+
+@Composable
+private fun TopGreeting() {
+    Column(Modifier.fillMaxWidth()) {
+        Image(
+            contentDescription = "App Logo",
+            painter = painterResource(id = R.drawable.noty_app_logo),
+            modifier = Modifier
+                .padding(top = 60.dp)
+                .requiredSize(92.dp)
+                .align(Alignment.CenterHorizontally),
+            contentScale = ContentScale.FillBounds
+        )
+
+        Text(
+            text = "Welcome\nback",
+            style = typography.h4,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 30.dp)
+        )
+    }
+}
+
+@Composable
+private fun LoginForm(
+    username: String,
+    isValidUsername: Boolean,
+    password: String,
+    isValidPassword: Boolean,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit
+) {
+    UsernameTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(MaterialTheme.colors.background),
+        value = username,
+        onValueChange = onUsernameChange,
+        isError = !isValidUsername
+    )
+
+    PasswordTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(MaterialTheme.colors.background),
+        value = password,
+        onValueChange = onPasswordChange,
+        isError = !isValidPassword
+    )
+
+    NotyFullWidthButton(text = "Login", onClick = onLoginClick,modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp))
+}
+
+@Composable
+private fun SignUpLink(modifier: Modifier, onClickSignUp: () -> Unit) {
+    Text(
+        text = buildAnnotatedString {
+            append("Don't have an account? Signup")
+            addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
+            toAnnotatedString()
+        },
+        style = typography.subtitle1,
+        modifier = modifier
+            .padding(vertical = 24.dp, horizontal = 16.dp)
+            .clickable(onClick = onClickSignUp)
+    )
+}
+
+@Preview
+@Composable
+fun PreviewLoginContent() = NotyPreview {
+    LoginContent(
+        isLoading = false,
+        username = "johndoe",
+        onUsernameChange = {},
+        password = "password",
+        onPasswordChange = {},
+        onLoginClick = {},
+        onSignupClick = {},
+        isValidPassword = false,
+        isValidUsername = false,
+        error = null
+    )
 }
