@@ -27,4 +27,4 @@ import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
  * updated causing recomposition of every State.value usage.
  */
 @Composable
-fun <S: State, VM: BaseViewModel<S>> VM.collectState() = state.collectAsState()
+fun <S : State, VM : BaseViewModel<S>> VM.collectState() = state.collectAsState()

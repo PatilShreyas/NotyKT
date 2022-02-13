@@ -175,7 +175,11 @@ private fun LoginForm(
         isError = !isValidPassword
     )
 
-    NotyFullWidthButton(text = "Login", onClick = onLoginClick,modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp))
+    NotyFullWidthButton(
+        text = "Login",
+        onClick = onLoginClick,
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)
+    )
 }
 
 @Composable

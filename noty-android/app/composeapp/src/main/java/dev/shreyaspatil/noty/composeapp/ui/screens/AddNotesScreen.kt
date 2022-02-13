@@ -89,7 +89,8 @@ fun AddNotesContent(
             Column(
                 Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp)) {
+                    .padding(16.dp)
+            ) {
                 NoteTitleField(
                     modifier = Modifier
                         .fillMaxWidth()
