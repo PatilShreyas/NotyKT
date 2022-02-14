@@ -32,7 +32,7 @@ ext {
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.7.1'
-    lifecycleVersion = "2.4.0"
+    lifecycleVersion = "2.4.1"
     navigationVersion = "2.5.0-alpha02"
     securityCryptoVersion = '1.1.0-alpha03'
     roomVersion = "2.4.1"
