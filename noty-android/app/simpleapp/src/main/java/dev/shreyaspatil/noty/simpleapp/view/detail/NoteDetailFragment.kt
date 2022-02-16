@@ -54,6 +54,14 @@ class NoteDetailFragment :
     @Inject
     lateinit var viewModelAssistedFactory: NoteDetailViewModel.Factory
 
+    /**
+     * Since we are continuously listening to the [NoteDetailState] for state updates, we get
+     * initial title and note from this model. Also, we continuously tell [NoteDetailViewModel]
+     * about changes to title and note and that ViewModel again let us know about the changes
+     * through the new state. So this forms a continuous cycle of events which can then lead
+     * to the issues. So using this field, we can make sure that whether note is loaded or not.
+     * Once the note is loaded initially, we won't respect further state changes of title and notes.
+     */
     private var isNoteLoaded = false
 
     override val viewModel: NoteDetailViewModel by viewModels {
