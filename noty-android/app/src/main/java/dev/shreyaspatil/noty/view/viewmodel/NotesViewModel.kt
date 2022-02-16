@@ -119,7 +119,6 @@ class NotesViewModel @Inject constructor(
     private fun observeConnectivity() {
         connectivityObserver.connectionState
             .distinctUntilChanged()
-            .onEach { Log.d(TAG, "observeConnectivity: New State - $it") }
             .map { it === Available }
             .onEach { setState { state -> state.copy(isConnectivityAvailable = it) } }
             .launchIn(viewModelScope)
