@@ -116,7 +116,8 @@ fun NotesContent(
             SwipeRefresh(
                 modifier = Modifier.fillMaxSize(),
                 state = rememberSwipeRefreshState(isLoading),
-                onRefresh = onRefresh
+                onRefresh = onRefresh,
+                swipeEnabled = isConnectivityAvailable == true
             ) {
                 Column {
                     if (isConnectivityAvailable != null) {

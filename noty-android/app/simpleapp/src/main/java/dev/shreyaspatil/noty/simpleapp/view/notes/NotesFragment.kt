@@ -67,13 +67,14 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     ContextCompat.getColor(requireContext(), R.color.secondaryColor),
                     ContextCompat.getColor(requireContext(), R.color.onSecondary)
                 )
-                setOnRefreshListener { syncNotes() }
+                setOnRefreshListener { viewModel.syncNotes() }
             }
         }
     }
 
     override fun render(state: NotesState) {
         binding.swipeRefreshNotes.isRefreshing = state.isLoading
+        binding.swipeRefreshNotes.isEnabled = state.isConnectivityAvailable == true
 
         val errorMessage = state.error
         if (errorMessage != null) {
@@ -99,12 +100,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
         }
     }
 
-    private fun syncNotes() {
-        if (isConnected() == true) {
-            viewModel.syncNotes()
-        }
-    }
-
     private fun onNotesLoaded(data: List<Note>) {
         binding.emptyStateLayout.run {
             if (data.isEmpty()) show() else hide()
@@ -120,7 +115,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private fun onConnectivityUnavailable() {
         with(binding) {
-            swipeRefreshNotes.isEnabled = false
             textNetworkStatus.apply {
                 setDrawableLeft(
                     ContextCompat.getDrawable(
@@ -141,12 +135,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private fun onConnectivityAvailable() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            if (shouldSyncNotes()) {
-                syncNotes()
-            }
+            if (shouldSyncNotes()) { viewModel.syncNotes() }
         }
         with(binding) {
-            swipeRefreshNotes.isEnabled = true
             textNetworkStatus.apply {
                 setDrawableLeft(
                     ContextCompat.getDrawable(
