@@ -68,7 +68,7 @@ abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<
 
     private fun observeState() {
         viewModel.state
-            .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach { state -> render(state) }
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
