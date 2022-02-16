@@ -120,7 +120,7 @@ fun LoginContent(
             onLoginClick = onLoginClick
         )
 
-        SignUpLink(Modifier.align(Alignment.CenterHorizontally), onClickSignUp = onSignupClick)
+        SignUpLink(Modifier.align(Alignment.CenterHorizontally), onSignupClick = onSignupClick)
     }
 }
 
@@ -183,7 +183,7 @@ private fun LoginForm(
 }
 
 @Composable
-private fun SignUpLink(modifier: Modifier, onClickSignUp: () -> Unit) {
+private fun SignUpLink(modifier: Modifier, onSignupClick: () -> Unit) {
     Text(
         text = buildAnnotatedString {
             append("Don't have an account? Signup")
@@ -193,7 +193,7 @@ private fun SignUpLink(modifier: Modifier, onClickSignUp: () -> Unit) {
         style = typography.subtitle1,
         modifier = modifier
             .padding(vertical = 24.dp, horizontal = 16.dp)
-            .clickable(onClick = onClickSignUp)
+            .clickable(onClick = onSignupClick)
     )
 }
 
