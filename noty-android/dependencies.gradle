@@ -55,7 +55,7 @@ ext {
 
     // Networking
     retrofitVersion = "2.9.0"
-    okHttpVersion = "4.9.0"
+    okHttpVersion = "4.9.3"
 
     // Moshi
     moshiVersion = "1.13.0"
@@ -76,10 +76,10 @@ ext {
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0"
 
-    lifecycleViewModelComposeVersion = "2.4.0"
+    lifecycleViewModelComposeVersion = "2.4.1"
 
     // Accompanist
-    accompanistVersion = "0.20.3"
+    accompanistVersion = "0.23.0"
 
     // Testing
     jUnitVersion = "4.13.2"
