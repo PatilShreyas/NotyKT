@@ -75,6 +75,12 @@ class AddNoteViewModel @Inject constructor(
         setState { state -> state.copy(showSave = isValid) }
     }
 
+    /**
+     * In simpleapp module, ViewModel's instance is created using Hilt NavGraph ViewModel so it
+     * doesn't clears the ViewModel when the Fragment's onDestroy() lifecycle is invoked and
+     * thus it holds the stale state when the same fragment is relaunched. So this method is
+     * simply a way for Fragment to ask ViewModel to reset the state.
+     */
     fun resetState() {
         setState { AddNoteState() }
     }
