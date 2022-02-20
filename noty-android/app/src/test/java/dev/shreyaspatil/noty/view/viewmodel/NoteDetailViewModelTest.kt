@@ -16,36 +16,28 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
+import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.fakes.note
-import io.kotest.core.spec.style.BehaviorSpec
+import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
+import dev.shreyaspatil.noty.testUtils.withState
+import dev.shreyaspatil.noty.view.state.NoteDetailState
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.setMain
 import java.util.*
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class NoteDetailViewModelTest : BehaviorSpec({
-    testCoroutineDispatcher = true
-    Dispatchers.setMain(TestCoroutineDispatcher())
-
+class NoteDetailViewModelTest : ViewModelBehaviorSpec({
+    val note = note("note-1234")
     val repository: NotyNoteRepository = mockk {
-        coEvery { getNoteById("note-1234") } returns flowOf(note("note-1234"))
+        coEvery { getNoteById("note-1234") } returns flowOf(note)
     }
 
     val scheduledTasks = mutableListOf<NotyTask>()
@@ -58,29 +50,103 @@ class NoteDetailViewModelTest : BehaviorSpec({
 
     val viewModel = NoteDetailViewModel(taskManager, repository, noteId)
 
+    Given("The ViewModel") {
+        val expectedState = NoteDetailState(
+            isLoading = false,
+            title = "Lorem Ipsum",
+            note = "Hey there! This is note content",
+            showSave = false,
+            finished = false,
+            error = null
+        )
+
+        When("Initialized") {
+            Then("Initial state should be valid") {
+                viewModel currentStateShouldBe expectedState
+            }
+        }
+    }
+
+    Given("Note contents") {
+        And("Note contents are invalid") {
+            val title = "hi"
+            val note = ""
+
+            When("When note contents are set") {
+                viewModel.setTitle(title)
+                viewModel.setNote(note)
+
+                Then("UI state should have validation details") {
+                    viewModel.withState {
+                        this.title shouldBe title
+                        this.note shouldBe note
+                        showSave shouldBe false
+                    }
+                }
+            }
+        }
+
+        And("Note contents are valid") {
+            val title = "Hey there"
+            val note = "This is body"
+
+            When("When note contents are set") {
+                viewModel.setTitle(title)
+                viewModel.setNote(note)
+
+                Then("UI state should have validation details") {
+                    viewModel.withState {
+                        this.title shouldBe title
+                        this.note shouldBe note
+                        showSave shouldBe true
+                    }
+                }
+            }
+        }
+
+        And("Note contents are same as existing note contents") {
+            val title = note.title
+            val note = note.note
+
+            When("When note contents are set") {
+                viewModel.setTitle(title)
+                viewModel.setNote(note)
+
+                Then("UI state should have validation details") {
+                    viewModel.withState {
+                        this.title shouldBe title
+                        this.note shouldBe note
+                        showSave shouldBe false
+                    }
+                }
+            }
+        }
+    }
+
     Given("A note for updating") {
         val title = "Lorem Ipsum"
         val note = "Updated body of a note"
 
+        viewModel.setTitle(title)
+        viewModel.setNote(note)
+
         And("Note is not yet synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns ResponseResult.success(
+            coEvery { repository.updateNote(noteId, title, note) } returns Either.success(
                 data = "TMP_$noteId"
             )
 
-            val updateStates = mutableListOf<UIDataState<Unit>>()
-            val collectUpdateStates = launch { viewModel.updateNoteState.toList(updateStates) }
-
-            When("Note is updated") {
-                viewModel.updateNote(title, note)
+            When("Note is saved") {
+                viewModel.save()
 
                 Then("Note should be get updated") {
                     coVerify { repository.updateNote(noteId, title, note) }
                 }
 
-                Then("Valid UI states should be get emitted") {
-                    collectUpdateStates.cancel()
-                    updateStates[0].isLoading shouldBe true
-                    updateStates[1].isSuccess shouldBe true
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState {
+                        isLoading shouldBe false
+                        finished shouldBe true
+                    }
                 }
 
                 Then("Note creation should be get scheduled") {
@@ -93,25 +159,22 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Note is synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns ResponseResult.success(
+            coEvery { repository.updateNote(noteId, title, note) } returns Either.success(
                 data = noteId
             )
 
-            val updateStates = mutableListOf<UIDataState<Unit>>()
-            val collectUpdateStates =
-                launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
-
             When("Note is updated") {
-                viewModel.updateNote(title, note)
+                viewModel.save()
 
                 Then("Note should be get updated") {
                     coVerify { repository.updateNote(noteId, title, note) }
                 }
 
-                Then("Valid UI states should be get emitted") {
-                    collectUpdateStates.cancel()
-                    updateStates[0].isLoading shouldBe true
-                    updateStates[1].isSuccess shouldBe true
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState {
+                        isLoading shouldBe false
+                        finished shouldBe true
+                    }
                 }
 
                 Then("Note update should be get scheduled") {
@@ -124,25 +187,19 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Error occurs") {
-            coEvery { repository.updateNote(noteId, title, note) } returns ResponseResult.error(
+            coEvery { repository.updateNote(noteId, title, note) } returns Either.error(
                 message = "Error occurred"
             )
 
-            val updateStates = mutableListOf<UIDataState<Unit>>()
-            val collectUpdateStates =
-                launch { viewModel.updateNoteState.drop(1).toList(updateStates) }
-
             When("Note is updated") {
-                viewModel.updateNote(title, note)
+                viewModel.save()
 
                 Then("Note should be get updated") {
                     coVerify { repository.updateNote(noteId, title, note) }
                 }
 
-                Then("Valid UI states should be get emitted") {
-                    collectUpdateStates.cancel()
-                    updateStates[0].isLoading shouldBe true
-                    updateStates[1].isFailed shouldBe true
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { error shouldBe "Error occurred" }
                 }
             }
         }
@@ -150,22 +207,17 @@ class NoteDetailViewModelTest : BehaviorSpec({
 
     Given("A note for deletion") {
         And("Note is not yet synced") {
-            coEvery { repository.deleteNote(noteId) } returns ResponseResult.success("TMP_$noteId")
-
-            val deleteStates = mutableListOf<UIDataState<Unit>>()
-            val collectDeleteStates = launch { viewModel.deleteNoteState.toList(deleteStates) }
+            coEvery { repository.deleteNote(noteId) } returns Either.success("TMP_$noteId")
 
             When("Note is deleted") {
-                viewModel.deleteNote()
+                viewModel.delete()
 
                 Then("Note should be get deleted") {
                     coVerify { repository.deleteNote(noteId) }
                 }
 
-                Then("Valid UI states should be get emitted") {
-                    collectDeleteStates.cancel()
-                    deleteStates[0].isLoading shouldBe true
-                    deleteStates[1].isSuccess shouldBe true
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { finished shouldBe true }
                 }
 
                 Then("Note deletion should NOT be get scheduled") {
@@ -177,23 +229,17 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Note is synced") {
-            coEvery { repository.deleteNote(noteId) } returns ResponseResult.success(noteId)
-
-            val deleteStates = mutableListOf<UIDataState<Unit>>()
-            val collectDeleteStates =
-                launch { viewModel.deleteNoteState.drop(1).toList(deleteStates) }
+            coEvery { repository.deleteNote(noteId) } returns Either.success(noteId)
 
             When("Note is deleted") {
-                viewModel.deleteNote()
+                viewModel.delete()
 
                 Then("Note should be get deleted") {
                     coVerify { repository.deleteNote(noteId) }
                 }
 
-                Then("Valid UI states should be get emitted") {
-                    collectDeleteStates.cancel()
-                    deleteStates[0].isLoading shouldBe true
-                    deleteStates[1].isSuccess shouldBe true
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { finished shouldBe true }
                 }
 
                 Then("Note deletion should be get scheduled") {
@@ -206,24 +252,17 @@ class NoteDetailViewModelTest : BehaviorSpec({
         }
 
         And("Error occurs") {
-            coEvery { repository.deleteNote(noteId) } returns ResponseResult.error("Error")
-
-            val deleteStates = mutableListOf<UIDataState<Unit>>()
-            val collectDeleteStates = launch {
-                viewModel.deleteNoteState.drop(1).toList(deleteStates)
-            }
+            coEvery { repository.deleteNote(noteId) } returns Either.error("Error occurred")
 
             When("Note is deleted") {
-                viewModel.deleteNote()
+                viewModel.delete()
 
                 Then("Note should be get deleted") {
                     coVerify { repository.deleteNote(noteId) }
                 }
 
-                Then("Valid UI states should be get emitted") {
-                    collectDeleteStates.cancel()
-                    deleteStates[0].isLoading shouldBe true
-                    deleteStates[1].isFailed shouldBe true
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { error shouldBe "Error occurred" }
                 }
             }
         }

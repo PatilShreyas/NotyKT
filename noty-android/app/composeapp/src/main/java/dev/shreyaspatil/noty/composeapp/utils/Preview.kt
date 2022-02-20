@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.utils.ext
+package dev.shreyaspatil.noty.composeapp.utils
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import androidx.compose.runtime.Composable
+import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 
-fun <T> Flow<T>.shareWhileObserved(coroutineScope: CoroutineScope, replay: Int = 1) = shareIn(
-    scope = coroutineScope,
-    started = SharingStarted.WhileSubscribed(),
-    replay = replay
-)
+@Composable
+fun NotyPreview(content: @Composable () -> Unit) {
+    NotyTheme(content = content)
+}

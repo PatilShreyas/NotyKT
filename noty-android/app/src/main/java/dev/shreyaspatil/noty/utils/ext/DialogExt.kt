@@ -25,20 +25,20 @@ fun Fragment.showDialog(
     title: String? = null,
     message: String? = null,
     positiveActionText: String? = null,
-    positiveAction: (d: DialogInterface, i: Int) -> Unit = { _, _ -> },
+    positiveAction: (dialogInterface: DialogInterface, i: Int) -> Unit = { _, _ -> },
     negativeActionText: String? = null,
-    negativeAction: (d: DialogInterface, i: Int) -> Unit = { _, _ -> },
+    negativeAction: (dialogInterface: DialogInterface, i: Int) -> Unit = { _, _ -> },
     isCancelable: Boolean = true
 ) {
     val dialog: AlertDialog =
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton(positiveActionText) { d, i ->
-                positiveAction(d, i)
+            .setPositiveButton(positiveActionText) { dialogInterface, i ->
+                positiveAction(dialogInterface, i)
             }
-            .setNegativeButton(negativeActionText) { d, i ->
-                negativeAction(d, i)
+            .setNegativeButton(negativeActionText) { dialogInterface, i ->
+                negativeAction(dialogInterface, i)
             }
             .setCancelable(isCancelable)
             .create()

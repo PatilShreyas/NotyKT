@@ -21,21 +21,21 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import dev.shreyaspatil.noty.utils.ConnectionState
+import dev.shreyaspatil.noty.core.connectivity.ConnectionState
+import dev.shreyaspatil.noty.utils.connectivityManager
 import dev.shreyaspatil.noty.utils.currentConnectivityState
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun currentConnectionState(): ConnectionState {
-    val context = LocalContext.current
-    return remember { context.currentConnectivityState }
+    val connectivityManager = LocalContext.current.connectivityManager
+    return remember { connectivityManager.currentConnectivityState }
 }
 
 @Composable
 fun connectivityState(): State<ConnectionState> {
-    val context = LocalContext.current
-    return produceState(initialValue = context.currentConnectivityState) {
-        context.observeConnectivityAsFlow().distinctUntilChanged().collect { value = it }
+    val connectivityManager = LocalContext.current.connectivityManager
+    return produceState(initialValue = connectivityManager.currentConnectivityState) {
+        connectivityManager.observeConnectivityAsFlow().collect { value = it }
     }
 }

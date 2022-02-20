@@ -18,127 +18,118 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
-import dev.shreyaspatil.noty.composeapp.component.NotesList
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
 import dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction
 import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
-import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
+import dev.shreyaspatil.noty.composeapp.component.note.NotesList
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
-import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.composeapp.utils.collectState
+import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 
 @Composable
 fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
-    val isUserLoggedIn by viewModel.userLoggedInState.collectAsState()
-
-    val scope = rememberCoroutineScope()
+    val state by viewModel.collectState()
 
     val isInDarkMode = isSystemInDarkTheme()
 
-    var showLogoutConfirmationDialog by remember { mutableStateOf(false) }
+    var showLogoutConfirmation by remember { mutableStateOf(false) }
 
-    if (showLogoutConfirmationDialog) {
-        ConfirmationDialog(
-            title = "Logout?",
-            message = "Sure want to logout?",
-            onConfirmedYes = { viewModel.clearUserSession() },
-            onConfirmedNo = { showLogoutConfirmationDialog = false },
-            onDismissed = { showLogoutConfirmationDialog = false }
-        )
+    NotesContent(
+        isLoading = state.isLoading,
+        notes = state.notes,
+        isConnectivityAvailable = state.isConnectivityAvailable,
+        onRefresh = viewModel::syncNotes,
+        onToggleTheme = { viewModel.setDarkMode(!isInDarkMode) },
+        onAboutClick = { navController.navigate(Screen.About.route) },
+        onAddNoteClick = { navController.navigate(Screen.AddNote.route) },
+        onLogoutClick = { showLogoutConfirmation = true },
+        onNavigateToNoteDetail = { noteId ->
+            navController.navigate(Screen.NotesDetail.route(noteId))
+        }
+    )
+
+    LogoutConfirmation(
+        show = showLogoutConfirmation,
+        onConfirm = viewModel::logout,
+        onDismiss = { showLogoutConfirmation = false }
+    )
+
+    val isUserLoggedIn = state.isUserLoggedIn
+    LaunchedEffect(isUserLoggedIn) {
+        if (isUserLoggedIn == false) {
+            navController.navigate(Screen.Login.route) {
+                popUpTo(NOTY_NAV_HOST_ROUTE)
+                launchSingleTop = true
+            }
+        }
     }
+}
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Noty",
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.onPrimary,
-                elevation = 0.dp,
+@Composable
+fun NotesContent(
+    isLoading: Boolean,
+    notes: List<Note>,
+    isConnectivityAvailable: Boolean?,
+    error: String? = null,
+    onRefresh: () -> Unit,
+    onToggleTheme: () -> Unit,
+    onAboutClick: () -> Unit,
+    onAddNoteClick: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onNavigateToNoteDetail: (String) -> Unit
+) {
+    NotyScaffold(
+        error = error,
+        notyTopAppBar = {
+            NotyTopAppBar(
                 actions = {
-                    ThemeSwitchAction { viewModel.setDarkMode(!isInDarkMode) }
-                    AboutAction {
-                        navController.navigate(
-                            Screen.About.route
-                        )
-                    }
-                    LogoutAction(onLogout = { showLogoutConfirmationDialog = true })
+                    ThemeSwitchAction(onToggleTheme)
+                    AboutAction(onAboutClick)
+                    LogoutAction(onLogout = onLogoutClick)
                 }
             )
         },
         content = {
-            var isSynced by rememberSaveable(key = "notesSyncedInitially") { mutableStateOf(false) }
-
-            val notes = viewModel.notes.collectAsState(UIDataState.loading()).value
-            val syncState = viewModel.syncState.collectAsState(UIDataState.loading()).value
-
-            // Check whether it's already synced in the past composition
-            // Or also check whether current state is also successful or not
-            isSynced = isSynced || syncState.isSuccess
-
-            val isRefreshing = notes.isLoading or syncState.isLoading
-
             SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing),
-                onRefresh = {
-                    isSynced = false
-                    viewModel.syncNotes()
-                }
+                modifier = Modifier.fillMaxSize(),
+                state = rememberSwipeRefreshState(isLoading),
+                onRefresh = onRefresh,
+                swipeEnabled = isConnectivityAvailable == true
             ) {
                 Column {
-                    ConnectivityStatus()
-                    when (notes) {
-                        is UIDataState.Success -> NotesList(notes.data) { note ->
-                            navController.navigate(Screen.NotesDetail.route(note.id))
-                        }
-                        is UIDataState.Failed -> FailureDialog(notes.message)
+                    if (isConnectivityAvailable != null) {
+                        ConnectivityStatus(isConnectivityAvailable)
                     }
-                }
-            }
-
-            LaunchedEffect(true) {
-                if (!isSynced) {
-                    viewModel.syncNotes()
+                    NotesList(notes) { note -> onNavigateToNoteDetail(note.id) }
                 }
             }
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate(Screen.AddNote.route) },
+                onClick = onAddNoteClick,
                 backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(
@@ -149,20 +140,17 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
             }
         }
     )
-
-    LaunchedEffect(key1 = isUserLoggedIn) {
-        if (!isUserLoggedIn) {
-            navigateToLogin(navController)
-        }
-    }
 }
 
-private fun navigateToLogin(navController: NavHostController) {
-    navController.navigate(
-        Screen.Login.route,
-        builder = {
-            popUpTo(NOTY_NAV_HOST_ROUTE)
-            launchSingleTop = true
-        }
-    )
+@Composable
+fun LogoutConfirmation(show: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    if (show) {
+        ConfirmationDialog(
+            title = "Logout?",
+            message = "Sure want to logout?",
+            onConfirmedYes = onConfirm,
+            onConfirmedNo = onDismiss,
+            onDismissed = onDismiss
+        )
+    }
 }

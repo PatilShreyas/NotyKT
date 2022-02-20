@@ -24,7 +24,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.di.LocalRepository
@@ -63,8 +63,8 @@ class NotySyncWorker @AssistedInject constructor(
 
     private suspend fun fetchRemoteNotes(): List<Note> {
         return when (val response = remoteNoteRepository.getAllNotes().first()) {
-            is ResponseResult.Success -> response.data
-            is ResponseResult.Error -> throw Exception(response.message)
+            is Either.Success -> response.data
+            is Either.Error -> throw Exception(response.message)
         }
     }
 

@@ -16,6 +16,6 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.ViewModel
+import dev.shreyaspatil.noty.view.state.AboutState
 
-class AboutViewModel : ViewModel()
+class AboutViewModel : BaseViewModel<AboutState>(initialState = AboutState)

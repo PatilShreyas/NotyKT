@@ -21,19 +21,20 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import dev.shreyaspatil.noty.core.connectivity.ConnectionState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
-sealed class ConnectionState {
-    object Available : ConnectionState()
-    object Unavailable : ConnectionState()
+val Context.connectivityManager get(): ConnectivityManager {
+    return getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 }
 
 /**
  * Network Utility to observe availability or unavailability of Internet connection
  */
-fun Context.observeConnectivityAsFlow() = callbackFlow {
-    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+fun ConnectivityManager.observeConnectivityAsFlow() = callbackFlow {
+    trySend(currentConnectivityState)
 
     val callback = NetworkCallback { connectionState -> trySend(connectionState) }
 
@@ -41,39 +42,26 @@ fun Context.observeConnectivityAsFlow() = callbackFlow {
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         .build()
 
-    connectivityManager.registerNetworkCallback(networkRequest, callback)
+    registerNetworkCallback(networkRequest, callback)
 
-    // Set current state
-    val currentState = getCurrentConnectivityState(connectivityManager)
-    trySend(currentState)
-
-    // Remove callback when not used
     awaitClose {
-        // Remove listeners
-        connectivityManager.unregisterNetworkCallback(callback)
+        unregisterNetworkCallback(callback)
     }
-}
+}.distinctUntilChanged()
 
 /**
  * Network utility to get current state of internet connection
  */
-val Context.currentConnectivityState: ConnectionState
+val ConnectivityManager.currentConnectivityState: ConnectionState
     get() {
-        val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return getCurrentConnectivityState(connectivityManager)
-    }
+        val connected = allNetworks.any { network ->
+            getNetworkCapabilities(network)
+                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                ?: false
+        }
 
-private fun getCurrentConnectivityState(connectivityManager: ConnectivityManager): ConnectionState {
-    // Retrieve current status of connectivity
-    val connected = connectivityManager.allNetworks.any { network ->
-        connectivityManager.getNetworkCapabilities(network)
-            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            ?: false
+        return if (connected) ConnectionState.Available else ConnectionState.Unavailable
     }
-
-    return if (connected) ConnectionState.Available else ConnectionState.Unavailable
-}
 
 @Suppress("FunctionName")
 fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.NetworkCallback {
@@ -83,6 +71,10 @@ fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.Ne
         }
 
         override fun onLost(network: Network) {
+            callback(ConnectionState.Unavailable)
+        }
+
+        override fun onUnavailable() {
             callback(ConnectionState.Unavailable)
         }
     }

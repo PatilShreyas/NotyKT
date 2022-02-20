@@ -83,6 +83,8 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 - [Jetpack Compose UI Toolkit](https://developer.android.com/jetpack/compose) - Modern UI development toolkit.
 - [Accompanist](https://google.github.io/accompanist/) - Accompanist is a group of libraries that aim to supplement Jetpack Compose with features that are commonly required by developers but not yet available.
 - [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android
+- [Kotest](https://kotest.io/) - Kotest is a flexible and elegant multi-platform test framework for Kotlin with extensive assertions and integrated property testing
+- [Mockk](https://mockk.io/) - Mocking library for Kotlin
 
 ## Modules
 

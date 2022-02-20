@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.repository
 
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
 import dev.shreyaspatil.noty.data.remote.model.response.State
@@ -38,28 +38,28 @@ class NotyRemoteNoteRepository @Inject internal constructor(
     private val notyService: NotyService
 ) : NotyNoteRepository {
 
-    override fun getAllNotes(): Flow<ResponseResult<List<Note>>> = flow {
+    override fun getAllNotes(): Flow<Either<List<Note>>> = flow {
         val notesResponse = notyService.getAllNotes().getResponse()
 
         val state = when (notesResponse.status) {
-            State.SUCCESS -> ResponseResult.success(notesResponse.notes)
-            else -> ResponseResult.error(notesResponse.message)
+            State.SUCCESS -> Either.success(notesResponse.notes)
+            else -> Either.error(notesResponse.message)
         }
 
         emit(state)
-    }.catch { emit(ResponseResult.error("Can't sync latest notes")) }
+    }.catch { emit(Either.error("Can't sync latest notes")) }
 
-    override suspend fun addNote(title: String, note: String): ResponseResult<String> {
+    override suspend fun addNote(title: String, note: String): Either<String> {
         return runCatching {
             val notesResponse = notyService.addNote(NoteRequest(title, note)).getResponse()
 
             when (notesResponse.status) {
-                State.SUCCESS -> ResponseResult.success(notesResponse.noteId!!)
-                else -> ResponseResult.error(notesResponse.message)
+                State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                else -> Either.error(notesResponse.message)
             }
         }.getOrElse {
             it.printStackTrace()
-            (ResponseResult.error("Something went wrong!"))
+            (Either.error("Something went wrong!"))
         }
     }
 
@@ -67,7 +67,7 @@ class NotyRemoteNoteRepository @Inject internal constructor(
         noteId: String,
         title: String,
         note: String
-    ): ResponseResult<String> {
+    ): Either<String> {
         return runCatching {
             val notesResponse = notyService.updateNote(
                 noteId,
@@ -75,21 +75,21 @@ class NotyRemoteNoteRepository @Inject internal constructor(
             ).getResponse()
 
             when (notesResponse.status) {
-                State.SUCCESS -> ResponseResult.success(notesResponse.noteId!!)
-                else -> ResponseResult.error(notesResponse.message)
+                State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                else -> Either.error(notesResponse.message)
             }
-        }.getOrDefault(ResponseResult.error("Something went wrong!"))
+        }.getOrDefault(Either.error("Something went wrong!"))
     }
 
-    override suspend fun deleteNote(noteId: String): ResponseResult<String> {
+    override suspend fun deleteNote(noteId: String): Either<String> {
         return runCatching {
             val notesResponse = notyService.deleteNote(noteId).getResponse()
 
             when (notesResponse.status) {
-                State.SUCCESS -> ResponseResult.success(notesResponse.noteId!!)
-                else -> ResponseResult.error(notesResponse.message)
+                State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                else -> Either.error(notesResponse.message)
             }
-        }.getOrDefault(ResponseResult.error("Something went wrong!"))
+        }.getOrDefault(Either.error("Something went wrong!"))
     }
 
     /** Not needed (NO-OP) **/

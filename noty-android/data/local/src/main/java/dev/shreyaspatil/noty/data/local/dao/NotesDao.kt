@@ -16,15 +16,30 @@
 
 package dev.shreyaspatil.noty.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotesDao {
 
+    /**
+     * The return type of this method is nullable because internally it throws an error if
+     * entity doesn't exist.
+     *
+     * Official docs says
+     *
+     * * When the return type is Flow<T>, querying an empty table throws a null pointer exception.
+     * * When the return type is Flow<T?>, querying an empty table emits a null value.
+     * * When the return type is Flow<List<T>>, querying an empty table emits an empty list.
+     *
+     * Refer: https://developer.android.com/reference/androidx/room/Query
+     */
     @Query("SELECT * FROM notes WHERE noteId = :noteId")
-    fun getNoteById(noteId: String): Flow<NoteEntity>
+    fun getNoteById(noteId: String): Flow<NoteEntity?>
 
     @Query("SELECT * FROM notes ORDER BY created DESC")
     fun getAllNotes(): Flow<List<NoteEntity>>

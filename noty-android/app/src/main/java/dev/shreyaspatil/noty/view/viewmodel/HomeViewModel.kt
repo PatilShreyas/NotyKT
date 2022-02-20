@@ -16,12 +16,18 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.shreyaspatil.noty.core.session.SessionManager
+import dev.shreyaspatil.noty.view.state.HomeState
 import javax.inject.Inject
 
-/**
- * Currently not in use
- */
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel()
+class HomeViewModel @Inject constructor(
+    sessionManager: SessionManager
+) : BaseViewModel<HomeState>(initialState = HomeState()) {
+
+    init {
+        val isLoggedIn = sessionManager.getToken() != null
+        setState { HomeState(isLoggedIn = isLoggedIn) }
+    }
+}

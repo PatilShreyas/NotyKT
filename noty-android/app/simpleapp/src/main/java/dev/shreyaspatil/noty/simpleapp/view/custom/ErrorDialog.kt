@@ -23,18 +23,18 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import dev.shreyaspatil.noty.simpleapp.databinding.ErrorDialogLayoutBinding
+import dev.shreyaspatil.noty.utils.autoCleaned
 
 class ErrorDialog(var title: String = "", var message: String = "") : DialogFragment() {
 
-    private var _binding: ErrorDialogLayoutBinding? = null
-    private val binding get() = _binding!!
+    private var binding: ErrorDialogLayoutBinding by autoCleaned()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ErrorDialogLayoutBinding.inflate(inflater, container, false)
+        binding = ErrorDialogLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -54,10 +54,5 @@ class ErrorDialog(var title: String = "", var message: String = "") : DialogFrag
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

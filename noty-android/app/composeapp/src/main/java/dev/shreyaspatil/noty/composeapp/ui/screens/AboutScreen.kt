@@ -20,23 +20,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,111 +48,68 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import dev.shreyaspatil.noty.composeapp.BuildConfig
 import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.utils.IntentUtils
 
 @Composable
 fun AboutScreen(navController: NavController) {
-
-    Scaffold(
-        topBar = {
-            AboutAppBar(navController = navController)
+    NotyScaffold(
+        notyTopAppBar = {
+            NotyTopAppBar(onNavigateUp = { navController.navigateUp() })
         },
         content = {
-            AboutColumn()
+            AboutContent()
         }
     )
 }
 
 @Composable
-fun AboutAppBar(navController: NavController) {
-    TopAppBar(
-        title = {
-            Row {
-                val image = painterResource(id = R.drawable.ic_noty_logo)
-                Image(painter = image, contentDescription = "Noty Icon")
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Noty",
-                    textAlign = TextAlign.Start,
-                    color = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        },
-        navigationIcon = {
-            IconButton(
-                modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
-                onClick = {
-                    navController.navigateUp()
-                }
-            ) {
-                Icon(
-                    painterResource(R.drawable.ic_back),
-                    "Back",
-                    tint = MaterialTheme.colors.onPrimary
-                )
-            }
-        },
-        backgroundColor = MaterialTheme.colors.surface,
-        contentColor = MaterialTheme.colors.onPrimary,
-        elevation = 0.dp
-    )
-}
-
-@Composable
-fun AboutColumn() {
-    LazyColumn(
-        modifier = Modifier.padding(8.dp).fillMaxSize(),
+fun AboutContent() {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            Spacer(modifier = Modifier.height(60.dp))
-        }
-        item {
-            val image = painterResource(id = R.drawable.noty_app_logo)
-            Image(
-                modifier = Modifier.size(92.dp, 92.dp),
-                painter = image,
-                contentDescription = "About Noty app",
-                alignment = Alignment.Center
+        Spacer(modifier = Modifier.height(60.dp))
+
+        val image = painterResource(id = R.drawable.noty_app_logo)
+        Image(
+            modifier = Modifier.size(92.dp, 92.dp),
+            painter = image,
+            contentDescription = "About Noty app",
+            alignment = Alignment.Center
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Noty",
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp,
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onBackground
             )
-        }
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-        item {
-            Text(
-                text = "Noty",
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.onBackground
-                )
-            )
-        }
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            Text(
-                text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.subtitle2
-            )
-        }
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-        item {
-            LicenseCard()
-        }
-        item {
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            VisitCard()
-        }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.subtitle2
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        LicenseCard()
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        VisitCard()
     }
 }
 

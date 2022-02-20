@@ -18,9 +18,7 @@ package dev.shreyaspatil.noty.simpleapp.view.about
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.BuildConfig
@@ -28,18 +26,14 @@ import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.FragmentAboutBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
+import dev.shreyaspatil.noty.view.state.AboutState
 import dev.shreyaspatil.noty.view.viewmodel.AboutViewModel
 
 @AndroidEntryPoint
-class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
+class AboutFragment : BaseFragment<FragmentAboutBinding, AboutState, AboutViewModel>() {
     override val viewModel: AboutViewModel by hiltNotyMainNavGraphViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
-    }
-
-    private fun initViews() {
+    override fun initView() {
         binding.run {
             textAppVersion.text = getString(
                 R.string.text_app_version,
@@ -55,6 +49,8 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutViewModel>() {
             }
         }
     }
+
+    override fun render(state: AboutState) {}
 
     private fun launchBrowser(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
         startActivity(it)
