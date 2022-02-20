@@ -18,178 +18,216 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
-import dev.shreyaspatil.noty.composeapp.component.text.ConfirmPasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
-import dev.shreyaspatil.noty.composeapp.component.text.TextFieldValue.Valid
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
 import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
 import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
-import dev.shreyaspatil.noty.core.ui.UIDataState
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
+import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 
 @Composable
-fun SignUpScreen(
-    navController: NavHostController,
-    viewModel: RegisterViewModel
-) {
+fun SignUpScreen(navController: NavHostController, viewModel: RegisterViewModel) {
+    val state by viewModel.collectState()
 
-    val viewState = viewModel.authFlow.collectAsState(initial = null).value
+    SignUpContent(
+        isLoading = state.isLoading,
+        username = state.username,
+        password = state.password,
+        confirmPassword = state.confirmPassword,
+        isValidUsername = state.isValidUsername ?: true,
+        isValidPassword = state.isValidPassword ?: true,
+        isValidConfirmPassword = state.isValidConfirmPassword ?: true,
+        onUsernameChange = viewModel::setUsername,
+        onPasswordChange = viewModel::setPassword,
+        onConfirmPasswordChanged = viewModel::setConfirmPassword,
+        onSignUpClick = viewModel::register,
+        onNavigateUp = { navController.navigateUp() },
+        error = state.error
+    )
 
-    when (viewState) {
-        is UIDataState.Loading -> LoaderDialog()
-        is UIDataState.Failed -> FailureDialog(viewState.message)
-    }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.surface)
-    ) {
-        item {
-            ConstraintLayout() {
-
-                val (
-                    titleRef,
-                    usernameRef,
-                    passwordRef,
-                    confirmPasswordRef,
-                    buttonSignupRef,
-                    textLoginRef,
-                ) = createRefs()
-
-                Text(
-                    text = "Create\naccount",
-                    style = typography.h4,
-                    modifier = Modifier.constrainAs(titleRef) {
-                        top.linkTo(parent.top, margin = 60.dp)
-                        start.linkTo(parent.start, margin = 16.dp)
-                    }
-                )
-
-                var username by remember { mutableStateOf("") }
-                var isValidUsername by remember { mutableStateOf(false) }
-
-                UsernameTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(usernameRef) {
-                            top.linkTo(titleRef.bottom, margin = 30.dp)
-                        }
-                        .background(MaterialTheme.colors.background),
-                    value = username,
-                    onTextChange = {
-                        username = it.data
-                        isValidUsername = it is Valid
-                    }
-                )
-
-                var password by remember { mutableStateOf("") }
-                var isValidPassword by remember { mutableStateOf(false) }
-
-                PasswordTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(passwordRef) {
-                            top.linkTo(usernameRef.bottom, margin = 16.dp)
-                        }
-                        .background(MaterialTheme.colors.background),
-                    value = password,
-                    onTextChange = {
-                        password = it.data
-                        isValidPassword = it is Valid
-                    }
-                )
-
-                var confirmPassword by remember { mutableStateOf("") }
-                var isValidConfirmPassword by remember { mutableStateOf(false) }
-
-                ConfirmPasswordTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(confirmPasswordRef) {
-                            top.linkTo(passwordRef.bottom, margin = 16.dp)
-                        }
-                        .background(MaterialTheme.colors.background),
-                    value = confirmPassword,
-                    expectedValue = password,
-                    onTextChange = {
-                        confirmPassword = it.data
-                        isValidConfirmPassword = it is Valid
-                    }
-                )
-
-                Button(
-                    onClick = {
-                        if (isValidUsername && isValidPassword && isValidConfirmPassword) {
-                            viewModel.register(username, password)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .padding(16.dp, 0.dp, 16.dp, 0.dp)
-                        .constrainAs(buttonSignupRef) {
-                            top.linkTo(confirmPasswordRef.bottom, margin = 40.dp)
-                        },
-                ) {
-                    Text(style = typography.subtitle1, color = Color.White, text = "Create account")
-                }
-                Text(
-                    text = buildAnnotatedString {
-                        append("Already have an account? Login")
-                        addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
-                    },
-                    style = typography.subtitle1,
-                    modifier = Modifier
-                        .constrainAs(textLoginRef) {
-                            top.linkTo(buttonSignupRef.bottom, margin = 24.dp)
-                            start.linkTo(parent.start, margin = 16.dp)
-                            end.linkTo(parent.end, margin = 16.dp)
-                        }
-                        .clickable(
-                            onClick = {
-                                navController.navigateUp()
-                            }
-                        )
-                )
-            }
-        }
-    }
-
-    LaunchedEffect(viewState?.isSuccess) {
-        if (viewState?.isSuccess == true) {
+    LaunchedEffect(state.isLoggedIn) {
+        if (state.isLoggedIn) {
             navController.navigate(Screen.Notes.route) {
                 launchSingleTop = true
                 popUpTo(NOTY_NAV_HOST_ROUTE)
             }
         }
     }
+}
+
+@Composable
+fun SignUpContent(
+    isLoading: Boolean,
+    username: String,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    password: String,
+    confirmPassword: String,
+    onConfirmPasswordChanged: (String) -> Unit,
+    isValidConfirmPassword: Boolean,
+    onNavigateUp: () -> Unit,
+    onSignUpClick: () -> Unit,
+    isValidUsername: Boolean,
+    isValidPassword: Boolean,
+    error: String?
+) {
+    if (isLoading) {
+        LoaderDialog()
+    }
+
+    if (error != null) {
+        FailureDialog(error)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.surface)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(
+            text = "Create\naccount",
+            style = typography.h4,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 60.dp, bottom = 16.dp)
+        )
+
+        SignUpForm(
+            username = username,
+            onUsernameChange = onUsernameChange,
+            isValidUsername = isValidUsername,
+            password = password,
+            onPasswordChange = onPasswordChange,
+            isValidPassword = isValidPassword,
+            confirmPassword = confirmPassword,
+            onConfirmPasswordChanged = onConfirmPasswordChanged,
+            isValidConfirmPassword = isValidConfirmPassword,
+            onSignUpClick = onSignUpClick
+        )
+
+        LoginLink(Modifier.align(Alignment.CenterHorizontally), onLoginClick = onNavigateUp)
+    }
+}
+
+@Composable
+private fun SignUpForm(
+    username: String,
+    onUsernameChange: (String) -> Unit,
+    isValidUsername: Boolean,
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    isValidPassword: Boolean,
+    confirmPassword: String,
+    onConfirmPasswordChanged: (String) -> Unit,
+    isValidConfirmPassword: Boolean,
+    onSignUpClick: () -> Unit
+) {
+    Column(
+        Modifier.padding(
+            start = 16.dp,
+            top = 32.dp,
+            end = 16.dp,
+            bottom = 16.dp
+        )
+    ) {
+
+        UsernameTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .background(MaterialTheme.colors.background),
+            value = username,
+            onValueChange = onUsernameChange,
+            isError = !isValidUsername,
+        )
+
+        PasswordTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .background(MaterialTheme.colors.background),
+            value = password,
+            onValueChange = onPasswordChange,
+            isError = !isValidPassword
+        )
+
+        PasswordTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .background(MaterialTheme.colors.background),
+            value = confirmPassword,
+            label = "Confirm Password",
+            onValueChange = onConfirmPasswordChanged,
+            isError = !isValidConfirmPassword
+        )
+
+        Button(
+            onClick = onSignUpClick,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .fillMaxWidth()
+                .height(60.dp)
+        ) {
+            Text(style = typography.subtitle1, color = Color.White, text = "Create account")
+        }
+    }
+}
+
+@Composable
+private fun LoginLink(modifier: Modifier, onLoginClick: () -> Unit) {
+    Text(
+        text = buildAnnotatedString {
+            append("Already have an account? Login")
+            addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
+        },
+        style = typography.subtitle1,
+        modifier = modifier
+            .padding(vertical = 24.dp, horizontal = 16.dp)
+            .clickable(onClick = onLoginClick)
+    )
+}
+
+@Preview
+@Composable
+fun PreviewSignupContent() = NotyPreview {
+    SignUpContent(
+        isLoading = false,
+        username = "johndoe",
+        onUsernameChange = {},
+        onPasswordChange = {},
+        password = "password",
+        confirmPassword = "password",
+        onConfirmPasswordChanged = {},
+        isValidConfirmPassword = false,
+        onNavigateUp = {},
+        onSignUpClick = {},
+        isValidUsername = false,
+        isValidPassword = false,
+        error = null
+    )
 }

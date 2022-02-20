@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.core.repository
+package dev.shreyaspatil.noty.view.state
 
-sealed class ResponseResult<T> {
-    data class Success<T>(val data: T) : ResponseResult<T>()
-    data class Error<T>(val message: String) : ResponseResult<T>()
-
-    companion object {
-        fun <T> success(data: T) = Success(data)
-        fun <T> error(message: String) = Error<T>(message)
-    }
-}
+data class AddNoteState(
+    val title: String = "",
+    val note: String = "",
+    val showSave: Boolean = false,
+    val isAdding: Boolean = false,
+    val added: Boolean = false,
+    val errorMessage: String? = null
+) : State

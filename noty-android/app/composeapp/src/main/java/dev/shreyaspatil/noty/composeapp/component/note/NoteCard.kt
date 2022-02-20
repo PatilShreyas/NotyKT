@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component
+package dev.shreyaspatil.noty.composeapp.component.note
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,12 +31,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.shreyaspatil.noty.core.model.Note
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 
 @Composable
-fun NoteCard(note: Note, onNoteClick: () -> Unit) {
+fun NoteCard(title: String, note: String, onNoteClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(4.dp),
         backgroundColor = MaterialTheme.colors.surface,
@@ -52,14 +53,14 @@ fun NoteCard(note: Note, onNoteClick: () -> Unit) {
                 .padding(16.dp)
         ) {
             Text(
-                text = note.title,
+                text = title,
                 style = typography.h5,
                 color = MaterialTheme.colors.onPrimary,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = note.note,
+                text = note,
                 style = typography.body1,
                 color = MaterialTheme.colors.onPrimary,
                 lineHeight = 24.sp,
@@ -67,4 +68,10 @@ fun NoteCard(note: Note, onNoteClick: () -> Unit) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewNoteCard() = NotyPreview {
+    NoteCard(title = "Lorem Ipsum", note = "Here is note body...", onNoteClick = {})
 }

@@ -17,27 +17,23 @@
 package dev.shreyaspatil.noty.view.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.shreyaspatil.noty.core.model.Note
+import dev.shreyaspatil.noty.core.connectivity.ConnectionState.Available
+import dev.shreyaspatil.noty.core.connectivity.ConnectivityObserver
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
-import dev.shreyaspatil.noty.core.repository.ResponseResult
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.di.LocalRepository
-import dev.shreyaspatil.noty.utils.ext.shareWhileObserved
+import dev.shreyaspatil.noty.view.state.NotesState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,40 +44,37 @@ class NotesViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val preferenceManager: PreferenceManager,
     private val notyTaskManager: NotyTaskManager,
-) : ViewModel() {
+    private val connectivityObserver: ConnectivityObserver
+) : BaseViewModel<NotesState>(initialState = NotesState()) {
 
     private var syncJob: Job? = null
 
-    private val _syncState = MutableSharedFlow<UIDataState<Unit>>()
-    val syncState: SharedFlow<UIDataState<Unit>> = _syncState.shareWhileObserved(viewModelScope)
-
-    private val _loggedInState = MutableStateFlow(isUserLoggedIn())
-    val userLoggedInState: StateFlow<Boolean> = _loggedInState
-
-    val notes: SharedFlow<UIDataState<List<Note>>> = notyNoteRepository.getAllNotes()
-        .distinctUntilChanged()
-        .map { result ->
-            when (result) {
-                is ResponseResult.Success -> UIDataState.success(result.data)
-                is ResponseResult.Error -> UIDataState.failed(result.message)
-            }
-        }.onStart { emit(UIDataState.loading()) }
-        .shareWhileObserved(viewModelScope)
+    init {
+        checkUserSession()
+        observeNotes()
+        syncNotes()
+        observeConnectivity()
+    }
 
     fun syncNotes() {
-        syncJob?.cancel()
+        if (syncJob?.isActive == true) return
+
         syncJob = viewModelScope.launch {
             val taskId = notyTaskManager.syncNotes()
 
             try {
                 notyTaskManager.observeTask(taskId).collect { taskState ->
-                    val viewState = when (taskState) {
-                        TaskState.SCHEDULED -> UIDataState.loading()
-                        TaskState.COMPLETED, TaskState.CANCELLED -> UIDataState.success(Unit)
-                        TaskState.FAILED -> UIDataState.failed("Failed")
+                    when (taskState) {
+                        TaskState.SCHEDULED -> setState { state ->
+                            state.copy(isLoading = true)
+                        }
+                        TaskState.COMPLETED, TaskState.CANCELLED -> setState { state ->
+                            state.copy(isLoading = false)
+                        }
+                        TaskState.FAILED -> setState { state ->
+                            state.copy(isLoading = false, error = "Failed to sync notes")
+                        }
                     }
-
-                    _syncState.emit(viewState)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Can't find work by ID '$taskId'")
@@ -89,14 +82,12 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    private fun isUserLoggedIn() = sessionManager.getToken() != null
-
-    fun clearUserSession() {
+    fun logout() {
         viewModelScope.launch {
             sessionManager.saveToken(null)
             notyTaskManager.abortAllTasks()
             notyNoteRepository.deleteAllNotes()
-            _loggedInState.value = false
+            setState { state -> state.copy(isUserLoggedIn = false) }
         }
     }
 
@@ -108,7 +99,32 @@ class NotesViewModel @Inject constructor(
         }
     }
 
+    private fun checkUserSession() {
+        setState { it.copy(isUserLoggedIn = sessionManager.getToken() != null) }
+    }
+
+    private fun observeNotes() {
+        notyNoteRepository.getAllNotes()
+            .distinctUntilChanged()
+            .onEach { response ->
+                response.onSuccess { notes ->
+                    setState { state -> state.copy(isLoading = false, notes = notes) }
+                }.onFailure { message ->
+                    setState { state -> state.copy(isLoading = false, error = message) }
+                }
+            }.onStart { setState { state -> state.copy(isLoading = true) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeConnectivity() {
+        connectivityObserver.connectionState
+            .distinctUntilChanged()
+            .map { it === Available }
+            .onEach { setState { state -> state.copy(isConnectivityAvailable = it) } }
+            .launchIn(viewModelScope)
+    }
+
     companion object {
-        const val TAG = "NotesViewModel"
+        private const val TAG = "NotesViewModel"
     }
 }

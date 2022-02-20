@@ -4,6 +4,14 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v2.0.0_ (2022-02-20)
+
+### 🎯 Codebase Improvements
+
+- [[#397](https://github.com/PatilShreyas/NotyKT/issues/397)] Revamp architecture of NotyKT Android app.
+
+> [**Read more**](/pages/noty-android/architecture-revamp-v2.0.0.md) about the refactoring.
+
 ## _v1.3.2_ (2021-11-30)
 
 This release includes a few improvements and fixes in the Jetpack Compose and Simple Application to make them better. All features mentioned below are contributed by [@kasem-sm](https://github.com/kasem-sm)

@@ -16,9 +16,7 @@
 
 package dev.shreyaspatil.noty.simpleapp.view.home
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,21 +24,28 @@ import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.HomeFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
+import dev.shreyaspatil.noty.view.state.HomeState
 import dev.shreyaspatil.noty.view.viewmodel.HomeViewModel
 
 /**
  * Currently nothing is going to performed in HomeFragment.
  */
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<HomeFragmentBinding, HomeViewModel>() {
+class HomeFragment : BaseFragment<HomeFragmentBinding, HomeState, HomeViewModel>() {
 
     override val viewModel: HomeViewModel by hiltNotyMainNavGraphViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun initView() {}
 
-        // Currently doing nothing in Home fragment, so navigate to login screen.
-        findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
+    override fun render(state: HomeState) {
+        val isLoggedIn = state.isLoggedIn ?: return
+
+        val destination = if (isLoggedIn) {
+            R.id.action_homeFragment_to_loginFragment
+        } else {
+            R.id.action_homeFragment_to_notesFragment
+        }
+        findNavController().navigate(destination)
     }
 
     override fun getViewBinding(

@@ -44,15 +44,10 @@ import androidx.compose.ui.unit.sp
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.ui.theme.green
 import dev.shreyaspatil.noty.composeapp.ui.theme.red
-import dev.shreyaspatil.noty.composeapp.utils.connectivityState
-import dev.shreyaspatil.noty.utils.ConnectionState
 import kotlinx.coroutines.delay
 
 @Composable
-fun ConnectivityStatus() {
-    val connection by connectivityState()
-    val isConnected = connection === ConnectionState.Available
-
+fun ConnectivityStatus(isConnected: Boolean) {
     var visibility by remember { mutableStateOf(false) }
 
     AnimatedVisibility(

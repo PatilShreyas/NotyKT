@@ -22,28 +22,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import dev.shreyaspatil.noty.simpleapp.databinding.LoadingDialogLayoutBinding
+import dev.shreyaspatil.noty.utils.autoCleaned
 
 class ProgressDialog : DialogFragment() {
 
-    private var _binding: LoadingDialogLayoutBinding? = null
-    private val binding get() = _binding!!
+    private var binding: LoadingDialogLayoutBinding by autoCleaned()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = LoadingDialogLayoutBinding.inflate(inflater, container, false)
+        binding = LoadingDialogLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
         dialog?.setCancelable(false)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

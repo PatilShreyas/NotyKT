@@ -17,39 +17,30 @@
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import dev.shreyaspatil.noty.composeapp.R
-import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
-import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
+import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
-import dev.shreyaspatil.noty.core.ui.UIDataState
-import dev.shreyaspatil.noty.utils.validator.NoteValidator
+import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 
 @Composable
@@ -57,61 +48,55 @@ fun AddNoteScreen(
     navController: NavHostController,
     viewModel: AddNoteViewModel
 ) {
-    val titleText = remember { mutableStateOf("") }
-    val noteText = remember { mutableStateOf("") }
+    val state by viewModel.collectState()
 
-    val addNoteState = viewModel.addNoteState.collectAsState(initial = null).value
+    AddNotesContent(
+        isLoading = state.isAdding,
+        title = state.title,
+        note = state.note,
+        showSaveFab = state.showSave,
+        onTitleChange = viewModel::setTitle,
+        onNoteChange = viewModel::setNote,
+        onClickAddNote = viewModel::add,
+        error = state.errorMessage,
+        onNavigateUp = { navController.navigateUp() }
+    )
 
-    when (addNoteState) {
-        is UIDataState.Loading -> LoaderDialog()
-        is UIDataState.Success -> navController.navigateUp()
-        is UIDataState.Failed -> FailureDialog(addNoteState.message)
+    LaunchedEffect(state.added) {
+        if (state.added) {
+            navController.navigateUp()
+        }
     }
+}
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Add Note",
-                        textAlign = TextAlign.Start,
-                        color = MaterialTheme.colors.onPrimary,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.ic_back),
-                            "Back",
-                            tint = MaterialTheme.colors.onPrimary
-                        )
-                    }
-                },
-                backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.onPrimary,
-                elevation = 0.dp,
-            )
-        },
+@Composable
+fun AddNotesContent(
+    isLoading: Boolean,
+    title: String,
+    note: String,
+    showSaveFab: Boolean,
+    onTitleChange: (String) -> Unit,
+    onNoteChange: (String) -> Unit,
+    onClickAddNote: () -> Unit,
+    error: String?,
+    onNavigateUp: () -> Unit
+) {
+    NotyScaffold(
+        isLoading = isLoading,
+        error = error,
+        notyTopAppBar = { NotyTopAppBar(title = "Add Note", onNavigateUp = onNavigateUp) },
         content = {
             Column(
-                Modifier.scrollable(
-                    rememberScrollState(),
-                    orientation = Orientation.Vertical
-                ).padding(16.dp)
+                Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
             ) {
-
                 NoteTitleField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colors.background),
-                    value = titleText.value,
-                    onTextChange = { titleText.value = it },
+                    value = title,
+                    onTextChange = onTitleChange,
                 )
 
                 NoteField(
@@ -120,16 +105,13 @@ fun AddNoteScreen(
                         .fillMaxHeight()
                         .padding(top = 32.dp)
                         .background(MaterialTheme.colors.background),
-                    value = noteText.value,
-                    onTextChange = { noteText.value = it }
+                    value = note,
+                    onTextChange = onNoteChange
                 )
             }
         },
         floatingActionButton = {
-            val noteTitle = titleText.value
-            val noteContent = noteText.value
-
-            if (NoteValidator.isValidNote(noteTitle, noteContent)) {
+            if (showSaveFab) {
                 ExtendedFloatingActionButton(
                     text = { Text("Save", color = Color.White) },
                     icon = {
@@ -139,7 +121,7 @@ fun AddNoteScreen(
                             tint = Color.White
                         )
                     },
-                    onClick = { viewModel.addNote(noteTitle, noteContent) },
+                    onClick = onClickAddNote,
                     backgroundColor = MaterialTheme.colors.primary
                 )
             }

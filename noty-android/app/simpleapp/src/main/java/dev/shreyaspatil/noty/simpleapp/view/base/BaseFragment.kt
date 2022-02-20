@@ -16,22 +16,32 @@
 
 package dev.shreyaspatil.noty.simpleapp.view.base
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import dev.shreyaspatil.noty.simpleapp.view.custom.ErrorDialog
 import dev.shreyaspatil.noty.simpleapp.view.custom.ProgressDialog
+import dev.shreyaspatil.noty.utils.autoCleaned
+import dev.shreyaspatil.noty.view.state.State
+import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
+/**
+ * Base for all fragments in the project
+ */
+abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<STATE>> :
+    Fragment() {
 
-    private var _binding: VB? = null
-    protected val binding get() = _binding!!
+    private var _binding: VB by autoCleaned()
+    val binding: VB get() = _binding
 
     protected abstract val viewModel: VM
 
@@ -47,12 +57,30 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
         return binding.root
     }
 
+    abstract fun initView()
+    abstract fun render(state: STATE)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        observeState()
+    }
+
+    private fun observeState() {
+        viewModel.state
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .onEach { state -> render(state) }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    fun showProgressDialog(show: Boolean) = if (show) showProgressDialog() else hideProgressDialog()
+
     fun showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = ProgressDialog()
         }
         progressDialog?.let {
-            if (!it.isVisible) {
+            if (!it.isVisible && !it.isAdded) {
                 it.show(requireActivity().supportFragmentManager, TAG_PROGRESS_DIALOG)
             }
         }
@@ -69,21 +97,17 @@ abstract class BaseFragment<VB : ViewBinding, VM : ViewModel> : Fragment() {
             this.message = message
         }
         errorDialog?.let {
-            if (!it.isVisible) {
+            if (!it.isVisible && !it.isAdded) {
                 it.show(requireActivity().supportFragmentManager, TAG_ERROR_DIALOG)
             }
         }
     }
 
     fun toast(message: String) {
-        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    val applicationContext: Context
-        get() = requireContext().applicationContext
-
     override fun onDestroyView() {
-        _binding = null
         progressDialog?.dismiss()
         progressDialog = null
 

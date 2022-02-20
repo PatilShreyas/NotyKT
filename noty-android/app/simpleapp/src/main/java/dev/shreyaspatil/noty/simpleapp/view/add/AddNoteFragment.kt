@@ -16,81 +16,46 @@
 
 package dev.shreyaspatil.noty.simpleapp.view.add
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.ui.UIDataState
 import dev.shreyaspatil.noty.simpleapp.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
-import dev.shreyaspatil.noty.utils.validator.NoteValidator
+import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
+import dev.shreyaspatil.noty.view.state.AddNoteState
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 
 @AndroidEntryPoint
-class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>() {
+class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteState, AddNoteViewModel>() {
 
     override val viewModel: AddNoteViewModel by hiltNotyMainNavGraphViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        observeAddNoteResult()
-    }
-
-    private fun initViews() {
+    override fun initView() {
         binding.run {
-            fabSave.setOnClickListener { saveNote() }
+            fabSave.setOnClickListener { viewModel.add() }
             noteLayout.run {
-                fieldTitle.addTextChangedListener { onNoteContentChanged() }
-                fieldNote.addTextChangedListener { onNoteContentChanged() }
+                fieldTitle.addTextChangedListener { viewModel.setTitle(it.toStringOrEmpty()) }
+                fieldNote.addTextChangedListener { viewModel.setNote(it.toStringOrEmpty()) }
             }
         }
     }
 
-    private fun onNoteContentChanged() {
-        val (title, note) = getNoteContent()
+    override fun render(state: AddNoteState) {
+        binding.fabSave.isVisible = state.showSave
 
-        binding.fabSave.let { fab ->
-            if (NoteValidator.isValidNote(title, note)) fab.show() else fab.hide()
+        showProgressDialog(state.isAdding)
+
+        if (state.added) {
+            findNavController().navigateUp()
         }
-    }
 
-    private fun saveNote() {
-        val (title, note) = getNoteContent()
-        viewModel.addNote(title, note)
-    }
-
-    private fun getNoteContent() = binding.noteLayout.let {
-        Pair(
-            it.fieldTitle.text.toString(),
-            it.fieldNote.text.toString()
-        )
-    }
-
-    private fun observeAddNoteResult() {
-        viewModel.addNoteState.asLiveData().observe(viewLifecycleOwner) { viewState ->
-            when (viewState) {
-                is UIDataState.Loading -> showProgressDialog()
-
-                is UIDataState.Success -> {
-                    hideProgressDialog()
-                    findNavController().navigateUp()
-                }
-
-                is UIDataState.Failed -> {
-                    hideProgressDialog()
-                    showErrorDialog("Failed to add a note", viewState.message)
-                }
-            }
+        val errorMessage = state.errorMessage
+        if (errorMessage != null) {
+            showErrorDialog("Failed to add a note", errorMessage)
         }
     }
 
@@ -98,4 +63,9 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteViewModel>()
         inflater: LayoutInflater,
         container: ViewGroup?
     ) = AddNoteFragmentBinding.inflate(inflater, container, false)
+
+    override fun onDestroyView() {
+        viewModel.resetState()
+        super.onDestroyView()
+    }
 }

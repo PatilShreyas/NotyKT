@@ -28,7 +28,7 @@ interface NotyUserRepository {
     /**
      * Register/Create a new user using [username] and [password]
      */
-    suspend fun addUser(username: String, password: String): ResponseResult<AuthCredential>
+    suspend fun addUser(username: String, password: String): Either<AuthCredential>
 
     /**
      * Sign ins a user using [username] and [password] which is already exists.
@@ -36,5 +36,5 @@ interface NotyUserRepository {
     suspend fun getUserByUsernameAndPassword(
         username: String,
         password: String
-    ): ResponseResult<AuthCredential>
+    ): Either<AuthCredential>
 }

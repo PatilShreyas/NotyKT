@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component
+package dev.shreyaspatil.noty.composeapp.component.button
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.shreyaspatil.noty.core.model.Note
+import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 
 @Composable
-fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
-    LazyColumn(contentPadding = PaddingValues(vertical = 4.dp)) {
-        items(
-            items = notes,
-            itemContent = { note ->
-                NoteCard(
-                    note = note,
-                    onNoteClick = { onClick(note) }
-                )
-            }
-        )
+fun NotyFullWidthButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth().height(60.dp)
+    ) {
+        Text(style = typography.subtitle1, color = Color.White, text = text)
     }
 }
