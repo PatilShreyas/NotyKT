@@ -12,6 +12,7 @@
     - [Setting up project](/pages/noty-android/setting-up-project)
     - [Design / Wireframe](pages/noty-android/design-wireframe.md)
     - [App Architecture](/pages/noty-android/app-architecture.md)
+    - [Architecture Revamp v2.0.0](/pages/noty-android/architecture-revamp-v2.0.0.md)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**
