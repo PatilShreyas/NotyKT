@@ -6,6 +6,8 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ## _v2.0.0_ (2022-02-20)
 
+This release includes codebase refactoring changes.
+
 ### 🎯 Codebase Improvements
 
 - [[#397](https://github.com/PatilShreyas/NotyKT/issues/397)] Revamp architecture of NotyKT Android app.
