@@ -52,6 +52,8 @@ Have any questions, doubts or want to present your opinions, views? You're alway
 
 See [contributors](https://github.com/PatilShreyas/NotyKT/graphs/contributors)
 
+_The beautiful UI of the application has been designed and developed by [Spikey Sanju](https://github.com/Spikeysanju)_
+
 ## License
 
 ```
