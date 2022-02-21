@@ -50,9 +50,7 @@ Have any questions, doubts or want to present your opinions, views? You're alway
 
 ## Contributors
 
-- [Shreyas Patil](https://github.com/PatilShreyas)
-- [Sanju S](https://github.com/Spikeysanju)
-- [Pranay Patel](https://github.com/pranaypatel512)
+See [contributors](https://github.com/PatilShreyas/NotyKT/graphs/contributors)
 
 ## License
 
