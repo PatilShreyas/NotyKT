@@ -44,7 +44,7 @@ ext {
     materialDesignVersion = "1.5.0"
 
     // Lottie Animation
-    lottieVersion = "4.2.2"
+    lottieVersion = "5.0.1"
 
     // Lottie Animation (Compose)
     lottieComposeVersion = "4.2.2"
