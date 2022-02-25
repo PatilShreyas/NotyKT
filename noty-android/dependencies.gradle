@@ -79,7 +79,7 @@ ext {
     lifecycleViewModelComposeVersion = "2.4.1"
 
     // Accompanist
-    accompanistVersion = "0.23.0"
+    accompanistVersion = "0.23.1"
 
     // Testing
     jUnitVersion = "4.13.2"
