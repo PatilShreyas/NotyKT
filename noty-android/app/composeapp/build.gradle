@@ -32,7 +32,7 @@ android {
         versionCode ProjectConfig.versionCode
         versionName ProjectConfig.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "dev.shreyaspatil.noty.composeapp.HiltComposeApplicationRunner"
     }
 
     packagingOptions {
@@ -166,10 +166,18 @@ dependencies {
 
     // Android Testing
     androidTestImplementation "androidx.test:core:1.4.0"
+    androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation "androidx.test.ext:junit:$androidJUnitVersion"
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     // Needed for createComposeRule, but not createAndroidComposeRule:
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+
+    // Hilt for testing
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$daggerHiltVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
+
+    // WorkManager for testing
+    androidTestImplementation "androidx.work:work-testing:$workmanagerVersion"
 
     // Leak Canary
     devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
