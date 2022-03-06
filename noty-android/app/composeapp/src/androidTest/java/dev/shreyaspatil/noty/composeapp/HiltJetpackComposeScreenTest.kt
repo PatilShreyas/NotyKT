@@ -17,12 +17,14 @@
 package dev.shreyaspatil.noty.composeapp
 
 import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dev.shreyaspatil.noty.composeapp.rule.WorkManagerRule
 import dev.shreyaspatil.noty.composeapp.ui.MainActivity
+import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.view.state.State
 import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
 import org.junit.Rule
@@ -48,6 +50,11 @@ abstract class HiltJetpackComposeScreenTest {
 
     fun runTest(
         body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit
-    ) =
-        composeTestRule.run(body)
+    ) = composeTestRule.run(body)
+
+    fun setNotyContent(content: @Composable () -> Unit) = composeTestRule.setContent {
+        NotyTheme {
+            content()
+        }
+    }
 }
