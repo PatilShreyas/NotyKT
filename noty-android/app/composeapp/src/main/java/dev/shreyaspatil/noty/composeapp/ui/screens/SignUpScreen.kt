@@ -38,7 +38,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
@@ -51,7 +50,11 @@ import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 
 @Composable
-fun SignUpScreen(navController: NavHostController, viewModel: RegisterViewModel) {
+fun SignUpScreen(
+    viewModel: RegisterViewModel,
+    onNavigateUp: () -> Unit,
+    onNavigateToNotes: () -> Unit
+) {
     val state by viewModel.collectState()
 
     SignUpContent(
@@ -66,16 +69,14 @@ fun SignUpScreen(navController: NavHostController, viewModel: RegisterViewModel)
         onPasswordChange = viewModel::setPassword,
         onConfirmPasswordChanged = viewModel::setConfirmPassword,
         onSignUpClick = viewModel::register,
-        onNavigateUp = { navController.navigateUp() },
+        onNavigateUp = onNavigateUp,
         error = state.error
     )
 
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
-            navController.navigate(Screen.Notes.route) {
-                launchSingleTop = true
-                popUpTo(NOTY_NAV_HOST_ROUTE)
-            }
+            onNavigateToNotes()
+
         }
     }
 }

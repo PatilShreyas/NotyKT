@@ -44,7 +44,6 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
@@ -65,8 +64,8 @@ import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 
 @Composable
 fun NoteDetailsScreen(
-    navController: NavHostController,
-    viewModel: NoteDetailViewModel
+    viewModel: NoteDetailViewModel,
+    onNavigateUp: () -> Unit
 ) {
     val state by viewModel.collectState()
     val context = LocalContext.current
@@ -82,7 +81,7 @@ fun NoteDetailsScreen(
         onNoteChange = viewModel::setNote,
         onSaveClick = viewModel::save,
         onDeleteClick = { showDeleteNoteConfirmation = true },
-        onNavigateUp = { navController.navigateUp() },
+        onNavigateUp = onNavigateUp,
         onShareNoteAsText = { context.shareNoteText(state.title ?: "", state.note ?: "") },
         onShareNoteAsImage = { bitmap ->
             val uri = saveBitmap(context, bitmap.asAndroidBitmap())
@@ -100,7 +99,7 @@ fun NoteDetailsScreen(
 
     LaunchedEffect(state.finished) {
         if (state.finished) {
-            navController.navigateUp()
+           onNavigateUp()
         }
     }
 }

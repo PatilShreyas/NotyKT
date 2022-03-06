@@ -35,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
@@ -45,8 +44,8 @@ import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 
 @Composable
 fun AddNoteScreen(
-    navController: NavHostController,
-    viewModel: AddNoteViewModel
+    viewModel: AddNoteViewModel,
+    onNavigateUp: () -> Unit
 ) {
     val state by viewModel.collectState()
 
@@ -59,12 +58,12 @@ fun AddNoteScreen(
         onNoteChange = viewModel::setNote,
         onClickAddNote = viewModel::add,
         error = state.errorMessage,
-        onNavigateUp = { navController.navigateUp() }
+        onNavigateUp = onNavigateUp
     )
 
     LaunchedEffect(state.added) {
         if (state.added) {
-            navController.navigateUp()
+            onNavigateUp()
         }
     }
 }

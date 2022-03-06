@@ -39,22 +39,23 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.button.NotyFullWidthButton
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
-import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
-import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
+fun LoginScreen(
+    viewModel: LoginViewModel,
+    onNavigateToSignup: () -> Unit,
+    onNavigateToNotes: () -> Unit
+) {
 
     val state by viewModel.collectState()
 
@@ -67,16 +68,13 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel) {
         onUsernameChange = viewModel::setUsername,
         onPasswordChange = viewModel::setPassword,
         onLoginClick = viewModel::login,
-        onSignupClick = { navController.navigate(Screen.SignUp.route) },
+        onSignupClick = onNavigateToSignup,
         error = state.error
     )
 
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
-            navController.navigate(Screen.Notes.route) {
-                launchSingleTop = true
-                popUpTo(NOTY_NAV_HOST_ROUTE)
-            }
+            onNavigateToNotes()
         }
     }
 }
