@@ -17,24 +17,18 @@
 package dev.shreyaspatil.noty.composeapp.component.note
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import junit.framework.Assert.assertEquals
-import org.junit.Rule
+import dev.shreyaspatil.noty.composeapp.JetpackComposeTest
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class NoteCardTest {
-
-    @JvmField
-    @Rule
-    val composeTestRule = createComposeRule()
+class NoteCardTest: JetpackComposeTest() {
 
     @Test
     fun testNoteCard() {
         var clickCount = 0
-        // Start the app
-        composeTestRule.setContent {
+        setTestContent {
             NoteCard(title = "Lorem Ipsum", note = "Hello World") {
                 clickCount++
             }

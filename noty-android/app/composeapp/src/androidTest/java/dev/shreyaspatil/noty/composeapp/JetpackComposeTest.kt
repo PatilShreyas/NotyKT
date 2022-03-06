@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component.text
+package dev.shreyaspatil.noty.composeapp
 
-sealed class TextFieldValue<T>(val data: T) {
-    class Valid<T>(data: T) : TextFieldValue<T>(data)
-    class Invalid<T>(data: T) : TextFieldValue<T>(data)
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.junit4.createComposeRule
+import org.junit.Rule
+
+abstract class JetpackComposeTest {
+
+    @JvmField
+    @Rule
+    val composeTestRule = createComposeRule()
+
+    fun setTestContent(composable: @Composable () -> Unit) = composeTestRule.setContent(composable)
 }
