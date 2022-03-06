@@ -96,6 +96,8 @@ class LoginScreenTest : HiltJetpackComposeScreenTest() {
         closeKeyboard.tryEmit(Unit)
         waitForIdle()
 
+        Thread.sleep(500)
+
         onNodeWithText("Login").performClick()
         waitForIdle()
 
@@ -124,6 +126,8 @@ class LoginScreenTest : HiltJetpackComposeScreenTest() {
         onNodeWithTag("Password").performTextInput("johndoe1234")
         closeKeyboard.tryEmit(Unit)
         waitForIdle()
+
+        Thread.sleep(500)
 
         onNodeWithText("Login").performClick()
         waitForIdle()
