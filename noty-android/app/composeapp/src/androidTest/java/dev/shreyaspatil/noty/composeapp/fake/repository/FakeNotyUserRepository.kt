@@ -36,7 +36,7 @@ class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
         users.add(
             UserCredentials(
                 username = "johndoe",
-                password = "johndoe",
+                password = "johndoe1234",
                 token = "johndoejohndoe"
             )
         )
@@ -60,7 +60,7 @@ class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
         password: String
     ): Either<AuthCredential> {
         return users.find { it.username == username && it.password == password }.let {
-            if (it != null) Either.success(AuthCredential(it.token)) else Either.error("Not exist")
+            if (it != null) Either.success(AuthCredential(it.token)) else Either.error("User not exist")
         }
     }
 }
