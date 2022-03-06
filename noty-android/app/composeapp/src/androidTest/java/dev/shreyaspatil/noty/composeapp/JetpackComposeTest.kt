@@ -16,7 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp
 
-import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import org.junit.Rule
 
@@ -26,5 +26,5 @@ abstract class JetpackComposeTest {
     @Rule
     val composeTestRule = createComposeRule()
 
-    fun setTestContent(composable: @Composable () -> Unit) = composeTestRule.setContent(composable)
+    fun runTest(body: ComposeContentTestRule.() -> Unit) = composeTestRule.run(body)
 }

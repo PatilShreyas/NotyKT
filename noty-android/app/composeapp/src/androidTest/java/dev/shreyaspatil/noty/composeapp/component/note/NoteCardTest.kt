@@ -26,16 +26,16 @@ import org.junit.Test
 class NoteCardTest: JetpackComposeTest() {
 
     @Test
-    fun testNoteCard() {
+    fun testNoteCard() = runTest {
         var clickCount = 0
-        setTestContent {
+        setContent {
             NoteCard(title = "Lorem Ipsum", note = "Hello World") {
                 clickCount++
             }
         }
 
-        val titleNode = composeTestRule.onNodeWithText("Lorem Ipsum")
-        val noteNode = composeTestRule.onNodeWithText("Hello World")
+        val titleNode = onNodeWithText("Lorem Ipsum")
+        val noteNode = onNodeWithText("Hello World")
 
         // Title and note should be displayed
         titleNode.assertIsDisplayed()
