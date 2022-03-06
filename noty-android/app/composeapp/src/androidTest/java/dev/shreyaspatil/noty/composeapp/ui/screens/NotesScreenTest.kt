@@ -34,6 +34,8 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -143,9 +145,13 @@ class NotesScreenTest : HiltJetpackComposeScreenTest() {
         setNotyContent { NotesScreen() }
         registerIdlingResource(prefillNotes())
 
+        waitForIdle()
+        onNodeWithTag("notesList").performScrollToIndex(0)
+        waitForIdle()
+
         val notes = notes()
-        onNodeWithText(notes.first().title).assertIsDisplayed()
-        onNodeWithText(notes.first().note).assertIsDisplayed()
+        onNodeWithText(notes.first().title).assertExists()
+        onNodeWithText(notes.first().note).assertExists()
 
         // Since it's LazyColumn, last note should not exist
         onNodeWithText(notes.last().title).assertDoesNotExist()
@@ -230,6 +236,9 @@ class NotesScreenTest : HiltJetpackComposeScreenTest() {
         }
     }
 
+    @After
+    fun tearDown() = runBlocking { noteRepository.deleteAllNotes() }
+
     private fun prefillNotes() = addNotes(notes())
 
     @Suppress("SameParameterValue")
@@ -264,6 +273,7 @@ class NotesScreenTest : HiltJetpackComposeScreenTest() {
         init {
             GlobalScope.launch {
                 noteRepository.addNotes(notes)
+                delay(1000)
                 isIdleNow = true
             }
         }
