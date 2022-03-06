@@ -77,7 +77,7 @@ class LoginScreenTest : HiltJetpackComposeScreenTest() {
     }
 
     @Test
-    fun showDoNothing_whenEnteredWrongCredentials() = runTest {
+    fun showDoNotExistError_whenEnteredWrongCredentials() = runTest {
         var navigatedToNotes = false
         val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
         setNotyContent {
@@ -91,6 +91,8 @@ class LoginScreenTest : HiltJetpackComposeScreenTest() {
         waitForIdle()
         closeKeyboard.tryEmit(Unit)
         waitForIdle()
+
+        Thread.sleep(500)
 
         onNodeWithTag("Password").performTextInput("wrongpassword")
         closeKeyboard.tryEmit(Unit)
@@ -122,6 +124,8 @@ class LoginScreenTest : HiltJetpackComposeScreenTest() {
         waitForIdle()
         closeKeyboard.tryEmit(Unit)
         waitForIdle()
+
+        Thread.sleep(500)
 
         onNodeWithTag("Password").performTextInput("johndoe1234")
         closeKeyboard.tryEmit(Unit)
