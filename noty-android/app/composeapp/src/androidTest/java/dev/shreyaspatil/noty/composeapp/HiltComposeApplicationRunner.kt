@@ -22,7 +22,7 @@ import androidx.test.runner.AndroidJUnitRunner
 import dagger.hilt.android.testing.HiltTestApplication
 
 @Suppress("unused")
-class HiltComposeApplicationRunner: AndroidJUnitRunner() {
+class HiltComposeApplicationRunner : AndroidJUnitRunner() {
     override fun newApplication(
         cl: ClassLoader?,
         className: String?,

@@ -56,7 +56,6 @@ fun LoginScreen(
     onNavigateToSignup: () -> Unit,
     onNavigateToNotes: () -> Unit
 ) {
-
     val state by viewModel.collectState()
 
     LoginContent(

@@ -42,8 +42,6 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
-import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
-import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
@@ -76,7 +74,6 @@ fun SignUpScreen(
     LaunchedEffect(state.isLoggedIn) {
         if (state.isLoggedIn) {
             onNavigateToNotes()
-
         }
     }
 }

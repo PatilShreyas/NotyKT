@@ -41,7 +41,6 @@ class WorkManagerRule : TestRule {
                     Log.d("WorkManagerRule", "Do some teardown")
                 }
             }
-
         }
     }
 }

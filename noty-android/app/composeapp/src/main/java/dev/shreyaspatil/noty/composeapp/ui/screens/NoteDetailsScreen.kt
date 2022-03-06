@@ -99,7 +99,7 @@ fun NoteDetailsScreen(
 
     LaunchedEffect(state.finished) {
         if (state.finished) {
-           onNavigateUp()
+            onNavigateUp()
         }
     }
 }

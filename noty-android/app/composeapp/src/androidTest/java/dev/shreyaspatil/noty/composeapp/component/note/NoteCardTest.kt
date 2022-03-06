@@ -23,7 +23,7 @@ import dev.shreyaspatil.noty.composeapp.JetpackComposeTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class NoteCardTest: JetpackComposeTest() {
+class NoteCardTest : JetpackComposeTest() {
 
     @Test
     fun testNoteCard() = runTest {

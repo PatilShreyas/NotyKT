@@ -46,6 +46,8 @@ abstract class HiltJetpackComposeScreenTest {
     inline fun <reified T : BaseViewModel<out State>> viewModel() =
         composeTestRule.activity.viewModels<T>().value
 
-    fun runTest(body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit) =
+    fun runTest(
+        body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit
+    ) =
         composeTestRule.run(body)
 }

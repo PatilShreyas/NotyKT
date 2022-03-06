@@ -28,7 +28,7 @@ data class UserCredentials(val username: String, val password: String, val token
  *
  * This stored credentials in memory
  */
-class FakeNotyUserRepository @Inject constructor(): NotyUserRepository {
+class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
     private val users = mutableListOf<UserCredentials>()
 
     init {

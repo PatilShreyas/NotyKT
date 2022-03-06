@@ -34,15 +34,15 @@ import dev.shreyaspatil.noty.repository.local.NotyLocalNoteRepository
     components = [SingletonComponent::class],
     replaces = [RepositoryModule::class]
 )
-interface FakeAnalyticsModule {
+interface FakeRepositoryModule {
     @Binds
-    fun notyAuthRepository(notyAuthRepository: FakeNotyUserRepository): NotyUserRepository
+    fun notyAuthRepository(repository: FakeNotyUserRepository): NotyUserRepository
 
     @Binds
     @LocalRepository
-    fun notyLocalNoteRepository(localRepository: NotyLocalNoteRepository): NotyNoteRepository
+    fun notyLocalNoteRepository(repository: NotyLocalNoteRepository): NotyNoteRepository
 
     @Binds
     @RemoteRepository
-    fun notyRemoteNoteRepository(remoteRepository: FakeNotyNoteRemoteRepository): NotyNoteRepository
+    fun notyRemoteNoteRepository(repository: FakeNotyNoteRemoteRepository): NotyNoteRepository
 }
