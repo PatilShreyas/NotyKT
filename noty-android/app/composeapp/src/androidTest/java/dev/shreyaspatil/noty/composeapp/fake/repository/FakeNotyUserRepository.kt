@@ -60,7 +60,11 @@ class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
         password: String
     ): Either<AuthCredential> {
         return users.find { it.username == username && it.password == password }.let {
-            if (it != null) Either.success(AuthCredential(it.token)) else Either.error("User not exist")
+            if (it != null) {
+                Either.success(AuthCredential(it.token))
+            } else {
+                Either.error("User not exist")
+            }
         }
     }
 }
