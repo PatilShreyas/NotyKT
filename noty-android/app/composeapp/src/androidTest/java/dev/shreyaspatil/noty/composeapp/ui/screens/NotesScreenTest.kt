@@ -25,7 +25,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import dagger.hilt.android.testing.HiltAndroidTest
-import dev.shreyaspatil.noty.composeapp.HiltJetpackComposeScreenTest
+import dev.shreyaspatil.noty.composeapp.NotyScreenTest
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
@@ -45,7 +45,7 @@ import javax.inject.Inject
 
 @DelicateCoroutinesApi
 @HiltAndroidTest
-class NotesScreenTest : HiltJetpackComposeScreenTest() {
+class NotesScreenTest : NotyScreenTest() {
 
     @LocalRepository
     @Inject

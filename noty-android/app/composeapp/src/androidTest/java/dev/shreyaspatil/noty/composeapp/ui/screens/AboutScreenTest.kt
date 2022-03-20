@@ -22,12 +22,12 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import dagger.hilt.android.testing.HiltAndroidTest
 import dev.shreyaspatil.noty.composeapp.BuildConfig
-import dev.shreyaspatil.noty.composeapp.HiltJetpackComposeScreenTest
+import dev.shreyaspatil.noty.composeapp.NotyScreenTest
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 @HiltAndroidTest
-class AboutScreenTest : HiltJetpackComposeScreenTest() {
+class AboutScreenTest : NotyScreenTest() {
     @Test
     fun testAboutScreen() = runTest {
         var navigatingUp = false

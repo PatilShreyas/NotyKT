@@ -25,7 +25,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import dagger.hilt.android.testing.HiltAndroidTest
-import dev.shreyaspatil.noty.composeapp.HiltJetpackComposeScreenTest
+import dev.shreyaspatil.noty.composeapp.NotyScreenTest
 import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -39,7 +39,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class NoteDetailsScreenTest : HiltJetpackComposeScreenTest() {
+class NoteDetailsScreenTest : NotyScreenTest() {
 
     @LocalRepository
     @Inject

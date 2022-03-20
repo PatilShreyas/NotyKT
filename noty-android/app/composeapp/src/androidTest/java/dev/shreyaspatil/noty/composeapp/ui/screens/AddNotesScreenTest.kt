@@ -23,12 +23,12 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import dagger.hilt.android.testing.HiltAndroidTest
-import dev.shreyaspatil.noty.composeapp.HiltJetpackComposeScreenTest
+import dev.shreyaspatil.noty.composeapp.NotyScreenTest
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 @HiltAndroidTest
-class AddNotesScreenTest : HiltJetpackComposeScreenTest() {
+class AddNotesScreenTest : NotyScreenTest() {
 
     @Test
     fun navigateUp_onClickBackIcon() = runTest {

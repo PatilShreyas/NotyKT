@@ -29,8 +29,13 @@ import dev.shreyaspatil.noty.view.state.State
 import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
 import org.junit.Rule
 
+/**
+ * Base spec for testing Jetpack Compose screens
+ *
+ * This takes care of instantiating Hilt, WorkManager.
+ */
 @Suppress("LeakingThis")
-abstract class HiltJetpackComposeScreenTest {
+abstract class NotyScreenTest {
     @JvmField
     @Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)

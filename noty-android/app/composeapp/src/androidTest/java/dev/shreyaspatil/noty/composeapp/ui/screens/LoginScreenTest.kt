@@ -25,7 +25,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import dagger.hilt.android.testing.HiltAndroidTest
-import dev.shreyaspatil.noty.composeapp.HiltJetpackComposeScreenTest
+import dev.shreyaspatil.noty.composeapp.NotyScreenTest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -35,7 +35,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalComposeUiApi::class)
 @HiltAndroidTest
-class LoginScreenTest : HiltJetpackComposeScreenTest() {
+class LoginScreenTest : NotyScreenTest() {
 
     @Test
     fun navigateToSignup_onClickingSignupText() = runTest {
