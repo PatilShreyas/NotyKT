@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.fake.repository
+package dev.shreyaspatil.noty.composeapp.fake.service
 
+import dev.shreyaspatil.noty.composeapp.testUtil.errorResponse
+import dev.shreyaspatil.noty.composeapp.testUtil.successResponse
 import dev.shreyaspatil.noty.core.model.AuthCredential
-import dev.shreyaspatil.noty.core.repository.Either
-import dev.shreyaspatil.noty.core.repository.NotyUserRepository
+import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
+import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
+import dev.shreyaspatil.noty.data.remote.model.response.AuthResponse
+import dev.shreyaspatil.noty.data.remote.model.response.State
+import retrofit2.Response
 import javax.inject.Inject
 
 data class UserCredentials(val username: String, val password: String, val token: String)
 
 /**
- * Fake implementation for user repository
+ * Fake implementation for user service
  *
  * This stored credentials in memory
  */
-class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
+class FakeNotyAuthService @Inject constructor() : NotyAuthService {
     private val users = mutableListOf<UserCredentials>()
 
     init {
@@ -42,8 +47,11 @@ class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
         )
     }
 
-    override suspend fun addUser(username: String, password: String): Either<AuthCredential> {
-        if (users.any { it.username == username }) return Either.error("User already exist")
+    override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> {
+        val (username, password) = authRequest
+        if (users.any { it.username == username }) {
+            return errorResponse(400, AuthResponse(State.FAILED, "User already exist", null))
+        }
         val credential = AuthCredential("$username-$password")
         users.add(
             UserCredentials(
@@ -52,18 +60,16 @@ class FakeNotyUserRepository @Inject constructor() : NotyUserRepository {
                 token = credential.token
             )
         )
-        return Either.success(credential)
+        return successResponse(AuthResponse(State.SUCCESS, "", credential.token))
     }
 
-    override suspend fun getUserByUsernameAndPassword(
-        username: String,
-        password: String
-    ): Either<AuthCredential> {
+    override suspend fun login(authRequest: AuthRequest): Response<AuthResponse> {
+        val (username, password) = authRequest
         return users.find { it.username == username && it.password == password }.let {
             if (it != null) {
-                Either.success(AuthCredential(it.token))
+                successResponse(AuthResponse(State.SUCCESS, "", it.token))
             } else {
-                Either.error("User not exist")
+                errorResponse(401, AuthResponse(State.UNAUTHORIZED, "User not exist", null))
             }
         }
     }
