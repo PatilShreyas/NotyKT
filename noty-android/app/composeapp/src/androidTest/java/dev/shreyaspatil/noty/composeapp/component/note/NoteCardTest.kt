@@ -19,11 +19,11 @@ package dev.shreyaspatil.noty.composeapp.component.note
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import dev.shreyaspatil.noty.composeapp.JetpackComposeTest
+import dev.shreyaspatil.noty.composeapp.NotyComposableTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class NoteCardTest : JetpackComposeTest() {
+class NoteCardTest : NotyComposableTest() {
 
     @Test
     fun testNoteCard() = runTest {

@@ -20,7 +20,10 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import org.junit.Rule
 
-abstract class JetpackComposeTest {
+/**
+ * A base spec class for testing Composable function.
+ */
+abstract class NotyComposableTest {
 
     @JvmField
     @Rule

@@ -21,10 +21,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
-import dev.shreyaspatil.noty.composeapp.JetpackComposeTest
+import dev.shreyaspatil.noty.composeapp.NotyComposableTest
 import org.junit.Test
 
-class ConnectivityStatusTest : JetpackComposeTest() {
+class ConnectivityStatusTest : NotyComposableTest() {
     @Test
     fun testNoConnectivity() = runTest {
         setContent {
