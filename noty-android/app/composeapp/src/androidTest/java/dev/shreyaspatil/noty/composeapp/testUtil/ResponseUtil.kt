@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.composeapp.component.text
+package dev.shreyaspatil.noty.composeapp.testUtil
 
-sealed class TextFieldValue<T>(val data: T) {
-    class Valid<T>(data: T) : TextFieldValue<T>(data)
-    class Invalid<T>(data: T) : TextFieldValue<T>(data)
-}
+import dev.shreyaspatil.noty.core.utils.json
+import okhttp3.ResponseBody
+import retrofit2.Response
+
+inline fun <reified T> errorResponse(
+    code: Int,
+    response: T
+): Response<T> = Response.error(code, ResponseBody.create(null, response.json))
+
+inline fun <reified T> successResponse(response: T): Response<T> = Response.success(response)

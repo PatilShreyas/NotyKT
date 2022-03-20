@@ -18,6 +18,10 @@ apply plugin: 'kotlin'
 
 test {
     useJUnitPlatform()
+    kover {
+        disabled = false
+        binaryReportFile.set(file("$buildDir/custom/result.bin"))
+    }
 }
 
 dependencies {

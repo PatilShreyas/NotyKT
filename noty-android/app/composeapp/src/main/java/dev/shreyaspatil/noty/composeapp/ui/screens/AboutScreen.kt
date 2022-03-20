@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import dev.shreyaspatil.noty.composeapp.BuildConfig
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
@@ -53,10 +52,10 @@ import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.utils.IntentUtils
 
 @Composable
-fun AboutScreen(navController: NavController) {
+fun AboutScreen(onNavigateUp: () -> Unit) {
     NotyScaffold(
         notyTopAppBar = {
-            NotyTopAppBar(onNavigateUp = { navController.navigateUp() })
+            NotyTopAppBar(onNavigateUp = onNavigateUp)
         },
         content = {
             AboutContent()

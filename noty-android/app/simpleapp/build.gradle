@@ -49,12 +49,6 @@ android {
         }
     }
 
-    flavorDimensions "default"
-    productFlavors {
-        stage {}
-        dev {}
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -136,5 +130,6 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
     // Leak Canary
-    devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    // Uncomment this when have to check for leaks
+    // devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }

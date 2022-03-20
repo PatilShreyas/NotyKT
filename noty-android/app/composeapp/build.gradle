@@ -32,16 +32,18 @@ android {
         versionCode ProjectConfig.versionCode
         versionName ProjectConfig.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "dev.shreyaspatil.noty.composeapp.HiltComposeApplicationRunner"
     }
 
     packagingOptions {
-        exclude 'META-INF/AL2.0'
-        exclude 'META-INF/LGPL2.1'
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 
     buildTypes {
         debug {
+            testCoverageEnabled true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -50,12 +52,6 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-
-    flavorDimensions "default"
-    productFlavors {
-        stage {}
-        dev {}
     }
 
     compileOptions {
@@ -127,7 +123,6 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$composeVersion"
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "androidx.compose.ui:ui-tooling-preview:$composeVersion"
-    implementation "androidx.compose.ui:ui-test:$composeVersion"
 
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
@@ -165,9 +160,21 @@ dependencies {
     testImplementation "junit:junit:$jUnitVersion"
 
     // Android Testing
+    androidTestImplementation "androidx.test:core:1.4.0"
+    androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation "androidx.test.ext:junit:$androidJUnitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
+    // Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+
+    // Hilt for testing
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$daggerHiltVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
+
+    // WorkManager for testing
+    androidTestImplementation "androidx.work:work-testing:$workmanagerVersion"
 
     // Leak Canary
-    devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    // Uncomment this when have to check for leaks
+    // debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }

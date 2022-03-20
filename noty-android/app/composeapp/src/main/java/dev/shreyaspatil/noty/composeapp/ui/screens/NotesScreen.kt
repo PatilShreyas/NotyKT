@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavHostController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
@@ -43,14 +42,18 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
 import dev.shreyaspatil.noty.composeapp.component.note.NotesList
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
-import dev.shreyaspatil.noty.composeapp.navigation.NOTY_NAV_HOST_ROUTE
-import dev.shreyaspatil.noty.composeapp.ui.Screen
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 
 @Composable
-fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
+fun NotesScreen(
+    viewModel: NotesViewModel,
+    onNavigateToAbout: () -> Unit,
+    onNavigateToAddNote: () -> Unit,
+    onNavigateToNoteDetail: (String) -> Unit,
+    onNavigateToLogin: () -> Unit
+) {
     val state by viewModel.collectState()
 
     val isInDarkMode = isSystemInDarkTheme()
@@ -63,12 +66,10 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
         isConnectivityAvailable = state.isConnectivityAvailable,
         onRefresh = viewModel::syncNotes,
         onToggleTheme = { viewModel.setDarkMode(!isInDarkMode) },
-        onAboutClick = { navController.navigate(Screen.About.route) },
-        onAddNoteClick = { navController.navigate(Screen.AddNote.route) },
+        onAboutClick = onNavigateToAbout,
+        onAddNoteClick = onNavigateToAddNote,
         onLogoutClick = { showLogoutConfirmation = true },
-        onNavigateToNoteDetail = { noteId ->
-            navController.navigate(Screen.NotesDetail.route(noteId))
-        }
+        onNavigateToNoteDetail = onNavigateToNoteDetail
     )
 
     LogoutConfirmation(
@@ -80,10 +81,7 @@ fun NotesScreen(navController: NavHostController, viewModel: NotesViewModel) {
     val isUserLoggedIn = state.isUserLoggedIn
     LaunchedEffect(isUserLoggedIn) {
         if (isUserLoggedIn == false) {
-            navController.navigate(Screen.Login.route) {
-                popUpTo(NOTY_NAV_HOST_ROUTE)
-                launchSingleTop = true
-            }
+            onNavigateToLogin()
         }
     }
 }

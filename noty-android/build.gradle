@@ -34,11 +34,13 @@ buildscript {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
         classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
+        classpath "org.jetbrains.kotlinx:kover:$koverVersion"
     }
 }
 
 apply from: 'dependencies.gradle'
 apply from: 'projectConfig.gradle'
+apply plugin: 'kover'
 
 allprojects {
     repositories {
@@ -67,4 +69,16 @@ subprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+tasks.koverMergedHtmlReport {
+    enabled = true                          // false to disable report generation
+    htmlReportDir.set(layout.buildDirectory.dir("kover-project-report/html-result"))
+    excludes = [
+            'dagger.hilt.*',
+            'hilt_aggregated_deps.*',
+            'dev.shreyaspatil.noty.simpleapp.databinding.*',
+            '*.Hilt_*',
+            '*.*_MembersInjector*',
+    ]
 }

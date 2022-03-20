@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.core.utils
+package dev.shreyaspatil.noty.composeapp
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import android.app.Application
+import android.content.Context
+import androidx.test.runner.AndroidJUnitRunner
+import dagger.hilt.android.testing.HiltTestApplication
 
-val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-
-inline fun <reified T> fromJson(json: String) = moshi.adapter(T::class.java).fromJson(json)
-
-inline val <reified T> T.json get() = moshi.adapter(T::class.java).toJson(this)
+@Suppress("unused")
+class HiltComposeApplicationRunner : AndroidJUnitRunner() {
+    override fun newApplication(
+        cl: ClassLoader?,
+        className: String?,
+        context: Context?
+    ): Application {
+        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
+    }
+}

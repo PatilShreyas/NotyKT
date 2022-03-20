@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.core.utils
+package dev.shreyaspatil.noty.composeapp
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import org.junit.Rule
 
-val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+/**
+ * A base spec class for testing Composable function.
+ */
+abstract class NotyComposableTest {
 
-inline fun <reified T> fromJson(json: String) = moshi.adapter(T::class.java).fromJson(json)
+    @JvmField
+    @Rule
+    val composeTestRule = createComposeRule()
 
-inline val <reified T> T.json get() = moshi.adapter(T::class.java).toJson(this)
+    fun runTest(body: ComposeContentTestRule.() -> Unit) = composeTestRule.run(body)
+}
