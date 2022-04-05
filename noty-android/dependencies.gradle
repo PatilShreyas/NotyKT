@@ -21,7 +21,7 @@ ext {
     // Kotlin
     kotlinVersion = "1.6.10"
     ktlintVersion = "10.2.1"
-    coroutinesVersion = "1.6.0"
+    coroutinesVersion = "1.6.1"
     koverVersion = "0.5.0"
 
     jacocoVersion = "0.8.7"
