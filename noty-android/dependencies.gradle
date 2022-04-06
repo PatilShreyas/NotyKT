@@ -24,7 +24,7 @@ ext {
     coroutinesVersion = "1.6.1"
     koverVersion = "0.5.0"
 
-    jacocoVersion = "0.8.7"
+    jacocoVersion = "0.8.8"
 
     // Android
     appcompatVersion = "1.4.1"
