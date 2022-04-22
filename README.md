@@ -58,7 +58,7 @@ _The beautiful UI of the application has been designed and developed by [Spikey 
 
 Many thanks to sponsors for helping this project to grow more.
 
-[![Ant Media](https://user-images.githubusercontent.com/54481799/95862105-16cb0e00-0d6b-11eb-9087-88888889825d.png)](https://antmedia.io)
+[![Ant Media](https://user-images.githubusercontent.com/54481799/95862105-16cb0e00-0d6b-11eb-9087-88888889825d.png)](https://antmedia.io/?utm_source=github&utm_medium=banner&utm_campaign=opensource&utm_id=1)
 
 ## License
 
