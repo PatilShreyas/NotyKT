@@ -54,6 +54,12 @@ See [contributors](https://github.com/PatilShreyas/NotyKT/graphs/contributors)
 
 _The beautiful UI of the application has been designed and developed by [Spikey Sanju](https://github.com/Spikeysanju)_
 
+## Sponsors
+
+Many thanks to sponsors for helping this project to grow more.
+
+[![Ant Media](https://user-images.githubusercontent.com/54481799/95862105-16cb0e00-0d6b-11eb-9087-88888889825d.png)](https://antmedia.io)
+
 ## License
 
 ```
