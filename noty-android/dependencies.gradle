@@ -19,10 +19,10 @@ ext {
     androidGradlePluginVersion = '7.2.0'
 
     // Kotlin
-    kotlinVersion = "1.6.10"
+    kotlinVersion = "1.6.21"
     ktlintVersion = "10.3.0"
     coroutinesVersion = "1.6.1"
-    koverVersion = "0.5.0"
+    koverVersion = "0.5.1"
 
     jacocoVersion = "0.8.8"
 
@@ -66,7 +66,7 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.1.1"
+    composeVersion = "1.2.0-beta01"
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.0"
