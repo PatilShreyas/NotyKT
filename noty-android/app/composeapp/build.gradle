@@ -133,8 +133,9 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$workmanagerVersion"
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 
     // Compose Lifecycle
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"

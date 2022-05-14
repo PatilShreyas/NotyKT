@@ -102,7 +102,7 @@ dependencies {
     implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
