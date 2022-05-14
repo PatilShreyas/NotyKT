@@ -23,7 +23,6 @@ plugins {
 
 android {
     compileSdkVersion ProjectConfig.compileSdkVersion
-    buildToolsVersion ProjectConfig.buildToolsVersion
 
     defaultConfig {
         applicationId "dev.shreyaspatil.noty.composeapp"
