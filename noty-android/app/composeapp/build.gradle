@@ -109,6 +109,7 @@ dependencies {
     implementation "com.airbnb.android:lottie-compose:$lottieComposeVersion"
 
     // Compose
+    implementation "androidx.activity:activity-compose:$activityVersion"
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
