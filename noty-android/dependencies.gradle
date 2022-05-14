@@ -16,13 +16,13 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.1.3'
+    androidGradlePluginVersion = '7.2.0'
 
     // Kotlin
-    kotlinVersion = "1.6.10"
+    kotlinVersion = "1.6.21"
     ktlintVersion = "10.3.0"
     coroutinesVersion = "1.6.1"
-    koverVersion = "0.5.0"
+    koverVersion = "0.5.1"
 
     jacocoVersion = "0.8.8"
 
@@ -33,13 +33,17 @@ ext {
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.7.1'
-    lifecycleVersion = "2.4.1"
-    navigationVersion = "2.5.0-alpha04"
+    lifecycleVersion = "2.5.0-rc01"
+    navigationVersion = "2.5.0-rc01"
     securityCryptoVersion = '1.1.0-alpha03'
     roomVersion = "2.4.2"
     dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
     capturableVersion = "1.0.3"
+
+    // Activity & Fragment
+    activityVersion = "1.4.0"
+    fragmentVersion = "1.4.0"
 
     // Design
     materialDesignVersion = "1.6.0"
@@ -66,25 +70,23 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.1.1"
+    composeVersion = "1.2.0-beta01"
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.0"
 
     // Jetpack Compose Navigation
-    composeNavVersion = "2.5.0-beta01"
+    composeNavVersion = "2.5.0-rc01"
 
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0"
-
-    lifecycleViewModelComposeVersion = "2.4.1"
 
     // Accompanist
     accompanistVersion = "0.23.1"
 
     // Testing
     jUnitVersion = "4.13.2"
-    kotestVersion = "5.1.0"
+    kotestVersion = "5.3.0"
     mockkVersion = "1.12.4"
     androidJUnitVersion = "1.1.3"
     espressoVersion = "3.3.0"

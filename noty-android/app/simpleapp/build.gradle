@@ -22,7 +22,6 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion ProjectConfig.compileSdkVersion
-    buildToolsVersion ProjectConfig.buildToolsVersion
 
     defaultConfig {
         applicationId "dev.shreyaspatil.noty.simpleapp"
@@ -63,10 +62,6 @@ android {
     }
 }
 
-configurations {
-    devDebugImplementation {}
-}
-
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
@@ -98,6 +93,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 
+    // Activity & Fragment
+    implementation "androidx.activity:activity-ktx:$activityVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
+
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
@@ -107,7 +106,7 @@ dependencies {
     implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
@@ -131,5 +130,5 @@ dependencies {
 
     // Leak Canary
     // Uncomment this when have to check for leaks
-    // devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    // debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }

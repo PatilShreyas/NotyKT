@@ -44,7 +44,7 @@ import java.util.*
 
 class NotyTaskManagerImplTest : BehaviorSpec() {
 
-    override fun beforeSpec(spec: Spec) {
+    override suspend fun beforeSpec(spec: Spec) {
         super.beforeSpec(spec)
         setupAsyncTaskExecutor()
     }
@@ -167,7 +167,7 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
         }
     }
 
-    override fun afterSpec(spec: Spec) {
+    override suspend fun afterSpec(spec: Spec) {
         super.afterSpec(spec)
         cleanupAsyncTaskExecutor()
     }
