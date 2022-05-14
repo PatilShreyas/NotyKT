@@ -33,13 +33,17 @@ ext {
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.7.1'
-    lifecycleVersion = "2.4.1"
+    lifecycleVersion = "2.5.0-rc01"
     navigationVersion = "2.5.0-rc01"
     securityCryptoVersion = '1.1.0-alpha03'
     roomVersion = "2.4.2"
     dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
     capturableVersion = "1.0.3"
+
+    // Activity & Fragment
+    activityVersion = "1.4.0"
+    fragmentVersion = "1.4.0"
 
     // Design
     materialDesignVersion = "1.6.0"
@@ -72,7 +76,7 @@ ext {
     composeConstraintLayoutVersion = "1.0.0"
 
     // Jetpack Compose Navigation
-    composeNavVersion = "2.5.0-beta01"
+    composeNavVersion = "2.5.0-rc01"
 
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0"

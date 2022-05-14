@@ -135,7 +135,6 @@ dependencies {
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
 
     // Compose Lifecycle
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"

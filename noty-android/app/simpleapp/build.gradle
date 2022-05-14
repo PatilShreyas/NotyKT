@@ -93,6 +93,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutVersion"
 
+    // Activity & Fragment
+    implementation "androidx.activity:activity-ktx:$activityVersion"
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
+
     // Dagger + Hilt
     implementation "com.google.dagger:hilt-android:$daggerHiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
@@ -102,7 +106,7 @@ dependencies {
     implementation "androidx.hilt:hilt-work:$jetpackHiltVersion"
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     // Material Design
     implementation "com.google.android.material:material:$materialDesignVersion"
