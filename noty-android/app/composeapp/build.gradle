@@ -86,10 +86,6 @@ kapt {
     correctErrorTypes true
 }
 
-configurations {
-    devDebugImplementation {}
-}
-
 dependencies {
     // Kotlin Stdlib
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"

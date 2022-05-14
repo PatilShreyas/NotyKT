@@ -62,10 +62,6 @@ android {
     }
 }
 
-configurations {
-    devDebugImplementation {}
-}
-
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
@@ -130,5 +126,5 @@ dependencies {
 
     // Leak Canary
     // Uncomment this when have to check for leaks
-    // devDebugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    // debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }
