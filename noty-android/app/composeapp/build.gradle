@@ -23,7 +23,6 @@ plugins {
 
 android {
     compileSdkVersion ProjectConfig.compileSdkVersion
-    buildToolsVersion ProjectConfig.buildToolsVersion
 
     defaultConfig {
         applicationId "dev.shreyaspatil.noty.composeapp"
@@ -87,10 +86,6 @@ kapt {
     correctErrorTypes true
 }
 
-configurations {
-    devDebugImplementation {}
-}
-
 dependencies {
     // Kotlin Stdlib
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -114,6 +109,7 @@ dependencies {
     implementation "com.airbnb.android:lottie-compose:$lottieComposeVersion"
 
     // Compose
+    implementation "androidx.activity:activity-compose:$activityVersion"
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
@@ -138,7 +134,7 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$workmanagerVersion"
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleViewModelComposeVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
 
     // Compose Lifecycle

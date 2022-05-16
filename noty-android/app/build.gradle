@@ -21,7 +21,6 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion ProjectConfig.compileSdkVersion
-    buildToolsVersion ProjectConfig.buildToolsVersion
 
     defaultConfig {
         minSdkVersion ProjectConfig.minSdkVersion
