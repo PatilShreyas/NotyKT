@@ -29,7 +29,7 @@ ext {
     // Android
     appcompatVersion = "1.4.1"
     coreKtxVersion = "1.7.0"
-    constraintlayoutVersion = "2.1.3"
+    constraintlayoutVersion = "2.1.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.7.1'
