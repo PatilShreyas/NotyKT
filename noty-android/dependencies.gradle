@@ -43,7 +43,7 @@ ext {
 
     // Activity & Fragment
     activityVersion = "1.4.0"
-    fragmentVersion = "1.4.0"
+    fragmentVersion = "1.4.1"
 
     // Design
     materialDesignVersion = "1.6.0"
