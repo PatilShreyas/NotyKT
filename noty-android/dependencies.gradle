@@ -70,7 +70,7 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeVersion = "1.2.0-beta02"
+    composeVersion = "1.2.0-beta03"
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.1"
