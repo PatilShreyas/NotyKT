@@ -50,7 +50,9 @@ Have any questions, doubts or want to present your opinions, views? You're alway
 
 ## Contributors
 
-See [contributors](https://github.com/PatilShreyas/NotyKT/graphs/contributors)
+See our rockstar contributors :smile:
+
+[![NotyKT Contributors](https://contrib.rocks/image?repo=PatilShreyas/NotyKT)](https://github.com/PatilShreyas/NotyKT/graphs/contributors)
 
 _The beautiful UI of the application has been designed and developed by [Spikey Sanju](https://github.com/Spikeysanju)_
 
