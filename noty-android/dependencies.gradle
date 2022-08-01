@@ -60,7 +60,7 @@ ext {
 
     // Networking
     retrofitVersion = "2.9.0"
-    okHttpVersion = "4.9.3"
+    okHttpVersion = "4.10.0"
 
     // Moshi
     moshiVersion = "1.13.0"
