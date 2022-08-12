@@ -27,7 +27,7 @@ ext {
     jacocoVersion = "0.8.8"
 
     // Android
-    appcompatVersion = "1.4.2"
+    appcompatVersion = "1.5.0"
     coreKtxVersion = "1.8.0"
     constraintlayoutVersion = "2.1.4"
     swipeRefreshLayoutVersion = "1.1.0"
