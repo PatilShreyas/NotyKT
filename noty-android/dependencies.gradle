@@ -42,7 +42,7 @@ ext {
     capturableVersion = "1.0.3"
 
     // Activity & Fragment
-    activityVersion = "1.5.0"
+    activityVersion = "1.5.1"
     fragmentVersion = "1.4.1"
 
     // Design
