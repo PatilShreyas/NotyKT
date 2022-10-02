@@ -25,7 +25,7 @@ buildscript {
         postgresVersion = "42.3.1"
         logbackVersion = "1.4.1"
         daggerVersion = "2.44"
-        testContainerVersion = "1.17.3"
+        testContainerVersion = "1.17.4"
         kotestVersion = "5.4.2"
     }
 
