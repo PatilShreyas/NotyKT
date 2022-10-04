@@ -26,7 +26,7 @@ buildscript {
         logbackVersion = "1.4.1"
         daggerVersion = "2.44"
         testContainerVersion = "1.17.4"
-        kotestVersion = "5.4.2"
+        kotestVersion = "5.5.0"
     }
 
     repositories {
