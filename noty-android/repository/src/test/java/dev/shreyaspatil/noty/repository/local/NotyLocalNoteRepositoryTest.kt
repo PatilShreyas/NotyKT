@@ -181,7 +181,7 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
                 }
             }
 
-            And("DAO will unpin note") {
+            And("DAO will be unable to pin note") {
                 coEvery { notesDao.updatePinnedNote(any(), any()) } throws Exception()
 
                 val response = repository.pinNote(noteEntity.noteId, false)
