@@ -32,6 +32,7 @@ class NotyTaskWorker @AssistedInject constructor(
             NotyTaskAction.CREATE -> addNote(noteId)
             NotyTaskAction.UPDATE -> updateNote(noteId)
             NotyTaskAction.DELETE -> deleteNote(noteId)
+            NotyTaskAction.PIN -> pinNote(noteId)
         }
     }
 
@@ -53,6 +54,12 @@ class NotyTaskWorker @AssistedInject constructor(
 
     private suspend fun deleteNote(noteId: String): Result {
         val response = remoteNoteRepository.deleteNote(noteId)
+        return if (response is Either.Success) Result.success() else Result.retry()
+    }
+
+    private suspend fun pinNote(noteId: String): Result {
+        val note = fetchLocalNote(noteId)
+        val response = remoteNoteRepository.pinNote(noteId, note.isPinned)
         return if (response is Either.Success) Result.success() else Result.retry()
     }
 

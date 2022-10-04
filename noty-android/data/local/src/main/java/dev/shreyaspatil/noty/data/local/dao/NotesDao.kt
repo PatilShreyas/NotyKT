@@ -61,4 +61,7 @@ interface NotesDao {
 
     @Query("UPDATE notes SET noteId = :newNoteId WHERE noteId = :oldNoteId")
     fun updateNoteId(oldNoteId: String, newNoteId: String)
+
+    @Query("UPDATE notes SET isPinned = :isPinned WHERE noteId = :noteId")
+    suspend fun updatePinnedNote(noteId: String, isPinned: Boolean)
 }

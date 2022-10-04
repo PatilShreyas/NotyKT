@@ -92,6 +92,13 @@ class NotyRemoteNoteRepository @Inject internal constructor(
         }.getOrDefault(Either.error("Something went wrong!"))
     }
 
+    override suspend fun pinNote(noteId: String, isPinned: Boolean): Either<String> {
+        return runCatching {
+            // TODO: Update this once backend changes are done
+            Either.success(noteId)
+        }.getOrDefault(Either.error("Something went wrong!"))
+    }
+
     /** Not needed (NO-OP) **/
     override fun getNoteById(noteId: String): Flow<Note> = emptyFlow()
 

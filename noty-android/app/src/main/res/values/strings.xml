@@ -20,6 +20,7 @@
     <!-- Action Menu -->
     <string name="menu_ui_mode">Light/Dark Mode</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_pin">Pin</string>
     <string name="menu_share">Share</string>
     <string name="menu_share_text">Share as Text</string>
     <string name="menu_share_image">Share as Image</string>

@@ -32,6 +32,19 @@ import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.R
 
 @Composable
+fun PinAction(onClick: () -> Unit, isPinned: Boolean) {
+    val icon = painterResource(id = if (isPinned) R.drawable.ic_pinned else R.drawable.ic_unpinned)
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = icon,
+            contentDescription = "Pinned Note",
+            modifier = Modifier
+                .padding(8.dp)
+        )
+    }
+}
+
+@Composable
 fun DeleteAction(onClick: () -> Unit) {
     val icon = painterResource(R.drawable.ic_delete)
     IconButton(onClick = onClick) {

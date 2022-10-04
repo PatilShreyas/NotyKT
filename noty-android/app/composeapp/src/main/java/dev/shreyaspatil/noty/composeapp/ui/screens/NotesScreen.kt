@@ -121,7 +121,11 @@ fun NotesContent(
                     if (isConnectivityAvailable != null) {
                         ConnectivityStatus(isConnectivityAvailable)
                     }
-                    NotesList(notes) { note -> onNavigateToNoteDetail(note.id) }
+                    NotesList(notes.sortedByDescending { it.isPinned }) { note ->
+                        onNavigateToNoteDetail(
+                            note.id
+                        )
+                    }
                 }
             }
         },

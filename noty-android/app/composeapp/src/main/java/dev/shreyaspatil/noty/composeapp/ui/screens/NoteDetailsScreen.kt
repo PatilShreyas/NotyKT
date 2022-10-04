@@ -48,6 +48,7 @@ import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
+import dev.shreyaspatil.noty.composeapp.component.action.PinAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareActionItem
 import dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown
@@ -76,9 +77,11 @@ fun NoteDetailsScreen(
         title = state.title ?: "",
         note = state.note ?: "",
         error = state.error,
+        isPinned = state.isPinned,
         showSaveButton = state.showSave,
         onTitleChange = viewModel::setTitle,
         onNoteChange = viewModel::setNote,
+        onPinClick = viewModel::updatePin,
         onSaveClick = viewModel::save,
         onDeleteClick = { showDeleteNoteConfirmation = true },
         onNavigateUp = onNavigateUp,
@@ -109,9 +112,11 @@ fun NoteDetailContent(
     title: String,
     note: String,
     error: String?,
+    isPinned: Boolean,
     showSaveButton: Boolean,
     onTitleChange: (String) -> Unit,
     onNoteChange: (String) -> Unit,
+    onPinClick: () -> Unit,
     onSaveClick: () -> Unit,
     onNavigateUp: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -131,6 +136,8 @@ fun NoteDetailContent(
                 onNavigateUp = onNavigateUp,
                 actions = {
                     NoteDetailActions(
+                        isPinned = isPinned,
+                        onPinClick = onPinClick,
                         onDeleteClick = onDeleteClick,
                         onShareNoteAsTextClick = onShareNoteAsText,
                         onShareNoteAsImageClick = {
@@ -166,11 +173,14 @@ fun NoteDetailContent(
 
 @Composable
 private fun NoteDetailActions(
+    isPinned: Boolean,
+    onPinClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onShareNoteAsTextClick: () -> Unit,
     onShareNoteAsImageClick: () -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
+    PinAction(onClick = onPinClick, isPinned)
     DeleteAction(onClick = onDeleteClick)
     ShareAction(onClick = { dropdownExpanded = true })
     ShareDropdown(

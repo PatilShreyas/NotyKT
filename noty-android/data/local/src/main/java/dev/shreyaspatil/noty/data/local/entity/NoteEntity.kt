@@ -26,5 +26,6 @@ data class NoteEntity(
     val noteId: String,
     val title: String,
     val note: String,
-    val created: Long
+    val created: Long,
+    val isPinned: Boolean
 )
