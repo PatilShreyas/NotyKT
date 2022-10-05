@@ -122,7 +122,8 @@ class NoteDetailFragment :
 
     private fun updatePinnedIcon(isPinned: Boolean) {
         pinMenuItem?.run {
-            if (isPinned) setIcon(R.drawable.ic_pinned) else setIcon(R.drawable.ic_unpinned)
+            val icon = if (isPinned) R.drawable.ic_pinned else R.drawable.ic_unpinned
+            setIcon(icon)
         }
     }
 
