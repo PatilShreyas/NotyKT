@@ -20,6 +20,7 @@ data class NoteDetailState(
     val isLoading: Boolean = false,
     val title: String? = null,
     val note: String? = null,
+    val isPinned: Boolean = false,
     val showSave: Boolean = false,
     val finished: Boolean = false,
     val error: String? = null

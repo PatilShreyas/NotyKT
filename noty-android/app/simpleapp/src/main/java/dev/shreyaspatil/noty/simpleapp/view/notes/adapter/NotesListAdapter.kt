@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.simpleapp.view.notes.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -48,6 +49,7 @@ class NotesListAdapter(
             with(binding) {
                 textTitle.text = note.title
                 textNote.text = note.note
+                pinnedIcon.isVisible = note.isPinned
                 root.setOnClickListener { onNoteClick(note) }
             }
         }

@@ -61,6 +61,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@tools:sample/lorem/random" />
 
+        <ImageView
+            android:id="@+id/pinnedIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_pinned"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_marginEnd="@dimen/dimen_8"
+            android:visibility="gone"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

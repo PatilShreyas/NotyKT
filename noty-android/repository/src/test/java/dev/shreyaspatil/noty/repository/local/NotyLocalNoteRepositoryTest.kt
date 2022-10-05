@@ -43,10 +43,11 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
             id = "UNIQUE_ID",
             title = "Lorem Ipsum",
             note = "This is body of a note!",
-            created = Date().time
+            created = Date().time,
+            isPinned = false
         )
 
-        val expectedEntity = NoteEntity(note.id, note.title, note.note, note.created)
+        val expectedEntity = NoteEntity(note.id, note.title, note.note, note.created, note.isPinned)
 
         When("Note is added") {
             And("DAO can add note") {
@@ -94,7 +95,8 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
             noteId = "UNIQUE_ID",
             title = "Lorem Ipsum",
             note = "This is body of a note!",
-            created = Date().time
+            created = Date().time,
+            isPinned = false
         )
 
         When("Note is observed") {
@@ -167,10 +169,32 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
                 }
             }
         }
+
+        When("Note is pinned") {
+            And("DAO can pin note") {
+                coEvery { notesDao.updateNotePin(any(), any()) } just Runs
+
+                repository.pinNote(noteEntity.noteId, true)
+
+                Then("Note should be get pinned in DAO") {
+                    coVerify { notesDao.updateNotePin(noteEntity.noteId, true) }
+                }
+            }
+
+            And("DAO will be unable to pin note") {
+                coEvery { notesDao.updateNotePin(any(), any()) } throws Exception()
+
+                val response = repository.pinNote(noteEntity.noteId, false)
+
+                Then("Error response should be returned") {
+                    (response as Error).message shouldBe "Unable to pin the note"
+                }
+            }
+        }
     }
 
     Given("All notes") {
-        val note = NoteEntity("ID", "Title", "Note", 0)
+        val note = NoteEntity("ID", "Title", "Note", 0, false)
         val noteEntities = listOf(note.copy(noteId = "1"), note.copy(noteId = "2"))
 
         When("Notes are observed") {
@@ -180,7 +204,7 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
 
             Then("All notes should be retrieved") {
                 (notes as Success).data shouldBe noteEntities.map {
-                    Note(it.noteId, it.title, it.note, it.created)
+                    Note(it.noteId, it.title, it.note, it.created, it.isPinned)
                 }
             }
         }

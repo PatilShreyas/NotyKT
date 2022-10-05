@@ -21,9 +21,10 @@ class NotyTask private constructor(val noteId: String, val action: NotyTaskActio
         fun create(noteId: String) = NotyTask(noteId, NotyTaskAction.CREATE)
         fun update(noteId: String) = NotyTask(noteId, NotyTaskAction.UPDATE)
         fun delete(noteId: String) = NotyTask(noteId, NotyTaskAction.DELETE)
+        fun pin(noteId: String) = NotyTask(noteId, NotyTaskAction.PIN)
     }
 }
 
 enum class NotyTaskAction {
-    CREATE, UPDATE, DELETE
+    CREATE, UPDATE, DELETE, PIN
 }

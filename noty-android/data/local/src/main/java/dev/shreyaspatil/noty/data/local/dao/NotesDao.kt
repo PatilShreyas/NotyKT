@@ -41,7 +41,7 @@ interface NotesDao {
     @Query("SELECT * FROM notes WHERE noteId = :noteId")
     fun getNoteById(noteId: String): Flow<NoteEntity?>
 
-    @Query("SELECT * FROM notes ORDER BY created DESC")
+    @Query("SELECT * FROM notes ORDER BY isPinned = 1 DESC, created")
     fun getAllNotes(): Flow<List<NoteEntity>>
 
     @Insert
@@ -61,4 +61,7 @@ interface NotesDao {
 
     @Query("UPDATE notes SET noteId = :newNoteId WHERE noteId = :oldNoteId")
     fun updateNoteId(oldNoteId: String, newNoteId: String)
+
+    @Query("UPDATE notes SET isPinned = :isPinned WHERE noteId = :noteId")
+    suspend fun updateNotePin(noteId: String, isPinned: Boolean)
 }

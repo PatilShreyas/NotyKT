@@ -64,6 +64,8 @@ class NoteDetailFragment :
      */
     private var isNoteLoaded = false
 
+    private var pinMenuItem: MenuItem? = null
+
     override val viewModel: NoteDetailViewModel by viewModels {
         args.noteId?.let { noteId ->
             NoteDetailViewModel.provideFactory(viewModelAssistedFactory, noteId)
@@ -95,8 +97,6 @@ class NoteDetailFragment :
     }
 
     override fun render(state: NoteDetailState) {
-        showProgressDialog(state.isLoading)
-
         binding.fabSave.isVisible = state.showSave
 
         val title = state.title
@@ -115,6 +115,15 @@ class NoteDetailFragment :
         val errorMessage = state.error
         if (errorMessage != null) {
             toast("Error: $errorMessage")
+        }
+
+        updatePinnedIcon(state.isPinned)
+    }
+
+    private fun updatePinnedIcon(isPinned: Boolean) {
+        pinMenuItem?.run {
+            val icon = if (isPinned) R.drawable.ic_pinned else R.drawable.ic_unpinned
+            setIcon(icon)
         }
     }
 
@@ -151,9 +160,15 @@ class NoteDetailFragment :
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        pinMenuItem = menu.findItem(R.id.action_pin)
+        super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_delete -> confirmNoteDeletion()
+            R.id.action_pin -> viewModel.togglePin()
             R.id.action_share_text -> shareText()
             R.id.action_share_image -> shareImage()
         }
