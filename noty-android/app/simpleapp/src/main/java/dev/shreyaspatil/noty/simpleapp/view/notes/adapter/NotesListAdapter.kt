@@ -50,9 +50,7 @@ class NotesListAdapter(
             with(binding) {
                 textTitle.text = note.title
                 textNote.text = note.note
-                pinnedIcon.run {
-                    if (note.isPinned) show() else hide()
-                }
+                pinnedIcon.isVisible = note.isPinned
                 root.setOnClickListener { onNoteClick(note) }
             }
         }
