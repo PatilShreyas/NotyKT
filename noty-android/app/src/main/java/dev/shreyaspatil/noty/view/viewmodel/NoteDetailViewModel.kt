@@ -131,8 +131,7 @@ class NoteDetailViewModel @AssistedInject constructor(
 
             val response = noteRepository.pinNote(noteId, !currentState.isPinned)
 
-            setState { state -> state.copy(isLoading = false) }
-            setState { state -> state.copy(isPinned = !currentState.isPinned) }
+            setState { state -> state.copy(isLoading = false, isPinned = !currentState.isPinned) }
 
             response.onSuccess { noteId ->
                 if (!NotyNoteRepository.isTemporaryNote(noteId)) {
