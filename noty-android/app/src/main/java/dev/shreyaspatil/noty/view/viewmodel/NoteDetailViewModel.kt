@@ -124,7 +124,7 @@ class NoteDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun updatePin() {
+    fun togglePin() {
         job?.cancel()
         job = viewModelScope.launch {
             setState { state -> state.copy(isLoading = true) }

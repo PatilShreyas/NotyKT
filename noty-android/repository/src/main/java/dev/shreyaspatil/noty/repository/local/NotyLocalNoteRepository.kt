@@ -82,7 +82,7 @@ class NotyLocalNoteRepository @Inject constructor(
     }.getOrDefault(Either.error("Unable to delete a note"))
 
     override suspend fun pinNote(noteId: String, isPinned: Boolean): Either<String> = runCatching {
-        notesDao.updatePinnedNote(noteId, isPinned)
+        notesDao.updateNotePin(noteId, isPinned)
         Either.success(noteId)
     }.getOrDefault(Either.error("Unable to pin the note"))
 

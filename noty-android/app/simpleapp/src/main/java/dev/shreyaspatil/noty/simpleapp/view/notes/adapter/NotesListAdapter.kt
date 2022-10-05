@@ -18,13 +18,12 @@ package dev.shreyaspatil.noty.simpleapp.view.notes.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.simpleapp.databinding.ItemNoteBinding
-import dev.shreyaspatil.noty.utils.ext.hide
-import dev.shreyaspatil.noty.utils.ext.show
 
 class NotesListAdapter(
     private val onNoteClick: (Note) -> Unit

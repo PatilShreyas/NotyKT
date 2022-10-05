@@ -81,7 +81,7 @@ fun NoteDetailsScreen(
         showSaveButton = state.showSave,
         onTitleChange = viewModel::setTitle,
         onNoteChange = viewModel::setNote,
-        onPinClick = viewModel::updatePin,
+        onPinClick = viewModel::togglePin,
         onSaveClick = viewModel::save,
         onDeleteClick = { showDeleteNoteConfirmation = true },
         onNavigateUp = onNavigateUp,
@@ -180,7 +180,7 @@ private fun NoteDetailActions(
     onShareNoteAsImageClick: () -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
-    PinAction(onClick = onPinClick, isPinned)
+    PinAction(isPinned, onClick = onPinClick)
     DeleteAction(onClick = onDeleteClick)
     ShareAction(onClick = { dropdownExpanded = true })
     ShareDropdown(

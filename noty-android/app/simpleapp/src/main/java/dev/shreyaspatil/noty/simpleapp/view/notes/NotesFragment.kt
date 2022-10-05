@@ -104,7 +104,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
         binding.emptyStateLayout.run {
             if (data.isEmpty()) show() else hide()
         }
-        notesListAdapter.submitList(data.sortedByDescending { it.isPinned })
+        notesListAdapter.submitList(data)
     }
 
     private fun onNoteClicked(note: Note) {

@@ -168,7 +168,7 @@ class NoteDetailFragment :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_delete -> confirmNoteDeletion()
-            R.id.action_pin -> viewModel.updatePin()
+            R.id.action_pin -> viewModel.togglePin()
             R.id.action_share_text -> shareText()
             R.id.action_share_image -> shareImage()
         }

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.R
 
 @Composable
-fun PinAction(onClick: () -> Unit, isPinned: Boolean) {
+fun PinAction(isPinned: Boolean, onClick: () -> Unit) {
     val icon = painterResource(id = if (isPinned) R.drawable.ic_pinned else R.drawable.ic_unpinned)
     IconButton(onClick = onClick) {
         Icon(

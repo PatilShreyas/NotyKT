@@ -20,13 +20,13 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DatabaseMigrations {
-    const val DB_VERSION = 1
+    const val DB_VERSION = 2
 
     val MIGRATIONS: Array<Migration>
         get() = arrayOf<Migration>(
             migration12()
         )
-    // TODO Uncomment when needed for migration from v1 to v2
+
     private fun migration12(): Migration = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE notes ADD COLUMN isPinned INTEGER NOT NULL")
