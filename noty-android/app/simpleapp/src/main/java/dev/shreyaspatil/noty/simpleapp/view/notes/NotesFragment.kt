@@ -172,8 +172,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private fun isConnected(): Boolean? = viewModel.currentState.isConnectivityAvailable
 
-    private fun shouldSyncNotes() = viewModel.currentState
-        .let { state -> state.error != null || state.notes.isEmpty() }
+    private fun shouldSyncNotes() = viewModel.currentState.error != null
 
     override fun getViewBinding(
         inflater: LayoutInflater,
