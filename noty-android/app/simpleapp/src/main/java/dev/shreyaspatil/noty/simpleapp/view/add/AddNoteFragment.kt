@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.databinding.AddNoteFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
+import dev.shreyaspatil.noty.utils.ext.hideKeyboard
 import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
 import dev.shreyaspatil.noty.view.state.AddNoteState
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
@@ -50,6 +51,7 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteState, AddNo
         showProgressDialog(state.isAdding)
 
         if (state.added) {
+            hideKeyboard()
             findNavController().navigateUp()
         }
 

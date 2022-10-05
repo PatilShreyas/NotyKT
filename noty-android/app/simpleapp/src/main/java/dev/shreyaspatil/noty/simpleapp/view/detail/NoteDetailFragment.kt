@@ -36,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
+import dev.shreyaspatil.noty.utils.ext.hideKeyboard
 import dev.shreyaspatil.noty.utils.ext.showDialog
 import dev.shreyaspatil.noty.utils.ext.toStringOrEmpty
 import dev.shreyaspatil.noty.utils.saveBitmap
@@ -109,6 +110,7 @@ class NoteDetailFragment :
         }
 
         if (state.finished) {
+            hideKeyboard()
             findNavController().navigateUp()
         }
 
