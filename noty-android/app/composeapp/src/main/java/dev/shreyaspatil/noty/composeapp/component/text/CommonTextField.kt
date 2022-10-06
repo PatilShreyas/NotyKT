@@ -48,10 +48,11 @@ fun NotyTextField(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
     color: Color = MaterialTheme.colors.onPrimary,
-    leadingIcon: @Composable() (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     helperText: String = "",
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Surface(modifier) {
         Column {
@@ -64,7 +65,8 @@ fun NotyTextField(
                 textStyle = TextStyle(color, fontSize = fontSize),
                 isError = isError,
                 visualTransformation = visualTransformation,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                trailingIcon = trailingIcon
             )
             if (helperText.isNotEmpty()) {
                 Spacer(modifier = Modifier.padding(2.dp))

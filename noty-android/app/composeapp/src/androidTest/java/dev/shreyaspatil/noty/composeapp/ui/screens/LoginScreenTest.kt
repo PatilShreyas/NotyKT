@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -137,6 +138,19 @@ class LoginScreenTest : NotyScreenTest() {
         waitForIdle()
 
         assertTrue(navigatedToNotes)
+    }
+
+    @Test
+    fun testIfPasswordIsVisible_onEyeButtonClicked() = runTest {
+        onNodeWithTag(
+            testTag = "TogglePasswordVisibility",
+            useUnmergedTree = true
+        ).performClick()
+
+        onNodeWithTag(
+            testTag = "TogglePasswordVisibility",
+            useUnmergedTree = true
+        ).assertContentDescriptionEquals("Hide password")
     }
 
     @Composable
