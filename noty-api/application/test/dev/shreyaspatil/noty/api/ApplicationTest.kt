@@ -237,7 +237,7 @@ class ApplicationTest : AnnotationSpec() {
 
         // pin note
         val pinRequest = PinRequest(isPinned = true).toJson()
-        put(
+        patch(
             "/note/${newNoteResponse.noteId}/pin",
             pinRequest,
             "Bearer ${authResponse.token}"
@@ -259,7 +259,7 @@ class ApplicationTest : AnnotationSpec() {
         }
 
         val unpinRequest = PinRequest(isPinned = false).toJson()
-        put(
+        patch(
             "/note/${newNoteResponse.noteId}/pin",
             unpinRequest,
             "Bearer ${authResponse.token}"

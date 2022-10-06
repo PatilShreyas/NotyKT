@@ -89,8 +89,8 @@ fun Route.NoteApi(notesController: Lazy<NotesController> = controllers.notesCont
                 call.respond(response.code, response.body)
             }
 
-            put("/{id}/pin") {
-                val noteId = call.parameters["id"] ?: return@put
+            patch("/{id}/pin") {
+                val noteId = call.parameters["id"] ?: return@patch
                 val pinRequest = runCatching { call.receive<PinRequest>() }.getOrElse {
                     throw BadRequestException(FailureMessages.MESSAGE_MISSING_PIN_DETAILS)
                 }
