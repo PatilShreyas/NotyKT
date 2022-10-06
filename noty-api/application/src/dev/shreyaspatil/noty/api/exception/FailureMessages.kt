@@ -22,4 +22,6 @@ object FailureMessages {
 
     const val MESSAGE_ACCESS_DENIED = "Access Denied!"
     const val MESSAGE_FAILED = "Something went wrong!"
+
+    const val MESSAGE_MISSING_PIN_DETAILS = "Required 'isPinned' missing."
 }

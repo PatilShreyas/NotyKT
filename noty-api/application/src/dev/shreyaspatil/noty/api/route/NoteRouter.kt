@@ -23,6 +23,7 @@ import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
+import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.generateHttpResponse
 import dev.shreyaspatil.noty.api.plugin.controllers
 import io.ktor.application.*
@@ -83,6 +84,21 @@ fun Route.NoteApi(notesController: Lazy<NotesController> = controllers.notesCont
                     ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
 
                 val noteResponse = notesController.get().deleteNote(principal.user, noteId)
+                val response = generateHttpResponse(noteResponse)
+
+                call.respond(response.code, response.body)
+            }
+
+            put("/{id}/pin") {
+                val noteId = call.parameters["id"] ?: return@put
+                val pinRequest = runCatching { call.receive<PinRequest>() }.getOrElse {
+                    throw BadRequestException(FailureMessages.MESSAGE_MISSING_PIN_DETAILS)
+                }
+
+                val principal = call.principal<UserPrincipal>()
+                    ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+
+                val noteResponse = notesController.get().pinNote(principal.user, noteId, pinRequest)
                 val response = generateHttpResponse(noteResponse)
 
                 call.respond(response.code, response.body)

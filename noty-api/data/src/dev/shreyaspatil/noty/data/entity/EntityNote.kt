@@ -29,4 +29,5 @@ class EntityNote(id: EntityID<UUID>) : UUIDEntity(id) {
     var title by Notes.title
     var note by Notes.note
     var created by Notes.created
+    var isPinned by Notes.isPinned
 }

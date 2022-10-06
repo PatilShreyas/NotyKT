@@ -20,6 +20,7 @@ import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.NoteNotFoundException
 import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
+import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.Note
 import dev.shreyaspatil.noty.api.model.response.NoteResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
@@ -38,7 +39,7 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         return try {
             val notes = noteDao.getAllByUser(user.id)
 
-            NotesResponse.success(notes.map { Note(it.id, it.title, it.note, it.created) })
+            NotesResponse.success(notes.map { Note(it.id, it.title, it.note, it.created, it.isPinned) })
         } catch (uae: UnauthorizedActivityException) {
             NotesResponse.unauthorized(uae.message)
         }
@@ -88,6 +89,21 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
             } else {
                 NoteResponse.failed("Error Occurred")
             }
+        } catch (uae: UnauthorizedActivityException) {
+            NoteResponse.unauthorized(uae.message)
+        } catch (bre: BadRequestException) {
+            NoteResponse.failed(bre.message)
+        } catch (nfe: NoteNotFoundException) {
+            NoteResponse.notFound(nfe.message)
+        }
+    }
+
+    fun pinNote(user: User, noteId: String, pinRequest: PinRequest): NoteResponse {
+        return try {
+            checkNoteExistsOrThrowException(noteId)
+            checkOwnerOrThrowException(user.id, noteId)
+            val id = noteDao.pinById(noteId, pinRequest.isPinned)
+            NoteResponse.success(id)
         } catch (uae: UnauthorizedActivityException) {
             NoteResponse.unauthorized(uae.message)
         } catch (bre: BadRequestException) {

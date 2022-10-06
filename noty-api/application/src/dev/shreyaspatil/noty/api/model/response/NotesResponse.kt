@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
  * Response model used for exposing a note.
  */
 @Serializable
-data class Note(val id: String, val title: String, val note: String, val created: Long)
+data class Note(val id: String, val title: String, val note: String, val created: Long, val isPinned: Boolean)
 
 /**
  * Response model used for exposing list of notes in API.
