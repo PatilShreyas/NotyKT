@@ -142,6 +142,9 @@ class LoginScreenTest : NotyScreenTest() {
 
     @Test
     fun testIfPasswordIsVisible_onEyeButtonClicked() = runTest {
+        setNotyContent {
+            LoginScreen()
+        }
         onNodeWithTag(
             testTag = "TogglePasswordVisibility",
             useUnmergedTree = true
