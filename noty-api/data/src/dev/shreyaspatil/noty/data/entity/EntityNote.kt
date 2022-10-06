@@ -30,4 +30,5 @@ class EntityNote(id: EntityID<UUID>) : UUIDEntity(id) {
     var note by Notes.note
     var created by Notes.created
     var isPinned by Notes.isPinned
+    var updated by Notes.updated
 }
