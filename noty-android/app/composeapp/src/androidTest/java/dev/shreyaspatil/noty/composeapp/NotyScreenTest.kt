@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp
 
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
@@ -57,7 +58,7 @@ abstract class NotyScreenTest {
         body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit
     ) = composeTestRule.run(body)
 
-    fun setNotyContent(content: @Composable () -> Unit) = composeTestRule.setContent {
+    fun setNotyContent(content: @Composable () -> Unit) = composeTestRule.activity.setContent {
         NotyTheme {
             content()
         }
