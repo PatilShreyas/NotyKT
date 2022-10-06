@@ -34,7 +34,7 @@ interface NoteDao {
     fun deleteById(id: String): Boolean
     fun isNoteOwnedByUser(id: String, userId: String): Boolean
     fun exists(id: String): Boolean
-    fun pinById(id: String, isPinned: Boolean): String
+    fun updateNotePinById(id: String, isPinned: Boolean): String
 }
 
 @Singleton
@@ -80,7 +80,7 @@ class NoteDaoImpl @Inject constructor() : NoteDao {
         EntityNote.findById(UUID.fromString(id)) != null
     }
 
-    override fun pinById(id: String, isPinned: Boolean): String = transaction {
+    override fun updateNotePinById(id: String, isPinned: Boolean): String = transaction {
         EntityNote[UUID.fromString(id)].apply {
             this.isPinned = isPinned
             this.updated = DateTime.now()

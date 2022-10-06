@@ -98,11 +98,11 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         }
     }
 
-    fun pinNote(user: User, noteId: String, pinRequest: PinRequest): NoteResponse {
+    fun updateNotePin(user: User, noteId: String, pinRequest: PinRequest): NoteResponse {
         return try {
             checkNoteExistsOrThrowException(noteId)
             checkOwnerOrThrowException(user.id, noteId)
-            val id = noteDao.pinById(noteId, pinRequest.isPinned)
+            val id = noteDao.updateNotePinById(noteId, pinRequest.isPinned)
             NoteResponse.success(id)
         } catch (uae: UnauthorizedActivityException) {
             NoteResponse.unauthorized(uae.message)

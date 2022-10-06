@@ -98,7 +98,7 @@ fun Route.NoteApi(notesController: Lazy<NotesController> = controllers.notesCont
                 val principal = call.principal<UserPrincipal>()
                     ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
 
-                val noteResponse = notesController.get().pinNote(principal.user, noteId, pinRequest)
+                val noteResponse = notesController.get().updateNotePin(principal.user, noteId, pinRequest)
                 val response = generateHttpResponse(noteResponse)
 
                 call.respond(response.code, response.body)
