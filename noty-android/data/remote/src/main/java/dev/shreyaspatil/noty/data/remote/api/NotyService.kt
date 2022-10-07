@@ -17,15 +17,11 @@
 package dev.shreyaspatil.noty.data.remote.api
 
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
+import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface NotyService {
 
@@ -43,4 +39,10 @@ interface NotyService {
 
     @DELETE("/note/{noteId}")
     suspend fun deleteNote(@Path("noteId") noteId: String): Response<NoteResponse>
+
+    @PATCH("/{noteId}/pin")
+    suspend fun updateNotePin(
+        @Path("noteId") noteId: String,
+        @Body noteRequest: NoteUpdatePinRequest
+    ): Response<NoteResponse>
 }
