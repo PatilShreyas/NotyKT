@@ -17,8 +17,8 @@
 package dev.shreyaspatil.noty.composeapp.ui
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
@@ -38,7 +38,7 @@ import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var preferenceManager: PreferenceManager
