@@ -29,6 +29,9 @@ fun TestApplicationEngine.get(url: String, token: String? = null) =
 fun TestApplicationEngine.put(url: String, body: String?, token: String? = null) =
     getResponse(HttpMethod.Put, url, body, token)
 
+fun TestApplicationEngine.patch(url: String, body: String?, token: String? = null) =
+    getResponse(HttpMethod.Patch, url, body, token)
+
 fun TestApplicationEngine.post(url: String, body: String?, token: String? = null) =
     getResponse(HttpMethod.Post, url, body, token)
 

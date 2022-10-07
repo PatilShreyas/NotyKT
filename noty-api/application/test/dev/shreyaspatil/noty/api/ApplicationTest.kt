@@ -20,6 +20,7 @@ import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
+import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.model.response.NoteResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
@@ -219,6 +220,7 @@ class ApplicationTest : AnnotationSpec() {
                 it.title shouldBe "Hey test"
                 it.note shouldBe "This is note text"
                 it.created shouldNotBe null
+                it.isPinned shouldBe false
             }
         }
 
@@ -231,6 +233,51 @@ class ApplicationTest : AnnotationSpec() {
         ).content.toModel<NoteResponse>().let { response ->
             response.status shouldBe State.SUCCESS
             response.noteId shouldNotBe null
+        }
+
+        // pin note
+        val pinRequest = PinRequest(isPinned = true).toJson()
+        patch(
+            "/note/${newNoteResponse.noteId}/pin",
+            pinRequest,
+            "Bearer ${authResponse.token}"
+        ).content.toModel<NoteResponse>().let { response ->
+            response.status shouldBe State.SUCCESS
+            response.noteId shouldNotBe null
+        }
+
+        get("/notes", "Bearer ${authResponse.token}").content.toModel<NotesResponse>().let { response ->
+            response.status shouldBe State.SUCCESS
+            response.notes shouldHaveSize 1
+            response.notes[0].let {
+                it.id shouldBe newNoteResponse.noteId
+                it.title shouldBe "Hey update"
+                it.note shouldBe "This is updated body"
+                it.created shouldNotBe null
+                it.isPinned shouldBe true
+            }
+        }
+
+        val unpinRequest = PinRequest(isPinned = false).toJson()
+        patch(
+            "/note/${newNoteResponse.noteId}/pin",
+            unpinRequest,
+            "Bearer ${authResponse.token}"
+        ).content.toModel<NoteResponse>().let { response ->
+            response.status shouldBe State.SUCCESS
+            response.noteId shouldNotBe null
+        }
+
+        get("/notes", "Bearer ${authResponse.token}").content.toModel<NotesResponse>().let { response ->
+            response.status shouldBe State.SUCCESS
+            response.notes shouldHaveSize 1
+            response.notes[0].let {
+                it.id shouldBe newNoteResponse.noteId
+                it.title shouldBe "Hey update"
+                it.note shouldBe "This is updated body"
+                it.created shouldNotBe null
+                it.isPinned shouldBe false
+            }
         }
 
         // Delete note
