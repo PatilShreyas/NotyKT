@@ -23,13 +23,17 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
@@ -81,9 +85,35 @@ class NoteDetailFragment :
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onPrepareMenu(menu: Menu) {
+                    pinMenuItem = menu.findItem(R.id.action_pin)
+
+                    super.onPrepareMenu(menu)
+                }
+
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.note_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    when (menuItem.itemId) {
+                        R.id.action_delete -> confirmNoteDeletion()
+                        R.id.action_pin -> viewModel.togglePin()
+                        R.id.action_share_text -> shareText()
+                        R.id.action_share_image -> shareImage()
+                    }
+                    return false
+                }
+            },
+            viewLifecycleOwner, Lifecycle.State.RESUMED
+        )
     }
 
     override fun initView() {
@@ -154,26 +184,6 @@ class NoteDetailFragment :
         requireContext(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     ) == PackageManager.PERMISSION_GRANTED
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.note_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        pinMenuItem = menu.findItem(R.id.action_pin)
-        super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_delete -> confirmNoteDeletion()
-            R.id.action_pin -> viewModel.togglePin()
-            R.id.action_share_text -> shareText()
-            R.id.action_share_image -> shareImage()
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun getViewBinding(
         inflater: LayoutInflater,
