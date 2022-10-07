@@ -40,7 +40,7 @@ interface NotyService {
     @DELETE("/note/{noteId}")
     suspend fun deleteNote(@Path("noteId") noteId: String): Response<NoteResponse>
 
-    @PATCH("/{noteId}/pin")
+    @PATCH("/note/{noteId}/pin")
     suspend fun updateNotePin(
         @Path("noteId") noteId: String,
         @Body noteRequest: NoteUpdatePinRequest
