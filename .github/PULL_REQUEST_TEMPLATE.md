@@ -18,13 +18,6 @@ Explain the **motivation** for making this change.
 What existing problem does the pull request solve?
 -->
 
-## Description for the changelog
-
-<!--
-Write a short (one line) summary that describes the changes in this
-pull request
--->
-
 ## A picture or screenshot regarding change
 
 <!--
@@ -44,4 +37,3 @@ Other than this, it's encouraged if you pay attention to the below checklist.
 - [ ] This change is not breaking existing flow of a system.
 - [ ] I have written test case for this change.
 - [ ] This change is tested from all aspects.
-- [ ] Implemented any new third-party library _(Which not existed before this change)_.
