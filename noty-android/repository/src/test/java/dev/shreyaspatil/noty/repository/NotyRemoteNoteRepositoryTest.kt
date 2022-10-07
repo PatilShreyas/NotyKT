@@ -22,6 +22,7 @@ import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
+import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.remote.model.response.State
@@ -206,6 +207,17 @@ class FakeNotyService : NotyService {
     }
 
     override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
+        return if (noteId == "1111") {
+            fakeNoteResponse(true)
+        } else {
+            fakeNoteResponse(false)
+        }
+    }
+
+    override suspend fun updateNotePin(
+        noteId: String,
+        noteRequest: NoteUpdatePinRequest
+    ): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
