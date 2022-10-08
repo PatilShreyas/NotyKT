@@ -58,42 +58,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val menuHost: MenuHost = requireActivity()
-
-        menuHost.addMenuProvider(
-            object : MenuProvider {
-
-                override fun onPrepareMenu(menu: Menu) {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        when (viewModel.isDarkModeEnabled()) {
-                            true -> {
-                                menu.findItem(R.id.action_dark_mode).isVisible = false
-                            }
-                            false -> {
-                                menu.findItem(R.id.action_light_mode).isVisible = false
-                            }
-                        }
-                        super.onPrepareMenu(menu)
-                    }
-                }
-
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.main_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.action_light_mode -> viewModel.setDarkMode(false)
-                        R.id.action_dark_mode -> viewModel.setDarkMode(true)
-                        R.id.action_about ->
-                            findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
-                        R.id.action_logout -> confirmLogout()
-                    }
-                    return false
-                }
-            },
-            viewLifecycleOwner, Lifecycle.State.RESUMED
-        )
+        setupMenu()
     }
 
     override fun initView() {
@@ -242,6 +207,45 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                 }
             }
         } else return
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+
+                override fun onPrepareMenu(menu: Menu) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        when (viewModel.isDarkModeEnabled()) {
+                            true -> {
+                                menu.findItem(R.id.action_dark_mode).isVisible = false
+                            }
+                            false -> {
+                                menu.findItem(R.id.action_light_mode).isVisible = false
+                            }
+                        }
+                        super.onPrepareMenu(menu)
+                    }
+                }
+
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.main_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    when (menuItem.itemId) {
+                        R.id.action_light_mode -> viewModel.setDarkMode(false)
+                        R.id.action_dark_mode -> viewModel.setDarkMode(true)
+                        R.id.action_about ->
+                            findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
+                        R.id.action_logout -> confirmLogout()
+                    }
+                    return false
+                }
+            },
+            viewLifecycleOwner, Lifecycle.State.RESUMED
+        )
     }
 
     companion object {

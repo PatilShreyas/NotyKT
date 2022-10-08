@@ -88,32 +88,7 @@ class NoteDetailFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val menuHost: MenuHost = requireActivity()
-
-        menuHost.addMenuProvider(
-            object : MenuProvider {
-                override fun onPrepareMenu(menu: Menu) {
-                    pinMenuItem = menu.findItem(R.id.action_pin)
-
-                    super.onPrepareMenu(menu)
-                }
-
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.note_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.action_delete -> confirmNoteDeletion()
-                        R.id.action_pin -> viewModel.togglePin()
-                        R.id.action_share_text -> shareText()
-                        R.id.action_share_image -> shareImage()
-                    }
-                    return false
-                }
-            },
-            viewLifecycleOwner, Lifecycle.State.RESUMED
-        )
+        setupMenu()
     }
 
     override fun initView() {
@@ -148,6 +123,35 @@ class NoteDetailFragment :
         }
 
         updatePinnedIcon(state.isPinned)
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onPrepareMenu(menu: Menu) {
+                    pinMenuItem = menu.findItem(R.id.action_pin)
+
+                    super.onPrepareMenu(menu)
+                }
+
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.note_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    when (menuItem.itemId) {
+                        R.id.action_delete -> confirmNoteDeletion()
+                        R.id.action_pin -> viewModel.togglePin()
+                        R.id.action_share_text -> shareText()
+                        R.id.action_share_image -> shareImage()
+                    }
+                    return false
+                }
+            },
+            viewLifecycleOwner, Lifecycle.State.RESUMED
+        )
     }
 
     private fun updatePinnedIcon(isPinned: Boolean) {
