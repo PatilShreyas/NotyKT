@@ -23,9 +23,13 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,9 +55,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private val notesListAdapter by autoCleaned(initializer = { NotesListAdapter(::onNoteClicked) })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupMenu()
     }
 
     override fun initView() {
@@ -179,36 +184,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
         container: ViewGroup?
     ) = NotesFragmentBinding.inflate(inflater, container, false)
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            when (viewModel.isDarkModeEnabled()) {
-                true -> {
-                    menu.findItem(R.id.action_dark_mode).isVisible = false
-                }
-                false -> {
-                    menu.findItem(R.id.action_light_mode).isVisible = false
-                }
-            }
-            super.onPrepareOptionsMenu(menu)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_light_mode -> viewModel.setDarkMode(false)
-            R.id.action_dark_mode -> viewModel.setDarkMode(true)
-            R.id.action_about ->
-                findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
-            R.id.action_logout -> confirmLogout()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun confirmLogout() {
         showDialog(
             title = "Logout?",
@@ -231,6 +206,45 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                 }
             }
         } else return
+    }
+
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+
+                override fun onPrepareMenu(menu: Menu) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        when (viewModel.isDarkModeEnabled()) {
+                            true -> {
+                                menu.findItem(R.id.action_dark_mode).isVisible = false
+                            }
+                            false -> {
+                                menu.findItem(R.id.action_light_mode).isVisible = false
+                            }
+                        }
+                        super.onPrepareMenu(menu)
+                    }
+                }
+
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.main_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    when (menuItem.itemId) {
+                        R.id.action_light_mode -> viewModel.setDarkMode(false)
+                        R.id.action_dark_mode -> viewModel.setDarkMode(true)
+                        R.id.action_about ->
+                            findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
+                        R.id.action_logout -> confirmLogout()
+                    }
+                    return false
+                }
+            },
+            viewLifecycleOwner, Lifecycle.State.RESUMED
+        )
     }
 
     companion object {

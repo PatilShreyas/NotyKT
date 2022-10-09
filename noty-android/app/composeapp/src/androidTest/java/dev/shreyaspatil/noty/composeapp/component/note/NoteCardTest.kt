@@ -29,7 +29,7 @@ class NoteCardTest : NotyComposableTest() {
     fun testNoteCard() = runTest {
         var clickCount = 0
         setContent {
-            NoteCard(title = "Lorem Ipsum", note = "Hello World") {
+            NoteCard(title = "Lorem Ipsum", note = "Hello World", isPinned = false) {
                 clickCount++
             }
         }

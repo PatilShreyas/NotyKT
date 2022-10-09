@@ -66,7 +66,12 @@ class NoteDetailViewModel @AssistedInject constructor(
             if (note != null) {
                 currentNote = note
                 setState { state ->
-                    state.copy(isLoading = false, title = note.title, note = note.note)
+                    state.copy(
+                        isLoading = false,
+                        title = note.title,
+                        note = note.note,
+                        isPinned = note.isPinned
+                    )
                 }
             } else {
                 setState { state -> state.copy(isLoading = false, finished = true) }
@@ -119,6 +124,25 @@ class NoteDetailViewModel @AssistedInject constructor(
         }
     }
 
+    fun togglePin() {
+        job?.cancel()
+        job = viewModelScope.launch {
+            setState { state -> state.copy(isLoading = true) }
+
+            val response = noteRepository.pinNote(noteId, !currentState.isPinned)
+
+            setState { state -> state.copy(isLoading = false, isPinned = !currentState.isPinned) }
+
+            response.onSuccess { noteId ->
+                if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                    scheduleNoteUpdatePin(noteId)
+                }
+            }.onFailure { message ->
+                setState { state -> state.copy(error = message) }
+            }
+        }
+    }
+
     private fun validateNote() {
         try {
             val oldTitle = currentNote.title
@@ -143,6 +167,9 @@ class NoteDetailViewModel @AssistedInject constructor(
 
     private fun scheduleNoteDelete(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.delete(noteId))
+
+    private fun scheduleNoteUpdatePin(noteId: String) =
+        notyTaskManager.scheduleTask(NotyTask.pin(noteId))
 
     @AssistedFactory
     interface Factory {

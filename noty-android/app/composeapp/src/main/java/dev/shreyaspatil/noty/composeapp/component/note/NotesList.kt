@@ -37,6 +37,7 @@ fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
                 NoteCard(
                     title = note.title,
                     note = note.note,
+                    isPinned = note.isPinned,
                     onNoteClick = { onClick(note) }
                 )
             },
