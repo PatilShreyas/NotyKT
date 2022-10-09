@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.data.local.entity
+package dev.shreyaspatil.noty.data.remote.model.request
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "notes")
-data class NoteEntity(
-
-    @PrimaryKey(autoGenerate = false)
-    val noteId: String,
-    val title: String,
-    val note: String,
-    val created: Long,
+/**
+ * @author Porush Tyagi
+ * @since 07,October,2022
+ */
+data class NoteUpdatePinRequest(
     val isPinned: Boolean
 )

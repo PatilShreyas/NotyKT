@@ -17,10 +17,11 @@
 package dev.shreyaspatil.noty.repository
 
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.Either
+import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
+import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.State
 import dev.shreyaspatil.noty.data.remote.util.getResponse
 import kotlinx.coroutines.flow.Flow
@@ -84,6 +85,18 @@ class NotyRemoteNoteRepository @Inject internal constructor(
     override suspend fun deleteNote(noteId: String): Either<String> {
         return runCatching {
             val notesResponse = notyService.deleteNote(noteId).getResponse()
+
+            when (notesResponse.status) {
+                State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                else -> Either.error(notesResponse.message)
+            }
+        }.getOrDefault(Either.error("Something went wrong!"))
+    }
+
+    override suspend fun pinNote(noteId: String, isPinned: Boolean): Either<String> {
+        return runCatching {
+            val notesResponse =
+                notyService.updateNotePin(noteId, NoteUpdatePinRequest(isPinned)).getResponse()
 
             when (notesResponse.status) {
                 State.SUCCESS -> Either.success(notesResponse.noteId!!)

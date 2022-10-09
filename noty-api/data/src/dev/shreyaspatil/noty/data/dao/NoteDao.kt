@@ -22,6 +22,7 @@ import dev.shreyaspatil.noty.data.entity.EntityUser
 import dev.shreyaspatil.noty.data.model.Note
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,6 +34,7 @@ interface NoteDao {
     fun deleteById(id: String): Boolean
     fun isNoteOwnedByUser(id: String, userId: String): Boolean
     fun exists(id: String): Boolean
+    fun updateNotePinById(id: String, isPinned: Boolean): String
 }
 
 @Singleton
@@ -47,7 +49,8 @@ class NoteDaoImpl @Inject constructor() : NoteDao {
 
     override fun getAllByUser(userId: String): List<Note> = transaction {
         EntityNote.find { Notes.user eq UUID.fromString(userId) }
-            .sortedByDescending { it.id }
+            .sortedWith(compareBy({ it.isPinned }, { it.updated }))
+            .reversed()
             .map { Note.fromEntity(it) }
     }
 
@@ -75,5 +78,12 @@ class NoteDaoImpl @Inject constructor() : NoteDao {
 
     override fun exists(id: String): Boolean = transaction {
         EntityNote.findById(UUID.fromString(id)) != null
+    }
+
+    override fun updateNotePinById(id: String, isPinned: Boolean): String = transaction {
+        EntityNote[UUID.fromString(id)].apply {
+            this.isPinned = isPinned
+            this.updated = DateTime.now()
+        }.id.value.toString()
     }
 }

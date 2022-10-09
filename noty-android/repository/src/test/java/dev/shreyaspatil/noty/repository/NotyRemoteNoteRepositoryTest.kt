@@ -22,6 +22,7 @@ import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
+import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.remote.model.response.State
@@ -176,6 +177,82 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                 }
             }
         }
+
+        When("Note is Pinned") {
+            And("Inputs Are Valid") {
+                val response = repository.pinNote(noteId = "1111", isPinned = true)
+
+                Then("Note Pinning should be requested") {
+                    coVerify {
+                        service.updateNotePin(
+                            noteId = "1111",
+                            NoteUpdatePinRequest(isPinned = true)
+                        )
+                    }
+                }
+
+                Then("Valid response should be returned") {
+                    val id = (response as Either.Success).data
+                    id shouldBe "1111"
+                }
+            }
+
+            And("Inputs are invalid") {
+                val response = repository.pinNote(noteId = "2222", isPinned = true)
+
+                Then("Note pinning should be requested") {
+                    coVerify {
+                        service.updateNotePin(
+                            noteId = "2222",
+                            NoteUpdatePinRequest(isPinned = true)
+                        )
+                    }
+                }
+
+                Then("Error response should be returned") {
+                    val message = (response as Either.Error).message
+                    message shouldBe "Failed to perform operation"
+                }
+            }
+        }
+
+        When("Note is UnPinned") {
+            And("Inputs Are Valid") {
+                val response = repository.pinNote(noteId = "1111", isPinned = false)
+
+                Then("Note Pinning should be requested") {
+                    coVerify {
+                        service.updateNotePin(
+                            noteId = "1111",
+                            NoteUpdatePinRequest(isPinned = false)
+                        )
+                    }
+                }
+
+                Then("Valid response should be returned") {
+                    val id = (response as Either.Success).data
+                    id shouldBe "1111"
+                }
+            }
+
+            And("Inputs are invalid") {
+                val response = repository.pinNote(noteId = "2222", isPinned = false)
+
+                Then("Note pinning should be requested") {
+                    coVerify {
+                        service.updateNotePin(
+                            noteId = "2222",
+                            NoteUpdatePinRequest(isPinned = false)
+                        )
+                    }
+                }
+
+                Then("Error response should be returned") {
+                    val message = (response as Either.Error).message
+                    message shouldBe "Failed to perform operation"
+                }
+            }
+        }
     }
 })
 
@@ -206,6 +283,17 @@ class FakeNotyService : NotyService {
     }
 
     override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
+        return if (noteId == "1111") {
+            fakeNoteResponse(true)
+        } else {
+            fakeNoteResponse(false)
+        }
+    }
+
+    override suspend fun updateNotePin(
+        noteId: String,
+        noteRequest: NoteUpdatePinRequest
+    ): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {

@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.data.local.entity
+package dev.shreyaspatil.noty.utils.ext
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import android.app.Activity
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
 
-@Entity(tableName = "notes")
-data class NoteEntity(
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
 
-    @PrimaryKey(autoGenerate = false)
-    val noteId: String,
-    val title: String,
-    val note: String,
-    val created: Long,
-    val isPinned: Boolean
-)
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}

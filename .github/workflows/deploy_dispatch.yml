@@ -19,6 +19,7 @@ jobs:
           git config --global user.email ${{ secrets.HEROKU_USER_EMAIL }}
           echo "$HEROKU_AUTH" > ~/.netrc
           heroku git:remote --app noty-api
-          git subtree push --prefix noty-api heroku $GITHUB_REF --force
+          git subtree split --prefix noty-api -b deployment-branch
+          git push -f heroku deployment-branch:master
         env:
           HEROKU_AUTH: ${{ secrets.HEROKU_AUTH }}

@@ -25,4 +25,6 @@ object Notes : UUIDTable() {
     var title = varchar("note_title", length = 30)
     var note = text("note_text")
     var created = datetime("created").default(DateTime.now())
+    var isPinned = bool("is_pinned").default(false)
+    var updated = datetime("updated").default(DateTime.now())
 }

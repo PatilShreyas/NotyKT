@@ -71,6 +71,11 @@ interface NotyNoteRepository {
     suspend fun deleteNote(noteId: String): Either<String>
 
     /**
+     * Pins/unpins a note having ID [noteId] based on [isPinned]
+     */
+    suspend fun pinNote(noteId: String, isPinned: Boolean): Either<String>
+
+    /**
      * Deletes all notes.
      */
     suspend fun deleteAllNotes()
