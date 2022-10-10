@@ -401,6 +401,8 @@ class ApplicationTest : AnnotationSpec() {
                     put("database.port", sqlContainer.firstMappedPort.toString())
                     put("database.name", sqlContainer.databaseName)
                     put("database.user", sqlContainer.username)
+                    put("database.maxPoolSize", "3")
+                    put("database.driver", sqlContainer.driverClassName)
                     put("database.password", sqlContainer.password)
                 }
                 module()

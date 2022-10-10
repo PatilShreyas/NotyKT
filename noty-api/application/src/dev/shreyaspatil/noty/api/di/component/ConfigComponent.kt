@@ -16,15 +16,15 @@
 
 package dev.shreyaspatil.noty.api.di.component
 
+import com.zaxxer.hikari.HikariConfig
 import dagger.Subcomponent
 import dev.shreyaspatil.noty.api.di.module.ConfigModule
 import dev.shreyaspatil.noty.api.di.module.SecretKey
-import dev.shreyaspatil.noty.data.database.DatabaseConfig
 import javax.inject.Singleton
 
 @Singleton
 @Subcomponent(modules = [ConfigModule::class])
 interface ConfigComponent {
     @SecretKey fun secretKey(): String
-    fun databaseConfig(): DatabaseConfig
+    fun databaseConfig(): HikariConfig
 }

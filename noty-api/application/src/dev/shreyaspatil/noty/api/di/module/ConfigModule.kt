@@ -16,9 +16,9 @@
 
 package dev.shreyaspatil.noty.api.di.module
 
+import com.zaxxer.hikari.HikariConfig
 import dagger.Module
 import dagger.Provides
-import dev.shreyaspatil.noty.data.database.DatabaseConfig
 import io.ktor.application.*
 import io.ktor.config.*
 import javax.inject.Singleton
@@ -30,16 +30,19 @@ object ConfigModule {
 
     @Singleton
     @Provides
-    fun databaseConfig(config: ApplicationConfig): DatabaseConfig {
+    fun databaseConfig(config: ApplicationConfig): HikariConfig {
         val dbConfig = config.config("database")
+        val host = dbConfig.property("host").getString()
+        val port = dbConfig.property("port").getString()
+        val name = dbConfig.property("name").getString()
 
-        return DatabaseConfig(
-            host = dbConfig.property("host").getString(),
-            port = dbConfig.property("port").getString(),
-            name = dbConfig.property("name").getString(),
-            user = dbConfig.property("user").getString(),
-            password = dbConfig.property("password").getString()
-        )
+        val config = HikariConfig()
+        config.jdbcUrl = "jdbc:postgresql://$host:$port/$name"
+        config.password = dbConfig.property("password").getString()
+        config.username = dbConfig.property("user").getString()
+        config.maximumPoolSize = dbConfig.property("maxPoolSize").getString().toInt()
+        config.driverClassName = dbConfig.property("driver").getString()
+        return config
     }
 
     @Singleton

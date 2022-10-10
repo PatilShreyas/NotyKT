@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.data.database
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import dev.shreyaspatil.noty.data.database.table.Notes
 import dev.shreyaspatil.noty.data.database.table.Users
 import org.jetbrains.exposed.sql.Database
@@ -25,17 +27,24 @@ import org.jetbrains.exposed.sql.transactions.transaction
 /**
  * Initializes dev.shreyaspatil.noty.data.database connection with application
  */
-fun initDatabase(databaseConfig: DatabaseConfig) {
+fun initDatabase(hikariConfig: HikariConfig) {
     val tables = arrayOf(Users, Notes)
 
-    Database.connect(
-        url = with(databaseConfig) { "jdbc:postgresql://$host:$port/$name" },
-        driver = "org.postgresql.Driver",
-        user = databaseConfig.user,
-        password = databaseConfig.password
-    )
+    Database.connect(hikari(hikariConfig))
 
     transaction {
         SchemaUtils.createMissingTablesAndColumns(*tables)
     }
+}
+
+private fun hikari(hikariConfig: HikariConfig): HikariDataSource {
+    val config = HikariConfig()
+    config.driverClassName = hikariConfig.driverClassName
+    config.password = hikariConfig.password
+    config.jdbcUrl = hikariConfig.jdbcUrl
+    config.maximumPoolSize = hikariConfig.maximumPoolSize
+    config.isAutoCommit = hikariConfig.isAutoCommit
+    config.username = hikariConfig.username
+    config.validate()
+    return HikariDataSource(config)
 }
