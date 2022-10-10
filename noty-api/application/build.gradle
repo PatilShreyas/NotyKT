@@ -15,7 +15,6 @@ repositories {
 dependencies {
     // Data module
     implementation project(":data")
-    implementation "com.zaxxer:HikariCP:$hikariVersion"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"

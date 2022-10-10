@@ -23,28 +23,30 @@ import dev.shreyaspatil.noty.data.database.table.Users
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.sql.DataSource
 
 /**
  * Initializes dev.shreyaspatil.noty.data.database connection with application
  */
-fun initDatabase(hikariConfig: HikariConfig) {
+fun initDatabase(databaseConfig: DatabaseConfig) {
     val tables = arrayOf(Users, Notes)
 
-    Database.connect(hikari(hikariConfig))
+    Database.connect(createDataSource(databaseConfig))
 
     transaction {
         SchemaUtils.createMissingTablesAndColumns(*tables)
     }
 }
 
-private fun hikari(hikariConfig: HikariConfig): HikariDataSource {
+private fun createDataSource(databaseConfig: DatabaseConfig): DataSource {
     val config = HikariConfig()
-    config.driverClassName = hikariConfig.driverClassName
-    config.password = hikariConfig.password
-    config.jdbcUrl = hikariConfig.jdbcUrl
-    config.maximumPoolSize = hikariConfig.maximumPoolSize
-    config.isAutoCommit = hikariConfig.isAutoCommit
-    config.username = hikariConfig.username
+    with(databaseConfig) {
+        config.driverClassName = driver
+        config.password = password
+        config.jdbcUrl = "jdbc:postgresql://$host:$port/$name"
+        config.maximumPoolSize = maxPoolSize
+        config.username = user
+    }
     config.validate()
     return HikariDataSource(config)
 }
