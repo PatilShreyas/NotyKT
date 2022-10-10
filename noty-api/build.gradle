@@ -26,7 +26,7 @@ buildscript {
         logbackVersion = "1.4.3"
         daggerVersion = "2.44"
         testContainerVersion = "1.17.5"
-        kotestVersion = "5.5.0"
+        kotestVersion = "5.5.1"
         hikariVersion = "5.0.1"
     }
 
