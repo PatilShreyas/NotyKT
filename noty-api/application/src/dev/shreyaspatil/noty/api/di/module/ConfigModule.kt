@@ -32,13 +32,14 @@ object ConfigModule {
     @Provides
     fun databaseConfig(config: ApplicationConfig): DatabaseConfig {
         val dbConfig = config.config("database")
-
         return DatabaseConfig(
             host = dbConfig.property("host").getString(),
             port = dbConfig.property("port").getString(),
             name = dbConfig.property("name").getString(),
             user = dbConfig.property("user").getString(),
-            password = dbConfig.property("password").getString()
+            password = dbConfig.property("password").getString(),
+            driver = dbConfig.property("driver").getString(),
+            maxPoolSize = dbConfig.property("maxPoolSize").getString().toInt()
         )
     }
 

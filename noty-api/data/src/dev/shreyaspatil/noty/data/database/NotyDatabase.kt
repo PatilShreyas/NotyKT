@@ -16,11 +16,14 @@
 
 package dev.shreyaspatil.noty.data.database
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import dev.shreyaspatil.noty.data.database.table.Notes
 import dev.shreyaspatil.noty.data.database.table.Users
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import javax.sql.DataSource
 
 /**
  * Initializes dev.shreyaspatil.noty.data.database connection with application
@@ -28,14 +31,22 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun initDatabase(databaseConfig: DatabaseConfig) {
     val tables = arrayOf(Users, Notes)
 
-    Database.connect(
-        url = with(databaseConfig) { "jdbc:postgresql://$host:$port/$name" },
-        driver = "org.postgresql.Driver",
-        user = databaseConfig.user,
-        password = databaseConfig.password
-    )
+    Database.connect(createDataSource(databaseConfig))
 
     transaction {
         SchemaUtils.createMissingTablesAndColumns(*tables)
     }
+}
+
+private fun createDataSource(databaseConfig: DatabaseConfig): DataSource {
+    val config = HikariConfig()
+    with(databaseConfig) {
+        config.driverClassName = driver
+        config.password = password
+        config.jdbcUrl = "jdbc:postgresql://$host:$port/$name"
+        config.maximumPoolSize = maxPoolSize
+        config.username = user
+    }
+    config.validate()
+    return HikariDataSource(config)
 }

@@ -33,4 +33,6 @@ class Config constructor(config: ApplicationConfig) {
     val DATABASE_NAME = config.property("database.name").getString()
     val DATABASE_USER = config.property("database.user").getString()
     val DATABASE_PASSWORD = config.property("database.password").getString()
+    val DATABASE_DRIVER = config.property("database.driver").getString()
+    val DATABASE_MAX_POOL_SIZE = config.property("database.maxPoolSize").getString()
 }
