@@ -39,6 +39,8 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
+DATABASE_DRIVER=org.postgresql.ds.PGSimpleDataSource
+DATABASE_MAX_POOL_SIZE=10
 ```
 
 Replace database credentials with your local config.
