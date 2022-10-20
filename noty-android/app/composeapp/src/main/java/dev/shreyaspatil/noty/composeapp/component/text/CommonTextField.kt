@@ -23,21 +23,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.ui.theme.getTextFieldHintColor
 
 @Composable
@@ -72,6 +78,29 @@ fun NotyTextField(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun previewNotifyTextField() {
+    NotyTextField(
+        value = "Mahsa",
+        label = "Username",
+        onValueChange = {},
+        leadingIcon = { Icon(Icons.Outlined.Person, "User") },
+        isError = true,
+        helperText = stringResource(R.string.message_field_username_invalid)
+    )
+}
+
+@Preview
+@Composable
+fun previewBasicNotyTextField() {
+    BasicNotyTextField(
+        value = "Mahsa",
+        label = "Username",
+        onTextChange = {}
+    )
 }
 
 @Composable
