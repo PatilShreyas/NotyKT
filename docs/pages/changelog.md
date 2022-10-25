@@ -4,6 +4,37 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v2.1.0_ (2022-10-25)
+
+This release includes new feature and some fixes in the application.
+
+### 🔮 What's New?
+
+- [[#534](https://github.com/PatilShreyas/NotyKT/issues/534)] Added feature: Pinning note.
+
+> _Many thanks to superstar contributors of this feature:_
+> - [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni) for proposing this feature and implementing this for Android.  
+> - [@mrfamouskk7](https://github.com/mrfamouskk7) for developing [API for this feature](https://github.com/PatilShreyas/NotyKT/issues/541).  
+> - [@tyaporush](https://github.com/tyaporush) for [implementing API](https://github.com/PatilShreyas/NotyKT/issues/543) in Android application.
+
+### ✅ Bug Fixes / Improvements
+
+- [[#535](https://github.com/PatilShreyas/NotyKT/issues/535)] Fix bug: Keyboard retains after navigating back from Add Note or Note detail screen by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni).
+- [[#536](https://github.com/PatilShreyas/NotyKT/issues/536)] Fix bug: Progress dialog keeps running in infinite loop by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni)
+- [[#551](https://github.com/PatilShreyas/NotyKT/issues/551)] Support password visibility/invisibility toggle button for Password fields in Compose app by [@tusharpingale04](https://github.com/tusharpingale04).
+
+
+### 🎯 Codebase Improvements
+
+- [[#473](https://github.com/PatilShreyas/NotyKT/issues/473)] Fix failing UI test cases by [@tusharpingale04](https://github.com/tusharpingale04).
+- [[#547](https://github.com/PatilShreyas/NotyKT/issues/547)] Replace deprecated OptionsMenu with MenuProvider by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni).
+- [[#554](https://github.com/PatilShreyas/NotyKT/issues/554)] [Backend] Use Hikari DataSource for Database connection pooling by [@mrfamouskk7](https://github.com/mrfamouskk7).
+
+
+_**Many Thanks to superstar ⭐ contributors for making NotyKT better in this Hacktoberfest**_
+
+---
+
 ## _v2.0.0_ (2022-02-20)
 
 This release includes codebase refactoring changes.
