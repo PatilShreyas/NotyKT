@@ -12,9 +12,10 @@ This release includes new feature and some fixes in the application.
 
 - [[#534](https://github.com/PatilShreyas/NotyKT/issues/534)] Added feature: Pinning note.
 
-> Many thanks to [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni) for proposing this feature and implementing this for Android.  
-> Thanks to [@mrfamouskk7](https://github.com/mrfamouskk7) for developing [API for this feature](https://github.com/PatilShreyas/NotyKT/issues/541).  
-> Also, thanks to [@tyaporush](https://github.com/tyaporush) for [implementing API](https://github.com/PatilShreyas/NotyKT/issues/543) in Android application.
+> _Many thanks to superstar contributors of this feature:_
+> - [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni) for proposing this feature and implementing this for Android.  
+> - [@mrfamouskk7](https://github.com/mrfamouskk7) for developing [API for this feature](https://github.com/PatilShreyas/NotyKT/issues/541).  
+> - [@tyaporush](https://github.com/tyaporush) for [implementing API](https://github.com/PatilShreyas/NotyKT/issues/543) in Android application.
 
 ### ✅ Bug Fixes / Improvements
 
