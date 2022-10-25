@@ -12,8 +12,8 @@ This release includes new feature and some fixes in the application.
 
 - [[#534](https://github.com/PatilShreyas/NotyKT/issues/534)] Added feature: Pinning note.
 
-> Many thanks to [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni) for proposing this feature and implementing this for Android.
-> Thanks to [@mrfamouskk7](https://github.com/mrfamouskk7) for developing [API for this feature](https://github.com/PatilShreyas/NotyKT/issues/541).
+> Many thanks to [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni) for proposing this feature and implementing this for Android.  
+> Thanks to [@mrfamouskk7](https://github.com/mrfamouskk7) for developing [API for this feature](https://github.com/PatilShreyas/NotyKT/issues/541).  
 > Also, thanks to [@tyaporush](https://github.com/tyaporush) for [implementing API](https://github.com/PatilShreyas/NotyKT/issues/543) in Android application.
 
 ### ✅ Bug Fixes / Improvements
@@ -26,8 +26,8 @@ This release includes new feature and some fixes in the application.
 ### 🎯 Codebase Improvements
 
 - [[#473](https://github.com/PatilShreyas/NotyKT/issues/473)] Fix failing UI test cases by [@tusharpingale04](https://github.com/tusharpingale04).
-- [[#547](https://github.com/PatilShreyas/NotyKT/issues/547)] Replace deprecated OptionsMenu with MenuProvider.
-- [[#554](https://github.com/PatilShreyas/NotyKT/issues/554)] [Backend] Use Hikari DataSource for Database connection pooling.
+- [[#547](https://github.com/PatilShreyas/NotyKT/issues/547)] Replace deprecated OptionsMenu with MenuProvider by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni).
+- [[#554](https://github.com/PatilShreyas/NotyKT/issues/554)] [Backend] Use Hikari DataSource for Database connection pooling by [@mrfamouskk7](https://github.com/mrfamouskk7).
 
 
 _**Many Thanks to superstar ⭐ contributors for making NotyKT better in this Hacktoberfest**_
