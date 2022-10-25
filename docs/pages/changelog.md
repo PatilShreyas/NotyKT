@@ -17,17 +17,16 @@ This release includes new feature and some fixes in the application.
 > - [@mrfamouskk7](https://github.com/mrfamouskk7) for developing [API for this feature](https://github.com/PatilShreyas/NotyKT/issues/541).  
 > - [@tyaporush](https://github.com/tyaporush) for [implementing API](https://github.com/PatilShreyas/NotyKT/issues/543) in Android application.
 
-### ✅ Bug Fixes / Improvements
+### 🐛 Bug Fixes
 
 - [[#535](https://github.com/PatilShreyas/NotyKT/issues/535)] Fix bug: Keyboard retains after navigating back from Add Note or Note detail screen by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni).
 - [[#536](https://github.com/PatilShreyas/NotyKT/issues/536)] Fix bug: Progress dialog keeps running in infinite loop by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni)
-- [[#551](https://github.com/PatilShreyas/NotyKT/issues/551)] Support password visibility/invisibility toggle button for Password fields in Compose app by [@tusharpingale04](https://github.com/tusharpingale04).
 
-
-### 🎯 Codebase Improvements
+### 🎯 Improvements
 
 - [[#473](https://github.com/PatilShreyas/NotyKT/issues/473)] Fix failing UI test cases by [@tusharpingale04](https://github.com/tusharpingale04).
 - [[#547](https://github.com/PatilShreyas/NotyKT/issues/547)] Replace deprecated OptionsMenu with MenuProvider by [@Varsha-Kulkarni](https://github.com/Varsha-Kulkarni).
+- [[#551](https://github.com/PatilShreyas/NotyKT/issues/551)] Support password visibility/invisibility toggle button for Password fields in Compose app by [@tusharpingale04](https://github.com/tusharpingale04).
 - [[#554](https://github.com/PatilShreyas/NotyKT/issues/554)] [Backend] Use Hikari DataSource for Database connection pooling by [@mrfamouskk7](https://github.com/mrfamouskk7).
 
 
