@@ -36,9 +36,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    lintOptions {
-        abortOnError false
-    }
 
     testOptions {
         unitTests.returnDefaultValues = true
@@ -56,6 +53,10 @@ android {
             }
         }
     }
+    lint {
+        abortOnError false
+    }
+    namespace 'dev.shreyaspatil.noty'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

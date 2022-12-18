@@ -63,6 +63,7 @@ android {
             }
         }
     }
+    namespace 'dev.shreyaspatil.noty.data.local'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

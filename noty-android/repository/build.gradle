@@ -50,6 +50,7 @@ android {
             }
         }
     }
+    namespace 'dev.shreyaspatil.noty.repository'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
