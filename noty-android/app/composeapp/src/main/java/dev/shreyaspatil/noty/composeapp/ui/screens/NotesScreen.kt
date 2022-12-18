@@ -17,23 +17,26 @@
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
@@ -86,6 +89,7 @@ fun NotesScreen(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NotesContent(
     isLoading: Boolean,
@@ -111,18 +115,23 @@ fun NotesContent(
             )
         },
         content = {
-            SwipeRefresh(
-                modifier = Modifier.fillMaxSize(),
-                state = rememberSwipeRefreshState(isLoading),
-                onRefresh = onRefresh,
-                swipeEnabled = isConnectivityAvailable == true
-            ) {
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = isLoading,
+                onRefresh = onRefresh
+            )
+            Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
                 Column {
                     if (isConnectivityAvailable != null) {
                         ConnectivityStatus(isConnectivityAvailable)
                     }
                     NotesList(notes) { note -> onNavigateToNoteDetail(note.id) }
                 }
+
+                PullRefreshIndicator(
+                    refreshing = isLoading,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
         },
         floatingActionButton = {
