@@ -56,10 +56,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
-    lintOptions {
+    lint {
         abortOnError false
     }
+    namespace 'dev.shreyaspatil.noty.simpleapp'
+
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

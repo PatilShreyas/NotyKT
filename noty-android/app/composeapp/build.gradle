@@ -70,10 +70,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion composeVersion
     }
-
-    lintOptions {
+    lint {
         abortOnError false
     }
+    namespace 'dev.shreyaspatil.noty.composeapp'
+
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

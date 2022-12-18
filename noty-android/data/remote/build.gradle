@@ -52,6 +52,7 @@ android {
             }
         }
     }
+    namespace 'dev.shreyaspatil.noty.data.remote'
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
