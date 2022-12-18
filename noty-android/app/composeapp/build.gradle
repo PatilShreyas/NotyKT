@@ -60,7 +60,6 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
 
     buildFeatures {
@@ -157,8 +156,8 @@ dependencies {
     testImplementation "junit:junit:$jUnitVersion"
 
     // Android Testing
-    androidTestImplementation "androidx.test:core:1.4.0"
-    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation "androidx.test:core:$androidTestCoreVersion"
+    androidTestImplementation "androidx.test:runner:$androidTestRunnerVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidJUnitVersion"
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
     // Needed for createComposeRule, but not createAndroidComposeRule:

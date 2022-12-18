@@ -47,7 +47,3 @@ dependencies {
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
-
-android {
-    namespace 'dev.shreyaspatil.noty.core'
-}
