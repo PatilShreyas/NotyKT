@@ -19,7 +19,7 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -123,7 +123,7 @@ fun NotesContent(
             Box(
                 modifier = Modifier
                     .pullRefresh(pullRefreshState)
-                    .fillMaxWidth()
+                    .fillMaxSize()
             ) {
                 Column {
                     if (isConnectivityAvailable != null) {
