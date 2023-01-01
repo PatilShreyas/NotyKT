@@ -2,7 +2,6 @@
 
 # NotyKT 🖊️ 
 
-![Deploy (API)](https://github.com/PatilShreyas/NotyKT/workflows/Deploy%20(API)/badge.svg) 
 ![Build (API)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(API)/badge.svg)
 ![Build (Android)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(Android)/badge.svg)
 ![Release](https://github.com/PatilShreyas/NotyKT/workflows/Release/badge.svg)
