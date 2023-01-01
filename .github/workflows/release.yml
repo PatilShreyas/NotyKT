@@ -32,7 +32,7 @@ jobs:
         working-directory: noty-android
 
       - name: Build APKs ⚙️🛠
-        run: bash ./gradlew assemble
+        run: bash ./gradlew assembleDebug
         working-directory: noty-android
 
       - name: Create Release ✅
