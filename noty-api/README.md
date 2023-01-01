@@ -31,14 +31,17 @@ You will require latest stable version of JetBrains IntelliJ Idea to build and r
 - Build the project.
 - Set environment variables for the `:application:run` configuration as following
 
-```
-SECRET_KEY=ANY_RANDOM_SECRET
+_Refer to the [`.env`](.env) file for example of environment variables._
 
-DATABASE_NAME=noty_db
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
+```
+SECRET_KEY=ANY_RANDOM_SECRET_VALUE
+
+PGPORT=5432
+PGHOST=localhost
+PGDATABASE=notykt_dev_db
+PGUSER=postgres
+PGPASSWORD=postgres
+
 DATABASE_DRIVER=org.postgresql.ds.PGSimpleDataSource
 DATABASE_MAX_POOL_SIZE=10
 ```
