@@ -1,8 +1,0 @@
-{
-  "name": "Noty API",
-  "description": "The API for Noty",
-  "image": "heroku/java",
-  "addons": [
-    "heroku-postgresql"
-  ]
-}
