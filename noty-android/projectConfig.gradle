@@ -19,7 +19,7 @@ ext {
             compileSdkVersion: 33,
             minSdkVersion    : 21,
             targetSdkVersion : 31,
-            versionCode      : 20211130,
-            versionName      : "1.3.2"
+            versionCode      : 20230101,
+            versionName      : "2.1.1"
     ]
 }
