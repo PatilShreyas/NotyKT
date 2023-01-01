@@ -3,9 +3,9 @@
 ![Build (API)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(API)/badge.svg)
 ![Deploy (API)](https://github.com/PatilShreyas/NotyKT/workflows/Deploy%20(API)/badge.svg)
 
-Noty backend _REST API_ is built with Ktor framework with PostgreSQL as database and deployed on the Heroku.
+Noty backend _REST API_ is built with Ktor framework with PostgreSQL as database and deployed on the [Railway](https://railway.app).
 
-Currently this API is deployed on _`https://noty-api.herokuapp.com/notes`_. You can try it 😃.
+Currently this API is deployed on _`https://notykt-production.up.railway.app` (Also, points to `https://notykt-api.shreyaspatil.dev/`)_. You can try it 😃.
 
 [📄 _**Visit the documentation of this project**_](https://patilshreyas.github.io/NotyKT/) to get more information in detail.
 
@@ -13,7 +13,7 @@ Currently this API is deployed on _`https://noty-api.herokuapp.com/notes`_. You 
 
 - Easy structure
 - Authentication
-- Automatic and easy deployment to Heroku
+- Automatic and easy deployment to Railway.app
 - Test cases
 
 ## About this Project 💡
