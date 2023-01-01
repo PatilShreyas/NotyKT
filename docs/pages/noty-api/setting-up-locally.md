@@ -25,13 +25,16 @@ You will require latest stable version of JetBrains IntelliJ Idea IDE to build a
 - Set up environment variables for database credentials as following with valid values as per your setup.
 
 ```
-SECRET_KEY=ANY_RANDOM_SECRET
+SECRET_KEY=ANY_RANDOM_SECRET_VALUE
 
-DATABASE_NAME=notykt_dev_db
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
+PGPORT=5432
+PGHOST=localhost
+PGDATABASE=notykt_dev_db
+PGUSER=postgres
+PGPASSWORD=postgres
+
+DATABASE_DRIVER=org.postgresql.ds.PGSimpleDataSource
+DATABASE_MAX_POOL_SIZE=10
 ```
 
 ?> These environment variables are used from [`application.conf`](https://github.com/PatilShreyas/NotyKT/blob/master/noty-api/application/resources/application.conf) and then retrieved in [`Config.kt`](https://github.com/PatilShreyas/NotyKT/blob/master/noty-api/application/src/dev/shreyaspatil/noty/api/Config.kt).

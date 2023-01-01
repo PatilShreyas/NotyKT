@@ -6,11 +6,13 @@ You can test Heroku setup locally to ensure everything is working configured cor
 
 ```env
 SECRET_KEY=ANY_RANDOM_SECRET_VALUE
-DATABASE_PORT=5432
-DATABASE_HOST=localhost
-DATABASE_NAME=notykt_dev_db
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
+PGPORT=5432
+PGHOST=localhost
+PGDATABASE=notykt_dev_db
+PGUSER=postgres
+PGPASSWORD=postgres
+DATABASE_DRIVER=org.postgresql.ds.PGSimpleDataSource
+DATABASE_MAX_POOL_SIZE=10
 ```
 
 - Run the command to run the Heroku application locally
