@@ -6,7 +6,7 @@ This project is currently deployed on Railway.app on the following URLs
 
 Deployment on Railway is very simple. On every push, it automatically deploys project.
 
-![Railway.app Dashboard - NotyKT](/media/noty-api/railway-dashboard.png)
+![Railway.app Dashboard - NotyKT](../../media/noty-api/railway-dashboard.png)
 
 ## Deployment Pre-requisites
 
