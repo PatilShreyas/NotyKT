@@ -2,7 +2,7 @@
 
 This project is currently deployed on [Heroku](https://heroku.com) which provides free of cost service for deployment and database. 
 
-_Currently this API is deployed on https://noty-api.herokuapp.com._
+_Currently this API was deployed on https://noty-api.herokuapp.com._
 
 ## 🤖 Setting up Heroku CLI  
 

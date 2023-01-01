@@ -56,7 +56,7 @@ class NotyJWTController @Inject constructor(@SecretKey secret: String) : JWTCont
 
     companion object {
         private const val ISSUER = "NotyKT-JWT-Issuer"
-        private const val AUDIENCE = "https://noty-api.herokuapp.com"
+        private const val AUDIENCE = "https://notykt-production.up.railway.app"
         const val ClAIM = "userId"
     }
 }

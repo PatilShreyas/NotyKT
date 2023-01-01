@@ -38,6 +38,4 @@ dependencies {
     testImplementation "org.testcontainers:postgresql:$testContainerVersion"
 }
 
-task stage {
-    dependsOn installDist
-}
+build.finalizedBy(installDist)
