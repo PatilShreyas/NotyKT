@@ -4,6 +4,18 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v2.1.1_ (2023-01-01)
+
+_This release includes minor fixes in the application. There are no major changes in the client application_  
+_**In the backend API, Migrated hosting of backend API service from Heroku to Railway.app**_
+
+### 🎯Codebase Improvements
+
+- Upgraded Gradle tooling and other dependency versions.
+- Updated Android Target API version to 33 (Android 13).
+- Use separate version of Compose and Compose Compiler.
+- Migrated from Accompanist's SwipeRefresh to Material SwipeRefresh.
+
 ## _v2.1.0_ (2022-10-25)
 
 This release includes new feature and some fixes in the application.
