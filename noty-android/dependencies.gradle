@@ -90,7 +90,7 @@ ext {
     kotestVersion = '5.5.4'
     mockkVersion = '1.13.3'
     androidTestCoreVersion = "1.5.0"
-    androidTestRunnerVersion = "1.5.1"
+    androidTestRunnerVersion = "1.5.2"
     androidJUnitVersion = '1.1.4'
     espressoVersion = '3.5.0'
 }
