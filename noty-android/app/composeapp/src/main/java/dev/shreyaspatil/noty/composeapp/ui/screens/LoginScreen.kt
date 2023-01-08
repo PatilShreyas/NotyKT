@@ -68,6 +68,7 @@ fun LoginScreen(
         onPasswordChange = viewModel::setPassword,
         onLoginClick = viewModel::login,
         onSignupClick = onNavigateToSignup,
+        onDialogDismiss = viewModel::clearError,
         error = state.error
     )
 
@@ -89,6 +90,7 @@ fun LoginContent(
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onSignupClick: () -> Unit,
+    onDialogDismiss: () -> Unit,
     error: String?
 ) {
     if (isLoading) {
@@ -96,7 +98,7 @@ fun LoginContent(
     }
 
     if (error != null) {
-        FailureDialog(error)
+        FailureDialog(error, onDialogDismiss = onDialogDismiss)
     }
 
     Column(
@@ -207,6 +209,7 @@ fun PreviewLoginContent() = NotyPreview {
         onSignupClick = {},
         isValidPassword = false,
         isValidUsername = false,
+        onDialogDismiss = {},
         error = null
     )
 }

@@ -71,6 +71,8 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun clearError() = setState { state -> state.copy(error = null) }
+
     private fun validateCredentials(): Boolean {
         val isValidUsername = AuthValidator.isValidUsername(currentState.username)
         val isValidPassword = AuthValidator.isValidPassword(currentState.password)

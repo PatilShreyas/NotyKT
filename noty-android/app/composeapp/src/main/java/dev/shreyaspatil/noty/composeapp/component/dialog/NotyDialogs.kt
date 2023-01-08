@@ -60,39 +60,33 @@ fun LoaderDialog() {
 }
 
 @Composable
-fun FailureDialog(failureMessage: String, onDismissed: () -> Unit = {}) {
-    val isDismissed = remember { mutableStateOf(false) }
+fun FailureDialog(failureMessage: String, onDialogDismiss: () -> Unit = {}) {
+    Dialog(onDismissRequest = onDialogDismiss) {
+        Surface {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                LottieAnimation(
+                    resId = R.raw.failure,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(84.dp)
+                )
+                Text(
+                    text = failureMessage,
+                    color = MaterialTheme.colors.onSurface,
+                    style = MaterialTheme.typography.subtitle1,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
 
-    if (!isDismissed.value) {
-        Dialog(onDismissRequest = {}) {
-            Surface {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    LottieAnimation(
-                        resId = R.raw.failure,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(84.dp)
-                    )
-                    Text(
-                        text = failureMessage,
-                        color = MaterialTheme.colors.onSurface,
-                        style = MaterialTheme.typography.subtitle1,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                Button(
+                    onClick = onDialogDismiss,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(16.dp),
 
-                    Button(
-                        onClick = {
-                            isDismissed.value = true
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(80.dp)
-                            .padding(16.dp),
-
-                    ) {
-                        Text(style = typography.subtitle1, color = Color.White, text = "OK")
-                    }
+                ) {
+                    Text(style = typography.subtitle1, color = Color.White, text = "OK")
                 }
             }
         }

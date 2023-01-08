@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.simpleapp.view.custom
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +26,11 @@ import androidx.fragment.app.DialogFragment
 import dev.shreyaspatil.noty.simpleapp.databinding.ErrorDialogLayoutBinding
 import dev.shreyaspatil.noty.utils.autoCleaned
 
-class ErrorDialog(var title: String = "", var message: String = "") : DialogFragment() {
+class ErrorDialog(
+    var title: String = "",
+    var message: String = "",
+    var onDialogDismiss: () -> Unit = {}
+) : DialogFragment() {
 
     private var binding: ErrorDialogLayoutBinding by autoCleaned()
 
@@ -44,7 +49,10 @@ class ErrorDialog(var title: String = "", var message: String = "") : DialogFrag
         binding.run {
             dialogTitle.text = title
             dialogMessage.text = message
-            dialogButtonOk.setOnClickListener { dialog?.dismiss() }
+            dialogButtonOk.setOnClickListener {
+                onDialogDismiss()
+                dialog?.dismiss()
+            }
         }
     }
 
@@ -54,5 +62,10 @@ class ErrorDialog(var title: String = "", var message: String = "") : DialogFrag
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        onDialogDismiss()
+        super.onCancel(dialog)
     }
 }
