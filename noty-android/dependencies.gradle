@@ -91,6 +91,6 @@ ext {
     mockkVersion = '1.13.3'
     androidTestCoreVersion = "1.5.0"
     androidTestRunnerVersion = "1.5.2"
-    androidJUnitVersion = '1.1.4'
+    androidJUnitVersion = '1.1.5'
     espressoVersion = '3.5.1'
 }
