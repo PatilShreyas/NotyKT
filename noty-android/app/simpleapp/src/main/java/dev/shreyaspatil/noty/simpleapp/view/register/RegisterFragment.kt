@@ -75,7 +75,8 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, Re
         if (errorMessage != null) {
             showErrorDialog(
                 title = getString(R.string.dialog_title_signup_failed),
-                message = errorMessage
+                message = errorMessage,
+                onDialogDismiss = viewModel::clearError
             )
         }
     }

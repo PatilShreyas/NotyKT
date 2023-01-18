@@ -67,6 +67,7 @@ fun SignUpScreen(
         onPasswordChange = viewModel::setPassword,
         onConfirmPasswordChanged = viewModel::setConfirmPassword,
         onSignUpClick = viewModel::register,
+        onDialogDismiss = viewModel::clearError,
         onNavigateUp = onNavigateUp,
         error = state.error
     )
@@ -90,6 +91,7 @@ fun SignUpContent(
     isValidConfirmPassword: Boolean,
     onNavigateUp: () -> Unit,
     onSignUpClick: () -> Unit,
+    onDialogDismiss: () -> Unit,
     isValidUsername: Boolean,
     isValidPassword: Boolean,
     error: String?
@@ -99,7 +101,7 @@ fun SignUpContent(
     }
 
     if (error != null) {
-        FailureDialog(error)
+        FailureDialog(error, onDialogDismiss = onDialogDismiss)
     }
 
     Column(
@@ -224,6 +226,7 @@ fun PreviewSignupContent() = NotyPreview {
         isValidConfirmPassword = false,
         onNavigateUp = {},
         onSignUpClick = {},
+        onDialogDismiss = {},
         isValidUsername = false,
         isValidPassword = false,
         error = null

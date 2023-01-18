@@ -69,7 +69,8 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewMo
         if (errorMessage != null) {
             showErrorDialog(
                 title = getString(R.string.dialog_title_login_failed),
-                message = errorMessage
+                message = errorMessage,
+                onDialogDismiss = viewModel::clearError
             )
         }
     }

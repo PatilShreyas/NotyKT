@@ -65,6 +65,8 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    fun clearError() = setState { state -> state.copy(error = null) }
+
     private fun validateCredentials(): Boolean {
         val username = currentState.username
         val password = currentState.password

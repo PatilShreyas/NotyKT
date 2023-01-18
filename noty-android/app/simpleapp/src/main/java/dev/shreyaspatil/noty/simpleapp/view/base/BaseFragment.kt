@@ -88,13 +88,18 @@ abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<
 
     fun hideProgressDialog() = progressDialog?.dismiss()
 
-    fun showErrorDialog(title: String, message: String) {
+    fun showErrorDialog(
+        title: String,
+        message: String,
+        onDialogDismiss: () -> Unit = {}
+    ) {
         if (errorDialog == null) {
             errorDialog = ErrorDialog()
         }
         errorDialog?.apply {
             this.title = title
             this.message = message
+            this.onDialogDismiss = onDialogDismiss
         }
         errorDialog?.let {
             if (!it.isVisible && !it.isAdded) {
