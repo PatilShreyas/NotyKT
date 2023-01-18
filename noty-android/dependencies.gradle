@@ -92,5 +92,5 @@ ext {
     androidTestCoreVersion = "1.5.0"
     androidTestRunnerVersion = "1.5.1"
     androidJUnitVersion = '1.1.4'
-    espressoVersion = '3.5.0'
+    espressoVersion = '3.5.1'
 }
