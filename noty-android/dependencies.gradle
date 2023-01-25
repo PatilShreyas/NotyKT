@@ -46,7 +46,7 @@ ext {
     fragmentVersion = '1.5.5'
 
     // Design
-    materialDesignVersion = '1.7.0'
+    materialDesignVersion = '1.8.0'
 
     // Lottie Animation
     lottieVersion = "5.2.0"
