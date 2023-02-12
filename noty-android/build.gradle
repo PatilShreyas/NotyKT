@@ -35,6 +35,7 @@ buildscript {
         classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlintVersion"
         classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
         classpath "org.jetbrains.kotlinx:kover:$koverVersion"
+        classpath "dev.shreyaspatil.compose-compiler-report-generator:gradle-plugin:$composeCompilerReportGenVersion"
     }
 }
 

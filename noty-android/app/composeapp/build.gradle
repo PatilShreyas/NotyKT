@@ -19,6 +19,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'dev.shreyaspatil.compose-compiler-report-generator'
 }
 
 android {
@@ -170,4 +171,8 @@ dependencies {
     // Leak Canary
     // Uncomment this when have to check for leaks
     // debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+}
+
+htmlComposeCompilerReport {
+    name = "NotyKT"
 }

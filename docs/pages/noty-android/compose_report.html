@@ -1,0 +1,3137 @@
+<html>
+  <head>
+    <title>NotyKT - Compose Compiler Report</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" type="crossorigin">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap" rel="stylesheet">
+    <style>body {
+    font-family: 'Roboto', sans-serif;
+    text-align:center
+}
+
+hr {
+    margin: 8px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: 8px;
+    padding: 4px
+}
+
+.code {
+    font-family: 'Roboto Mono', monospace;
+}
+
+.collapsible {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.active, .collapsible:hover {
+    background-color: #555;
+}
+
+.collapsible:after {
+    content: '\002B';
+    color: white;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2212";
+}
+
+.content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+
+ .content-header {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.content-body {
+    padding: 0 18px;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+footer {
+    padding: 16px;
+    background-color: #E0E0E0 
+}
+
+.status-success {
+    color: #004D40;
+}
+
+.status-failure {
+    color: #D32F2F;
+}
+
+.background-status-success {
+    background-color: #B2DFDB;
+    color: #000000;
+}
+
+.background-status-failure {
+    background-color: #D32F2F;
+    color: #FFFFFF
+}
+
+.background-status-missing {
+    background-color: #FFAC1C;
+    color: #000000
+}
+
+.empty-content {
+    margin: 4px;
+    padding: 18px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+}</style>
+  </head>
+  <body>
+    <h1>Compose Compiler Report - NotyKT</h1>
+    <section><button class="collapsible">Brief Statistics</button>
+      <div class="content">
+        <table class="center" style="text-align:left;">
+          <tr>
+            <th>Skippable Composables</th>
+            <td>129</td>
+          </tr>
+          <tr>
+            <th>Restartable Composables</th>
+            <td>147</td>
+          </tr>
+          <tr>
+            <th>Readonly Composables</th>
+            <td>0</td>
+          </tr>
+          <tr>
+            <th>Total Composables</th>
+            <td>153</td>
+          </tr>
+          <tr>
+            <th>Restart Groups</th>
+            <td>147</td>
+          </tr>
+          <tr>
+            <th>Total Groups</th>
+            <td>165</td>
+          </tr>
+          <tr>
+            <th>Static Arguments</th>
+            <td>214</td>
+          </tr>
+          <tr>
+            <th>Certain Arguments</th>
+            <td>164</td>
+          </tr>
+          <tr>
+            <th>Known Stable Arguments</th>
+            <td>1312</td>
+          </tr>
+          <tr>
+            <th>Known Unstable Arguments</th>
+            <td>39</td>
+          </tr>
+          <tr>
+            <th>Unknown Stable Arguments</th>
+            <td>3</td>
+          </tr>
+          <tr>
+            <th>Total Arguments</th>
+            <td>1354</td>
+          </tr>
+          <tr>
+            <th>Marked Stable Classes</th>
+            <td>0</td>
+          </tr>
+          <tr>
+            <th>Inferred Stable Classes</th>
+            <td>9</td>
+          </tr>
+          <tr>
+            <th>Inferred Unstable Classes</th>
+            <td>2</td>
+          </tr>
+          <tr>
+            <th>Inferred Uncertain Classes</th>
+            <td>0</td>
+          </tr>
+          <tr>
+            <th>Effectively Stable Classes</th>
+            <td>9</td>
+          </tr>
+          <tr>
+            <th>Total Classes</th>
+            <td>11</td>
+          </tr>
+          <tr>
+            <th>Memoized Lambdas</th>
+            <td>105</td>
+          </tr>
+          <tr>
+            <th>Singleton Lambdas</th>
+            <td>16</td>
+          </tr>
+          <tr>
+            <th>Singleton Composable Lambdas</th>
+            <td>25</td>
+          </tr>
+          <tr>
+            <th>Composable Lambdas</th>
+            <td>70</td>
+          </tr>
+          <tr>
+            <th>Total Lambdas</th>
+            <td>125</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <hr>
+    <section><button class="collapsible">Detailed Statistics</button>
+      <div class="content">
+        <table style="width:100%;">
+          <tr>
+            <th>package</th>
+            <th>name</th>
+            <th>composable</th>
+            <th>skippable</th>
+            <th>restartable</th>
+            <th>readonly</th>
+            <th>inline</th>
+            <th>isLambda</th>
+            <th>hasDefaults</th>
+            <th>defaultsGroup</th>
+            <th>groups</th>
+            <th>calls</th>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus</td>
+            <td>ConnectivityStatus</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.ConnectivityStatusBox</td>
+            <td>ConnectivityStatusBox</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.PinAction</td>
+            <td>PinAction</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.DeleteAction</td>
+            <td>DeleteAction</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.ShareAction</td>
+            <td>ShareAction</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown</td>
+            <td>ShareDropdown</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction</td>
+            <td>ThemeSwitchAction</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.LogoutAction</td>
+            <td>LogoutAction</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.action.AboutAction</td>
+            <td>AboutAction</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.anim.LottieAnimation</td>
+            <td>LottieAnimation</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.button.NotyFullWidthButton</td>
+            <td>NotyFullWidthButton</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog</td>
+            <td>LoaderDialog</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog</td>
+            <td>FailureDialog</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog</td>
+            <td>ConfirmationDialog</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.note.NoteCard</td>
+            <td>NoteCard</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.note.PreviewNoteCard</td>
+            <td>PreviewNoteCard</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.note.NotesList</td>
+            <td>NotesList</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold</td>
+            <td>NotyScaffold</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>3</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar</td>
+            <td>NotyTopAppBar</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.text.NotyTextField</td>
+            <td>NotyTextField</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>2</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.text.BasicNotyTextField</td>
+            <td>BasicNotyTextField</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>2</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField</td>
+            <td>NoteTitleField</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.text.NoteField</td>
+            <td>NoteField</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField</td>
+            <td>PasswordTextField</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField</td>
+            <td>UsernameTextField</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation</td>
+            <td>NotyNavigation</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.MainActivity.NotyMain</td>
+            <td>NotyMain</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AboutScreen</td>
+            <td>AboutScreen</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AboutContent</td>
+            <td>AboutContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LicenseCard</td>
+            <td>LicenseCard</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.VisitCard</td>
+            <td>VisitCard</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AddNoteScreen</td>
+            <td>AddNoteScreen</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AddNotesContent</td>
+            <td>AddNotesContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginScreen</td>
+            <td>LoginScreen</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginContent</td>
+            <td>LoginContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>3</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.TopGreeting</td>
+            <td>TopGreeting</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginForm</td>
+            <td>LoginForm</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpLink</td>
+            <td>SignUpLink</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.PreviewLoginContent</td>
+            <td>PreviewLoginContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailsScreen</td>
+            <td>NoteDetailsScreen</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>9</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailContent</td>
+            <td>NoteDetailContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailActions</td>
+            <td>NoteDetailActions</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>7</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailBody</td>
+            <td>NoteDetailBody</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.DeleteNoteConfirmation</td>
+            <td>DeleteNoteConfirmation</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen</td>
+            <td>NotesScreen</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>9</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NotesContent</td>
+            <td>NotesContent</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LogoutConfirmation</td>
+            <td>LogoutConfirmation</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen</td>
+            <td>SignUpScreen</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpContent</td>
+            <td>SignUpContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>3</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpForm</td>
+            <td>SignUpForm</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginLink</td>
+            <td>LoginLink</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.screens.PreviewSignupContent</td>
+            <td>PreviewSignupContent</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.theme.getTextFieldHintColor</td>
+            <td>getTextFieldHintColor</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme</td>
+            <td>NotyTheme</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>2</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.assistedViewModel</td>
+            <td>assistedViewModel</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.assistedViewModelFactory</td>
+            <td>assistedViewModelFactory</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.collectState</td>
+            <td>collectState</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.currentConnectionState</td>
+            <td>currentConnectionState</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.connectivityState</td>
+            <td>connectivityState</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.NotyPreview</td>
+            <td>NotyPreview</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>dev.shreyaspatil.noty.composeapp.utils.ShowToast</td>
+            <td>ShowToast</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>1</td>
+            <td>1</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <hr>
+    <section><button class="collapsible">Composables Report</button>
+      <div class="content"><button class="collapsible" style="background-color:#D32F2F;font-size:18px;">Composables with issues (Restartable but Not Skippable)</button>
+        <div class="content" style="background-color:#FFEBEE;">
+          <table>
+            <tr>
+              <td>1.</td>
+              <td>
+                <h3 class="code"><span> fun ShareDropdown</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">expanded</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>2</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">shareActions</td>
+                    <td class="code">List&lt;ShareActionItem&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onDismissRequest</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>2.</td>
+              <td>
+                <h3 class="code"><span> fun LoginScreen</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">viewModel</td>
+                    <td class="code">LoginViewModel</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToSignup</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToNotes</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>3.</td>
+              <td>
+                <h3 class="code"><span> fun NotesScreen</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">viewModel</td>
+                    <td class="code">NotesViewModel</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToAbout</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToAddNote</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToNoteDetail</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToLogin</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>4.</td>
+              <td>
+                <h3 class="code"><span> fun NotesContent</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isLoading</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>2</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">notes</td>
+                    <td class="code">List&lt;Note&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">isConnectivityAvailable</td>
+                    <td class="code">Boolean?</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">error</td>
+                    <td class="code">String? = @static null</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onRefresh</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">onToggleTheme</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">onAboutClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">onAddNoteClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">onLogoutClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>10</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToNoteDetail</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>5.</td>
+              <td>
+                <h3 class="code"><span> fun SignUpScreen</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">viewModel</td>
+                    <td class="code">RegisterViewModel</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateToNotes</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
+<button class="collapsible" style="background-color:#004D40;font-size:18px;">Composibles without issues</button>
+        <div class="content" style="background-color:#F1F8E9;">
+          <table>
+            <tr>
+              <td>1.</td>
+              <td>
+                <h3 class="code"><span> fun ConnectivityStatus</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isConnected</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>2.</td>
+              <td>
+                <h3 class="code"><span> fun ConnectivityStatusBox</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isConnected</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>3.</td>
+              <td>
+                <h3 class="code"><span> fun PinAction</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isPinned</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>4.</td>
+              <td>
+                <h3 class="code"><span> fun DeleteAction</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">onClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>5.</td>
+              <td>
+                <h3 class="code"><span> fun ShareAction</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">onClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>6.</td>
+              <td>
+                <h3 class="code"><span> fun ThemeSwitchAction</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">onToggle</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>7.</td>
+              <td>
+                <h3 class="code"><span> fun LogoutAction</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">onLogout</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>8.</td>
+              <td>
+                <h3 class="code"><span> fun AboutAction</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">onClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>9.</td>
+              <td>
+                <h3 class="code"><span> fun LottieAnimation</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">resId</td>
+                    <td class="code">Int</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">iterations</td>
+                    <td class="code">Int = @static LottieConstants.IterateForever</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">restartOnPlay</td>
+                    <td class="code">Boolean = @static true</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>10.</td>
+              <td>
+                <h3 class="code"><span> fun NotyFullWidthButton</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">text</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>11.</td>
+              <td>
+                <h3 class="code"><span> fun LoaderDialog</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">failureMessage</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onDialogDismiss</td>
+                    <td class="code">Function0&lt;Unit&gt;? = @static {</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>12.</td>
+              <td>
+                <h3 class="code"><span> fun ConfirmationDialog</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">title</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">message</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onConfirmedYes</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onConfirmedNo</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onDismissed</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>13.</td>
+              <td>
+                <h3 class="code"><span> fun NoteCard</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">title</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">note</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">isPinned</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onNoteClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>14.</td>
+              <td>
+                <h3 class="code"><span> fun PreviewNoteCard</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">notes</td>
+                    <td class="code">List&lt;Note&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onClick</td>
+                    <td class="code">Function1&lt;Note, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>15.</td>
+              <td>
+                <h3 class="code"><span> fun NotyScaffold</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">notyTopAppBar</td>
+                    <td class="code">Function2&lt;Composer, Int, Unit&gt;? = @static ComposableSingletons$NotyScaffoldKt.lambda-1</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">content</td>
+                    <td class="code">Function3&lt;PaddingValues, Composer, Int, Unit&gt;? = @static ComposableSingletons$NotyScaffoldKt.lambda-2</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">floatingActionButton</td>
+                    <td class="code">Function2&lt;Composer, Int, Unit&gt;? = @static ComposableSingletons$NotyScaffoldKt.lambda-3</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">isLoading</td>
+                    <td class="code">Boolean = @static false</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">error</td>
+                    <td class="code">String? = @static null</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>16.</td>
+              <td>
+                <h3 class="code"><span> fun NotyTopAppBar</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">title</td>
+                    <td class="code">String? = @static &quot;NotyKT&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;? = @static null</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">actions</td>
+                    <td class="code">@[ExtensionFunctionType] Function3&lt;RowScope, Composer, Int, Unit&gt;? = @static ComposableSingletons$NotyTopAppBarKt.lambda-1</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>17.</td>
+              <td>
+                <h3 class="code"><span> fun NotyTextField</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">value</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">label</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onValueChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">fontSize</td>
+                    <td class="code">TextUnit = @static 16.sp</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">color</td>
+                    <td class="code">Color = @dynamic MaterialTheme.colors.onPrimary</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">leadingIcon</td>
+                    <td class="code">Function2&lt;Composer, Int, Unit&gt;? = @static null</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">isError</td>
+                    <td class="code">Boolean = @static false</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">helperText</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>10</td>
+                    <td>STABLE</td>
+                    <td class="code">visualTransformation</td>
+                    <td class="code">VisualTransformation? = @static Companion.None</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>11</td>
+                    <td>STABLE</td>
+                    <td class="code">trailingIcon</td>
+                    <td class="code">Function2&lt;Composer, Int, Unit&gt;? = @static null</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>18.</td>
+              <td>
+                <h3 class="code"><span> fun BasicNotyTextField</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">value</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">label</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">textStyle</td>
+                    <td class="code">TextStyle? = @dynamic TextStyle(</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>19.</td>
+              <td>
+                <h3 class="code"><span> fun NoteTitleField</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">value</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onTextChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>20.</td>
+              <td>
+                <h3 class="code"><span> fun NoteField</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">value</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onTextChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>21.</td>
+              <td>
+                <h3 class="code"><span> fun PasswordTextField</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">label</td>
+                    <td class="code">String? = @static &quot;Password&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">value</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">isError</td>
+                    <td class="code">Boolean = @static false</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onValueChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>22.</td>
+              <td>
+                <h3 class="code"><span> fun UsernameTextField</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier? = @static Companion</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">value</td>
+                    <td class="code">String? = @static &quot;&quot;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">isError</td>
+                    <td class="code">Boolean = @static false</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onValueChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>23.</td>
+              <td>
+                <h3 class="code"><span> fun NotyNavigation</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table></table>
+              </td>
+            </tr>
+            <tr>
+              <td>24.</td>
+              <td>
+                <h3 class="code"><span> fun AboutScreen</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>25.</td>
+              <td>
+                <h3 class="code"><span> fun AboutContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">viewModel</td>
+                    <td class="code">AddNoteViewModel</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>26.</td>
+              <td>
+                <h3 class="code"><span> fun AddNotesContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isLoading</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">title</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">note</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">showSaveFab</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onTitleChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">onNoteChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">onClickAddNote</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">error</td>
+                    <td class="code">String?</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>27.</td>
+              <td>
+                <h3 class="code"><span> fun LoginContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isLoading</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">username</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidUsername</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">password</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidPassword</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">onUsernameChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">onPasswordChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">onLoginClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">onSignupClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>10</td>
+                    <td>STABLE</td>
+                    <td class="code">onDialogDismiss</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>11</td>
+                    <td>STABLE</td>
+                    <td class="code">error</td>
+                    <td class="code">String?</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>28.</td>
+              <td>
+                <h3 class="code"><span> fun TopGreeting</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">username</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidUsername</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">password</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidPassword</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onUsernameChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">onPasswordChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">onLoginClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>29.</td>
+              <td>
+                <h3 class="code"><span> fun SignUpLink</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onSignupClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>30.</td>
+              <td>
+                <h3 class="code"><span> fun PreviewLoginContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">viewModel</td>
+                    <td class="code">NoteDetailViewModel</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>31.</td>
+              <td>
+                <h3 class="code"><span> fun NoteDetailContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">title</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">note</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">error</td>
+                    <td class="code">String?</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">isPinned</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">showSaveButton</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">onTitleChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">onNoteChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">onPinClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">onSaveClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>10</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>11</td>
+                    <td>STABLE</td>
+                    <td class="code">onDeleteClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>12</td>
+                    <td>STABLE</td>
+                    <td class="code">onShareNoteAsText</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>13</td>
+                    <td>STABLE</td>
+                    <td class="code">onShareNoteAsImage</td>
+                    <td class="code">Function1&lt;ImageBitmap, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>32.</td>
+              <td>
+                <h3 class="code"><span> fun NoteDetailActions</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isPinned</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onPinClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onDeleteClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onShareNoteAsTextClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onShareNoteAsImageClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>33.</td>
+              <td>
+                <h3 class="code"><span> fun NoteDetailBody</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-missing">
+                    <td>1</td>
+                    <td>MISSING</td>
+                    <td class="code">captureController</td>
+                    <td class="code">CaptureController</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onCaptured</td>
+                    <td class="code">Function1&lt;ImageBitmap, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">title</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onTitleChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">note</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">onNoteChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>34.</td>
+              <td>
+                <h3 class="code"><span> fun DeleteNoteConfirmation</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">show</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onConfirm</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onDismiss</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>35.</td>
+              <td>
+                <h3 class="code"><span> fun LogoutConfirmation</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">show</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onConfirm</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onDismiss</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>36.</td>
+              <td>
+                <h3 class="code"><span> fun SignUpContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">isLoading</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">username</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">onUsernameChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">onPasswordChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">password</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">confirmPassword</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">onConfirmPasswordChanged</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidConfirmPassword</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">onNavigateUp</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>10</td>
+                    <td>STABLE</td>
+                    <td class="code">onSignUpClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>11</td>
+                    <td>STABLE</td>
+                    <td class="code">onDialogDismiss</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>12</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidUsername</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>13</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidPassword</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>14</td>
+                    <td>STABLE</td>
+                    <td class="code">error</td>
+                    <td class="code">String?</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>37.</td>
+              <td>
+                <h3 class="code"><span> fun SignUpForm</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">username</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onUsernameChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>3</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidUsername</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>4</td>
+                    <td>STABLE</td>
+                    <td class="code">password</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>5</td>
+                    <td>STABLE</td>
+                    <td class="code">onPasswordChange</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>6</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidPassword</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>7</td>
+                    <td>STABLE</td>
+                    <td class="code">confirmPassword</td>
+                    <td class="code">String</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>8</td>
+                    <td>STABLE</td>
+                    <td class="code">onConfirmPasswordChanged</td>
+                    <td class="code">Function1&lt;String, Unit&gt;</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>9</td>
+                    <td>STABLE</td>
+                    <td class="code">isValidConfirmPassword</td>
+                    <td class="code">Boolean</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>10</td>
+                    <td>STABLE</td>
+                    <td class="code">onSignUpClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>38.</td>
+              <td>
+                <h3 class="code"><span> fun LoginLink</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">modifier</td>
+                    <td class="code">Modifier</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">onLoginClick</td>
+                    <td class="code">Function0&lt;Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>39.</td>
+              <td>
+                <h3 class="code"><span> fun PreviewSignupContent</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">darkTheme</td>
+                    <td class="code">Boolean = @dynamic isSystemInDarkTheme($composer, 0)</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">content</td>
+                    <td class="code">Function2&lt;Composer, Int, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>40.</td>
+              <td>
+                <h3 class="code">inline<span> fun assistedViewModel</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-failure"> ❌ Non Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-failure">
+                    <td>1</td>
+                    <td>UNSTABLE</td>
+                    <td class="code">viewModelStoreOwner</td>
+                    <td class="code">ViewModelStoreOwner? = @dynamic checkNotNull(LocalViewModelStoreOwner.current) {</td>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>2</td>
+                    <td>STABLE</td>
+                    <td class="code">provideFactory</td>
+                    <td class="code">@[ExtensionFunctionType] Function1&lt;ViewModelFactoryProvider, Factory&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>41.</td>
+              <td>
+                <h3 class="code"><span> fun assistedViewModelFactory</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-failure"> ❌ Non Restartable</span></h4>
+                <table></table>
+              </td>
+            </tr>
+            <tr>
+              <td>42.</td>
+              <td>
+                <h3 class="code"><span> fun currentConnectionState</span></h3>
+                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-failure"> ❌ Non Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">content</td>
+                    <td class="code">Function2&lt;Composer, Int, Unit&gt;</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>43.</td>
+              <td>
+                <h3 class="code"><span> fun ShowToast</span></h3>
+                <h4><span class="status-success">✅ Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
+                <table>
+                  <tr>
+                    <th>No.</th>
+                    <th>Stability</th>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr class="background-status-success">
+                    <td>1</td>
+                    <td>STABLE</td>
+                    <td class="code">message</td>
+                    <td class="code">String</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
+    <hr>
+    <section>
+      <div><button class="collapsible">Classes Report</button>
+        <div class="content"><button class="collapsible" style="background-color:#D32F2F;font-size:18px;">Unstable Classes</button>
+          <div class="content" style="background-color:#FFEBEE;">
+            <table>
+              <tr>
+                <td>1.</td>
+                <td>
+                  <h3><span class="status-failure">❌ Unstable</span><span class="code"> class NotyApp</span></h3>
+                  <table>
+                    <tr>
+                      <th>No.</th>
+                      <th>Status</th>
+                      <th>Field</th>
+                      <th>Type</th>
+                    </tr>
+                    <tr style="color:#FFFFFF;background-color:#D32F2F;">
+                      <td>1</td>
+                      <td>UNSTABLE</td>
+                      <td class="code">var workerFactory</td>
+                      <td class="code">HiltWorkerFactory</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td>
+                  <h3><span class="status-failure">❌ Unstable</span><span class="code"> class MainActivity</span></h3>
+                  <table>
+                    <tr>
+                      <th>No.</th>
+                      <th>Status</th>
+                      <th>Field</th>
+                      <th>Type</th>
+                    </tr>
+                    <tr style="color:#FFFFFF;background-color:#D32F2F;">
+                      <td>1</td>
+                      <td>UNSTABLE</td>
+                      <td class="code">var preferenceManager</td>
+                      <td class="code">PreferenceManager</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+<button class="collapsible" style="background-color:#004D40;font-size:18px;">Stable Classes</button>
+          <div class="content" style="background-color:#F1F8E9;">
+            <table>
+              <tr>
+                <td>1.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class ShareActionItem</span></h3>
+                  <table>
+                    <tr>
+                      <th>No.</th>
+                      <th>Status</th>
+                      <th>Field</th>
+                      <th>Type</th>
+                    </tr>
+                    <tr style="color:#000000;background-color:#B2DFDB;">
+                      <td>1</td>
+                      <td>STABLE</td>
+                      <td class="code">val label</td>
+                      <td class="code">String</td>
+                    </tr>
+                    <tr style="color:#000000;background-color:#B2DFDB;">
+                      <td>2</td>
+                      <td>STABLE</td>
+                      <td class="code">val onActionClick</td>
+                      <td class="code">Function0&lt;Unit&gt;</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>2.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class SignUp</span></h3>
+                  <table></table>
+                </td>
+              </tr>
+              <tr>
+                <td>3.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class Login</span></h3>
+                  <table></table>
+                </td>
+              </tr>
+              <tr>
+                <td>4.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class Notes</span></h3>
+                  <table></table>
+                </td>
+              </tr>
+              <tr>
+                <td>5.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class NotesDetail</span></h3>
+                  <table>
+                    <tr>
+                      <th>No.</th>
+                      <th>Status</th>
+                      <th>Field</th>
+                      <th>Type</th>
+                    </tr>
+                    <tr style="color:#000000;background-color:#B2DFDB;">
+                      <td>1</td>
+                      <td>STABLE</td>
+                      <td class="code">val ARG_NOTE_ID</td>
+                      <td class="code">String</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>6.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class AddNote</span></h3>
+                  <table></table>
+                </td>
+              </tr>
+              <tr>
+                <td>7.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class About</span></h3>
+                  <table></table>
+                </td>
+              </tr>
+              <tr>
+                <td>8.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class Screen</span></h3>
+                  <table>
+                    <tr>
+                      <th>No.</th>
+                      <th>Status</th>
+                      <th>Field</th>
+                      <th>Type</th>
+                    </tr>
+                    <tr style="color:#000000;background-color:#B2DFDB;">
+                      <td>1</td>
+                      <td>STABLE</td>
+                      <td class="code">val route</td>
+                      <td class="code">String</td>
+                    </tr>
+                    <tr style="color:#000000;background-color:#B2DFDB;">
+                      <td>2</td>
+                      <td>STABLE</td>
+                      <td class="code">val name</td>
+                      <td class="code">String</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>9.</td>
+                <td>
+                  <h3><span class="status-success">✅ Stable</span><span class="code"> class IntentUtils</span></h3>
+                  <table></table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr>
+    <footer><i>This report is beautified with <a href="https://github.com/PatilShreyas/compose-report-to-html" target="_blank">Compose Report to HTML</a></i></footer>
+    <script>var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+      content.style.overflow = "hidden"
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+      content.style.overflow = "auto";
+      content.style.maxHeight = "none";
+    } 
+  });
+}</script>
+  </body>
+</html>
