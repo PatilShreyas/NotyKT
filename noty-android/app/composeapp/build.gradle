@@ -173,7 +173,6 @@ dependencies {
     // debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
 }
 
-
 htmlComposeCompilerReport {
-    name = "Shreyas Report"
+    name = "NotyKT"
 }
