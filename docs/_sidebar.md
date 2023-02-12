@@ -15,6 +15,7 @@
     - [Design / Wireframe](pages/noty-android/design-wireframe.md)
     - [App Architecture](/pages/noty-android/app-architecture.md)
     - [Architecture Revamp v2.0.0](/pages/noty-android/architecture-revamp-v2.0.0.md)
+    - [Compose Compiler Metrics and Report](/pages/noty-android/compose-compiler-metrics-and-report)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**
