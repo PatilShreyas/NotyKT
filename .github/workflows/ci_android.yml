@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Set up JDK 12
         uses: actions/setup-java@v1
@@ -35,7 +35,7 @@ jobs:
         working-directory: noty-android
 
       - name: 🏗 Build with Gradle 🛠️
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build releaseComposeCompilerHtmlReport --stacktrace
         working-directory: noty-android
 
       - name: 🚀 Upload APK 📱
@@ -44,3 +44,14 @@ jobs:
           name: app
           path: noty-android/**/*.apk
           retention-days: 3
+          
+      - name: Update compose compiler metrics and report in docs
+        if: github.event_name == 'push'
+        run: |
+          mv -f noty-android/app/composeapp/build/compose_report/index.html docs/pages/noty-android/compose_report.html
+          git config user.name $GITHUB_ACTOR
+          git config user.email action@github.com
+          git add docs/pages/noty-android/compose_report.html
+          git commit -m "Update compose compiler metric and report"
+          git status
+          git push
