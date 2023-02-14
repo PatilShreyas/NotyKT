@@ -19,7 +19,7 @@ ext {
     androidGradlePluginVersion = '7.3.1'
 
     // Compose compiler report generator plugin
-    composeCompilerReportGenVersion = "1.0.0-beta01"
+    composeCompilerReportGenVersion = "1.0.0-beta02"
 
     // Kotlin
     kotlinVersion = "1.7.20"
