@@ -18,7 +18,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "dev.shreyaspatil.compose-compiler-report-generator:gradle-plugin:1.0.0-beta01"
+    classpath "dev.shreyaspatil.compose-compiler-report-generator:gradle-plugin:$latestVersion"
   }
 }
 ```
