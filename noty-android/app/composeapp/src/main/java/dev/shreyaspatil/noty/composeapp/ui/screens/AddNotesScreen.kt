@@ -95,7 +95,7 @@ fun AddNotesContent(
                         .fillMaxWidth()
                         .background(MaterialTheme.colors.background),
                     value = title,
-                    onTextChange = onTitleChange,
+                    onTextChange = onTitleChange
                 )
 
                 NoteField(

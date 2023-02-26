@@ -32,7 +32,7 @@ inline fun <reified VM : ViewModel> assistedViewModel(
     viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
         "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
     },
-    provideFactory: MainActivity.ViewModelFactoryProvider.() -> ViewModelProvider.Factory,
+    provideFactory: MainActivity.ViewModelFactoryProvider.() -> ViewModelProvider.Factory
 ): VM {
     val factory = provideFactory(assistedViewModelFactory())
     return viewModel(viewModelStoreOwner, factory = factory)

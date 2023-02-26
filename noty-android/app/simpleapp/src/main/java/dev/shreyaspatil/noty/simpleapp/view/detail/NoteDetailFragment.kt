@@ -80,10 +80,14 @@ class NoteDetailFragment :
     private val requestLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) shareImage() else showErrorDialog(
-            title = getString(R.string.dialog_title_failed_image_share),
-            message = getString(R.string.dialog_message_failed_image_share)
-        )
+        if (isGranted) {
+            shareImage()
+        } else {
+            showErrorDialog(
+                title = getString(R.string.dialog_title_failed_image_share),
+                message = getString(R.string.dialog_message_failed_image_share)
+            )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -152,7 +156,8 @@ class NoteDetailFragment :
                     return false
                 }
             },
-            viewLifecycleOwner, Lifecycle.State.RESUMED
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
         )
     }
 

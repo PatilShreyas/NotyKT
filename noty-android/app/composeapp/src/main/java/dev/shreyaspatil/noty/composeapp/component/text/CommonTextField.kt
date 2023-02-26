@@ -83,7 +83,7 @@ fun BasicNotyTextField(
     label: String = "",
     textStyle: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal),
     onTextChange: (String) -> Unit,
-    maxLines: Int = Int.MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     BasicTextField(
         modifier = modifier,

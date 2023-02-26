@@ -205,7 +205,9 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     navigate(destination)
                 }
             }
-        } else return
+        } else {
+            return
+        }
     }
 
     private fun setupMenu() {
@@ -243,7 +245,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     return false
                 }
             },
-            viewLifecycleOwner, Lifecycle.State.RESUMED
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
         )
     }
 

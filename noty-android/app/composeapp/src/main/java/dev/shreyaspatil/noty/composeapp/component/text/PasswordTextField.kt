@@ -40,9 +40,8 @@ fun PasswordTextField(
     label: String = "Password",
     value: String = "",
     isError: Boolean = false,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit
 ) {
-
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     NotyTextField(
@@ -51,13 +50,19 @@ fun PasswordTextField(
         onValueChange = onValueChange,
         modifier = modifier,
         leadingIcon = { Icon(Icons.Outlined.Password, label) },
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None
-        else PasswordVisualTransformation(),
+        visualTransformation = if (isPasswordVisible) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
         isError = isError,
         helperText = stringResource(R.string.message_field_password_invalid),
         trailingIcon = {
-            val image = if (isPasswordVisible) Icons.Filled.Visibility
-            else Icons.Filled.VisibilityOff
+            val image = if (isPasswordVisible) {
+                Icons.Filled.Visibility
+            } else {
+                Icons.Filled.VisibilityOff
+            }
             val description = if (isPasswordVisible) "Hide password" else "Show password"
 
             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {

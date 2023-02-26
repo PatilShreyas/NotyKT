@@ -154,7 +154,6 @@ private fun SignUpForm(
             bottom = 16.dp
         )
     ) {
-
         UsernameTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -162,7 +161,7 @@ private fun SignUpForm(
                 .background(MaterialTheme.colors.background),
             value = username,
             onValueChange = onUsernameChange,
-            isError = !isValidUsername,
+            isError = !isValidUsername
         )
 
         PasswordTextField(
