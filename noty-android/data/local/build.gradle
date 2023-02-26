@@ -55,12 +55,6 @@ android {
                 junitXml.enabled = true
                 html.enabled = true
             }
-            if (name == "testDebugUnitTest") {
-                kover {
-                    disabled = false
-                    binaryReportFile.set(file("$buildDir/test/test-debug-report.bin"))
-                }
-            }
         }
     }
     namespace 'dev.shreyaspatil.noty.data.local'
