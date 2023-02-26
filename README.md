@@ -9,10 +9,6 @@
 [![GitHub license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Android Weekly](https://img.shields.io/badge/Android%20Weekly-%23473-2CA3E6.svg?style=flat)](http://androidweekly.net/issues/issue-473)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
-[![GitHub stars](https://img.shields.io/github/stars/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/network/members)
-[![GitHub watchers](https://img.shields.io/github/watchers/PatilShreyas/NotyKT?style=social)](https://github.com/PatilShreyas/NotyKT/watchers)
-
 
 **NotyKT** is the complete Kotlin-stack note taking 🖊️ application 📱 built to demonstrate a use of Kotlin programming language in *server-side* and *Modern Android development* tools. Dedicated to all Android Developers with ❤️. 
 
