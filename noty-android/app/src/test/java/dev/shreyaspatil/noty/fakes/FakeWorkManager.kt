@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.fakes
 import android.app.PendingIntent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import androidx.work.Configuration
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -82,6 +83,10 @@ class FakeWorkManager : WorkManager() {
 
     override fun getWorkInfoByIdLiveData(id: UUID): LiveData<WorkInfo> {
         return fakeWorkStatesForObserve.map { workInfo(it) }.asLiveData()
+    }
+
+    override fun getConfiguration(): Configuration {
+        TODO("Not yet implemented")
     }
 
     override fun enqueue(requests: MutableList<out WorkRequest>): Operation {
@@ -163,6 +168,10 @@ class FakeWorkManager : WorkManager() {
     override fun getWorkInfos(workQuery: WorkQuery): ListenableFuture<MutableList<WorkInfo>> {
         TODO("Not yet implemented")
     }
+
+    override fun updateWork(request: WorkRequest): ListenableFuture<UpdateResult> {
+        TODO("Not yet implemented")
+    }
 }
 
 fun futureWorkInfo(
@@ -173,10 +182,10 @@ fun futureWorkInfo(
     override fun isDone(): Boolean = true
     override fun get(): WorkInfo = workInfo(state)
     override fun get(timeout: Long, unit: TimeUnit?): WorkInfo = TODO("Not needed")
-    override fun addListener(listener: Runnable?, executor: Executor?) = TODO("Not needed")
+    override fun addListener(listener: Runnable, executor: Executor) = TODO("Not needed")
 }
 
 fun workInfo(state: WorkInfo.State): WorkInfo {
     val fakeData = Data.Builder().build()
-    return WorkInfo(UUID.randomUUID(), state, fakeData, emptyList(), fakeData, 1)
+    return WorkInfo(UUID.randomUUID(), state, fakeData, emptyList(), fakeData, 1, 0)
 }
