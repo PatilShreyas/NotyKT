@@ -72,14 +72,24 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-tasks.koverMergedHtmlReport {
-    enabled = true                          // false to disable report generation
-    htmlReportDir.set(layout.buildDirectory.dir("kover-project-report/html-result"))
-    excludes = [
-            'dagger.hilt.*',
-            'hilt_aggregated_deps.*',
-            'dev.shreyaspatil.noty.simpleapp.databinding.*',
-            '*.Hilt_*',
-            '*.*_MembersInjector*',
-    ]
+koverMerged {
+    enable()
+
+    htmlReport {
+        onCheck.set(false)
+        reportDir.set(layout.buildDirectory.dir(layout.buildDirectory.dir("kover-project-report/html-result")))
+    }
+
+    filters {
+        classes {
+            // class exclusion rules
+            excludes.addAll([
+                    'dagger.hilt.*',
+                    'hilt_aggregated_deps.*',
+                    'dev.shreyaspatil.noty.simpleapp.databinding.*',
+                    '*.Hilt_*',
+                    '*.*_MembersInjector*'
+            ])
+        }
+    }
 }
