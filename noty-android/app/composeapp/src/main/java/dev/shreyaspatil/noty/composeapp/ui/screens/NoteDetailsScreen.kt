@@ -121,7 +121,7 @@ fun NoteDetailContent(
     onNavigateUp: () -> Unit,
     onDeleteClick: () -> Unit,
     onShareNoteAsText: () -> Unit,
-    onShareNoteAsImage: (ImageBitmap) -> Unit,
+    onShareNoteAsImage: (ImageBitmap) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val captureController = rememberCaptureController()
@@ -194,7 +194,7 @@ private fun NoteDetailActions(
             ShareActionItem(
                 label = "Image",
                 onActionClick = onShareNoteAsImageClick
-            ),
+            )
         )
     )
 }

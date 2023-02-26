@@ -83,7 +83,7 @@ fun FailureDialog(failureMessage: String, onDialogDismiss: () -> Unit = {}) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
-                        .padding(16.dp),
+                        .padding(16.dp)
 
                 ) {
                     Text(style = typography.subtitle1, color = Color.White, text = "OK")
@@ -101,7 +101,6 @@ fun ConfirmationDialog(
     onConfirmedNo: () -> Unit,
     onDismissed: () -> Unit
 ) {
-
     var isDismissed by remember { mutableStateOf(false) }
 
     if (!isDismissed) {
@@ -130,7 +129,7 @@ fun ConfirmationDialog(
                             isDismissed = true
                         },
                         modifier = Modifier
-                            .padding(4.dp),
+                            .padding(4.dp)
                     ) {
                         Text(
                             text = "Yes",
@@ -145,7 +144,7 @@ fun ConfirmationDialog(
                             isDismissed = true
                         },
                         modifier = Modifier
-                            .padding(4.dp),
+                            .padding(4.dp)
                     ) {
                         Text(
                             text = "No",
@@ -155,7 +154,7 @@ fun ConfirmationDialog(
                         )
                     }
                 }
-            },
+            }
         )
     }
 }

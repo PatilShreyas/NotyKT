@@ -29,7 +29,7 @@ fun UsernameTextField(
     modifier: Modifier = Modifier,
     value: String = "",
     isError: Boolean = false,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit
 ) {
     NotyTextField(
         value = value,

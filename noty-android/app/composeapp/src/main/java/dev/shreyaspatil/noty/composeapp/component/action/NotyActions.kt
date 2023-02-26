@@ -72,7 +72,7 @@ fun ShareAction(onClick: () -> Unit) {
 
 data class ShareActionItem(
     val label: String,
-    val onActionClick: () -> Unit,
+    val onActionClick: () -> Unit
 )
 
 @Composable

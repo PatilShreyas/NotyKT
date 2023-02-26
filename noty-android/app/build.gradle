@@ -18,6 +18,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'kover'
 
 android {
     compileSdkVersion ProjectConfig.compileSdkVersion
@@ -44,12 +45,6 @@ android {
             reports {
                 junitXml.enabled = true
                 html.enabled = true
-            }
-            if (name == "testDebugUnitTest") {
-                kover {
-                    disabled = false
-                    binaryReportFile.set(file("$buildDir/test/test-debug-report.bin"))
-                }
             }
         }
     }

@@ -120,7 +120,6 @@ fun LicenseCard() {
                 .padding(12.dp)
                 .fillMaxWidth()
         ) {
-
             val licenseTitle = stringResource(id = R.string.text_license_title)
             Text(
                 text = licenseTitle,
@@ -148,7 +147,6 @@ fun VisitCard() {
                 .padding(12.dp)
                 .fillMaxWidth()
         ) {
-
             val visit = stringResource(id = R.string.text_visit)
             Text(
                 text = visit,
@@ -173,7 +171,7 @@ fun VisitCard() {
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.primaryColor),
-                    style = TextStyle(textDecoration = TextDecoration.Underline),
+                    style = TextStyle(textDecoration = TextDecoration.Underline)
                 )
             }
         }

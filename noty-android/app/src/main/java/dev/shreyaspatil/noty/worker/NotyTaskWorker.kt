@@ -43,7 +43,9 @@ class NotyTaskWorker @AssistedInject constructor(
             // `response.data` will be a noteId received from API.
             localNoteRepository.updateNoteId(tempNoteId, response.data)
             Result.success()
-        } else Result.retry()
+        } else {
+            Result.retry()
+        }
     }
 
     private suspend fun updateNote(noteId: String): Result {

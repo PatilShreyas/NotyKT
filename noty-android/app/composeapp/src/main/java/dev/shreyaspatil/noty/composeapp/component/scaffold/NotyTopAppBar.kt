@@ -42,7 +42,7 @@ import dev.shreyaspatil.noty.composeapp.R
 fun NotyTopAppBar(
     title: String = "NotyKT",
     onNavigateUp: (() -> Unit)? = null,
-    actions: @Composable() (RowScope.() -> Unit) = {},
+    actions: @Composable (RowScope.() -> Unit) = {}
 ) {
     TopAppBar(
         title = {
@@ -76,6 +76,6 @@ fun NotyTopAppBar(
         actions = actions,
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onPrimary,
-        elevation = 0.dp,
+        elevation = 0.dp
     )
 }
