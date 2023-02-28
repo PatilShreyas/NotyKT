@@ -18,7 +18,7 @@ buildscript {
     ext {
         kotlinVersion = "1.8.10"
         kotlinSerializerVersion = "1.5.0"
-        ktlintVersion = "10.3.0"
+        ktlintVersion = "11.2.0"
         coroutinesVersion = "1.6.4"
         ktorVersion = "1.6.8"
         exposedVersion = "0.41.1"
