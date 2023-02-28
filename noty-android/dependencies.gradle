@@ -16,7 +16,7 @@
 
 ext {
     // Android Plugin
-    androidGradlePluginVersion = '7.4.1'
+    androidGradlePluginVersion = '7.4.2'
 
     // Compose compiler report generator plugin
     composeCompilerReportGenVersion = "1.0.0"
