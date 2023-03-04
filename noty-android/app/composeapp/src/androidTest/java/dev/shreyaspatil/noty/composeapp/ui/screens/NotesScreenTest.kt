@@ -196,13 +196,13 @@ class NotesScreenTest : NotyScreenTest() {
         setNotyContent { NotesScreen(onNavigateToNoteDetail = { navigateToNoteId = it }) }
         registerIdlingResource(prefillNotes())
 
-        onNodeWithText("Lorem Ipsum 49", useUnmergedTree = true).performClick()
+        onNodeWithText("Lorem Ipsum 1", useUnmergedTree = true).performClick()
         waitForIdle()
-        assertEquals("49", navigateToNoteId)
+        assertEquals("1", navigateToNoteId)
 
-        onNodeWithText("Hello World 48", useUnmergedTree = true).performClick()
+        onNodeWithText("Hello World 2", useUnmergedTree = true).performClick()
         waitForIdle()
-        assertEquals("48", navigateToNoteId)
+        assertEquals("2", navigateToNoteId)
     }
 
     @Composable
@@ -231,8 +231,7 @@ class NotesScreenTest : NotyScreenTest() {
                 id = it.toString(),
                 title = "$title $it",
                 note = "$note $it",
-                created = currentTime - it.toLong(),
-                isPinned = false
+                created = currentTime - it.toLong()
             )
         }
     }
