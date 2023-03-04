@@ -16,4 +16,5 @@ If you want to discuss on something then feel free to present your opinions, vie
 - New code addition/deletion should not break existing flow of a system.
 - All tests should be passed.
 - Verify `./gradlew build` is passing before raising a PR.
+- Run UI tests using `./gradlew connectedCheck` to make sure UI tests are passing.
 - Reformat code with KtLint `./gradlew ktlintFormat` before raising a PR.
