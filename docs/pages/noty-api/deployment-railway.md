@@ -1,8 +1,7 @@
 # Deployment on Railway.app
 
-This project is currently deployed on Railway.app on the following URLs
+This project is currently deployed on Railway.app on the following URL
 - https://notykt-production.up.railway.app/notes
-- https://notykt-api.shreyaspatil.dev
 
 Deployment on Railway is very simple. On every push, it automatically deploys project.
 

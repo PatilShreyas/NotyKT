@@ -5,7 +5,7 @@
 
 Noty backend _REST API_ is built with Ktor framework with PostgreSQL as database and deployed on the [Railway](https://railway.app).
 
-Currently this API is deployed on _`https://notykt-production.up.railway.app` (Also, points to `https://notykt-api.shreyaspatil.dev/`)_. You can try it 😃.
+Currently this API is deployed on _`https://notykt-production.up.railway.app`. You can try it 😃.
 
 [📄 _**Visit the documentation of this project**_](https://patilshreyas.github.io/NotyKT/) to get more information in detail.
 
