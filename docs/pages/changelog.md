@@ -4,6 +4,23 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v2.1.2_ (2023-03-04)
+
+This release includes minor fixes in the application.
+### 🐛 Fixes
+
+- [[#592](https://github.com/PatilShreyas/NotyKT/issues/592)] Fix popping behavior of error dialog on login of sign up screen.
+- [[#617](https://github.com/PatilShreyas/NotyKT/issues/617)] Fix issue of network errors in the app (due to bad endpoint).
+
+### 🎯Codebase Improvements
+
+- Started using Jetpack Compose BoM for better version management.
+- Integrate [_Jetpack Compose Compiler Report Generator plugin_](https://patilshreyas.github.io/NotyKT/#/pages/noty-android/compose-compiler-metrics-and-report).
+
+_**Many Thanks to superstar ⭐ contributor [@LightningGem](https://github.com/LightningGem) for contributing and for making this project better!**_
+
+---
+
 ## _v2.1.1_ (2023-01-01)
 
 _This release includes minor fixes in the application. There are no major changes in the client application_  
