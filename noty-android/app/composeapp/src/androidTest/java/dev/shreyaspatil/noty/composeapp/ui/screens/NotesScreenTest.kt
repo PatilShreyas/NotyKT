@@ -205,6 +205,24 @@ class NotesScreenTest : NotyScreenTest() {
         assertEquals("3", navigateToNoteId)
     }
 
+    @Test
+    fun showPinnedNotesFirst_whenPinnedNotesArePresent() = runTest {
+        setNotyContent { NotesScreen() }
+
+        registerIdlingResource(prefillNotes())
+        registerIdlingResource(pinNotes("49", "50"))
+
+        waitForIdle()
+
+        // Scroll to the top of screen
+        onNodeWithTag("notesList").performScrollToIndex(0)
+        waitForIdle()
+
+        // Pinned notes should be displayed on top of screen
+        onNodeWithText("Lorem Ipsum 49").assertIsDisplayed()
+        onNodeWithText("Lorem Ipsum 50").assertIsDisplayed()
+    }
+
     @Composable
     private fun NotesScreen(
         onNavigateToAbout: () -> Unit = {},
@@ -241,6 +259,10 @@ class NotesScreenTest : NotyScreenTest() {
 
     private fun prefillNotes() = addNotes(notes())
 
+    private fun pinNotes(vararg noteIds: String): IdlingResource {
+        return updateNotePins(noteIds.toList())
+    }
+
     @Suppress("SameParameterValue")
     private fun addNote(title: String, note: String) = object : IdlingResource {
         override var isIdleNow: Boolean = false
@@ -248,6 +270,20 @@ class NotesScreenTest : NotyScreenTest() {
         init {
             GlobalScope.launch {
                 noteRepository.addNote(title, note)
+                delay(1_000)
+                isIdleNow = true
+            }
+        }
+    }
+
+    private fun updateNotePins(noteIds: List<String>) = object : IdlingResource {
+        override var isIdleNow: Boolean = false
+
+        init {
+            GlobalScope.launch {
+                noteIds.forEach { noteId ->
+                    noteRepository.pinNote(noteId, true)
+                }
                 delay(1_000)
                 isIdleNow = true
             }
