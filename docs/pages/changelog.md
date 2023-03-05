@@ -4,6 +4,21 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v2.2.0_ (2023-03-05)
+
+This release includes minor fixes and codebase improvements in the application.
+
+### 🐛 Fixes
+
+- [[#619](https://github.com/PatilShreyas/NotyKT/issues/619)] Show recently added notes first (after pinned notes)
+
+### 🎯Codebase Improvements
+
+- Fixed failing UI tests.
+- Added unit tests for verifying pinning and unpinning flow.
+
+---
+
 ## _v2.1.2_ (2023-03-04)
 
 This release includes minor fixes in the application.
