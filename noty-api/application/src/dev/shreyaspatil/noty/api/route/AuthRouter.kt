@@ -23,15 +23,16 @@ import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
 import dev.shreyaspatil.noty.api.model.response.generateHttpResponse
 import dev.shreyaspatil.noty.api.plugin.controllers
-import io.ktor.application.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.*
+import io.ktor.application.call
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Route
+import io.ktor.routing.post
+import io.ktor.routing.route
+import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalAPI
 fun Route.AuthApi(authController: Lazy<AuthController> = controllers.authController()) {
-
     route("/auth") {
         controllers
         post("/register") {

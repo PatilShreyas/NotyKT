@@ -18,8 +18,8 @@ package dev.shreyaspatil.noty.api
 
 import dev.shreyaspatil.noty.api.plugin.*
 import dev.shreyaspatil.noty.data.database.initDatabase
-import io.ktor.application.*
-import io.ktor.util.*
+import io.ktor.application.Application
+import io.ktor.util.KtorExperimentalAPI
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 

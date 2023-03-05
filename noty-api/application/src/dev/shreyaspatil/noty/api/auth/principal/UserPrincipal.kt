@@ -17,6 +17,6 @@
 package dev.shreyaspatil.noty.api.auth.principal
 
 import dev.shreyaspatil.noty.data.model.User
-import io.ktor.auth.*
+import io.ktor.auth.Principal
 
 class UserPrincipal(val user: User) : Principal

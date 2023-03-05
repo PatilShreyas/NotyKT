@@ -17,7 +17,7 @@
 package dev.shreyaspatil.noty.api.auth
 
 import dev.shreyaspatil.noty.api.di.module.SecretKey
-import io.ktor.util.*
+import io.ktor.util.hex
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject

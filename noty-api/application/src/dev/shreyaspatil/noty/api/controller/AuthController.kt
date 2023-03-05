@@ -23,7 +23,7 @@ import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.utils.isAlphaNumeric
 import dev.shreyaspatil.noty.data.dao.UserDao
-import io.ktor.util.*
+import io.ktor.util.KtorExperimentalAPI
 import javax.inject.Inject
 import javax.inject.Singleton
 

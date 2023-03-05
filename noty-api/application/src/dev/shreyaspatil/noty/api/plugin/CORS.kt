@@ -16,9 +16,11 @@
 
 package dev.shreyaspatil.noty.api.plugin
 
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.http.*
+import io.ktor.application.Application
+import io.ktor.application.install
+import io.ktor.features.CORS
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 
 fun Application.configureCORS() {
     install(CORS) {

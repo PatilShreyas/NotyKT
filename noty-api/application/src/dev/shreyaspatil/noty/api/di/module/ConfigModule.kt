@@ -19,8 +19,8 @@ package dev.shreyaspatil.noty.api.di.module
 import dagger.Module
 import dagger.Provides
 import dev.shreyaspatil.noty.data.database.DatabaseConfig
-import io.ktor.application.*
-import io.ktor.config.*
+import io.ktor.application.Application
+import io.ktor.config.ApplicationConfig
 import javax.inject.Singleton
 
 @Module

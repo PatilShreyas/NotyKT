@@ -21,7 +21,7 @@ import dev.shreyaspatil.noty.data.entity.EntityUser
 import dev.shreyaspatil.noty.data.model.User
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 

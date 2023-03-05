@@ -26,16 +26,16 @@ import dev.shreyaspatil.noty.api.model.request.NoteRequest
 import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.generateHttpResponse
 import dev.shreyaspatil.noty.api.plugin.controllers
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.request.*
-import io.ktor.response.*
+import io.ktor.application.call
+import io.ktor.auth.authenticate
+import io.ktor.auth.principal
+import io.ktor.request.receive
+import io.ktor.response.respond
 import io.ktor.routing.*
-import io.ktor.util.*
+import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalAPI
 fun Route.NoteApi(notesController: Lazy<NotesController> = controllers.notesController()) {
-
     authenticate {
         get("/notes") {
             val principal = call.principal<UserPrincipal>()
@@ -48,7 +48,6 @@ fun Route.NoteApi(notesController: Lazy<NotesController> = controllers.notesCont
         }
 
         route("/note/") {
-
             post("/new") {
                 val noteRequest = runCatching { call.receive<NoteRequest>() }.getOrElse {
                     throw BadRequestException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)

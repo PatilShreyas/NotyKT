@@ -21,23 +21,22 @@ import dev.shreyaspatil.noty.api.auth.JWTController
 import dev.shreyaspatil.noty.api.auth.NotyJWTController
 import dev.shreyaspatil.noty.api.auth.principal.UserPrincipal
 import dev.shreyaspatil.noty.data.dao.UserDao
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.auth.jwt.*
-import io.ktor.util.*
-import java.util.*
+import io.ktor.application.Application
+import io.ktor.application.install
+import io.ktor.auth.Authentication
+import io.ktor.auth.jwt.jwt
+import io.ktor.util.KtorExperimentalAPI
+import java.util.UUID
 
 @KtorExperimentalAPI
 fun Application.configureAuthentication(
     jwtController: Lazy<JWTController> = appComponent.controllerComponent().jwtController(),
     userDao: Lazy<UserDao> = appComponent.daoComponent().userDao()
 ) {
-
     install(Authentication) {
         jwt {
             verifier(jwtController.get().verifier)
             validate {
-
                 // Extract userId from token
                 val userId = it.payload.getClaim(NotyJWTController.ClAIM).asString()
 

@@ -25,7 +25,7 @@ import dev.shreyaspatil.noty.api.di.module.ConfigModule
 import dev.shreyaspatil.noty.api.di.module.ControllerModule
 import dev.shreyaspatil.noty.api.di.module.DaoModule
 import dev.shreyaspatil.noty.api.di.module.EncryptorModule
-import io.ktor.util.*
+import io.ktor.util.KtorExperimentalAPI
 import javax.inject.Singleton
 
 @KtorExperimentalAPI

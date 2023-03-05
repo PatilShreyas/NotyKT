@@ -18,8 +18,8 @@ package dev.shreyaspatil.noty.api.di.component
 
 import dagger.BindsInstance
 import dagger.Component
-import io.ktor.application.*
-import io.ktor.util.*
+import io.ktor.application.Application
+import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalAPI
 @Component
