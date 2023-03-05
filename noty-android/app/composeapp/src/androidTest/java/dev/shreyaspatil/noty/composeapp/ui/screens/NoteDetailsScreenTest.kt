@@ -176,6 +176,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             )
             GlobalScope.launch {
                 noteRepository.addNotes(listOf(note))
+                delay(1000)
                 isIdleNow = true
             }
         }
