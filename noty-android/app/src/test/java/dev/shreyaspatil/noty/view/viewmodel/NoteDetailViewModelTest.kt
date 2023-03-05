@@ -267,4 +267,65 @@ class NoteDetailViewModelTest : ViewModelBehaviorSpec({
             }
         }
     }
+
+    Given("A note is either pinned or unpinned") {
+        And("Note is not yet synced") {
+            val wasPinned = viewModel.currentState.isPinned
+            coEvery { repository.pinNote(noteId, any()) } returns Either.success("TMP_$noteId")
+
+            When("Note pin is toggled") {
+                viewModel.togglePin()
+
+                Then("Note should be get pinned") {
+                    coVerify { repository.pinNote(noteId, !wasPinned) }
+                }
+
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { isPinned shouldBe !wasPinned }
+                }
+
+                Then("Note pin should NOT be get scheduled") {
+                    scheduledTasks.find {
+                        it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.PIN
+                    } shouldBe null
+                }
+            }
+        }
+
+        And("Note is synced") {
+            val wasPinned = viewModel.currentState.isPinned
+            coEvery { repository.pinNote(noteId, any()) } returns Either.success(noteId)
+
+            When("Note pin is toggled") {
+                viewModel.togglePin()
+
+                Then("Note should get pinned") {
+                    coVerify { repository.pinNote(noteId, !wasPinned) }
+                }
+
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { isPinned shouldBe !wasPinned }
+                }
+
+                Then("Note pin should be get scheduled") {
+                    scheduledTasks.last().let {
+                        it.noteId shouldBe noteId
+                        it.action shouldBe NotyTaskAction.PIN
+                    }
+                }
+            }
+        }
+
+        And("Error occurs") {
+            coEvery { repository.pinNote(noteId, any()) } returns Either.error("Error occurred")
+
+            When("Note pin is toggled") {
+                viewModel.togglePin()
+
+                Then("Valid UI states should be get updated") {
+                    viewModel.withState { error shouldBe "Error occurred" }
+                }
+            }
+        }
+    }
 })

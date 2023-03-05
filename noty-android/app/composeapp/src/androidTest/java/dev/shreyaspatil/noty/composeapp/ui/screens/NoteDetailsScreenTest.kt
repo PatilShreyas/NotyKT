@@ -18,8 +18,10 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.IdlingResource
+import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
@@ -32,6 +34,7 @@ import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -131,6 +134,26 @@ class NoteDetailsScreenTest : NotyScreenTest() {
         assertTrue(navigatingUp)
     }
 
+    @Test
+    fun showActionToUnpinNote_whenNoteIsAlreadyPinned() = runTest {
+        registerIdlingResource(setNoteIsPinned(true))
+        setNotyContent { NoteDetailScreen() }
+        waitForIdle()
+
+        onNodeWithTag("actionTogglePin", useUnmergedTree = true)
+            .assertContentDescriptionEquals("Pinned")
+    }
+
+    @Test
+    fun showActionToPinNote_whenNoteIsNotPinned() = runTest {
+        registerIdlingResource(setNoteIsPinned(false))
+        setNotyContent { NoteDetailScreen() }
+        waitForIdle()
+
+        onNodeWithTag("actionTogglePin", useUnmergedTree = true)
+            .assertContentDescriptionEquals("Not Pinned")
+    }
+
     @Composable
     private fun NoteDetailScreen(onNavigateUp: () -> Unit = {}) {
         NoteDetailsScreen(
@@ -153,6 +176,18 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             )
             GlobalScope.launch {
                 noteRepository.addNotes(listOf(note))
+                isIdleNow = true
+            }
+        }
+    }
+
+    private fun setNoteIsPinned(isPinned: Boolean) = object : IdlingResource {
+        override var isIdleNow: Boolean = false
+
+        init {
+            GlobalScope.launch {
+                noteRepository.pinNote("1", isPinned)
+                delay(1000)
                 isIdleNow = true
             }
         }

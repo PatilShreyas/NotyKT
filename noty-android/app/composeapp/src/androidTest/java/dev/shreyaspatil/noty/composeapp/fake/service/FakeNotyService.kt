@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.composeapp.fake.service
 import dev.shreyaspatil.noty.composeapp.testUtil.successResponse
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
+import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.remote.model.response.State
@@ -51,6 +52,13 @@ class FakeNotyService @Inject constructor() : NotyService {
 
     override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
         // Do nothing, just return success
+        return successResponse(NoteResponse(State.SUCCESS, "", ""))
+    }
+
+    override suspend fun updateNotePin(
+        noteId: String,
+        noteRequest: NoteUpdatePinRequest
+    ): Response<NoteResponse> {
         return successResponse(NoteResponse(State.SUCCESS, "", ""))
     }
 }

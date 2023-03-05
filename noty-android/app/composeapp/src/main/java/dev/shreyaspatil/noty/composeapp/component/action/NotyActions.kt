@@ -27,19 +27,25 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.R
 
 @Composable
 fun PinAction(isPinned: Boolean, onClick: () -> Unit) {
-    val icon = painterResource(id = if (isPinned) R.drawable.ic_pinned else R.drawable.ic_unpinned)
+    val (icon, contentDescription) = if (isPinned) {
+        R.drawable.ic_pinned to "Pinned"
+    } else {
+        R.drawable.ic_unpinned to "Not Pinned"
+    }
     IconButton(onClick = onClick) {
         Icon(
-            painter = icon,
-            contentDescription = "Pinned Note",
+            painter = painterResource(id = icon),
+            contentDescription = contentDescription,
             modifier = Modifier
                 .padding(8.dp)
+                .testTag("actionTogglePin")
         )
     }
 }

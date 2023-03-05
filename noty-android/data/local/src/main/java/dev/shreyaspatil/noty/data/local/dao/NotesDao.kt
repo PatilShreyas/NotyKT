@@ -41,7 +41,7 @@ interface NotesDao {
     @Query("SELECT * FROM notes WHERE noteId = :noteId")
     fun getNoteById(noteId: String): Flow<NoteEntity?>
 
-    @Query("SELECT * FROM notes ORDER BY isPinned = 1 DESC, created")
+    @Query("SELECT * FROM notes ORDER BY isPinned = 1 DESC, created DESC")
     fun getAllNotes(): Flow<List<NoteEntity>>
 
     @Insert

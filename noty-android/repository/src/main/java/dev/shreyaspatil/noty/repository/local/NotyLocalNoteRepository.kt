@@ -17,8 +17,8 @@
 package dev.shreyaspatil.noty.repository.local
 
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.repository.Either
+import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.data.local.dao.NotesDao
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 import kotlinx.coroutines.flow.Flow
@@ -51,11 +51,11 @@ class NotyLocalNoteRepository @Inject constructor(
         val tempNoteId = NotyNoteRepository.generateTemporaryId()
         notesDao.addNote(
             NoteEntity(
-                tempNoteId,
-                title,
-                note,
-                System.currentTimeMillis(),
-                false
+                noteId = tempNoteId,
+                title = title,
+                note = note,
+                created = System.currentTimeMillis(),
+                isPinned = false
             )
         )
         Either.success(tempNoteId)
