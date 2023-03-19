@@ -15,7 +15,6 @@
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     apply from: 'dependencies.gradle'
     apply from: 'projectConfig.gradle'
@@ -38,7 +37,9 @@ buildscript {
         classpath "dev.shreyaspatil.compose-compiler-report-generator:gradle-plugin:$composeCompilerReportGenVersion"
     }
 }
-
+plugins {
+    id 'com.google.devtools.ksp' version "$kspVersion" apply false
+}
 apply from: 'dependencies.gradle'
 apply from: 'projectConfig.gradle'
 apply plugin: 'kover'

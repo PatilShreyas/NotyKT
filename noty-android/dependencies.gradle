@@ -23,6 +23,7 @@ ext {
 
     // Kotlin
     kotlinVersion = "1.8.10"
+    kspVersion = "1.8.10-1.0.9"
     ktlintVersion = "11.2.0"
     coroutinesVersion = "1.6.4"
     koverVersion = "0.6.1"
@@ -69,6 +70,7 @@ ext {
     moshiVersion = '1.14.0'
 
     // Other utility
+    mutektVersion = "1.0.0"
     leakCanaryVersion = "2.8.1"
     javaxInjectVersion = "1"
 
