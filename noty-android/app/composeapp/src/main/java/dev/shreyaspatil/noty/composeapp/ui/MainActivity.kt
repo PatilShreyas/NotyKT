@@ -23,8 +23,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -60,7 +60,9 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun NotyMain() {
-        val darkMode by preferenceManager.uiModeFlow.collectAsState(initial = isSystemInDarkTheme())
+        val darkMode by preferenceManager.uiModeFlow.collectAsStateWithLifecycle(
+            initialValue = isSystemInDarkTheme()
+        )
 
         NotyTheme(darkTheme = darkMode) {
             Surface {
