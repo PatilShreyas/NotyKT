@@ -17,7 +17,7 @@
 package dev.shreyaspatil.noty.composeapp.utils
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.shreyaspatil.noty.view.state.State
 import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
 
@@ -27,4 +27,4 @@ import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
  * updated causing recomposition of every State.value usage.
  */
 @Composable
-fun <S : State, VM : BaseViewModel<S>> VM.collectState() = state.collectAsState()
+fun <S : State, VM : BaseViewModel<S>> VM.collectState() = state.collectAsStateWithLifecycle()
