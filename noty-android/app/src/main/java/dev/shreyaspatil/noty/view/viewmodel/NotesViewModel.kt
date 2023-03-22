@@ -65,6 +65,7 @@ class NotesViewModel @Inject constructor(
     }
 
     fun syncNotes() {
+        if (sessionManager.getToken() == null) return
         if (syncJob?.isActive == true) return
 
         syncJob = viewModelScope.launch {

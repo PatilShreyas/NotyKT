@@ -31,13 +31,13 @@ import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
 import dev.shreyaspatil.noty.testUtils.withState
 import dev.shreyaspatil.noty.view.state.NotesState
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +45,6 @@ import kotlinx.coroutines.flow.flowOf
 import java.util.*
 
 @Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
-@OptIn(ExperimentalCoroutinesApi::class)
 class NotesViewModelTest : ViewModelBehaviorSpec({
     val fakeNotesFlow = MutableSharedFlow<Either<List<Note>>>(replay = 1)
 
@@ -143,7 +142,26 @@ class NotesViewModelTest : ViewModelBehaviorSpec({
     }
 
     Given("Notes available for syncing") {
-        When("Sync for notes is requested") {
+        When("User is not logged in and Sync for notes is requested") {
+            clearAllMocks(answers = false)
+            every { sessionManager.getToken() } returns null
+
+            val taskId = UUID.randomUUID()
+            every { taskManager.syncNotes() } returns taskId
+            every { taskManager.observeTask(taskId) } returns flowOf(
+                TaskState.SCHEDULED,
+                TaskState.COMPLETED
+            )
+
+            viewModel.syncNotes()
+
+            Then("Task should not be get scheduled") {
+                verify(exactly = 0) { taskManager.syncNotes() }
+            }
+        }
+        When("User is logged in and Sync for notes is requested") {
+            clearAllMocks(answers = false)
+            every { sessionManager.getToken() } returns "ABCD1234"
 
             And("Sync is successful") {
                 val taskId = UUID.randomUUID()
@@ -154,6 +172,10 @@ class NotesViewModelTest : ViewModelBehaviorSpec({
                 )
 
                 viewModel.syncNotes()
+
+                Then("Task should be get scheduled") {
+                    verify(exactly = 1) { taskManager.syncNotes() }
+                }
 
                 Then("UI state should be get updated") {
                     viewModel.withState { isLoading shouldBe false }
