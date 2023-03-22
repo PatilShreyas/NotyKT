@@ -57,7 +57,8 @@ class NoteDetailViewModelTest : ViewModelBehaviorSpec({
             note = "Hey there! This is note content",
             showSave = false,
             finished = false,
-            error = null
+            error = null,
+            isPinned = false
         )
 
         When("Initialized") {
