@@ -34,7 +34,7 @@ interface AddNoteState : State {
             showSave = false,
             isAdding = false,
             added = false,
-            errorMessage = null,
+            errorMessage = null
         )
     }
 }

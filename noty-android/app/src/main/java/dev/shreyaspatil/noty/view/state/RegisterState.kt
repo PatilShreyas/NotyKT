@@ -40,7 +40,7 @@ interface RegisterState : State {
             isValidUsername = null,
             isValidPassword = null,
             isValidConfirmPassword = null,
-            error = null,
+            error = null
         )
     }
 }

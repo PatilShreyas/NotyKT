@@ -34,6 +34,3 @@ abstract class BaseViewModel<STATE : State> : ViewModel() {
      */
     val currentState: STATE get() = state.value
 }
-
-
-
