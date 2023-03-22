@@ -16,9 +16,11 @@
 
 package dev.shreyaspatil.noty.view.state
 
+import androidx.compose.runtime.Immutable
 import dev.shreyaspatil.mutekt.core.annotations.GenerateMutableModel
 
 @GenerateMutableModel
+@Immutable
 interface AddNoteState : State {
     val title: String
     val note: String

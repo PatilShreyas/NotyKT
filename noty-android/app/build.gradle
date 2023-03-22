@@ -113,6 +113,11 @@ dependencies {
     implementation("dev.shreyaspatil.mutekt:mutekt-core:$mutektVersion")
     ksp("dev.shreyaspatil.mutekt:mutekt-codegen:$mutektVersion")
 
+    // Compose runtime - For @Immutable annotation
+    implementation platform("androidx.compose:compose-bom:$composeBomVersion")
+    testImplementation platform("androidx.compose:compose-bom:$composeBomVersion")
+    implementation "androidx.compose.runtime:runtime"
+
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "io.kotest:kotest-runner-junit5:$kotestVersion"

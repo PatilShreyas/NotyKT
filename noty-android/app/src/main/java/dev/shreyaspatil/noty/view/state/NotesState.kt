@@ -16,9 +16,12 @@
 
 package dev.shreyaspatil.noty.view.state
 
+import androidx.compose.runtime.Immutable
 import dev.shreyaspatil.mutekt.core.annotations.GenerateMutableModel
 import dev.shreyaspatil.noty.core.model.Note
+
 @GenerateMutableModel
+@Immutable
 interface NotesState : State {
     val isLoading: Boolean
     val notes: List<Note>

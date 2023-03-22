@@ -16,9 +16,11 @@
 
 package dev.shreyaspatil.noty.view.state
 
+import androidx.compose.runtime.Immutable
 import dev.shreyaspatil.mutekt.core.annotations.GenerateMutableModel
 
 @GenerateMutableModel
+@Immutable
 interface RegisterState : State {
     val isLoading: Boolean
     val isLoggedIn: Boolean
