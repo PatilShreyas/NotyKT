@@ -16,12 +16,27 @@
 
 package dev.shreyaspatil.noty.view.state
 
-data class LoginState(
-    val isLoading: Boolean = false,
-    val isLoggedIn: Boolean = false,
-    val error: String? = null,
-    val username: String = "",
-    val password: String = "",
-    val isValidUsername: Boolean? = null,
-    val isValidPassword: Boolean? = null
-) : State
+import dev.shreyaspatil.mutekt.core.annotations.GenerateMutableModel
+
+@GenerateMutableModel
+interface LoginState : State {
+    val isLoading: Boolean
+    val isLoggedIn: Boolean
+    val error: String?
+    val username: String
+    val password: String
+    val isValidUsername: Boolean?
+    val isValidPassword: Boolean?
+
+    companion object {
+        val initialState = LoginState(
+            isLoading = false,
+            isLoggedIn = false,
+            error = null,
+            username = "",
+            password = "",
+            isValidUsername = null,
+            isValidPassword = null
+        )
+    }
+}

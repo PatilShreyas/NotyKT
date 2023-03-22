@@ -30,9 +30,13 @@ import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.di.LocalRepository
+import dev.shreyaspatil.noty.store.StateStore
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
+import dev.shreyaspatil.noty.view.state.MutableNoteDetailState
 import dev.shreyaspatil.noty.view.state.NoteDetailState
+import dev.shreyaspatil.noty.view.state.mutable
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -40,7 +44,11 @@ class NoteDetailViewModel @AssistedInject constructor(
     private val notyTaskManager: NotyTaskManager,
     @LocalRepository private val noteRepository: NotyNoteRepository,
     @Assisted private val noteId: String
-) : BaseViewModel<NoteDetailState>(initialState = NoteDetailState()) {
+) : BaseViewModel<NoteDetailState>() {
+
+    private val stateStore = StateStore(initialState = NoteDetailState.initialState.mutable())
+
+    override val state: StateFlow<NoteDetailState> = stateStore.state
 
     private var job: Job? = null
     private lateinit var currentNote: Note
@@ -50,31 +58,32 @@ class NoteDetailViewModel @AssistedInject constructor(
     }
 
     fun setTitle(title: String) {
-        setState { state -> state.copy(title = title) }
+        setState { this.title = title }
         validateNote()
     }
 
     fun setNote(note: String) {
-        setState { state -> state.copy(note = note) }
+        setState { this.note = note }
         validateNote()
     }
 
     private fun loadNote() {
         viewModelScope.launch {
-            setState { state -> state.copy(isLoading = true) }
+            setState { isLoading = true }
             val note = noteRepository.getNoteById(noteId).firstOrNull()
             if (note != null) {
                 currentNote = note
-                setState { state ->
-                    state.copy(
-                        isLoading = false,
-                        title = note.title,
-                        note = note.note,
-                        isPinned = note.isPinned
-                    )
+                setState {
+                    this.isLoading = false
+                    this.title = note.title
+                    this.note = note.note
+                    this.isPinned = note.isPinned
                 }
             } else {
-                setState { state -> state.copy(isLoading = false, finished = true) }
+                setState {
+                    isLoading = false
+                    finished = true
+                }
             }
         }
     }
@@ -85,11 +94,11 @@ class NoteDetailViewModel @AssistedInject constructor(
 
         job?.cancel()
         job = viewModelScope.launch {
-            setState { state -> state.copy(isLoading = true) }
+            setState { isLoading = true }
 
             val response = noteRepository.updateNote(noteId, title, note)
 
-            setState { state -> state.copy(isLoading = false) }
+            setState { isLoading = false }
 
             response.onSuccess { noteId ->
                 if (NotyNoteRepository.isTemporaryNote(noteId)) {
@@ -97,9 +106,9 @@ class NoteDetailViewModel @AssistedInject constructor(
                 } else {
                     scheduleNoteUpdate(noteId)
                 }
-                setState { state -> state.copy(finished = true) }
+                setState { finished = true }
             }.onFailure { message ->
-                setState { state -> state.copy(error = message) }
+                setState { error = message }
             }
         }
     }
@@ -107,19 +116,19 @@ class NoteDetailViewModel @AssistedInject constructor(
     fun delete() {
         job?.cancel()
         job = viewModelScope.launch {
-            setState { state -> state.copy(isLoading = true) }
+            setState { isLoading = true }
 
             val response = noteRepository.deleteNote(noteId)
 
-            setState { state -> state.copy(isLoading = false) }
+            setState { isLoading = false }
 
             response.onSuccess { noteId ->
                 if (!NotyNoteRepository.isTemporaryNote(noteId)) {
                     scheduleNoteDelete(noteId)
                 }
-                setState { state -> state.copy(finished = true) }
+                setState { finished = true }
             }.onFailure { message ->
-                setState { state -> state.copy(error = message) }
+                setState { error = message }
             }
         }
     }
@@ -127,18 +136,21 @@ class NoteDetailViewModel @AssistedInject constructor(
     fun togglePin() {
         job?.cancel()
         job = viewModelScope.launch {
-            setState { state -> state.copy(isLoading = true) }
+            setState { isLoading = true }
 
             val response = noteRepository.pinNote(noteId, !currentState.isPinned)
 
-            setState { state -> state.copy(isLoading = false, isPinned = !currentState.isPinned) }
+            setState {
+                isLoading = false
+                isPinned = !currentState.isPinned
+            }
 
             response.onSuccess { noteId ->
                 if (!NotyNoteRepository.isTemporaryNote(noteId)) {
                     scheduleNoteUpdatePin(noteId)
                 }
             }.onFailure { message ->
-                setState { state -> state.copy(error = message) }
+                setState { error = message }
             }
         }
     }
@@ -154,7 +166,7 @@ class NoteDetailViewModel @AssistedInject constructor(
             val isValid = title != null && note != null && NoteValidator.isValidNote(title, note)
             val areOldAndUpdatedNoteSame = oldTitle == title?.trim() && oldNote == note?.trim()
 
-            setState { state -> state.copy(showSave = isValid && !areOldAndUpdatedNoteSame) }
+            setState { showSave = isValid && !areOldAndUpdatedNoteSame }
         } catch (error: Throwable) {
         }
     }
@@ -170,6 +182,8 @@ class NoteDetailViewModel @AssistedInject constructor(
 
     private fun scheduleNoteUpdatePin(noteId: String) =
         notyTaskManager.scheduleTask(NotyTask.pin(noteId))
+
+    private fun setState(update: MutableNoteDetailState.() -> Unit) = stateStore.setState(update)
 
     @AssistedFactory
     interface Factory {

@@ -17,5 +17,10 @@
 package dev.shreyaspatil.noty.view.viewmodel
 
 import dev.shreyaspatil.noty.view.state.AboutState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class AboutViewModel : BaseViewModel<AboutState>(initialState = AboutState)
+class AboutViewModel : BaseViewModel<AboutState>() {
+    override val state: StateFlow<AboutState> = MutableStateFlow(AboutState).asStateFlow()
+}

@@ -20,8 +20,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
+import dev.shreyaspatil.noty.store.StateStore
 import dev.shreyaspatil.noty.utils.validator.AuthValidator
+import dev.shreyaspatil.noty.view.state.MutableRegisterState
 import dev.shreyaspatil.noty.view.state.RegisterState
+import dev.shreyaspatil.noty.view.state.mutable
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,18 +33,22 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val notyUserRepository: NotyUserRepository,
     private val sessionManager: SessionManager
-) : BaseViewModel<RegisterState>(initialState = RegisterState()) {
+) : BaseViewModel<RegisterState>() {
+
+    private val stateStore = StateStore(initialState = RegisterState.initialState.mutable())
+
+    override val state: StateFlow<RegisterState> = stateStore.state
 
     fun setUsername(username: String) {
-        setState { state -> state.copy(username = username) }
+        setState { this.username = username }
     }
 
     fun setPassword(password: String) {
-        setState { state -> state.copy(password = password) }
+        setState { this.password = password }
     }
 
     fun setConfirmPassword(password: String) {
-        setState { state -> state.copy(confirmPassword = password) }
+        setState { this.confirmPassword = password }
     }
 
     fun register() {
@@ -50,22 +58,28 @@ class RegisterViewModel @Inject constructor(
             val username = currentState.username
             val password = currentState.password
 
-            setState { state -> state.copy(isLoading = true) }
+            setState { isLoading = true }
 
             val response = notyUserRepository.addUser(username, password)
 
             response.onSuccess { authCredential ->
                 sessionManager.saveToken(authCredential.token)
-                setState { state -> state.copy(isLoading = false, isLoggedIn = true, error = null) }
+                setState {
+                    isLoading = false
+                    isLoggedIn = true
+                    error = null
+                }
             }.onFailure { message ->
-                setState { state ->
-                    state.copy(isLoading = false, error = message, isLoggedIn = false)
+                setState {
+                    isLoading = false
+                    error = message
+                    isLoggedIn = false
                 }
             }
         }
     }
 
-    fun clearError() = setState { state -> state.copy(error = null) }
+    fun clearError() = setState { error = null }
 
     private fun validateCredentials(): Boolean {
         val username = currentState.username
@@ -79,14 +93,14 @@ class RegisterViewModel @Inject constructor(
             confirmPassword
         )
 
-        setState { state ->
-            state.copy(
-                isValidUsername = isValidUsername,
-                isValidPassword = isValidPassword,
-                isValidConfirmPassword = arePasswordAndConfirmPasswordSame
-            )
+        setState {
+            this.isValidUsername = isValidUsername
+            this.isValidPassword = isValidPassword
+            this.isValidConfirmPassword = arePasswordAndConfirmPasswordSame
         }
 
         return isValidUsername && isValidPassword && arePasswordAndConfirmPasswordSame
     }
+
+    private fun setState(update: MutableRegisterState.() -> Unit) = stateStore.setState(update)
 }
