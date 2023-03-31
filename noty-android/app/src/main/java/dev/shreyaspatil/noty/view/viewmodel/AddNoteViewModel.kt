@@ -22,9 +22,13 @@ import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.di.LocalRepository
+import dev.shreyaspatil.noty.store.StateStore
 import dev.shreyaspatil.noty.utils.validator.NoteValidator
 import dev.shreyaspatil.noty.view.state.AddNoteState
+import dev.shreyaspatil.noty.view.state.MutableAddNoteState
+import dev.shreyaspatil.noty.view.state.mutable
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,17 +36,21 @@ import javax.inject.Inject
 class AddNoteViewModel @Inject constructor(
     @LocalRepository private val noteRepository: NotyNoteRepository,
     private val notyTaskManager: NotyTaskManager
-) : BaseViewModel<AddNoteState>(initialState = AddNoteState()) {
+) : BaseViewModel<AddNoteState>() {
+
+    private val stateStore = StateStore(AddNoteState.initialState.mutable())
+
+    override val state: StateFlow<AddNoteState> = stateStore.state
 
     private var job: Job? = null
 
     fun setTitle(title: String) {
-        setState { state -> state.copy(title = title) }
+        setState { this.title = title }
         validateNote()
     }
 
     fun setNote(note: String) {
-        setState { state -> state.copy(note = note) }
+        setState { this.note = note }
         validateNote()
     }
 
@@ -52,16 +60,21 @@ class AddNoteViewModel @Inject constructor(
             val title = state.value.title.trim()
             val note = state.value.note.trim()
 
-            setState { state -> state.copy(isAdding = true) }
+            setState { isAdding = true }
 
             val result = noteRepository.addNote(title, note)
 
             result.onSuccess { noteId ->
                 scheduleNoteCreate(noteId)
-                setState { state -> state.copy(isAdding = false, added = true) }
+                setState {
+                    isAdding = false
+                    added = true
+                }
             }.onFailure { message ->
-                setState { state ->
-                    state.copy(isAdding = false, added = false, errorMessage = message)
+                setState {
+                    isAdding = false
+                    added = false
+                    errorMessage = message
                 }
             }
         }
@@ -72,7 +85,7 @@ class AddNoteViewModel @Inject constructor(
 
     private fun validateNote() {
         val isValid = NoteValidator.isValidNote(currentState.title, currentState.note)
-        setState { state -> state.copy(showSave = isValid) }
+        setState { showSave = isValid }
     }
 
     /**
@@ -82,6 +95,16 @@ class AddNoteViewModel @Inject constructor(
      * simply a way for Fragment to ask ViewModel to reset the state.
      */
     fun resetState() {
-        setState { AddNoteState() }
+        setState {
+            note = ""
+            title = ""
+            note = ""
+            showSave = false
+            isAdding = false
+            added = false
+            errorMessage = null
+        }
     }
+
+    private fun setState(update: MutableAddNoteState.() -> Unit) = stateStore.setState(update)
 }

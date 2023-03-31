@@ -16,4 +16,15 @@
 
 package dev.shreyaspatil.noty.view.state
 
-data class HomeState(val isLoggedIn: Boolean? = null) : State
+import androidx.compose.runtime.Immutable
+import dev.shreyaspatil.mutekt.core.annotations.GenerateMutableModel
+
+@GenerateMutableModel
+@Immutable
+interface HomeState : State {
+    val isLoggedIn: Boolean?
+
+    companion object {
+        val initialState = HomeState(isLoggedIn = null)
+    }
+}

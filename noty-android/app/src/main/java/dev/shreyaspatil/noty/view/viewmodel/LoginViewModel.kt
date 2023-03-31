@@ -20,8 +20,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
+import dev.shreyaspatil.noty.store.StateStore
 import dev.shreyaspatil.noty.utils.validator.AuthValidator
 import dev.shreyaspatil.noty.view.state.LoginState
+import dev.shreyaspatil.noty.view.state.MutableLoginState
+import dev.shreyaspatil.noty.view.state.mutable
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,14 +33,18 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val notyUserRepository: NotyUserRepository,
     private val sessionManager: SessionManager
-) : BaseViewModel<LoginState>(initialState = LoginState()) {
+) : BaseViewModel<LoginState>() {
+
+    private val stateStore = StateStore(initialState = LoginState.initialState.mutable())
+
+    override val state: StateFlow<LoginState> = stateStore.state
 
     fun setUsername(username: String) {
-        setState { state -> state.copy(username = username) }
+        setState { this.username = username }
     }
 
     fun setPassword(password: String) {
-        setState { state -> state.copy(password = password) }
+        setState { this.password = password }
     }
 
     fun login() {
@@ -46,44 +54,40 @@ class LoginViewModel @Inject constructor(
             val username = currentState.username
             val password = currentState.password
 
-            setState { state -> state.copy(isLoading = true) }
+            setState { isLoading = true }
 
             val response = notyUserRepository.getUserByUsernameAndPassword(username, password)
 
             response.onSuccess { authCredential ->
                 sessionManager.saveToken(authCredential.token)
-                setState { state ->
-                    state.copy(
-                        isLoading = false,
-                        isLoggedIn = true,
-                        error = null
-                    )
+                setState {
+                    isLoading = false
+                    isLoggedIn = true
+                    error = null
                 }
             }.onFailure { message ->
-                setState { state ->
-                    state.copy(
-                        isLoading = false,
-                        isLoggedIn = false,
-                        error = message
-                    )
+                setState {
+                    isLoading = false
+                    isLoggedIn = false
+                    error = message
                 }
             }
         }
     }
 
-    fun clearError() = setState { state -> state.copy(error = null) }
+    fun clearError() = setState { error = null }
 
     private fun validateCredentials(): Boolean {
         val isValidUsername = AuthValidator.isValidUsername(currentState.username)
         val isValidPassword = AuthValidator.isValidPassword(currentState.password)
 
-        setState { state ->
-            state.copy(
-                isValidUsername = isValidUsername,
-                isValidPassword = isValidPassword
-            )
+        setState {
+            this.isValidUsername = isValidUsername
+            this.isValidPassword = isValidPassword
         }
 
         return isValidUsername && isValidPassword
     }
+
+    private fun setState(update: MutableLoginState.() -> Unit) = stateStore.setState(update)
 }

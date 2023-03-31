@@ -27,8 +27,12 @@ import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
 import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.di.LocalRepository
+import dev.shreyaspatil.noty.store.StateStore
+import dev.shreyaspatil.noty.view.state.MutableNotesState
 import dev.shreyaspatil.noty.view.state.NotesState
+import dev.shreyaspatil.noty.view.state.mutable
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -45,7 +49,11 @@ class NotesViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager,
     private val notyTaskManager: NotyTaskManager,
     private val connectivityObserver: ConnectivityObserver
-) : BaseViewModel<NotesState>(initialState = NotesState()) {
+) : BaseViewModel<NotesState>() {
+
+    private val stateStore = StateStore(initialState = NotesState.initialState.mutable())
+
+    override val state: StateFlow<NotesState> = stateStore.state
 
     private var syncJob: Job? = null
 
@@ -57,6 +65,7 @@ class NotesViewModel @Inject constructor(
     }
 
     fun syncNotes() {
+        if (sessionManager.getToken() == null) return
         if (syncJob?.isActive == true) return
 
         syncJob = viewModelScope.launch {
@@ -65,14 +74,11 @@ class NotesViewModel @Inject constructor(
             try {
                 notyTaskManager.observeTask(taskId).collect { taskState ->
                     when (taskState) {
-                        TaskState.SCHEDULED -> setState { state ->
-                            state.copy(isLoading = true)
-                        }
-                        TaskState.COMPLETED, TaskState.CANCELLED -> setState { state ->
-                            state.copy(isLoading = false)
-                        }
-                        TaskState.FAILED -> setState { state ->
-                            state.copy(isLoading = false, error = "Failed to sync notes")
+                        TaskState.SCHEDULED -> setState { isLoading = true }
+                        TaskState.COMPLETED, TaskState.CANCELLED -> setState { isLoading = false }
+                        TaskState.FAILED -> setState {
+                            isLoading = false
+                            error = "Failed to sync notes"
                         }
                     }
                 }
@@ -87,7 +93,7 @@ class NotesViewModel @Inject constructor(
             sessionManager.saveToken(null)
             notyTaskManager.abortAllTasks()
             notyNoteRepository.deleteAllNotes()
-            setState { state -> state.copy(isUserLoggedIn = false) }
+            setState { isUserLoggedIn = false }
         }
     }
 
@@ -100,7 +106,7 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun checkUserSession() {
-        setState { it.copy(isUserLoggedIn = sessionManager.getToken() != null) }
+        setState { isUserLoggedIn = sessionManager.getToken() != null }
     }
 
     private fun observeNotes() {
@@ -108,11 +114,17 @@ class NotesViewModel @Inject constructor(
             .distinctUntilChanged()
             .onEach { response ->
                 response.onSuccess { notes ->
-                    setState { state -> state.copy(isLoading = false, notes = notes) }
+                    setState {
+                        this.isLoading = false
+                        this.notes = notes
+                    }
                 }.onFailure { message ->
-                    setState { state -> state.copy(isLoading = false, error = message) }
+                    setState {
+                        isLoading = false
+                        error = message
+                    }
                 }
-            }.onStart { setState { state -> state.copy(isLoading = true) } }
+            }.onStart { setState { isLoading = true } }
             .launchIn(viewModelScope)
     }
 
@@ -120,9 +132,13 @@ class NotesViewModel @Inject constructor(
         connectivityObserver.connectionState
             .distinctUntilChanged()
             .map { it === Available }
-            .onEach { setState { state -> state.copy(isConnectivityAvailable = it) } }
+            .onEach {
+                setState { isConnectivityAvailable = it }
+            }
             .launchIn(viewModelScope)
     }
+
+    private fun setState(update: MutableNotesState.() -> Unit) = stateStore.setState(update)
 
     companion object {
         private const val TAG = "NotesViewModel"

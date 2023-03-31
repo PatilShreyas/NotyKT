@@ -18,16 +18,24 @@ package dev.shreyaspatil.noty.view.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.session.SessionManager
+import dev.shreyaspatil.noty.store.StateStore
 import dev.shreyaspatil.noty.view.state.HomeState
+import dev.shreyaspatil.noty.view.state.mutable
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     sessionManager: SessionManager
-) : BaseViewModel<HomeState>(initialState = HomeState()) {
+) : BaseViewModel<HomeState>() {
+
+    private val stateStore = StateStore(initialState = HomeState.initialState.mutable())
+
+    override val state: StateFlow<HomeState> = stateStore.state
 
     init {
-        val isLoggedIn = sessionManager.getToken() != null
-        setState { HomeState(isLoggedIn = isLoggedIn) }
+        stateStore.setState {
+            isLoggedIn = sessionManager.getToken() != null
+        }
     }
 }
