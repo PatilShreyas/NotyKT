@@ -75,7 +75,7 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeBomVersion = "2023.01.00"
+    composeBomVersion = "2023.04.00"
     composeCompilerVersion = '1.4.3'
 
     // Constrain Layout (Compose)
