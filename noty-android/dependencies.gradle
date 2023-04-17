@@ -23,7 +23,7 @@ ext {
 
     // Kotlin
     kotlinVersion = "1.8.10"
-    kspVersion = "1.8.10-1.0.9"
+    kspVersion = "1.8.20-1.0.10"
     ktlintVersion = "11.3.1"
     coroutinesVersion = "1.6.4"
     koverVersion = "0.6.1"
