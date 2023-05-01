@@ -16,7 +16,7 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.8.20"
+        kotlinVersion = "1.8.21"
         kotlinSerializerVersion = "1.5.0"
         ktlintVersion = "11.3.2"
         coroutinesVersion = "1.6.4"
