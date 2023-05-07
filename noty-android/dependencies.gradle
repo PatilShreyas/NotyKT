@@ -23,7 +23,7 @@ ext {
 
     // Kotlin
     kotlinVersion = "1.8.20"
-    kspVersion = "1.8.10-1.0.9"
+    kspVersion = "1.8.20-1.0.11"
     ktlintVersion = "11.3.1"
     coroutinesVersion = "1.6.4"
     koverVersion = "0.6.1"
@@ -75,8 +75,8 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeBomVersion = "2023.04.00"
-    composeCompilerVersion = '1.4.3'
+    composeBomVersion = "2023.05.00"
+    composeCompilerVersion = '1.4.6'
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.1"
