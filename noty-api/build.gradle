@@ -16,17 +16,17 @@
 
 buildscript {
     ext {
-        kotlinVersion = "1.8.20"
+        kotlinVersion = "1.8.21"
         kotlinSerializerVersion = "1.5.0"
-        ktlintVersion = "11.3.1"
+        ktlintVersion = "11.3.2"
         coroutinesVersion = "1.6.4"
         ktorVersion = "1.6.8"
         exposedVersion = "0.41.1"
         postgresVersion = "42.5.4"
-        logbackVersion = "1.4.6"
-        daggerVersion = "2.45"
+        logbackVersion = "1.4.7"
+        daggerVersion = "2.46"
         testContainerVersion = "1.18.0"
-        kotestVersion = "5.5.5"
+        kotestVersion = "5.6.1"
         hikariVersion = "5.0.1"
     }
 
