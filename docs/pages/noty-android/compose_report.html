@@ -160,7 +160,7 @@ footer {
           </tr>
           <tr>
             <th>Known Stable Arguments</th>
-            <td>1325</td>
+            <td>1355</td>
           </tr>
           <tr>
             <th>Known Unstable Arguments</th>
@@ -172,7 +172,7 @@ footer {
           </tr>
           <tr>
             <th>Total Arguments</th>
-            <td>1361</td>
+            <td>1391</td>
           </tr>
           <tr>
             <th>Marked Stable Classes</th>
@@ -1917,7 +1917,7 @@ footer {
                     <td>6</td>
                     <td>STABLE</td>
                     <td class="code">color</td>
-                    <td class="code">Color = @dynamic MaterialTheme.colors.onPrimary</td>
+                    <td class="code">Color = @dynamic MaterialTheme.&lt;get-colors&gt;($composer, MaterialTheme.$stable).onPrimary</td>
                   </tr>
                   <tr class="background-status-success">
                     <td>7</td>
@@ -2971,7 +2971,7 @@ footer {
                     <td>1</td>
                     <td>UNSTABLE</td>
                     <td class="code">viewModelStoreOwner</td>
-                    <td class="code">ViewModelStoreOwner? = @dynamic checkNotNull(LocalViewModelStoreOwner.current) {</td>
+                    <td class="code">ViewModelStoreOwner? = @dynamic checkNotNull(LocalViewModelStoreOwner.&lt;get-current&gt;($composer, LocalViewModelStoreOwner.$stable)) {</td>
                   </tr>
                   <tr class="background-status-success">
                     <td>2</td>
