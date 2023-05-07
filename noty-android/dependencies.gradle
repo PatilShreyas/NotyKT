@@ -22,8 +22,8 @@ ext {
     composeCompilerReportGenVersion = "1.0.1"
 
     // Kotlin
-    kotlinVersion = "1.8.10"
-    kspVersion = "1.8.10-1.0.9"
+    kotlinVersion = "1.8.20"
+    kspVersion = "1.8.20-1.0.11"
     ktlintVersion = "11.3.1"
     coroutinesVersion = "1.6.4"
     koverVersion = "0.6.1"
@@ -32,11 +32,11 @@ ext {
 
     // Android
     appcompatVersion = '1.6.1'
-    coreKtxVersion = '1.9.0'
+    coreKtxVersion = '1.10.0'
     constraintlayoutVersion = "2.1.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
-    workmanagerVersion = '2.8.0'
+    workmanagerVersion = '2.8.1'
     lifecycleVersion = "2.6.1"
     navigationVersion = '2.5.3'
     securityCryptoVersion = '1.1.0-alpha05'
@@ -47,7 +47,7 @@ ext {
 
     // Activity & Fragment
     activityVersion = '1.7.0'
-    fragmentVersion = '1.5.5'
+    fragmentVersion = '1.5.6'
 
     // Design
     materialDesignVersion = '1.8.0'
@@ -75,8 +75,8 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeBomVersion = "2023.01.00"
-    composeCompilerVersion = '1.4.3'
+    composeBomVersion = "2023.05.00"
+    composeCompilerVersion = '1.4.6'
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.1"
