@@ -39,7 +39,7 @@ ext {
     workmanagerVersion = '2.8.1'
     lifecycleVersion = "2.6.1"
     navigationVersion = '2.5.3'
-    securityCryptoVersion = '1.1.0-alpha05'
+    securityCryptoVersion = '1.1.0-alpha06'
     roomVersion = "2.5.1"
     dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
