@@ -70,7 +70,7 @@ ext {
     moshiVersion = '1.14.0'
 
     // Other utility
-    mutektVersion = "1.0.0"
+    mutektVersion = "1.0.1"
     leakCanaryVersion = "2.8.1"
     javaxInjectVersion = "1"
 
