@@ -22,7 +22,7 @@ ext {
     composeCompilerReportGenVersion = "1.0.1"
 
     // Kotlin
-    kotlinVersion = "1.8.20"
+    kotlinVersion = "1.8.21"
     kspVersion = "1.8.20-1.0.11"
     ktlintVersion = "11.3.1"
     coroutinesVersion = "1.6.4"
