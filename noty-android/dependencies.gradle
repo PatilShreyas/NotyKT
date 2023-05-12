@@ -93,7 +93,7 @@ ext {
     // Testing
     jUnitVersion = "4.13.2"
     kotestVersion = '5.6.2'
-    mockkVersion = '1.13.4'
+    mockkVersion = '1.13.5'
     androidTestCoreVersion = "1.5.0"
     androidTestRunnerVersion = "1.5.2"
     androidJUnitVersion = '1.1.5'
