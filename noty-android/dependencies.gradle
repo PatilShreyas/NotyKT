@@ -25,7 +25,7 @@ ext {
     kotlinVersion = "1.8.20"
     kspVersion = "1.8.20-1.0.11"
     ktlintVersion = "11.3.2"
-    coroutinesVersion = "1.6.4"
+    coroutinesVersion = "1.7.1"
     koverVersion = "0.6.1"
 
     jacocoVersion = "0.8.10"
