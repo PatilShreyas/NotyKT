@@ -139,7 +139,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
     }
 
     private fun onConnectivityAvailable() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
             if (shouldSyncNotes()) { viewModel.syncNotes() }
         }
         with(binding) {
