@@ -26,11 +26,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.R
+import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
 
 @Composable
 fun PinAction(isPinned: Boolean, onClick: () -> Unit) {
@@ -76,6 +78,7 @@ fun ShareAction(onClick: () -> Unit) {
     }
 }
 
+@Immutable
 data class ShareActionItem(
     val label: String,
     val onActionClick: () -> Unit
@@ -84,7 +87,7 @@ data class ShareActionItem(
 @Composable
 fun ShareDropdown(
     expanded: Boolean,
-    shareActions: List<ShareActionItem>,
+    shareActions: ComposeImmutableList<ShareActionItem>,
     onDismissRequest: () -> Unit
 ) {
     DropdownMenu(
