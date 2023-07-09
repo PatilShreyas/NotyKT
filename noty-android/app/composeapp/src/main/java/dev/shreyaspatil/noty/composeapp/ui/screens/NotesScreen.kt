@@ -47,6 +47,8 @@ import dev.shreyaspatil.noty.composeapp.component.note.NotesList
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.utils.collectState
+import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
+import dev.shreyaspatil.noty.composeapp.utils.collection.rememberComposeImmutableList
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
 
@@ -64,9 +66,11 @@ fun NotesScreen(
 
     var showLogoutConfirmation by remember { mutableStateOf(false) }
 
+    val notes by rememberComposeImmutableList { state.notes }
+
     NotesContent(
         isLoading = state.isLoading,
-        notes = state.notes,
+        notes = notes,
         isConnectivityAvailable = state.isConnectivityAvailable,
         onRefresh = viewModel::syncNotes,
         onToggleTheme = { viewModel.setDarkMode(!isInDarkMode) },
@@ -94,7 +98,7 @@ fun NotesScreen(
 @Composable
 fun NotesContent(
     isLoading: Boolean,
-    notes: List<Note>,
+    notes: ComposeImmutableList<Note>,
     isConnectivityAvailable: Boolean?,
     error: String? = null,
     onRefresh: () -> Unit,

@@ -58,6 +58,7 @@ import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
 import dev.shreyaspatil.noty.composeapp.utils.collectState
+import dev.shreyaspatil.noty.composeapp.utils.collection.composeImmutableListOf
 import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
@@ -180,13 +181,8 @@ private fun NoteDetailActions(
     onShareNoteAsImageClick: () -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
-    PinAction(isPinned, onClick = onPinClick)
-    DeleteAction(onClick = onDeleteClick)
-    ShareAction(onClick = { dropdownExpanded = true })
-    ShareDropdown(
-        expanded = dropdownExpanded,
-        onDismissRequest = { dropdownExpanded = false },
-        shareActions = listOf(
+    val shareActions = remember {
+        composeImmutableListOf(
             ShareActionItem(
                 label = "Text",
                 onActionClick = onShareNoteAsTextClick
@@ -196,6 +192,15 @@ private fun NoteDetailActions(
                 onActionClick = onShareNoteAsImageClick
             )
         )
+    }
+
+    PinAction(isPinned, onClick = onPinClick)
+    DeleteAction(onClick = onDeleteClick)
+    ShareAction(onClick = { dropdownExpanded = true })
+    ShareDropdown(
+        expanded = dropdownExpanded,
+        onDismissRequest = { dropdownExpanded = false },
+        shareActions = shareActions
     )
 }
 

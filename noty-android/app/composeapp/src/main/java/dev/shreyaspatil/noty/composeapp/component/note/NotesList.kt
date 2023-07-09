@@ -23,10 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
-fun NotesList(notes: List<Note>, onClick: (Note) -> Unit) {
+fun NotesList(notes: ComposeImmutableList<Note>, onClick: (Note) -> Unit) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 4.dp),
         modifier = Modifier.testTag("notesList")
