@@ -34,12 +34,12 @@ android {
 
         testInstrumentationRunner "dev.shreyaspatil.noty.composeapp.HiltComposeApplicationRunner"
     }
-
     packagingOptions {
         resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += ['/META-INF/{AL2.0,LGPL2.1}', 'META-INF/LICENSE.txt', 'META-INF/LICENSE.md', 'META-INF/NOTICE.txt', 'META-INF/NOTICE', 'META-INF/LICENSE', 'META-INF/DEPENDENCIES']
         }
     }
+
 
     buildTypes {
         debug {
@@ -55,12 +55,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = javaVersion
+    }
+
+    kotlin {
+        jvmToolchain(javaVersion.toInteger())
     }
 
     buildFeatures {
@@ -73,21 +77,13 @@ android {
     lint {
         abortOnError false
     }
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/LICENSE.md'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/DEPENDENCIES'
-    }
     namespace 'dev.shreyaspatil.noty.composeapp'
 
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = javaVersion
     }
 }
 

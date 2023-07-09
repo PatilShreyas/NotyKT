@@ -15,48 +15,51 @@
  */
 
 ext {
+    // Java Version
+    javaVersion = "17"
+
     // Android Plugin
-    androidGradlePluginVersion = '7.4.2'
+    androidGradlePluginVersion = '8.0.2'
 
     // Compose compiler report generator plugin
     composeCompilerReportGenVersion = "1.0.1"
 
     // Kotlin
-    kotlinVersion = "1.8.20"
-    kspVersion = "1.8.20-1.0.11"
+    kotlinVersion = "1.8.22"
+    kspVersion = "$kotlinVersion-1.0.11"
     ktlintVersion = "11.3.2"
-    coroutinesVersion = "1.7.1"
+    coroutinesVersion = '1.7.2'
     koverVersion = "0.6.1"
 
     jacocoVersion = "0.8.10"
 
     // Android
     appcompatVersion = '1.6.1'
-    coreKtxVersion = '1.10.0'
+    coreKtxVersion = '1.10.1'
     constraintlayoutVersion = "2.1.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.8.1'
     lifecycleVersion = "2.6.1"
-    navigationVersion = '2.5.3'
+    navigationVersion = '2.6.0'
     securityCryptoVersion = '1.1.0-alpha06'
-    roomVersion = "2.5.1"
+    roomVersion = '2.5.2'
     dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
     capturableVersion = "1.0.3"
 
     // Activity & Fragment
-    activityVersion = '1.7.0'
-    fragmentVersion = '1.5.6'
+    activityVersion = '1.7.2'
+    fragmentVersion = '1.6.0'
 
     // Design
     materialDesignVersion = '1.9.0'
 
     // Lottie Animation
-    lottieVersion = '6.0.0'
+    lottieVersion = '6.0.1'
 
     // Lottie Animation (Compose)
-    lottieComposeVersion = '6.0.0'
+    lottieComposeVersion = '6.0.1'
 
     // DI
     daggerHiltVersion = '2.44.2'
@@ -67,7 +70,7 @@ ext {
     okHttpVersion = "4.10.0"
 
     // Moshi
-    moshiVersion = '1.14.0'
+    moshiVersion = '1.15.0'
 
     // Other utility
     mutektVersion = "1.0.1"
@@ -75,14 +78,14 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeBomVersion = "2023.05.00"
-    composeCompilerVersion = '1.4.6'
+    composeBomVersion = "2023.06.01"
+    composeCompilerVersion = '1.4.8'
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.1"
 
     // Jetpack Compose Navigation
-    composeNavVersion = '2.5.3'
+    composeNavVersion = '2.6.0'
 
     // Hilt Compose Navigation
     hiltComposeNavVersion = "1.0.0"
