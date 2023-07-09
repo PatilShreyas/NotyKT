@@ -49,12 +49,15 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = javaVersion
+    }
+    kotlin {
+        jvmToolchain(javaVersion.toInteger())
     }
     lint {
         abortOnError false
@@ -65,7 +68,7 @@ android {
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = javaVersion
     }
 }
 

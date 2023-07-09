@@ -15,6 +15,9 @@
  */
 
 ext {
+    // Java Version
+    javaVersion = "17"
+
     // Android Plugin
     androidGradlePluginVersion = '8.0.2'
 
@@ -22,8 +25,8 @@ ext {
     composeCompilerReportGenVersion = "1.0.1"
 
     // Kotlin
-    kotlinVersion = "1.8.20"
-    kspVersion = "1.8.20-1.0.11"
+    kotlinVersion = "1.8.22"
+    kspVersion = "$kotlinVersion-1.0.11"
     ktlintVersion = "11.3.2"
     coroutinesVersion = "1.7.1"
     koverVersion = "0.6.1"
@@ -75,8 +78,8 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeBomVersion = "2023.05.00"
-    composeCompilerVersion = '1.4.6'
+    composeBomVersion = "2023.06.01"
+    composeCompilerVersion = '1.4.8'
 
     // Constrain Layout (Compose)
     composeConstraintLayoutVersion = "1.0.1"
