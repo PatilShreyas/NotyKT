@@ -25,6 +25,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -35,6 +36,8 @@ import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -72,14 +75,15 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun observeUiTheme() {
-        lifecycleScope.launchWhenStarted {
-            preferenceManager.uiModeFlow.collect { isDarkMode ->
+        preferenceManager
+            .uiModeFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { isDarkMode ->
                 val mode = when (isDarkMode) {
                     true -> AppCompatDelegate.MODE_NIGHT_YES
                     false -> AppCompatDelegate.MODE_NIGHT_NO
                 }
                 AppCompatDelegate.setDefaultNightMode(mode)
-            }
-        }
+            }.launchIn(lifecycleScope)
     }
 }
