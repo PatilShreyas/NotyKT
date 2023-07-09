@@ -37,10 +37,6 @@ android {
     testOptions {
         unitTests.all {
             useJUnitPlatform()
-            reports {
-                junitXml.enabled = true
-                html.enabled = true
-            }
         }
     }
     namespace 'dev.shreyaspatil.noty.repository'
