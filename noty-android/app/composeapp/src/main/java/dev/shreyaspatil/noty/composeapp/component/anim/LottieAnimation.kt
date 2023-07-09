@@ -40,5 +40,9 @@ fun LottieAnimation(
         restartOnPlay = restartOnPlay
     )
 
-    LottieAnimation(composition, progress, modifier = modifier)
+    LottieAnimation(
+        composition = composition,
+        progress = { progress },
+        modifier = modifier
+    )
 }
