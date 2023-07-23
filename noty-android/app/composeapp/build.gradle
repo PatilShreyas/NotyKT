@@ -181,4 +181,6 @@ dependencies {
 
 htmlComposeCompilerReport {
     name = "NotyKT"
+    includeStableComposables = false
+    includeStableClasses = false
 }

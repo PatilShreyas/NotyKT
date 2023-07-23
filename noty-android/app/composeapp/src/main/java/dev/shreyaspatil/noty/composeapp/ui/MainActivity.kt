@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -63,15 +64,20 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     private fun NotyMain() {
-        val darkMode by preferenceManager.uiModeFlow.collectAsStateWithLifecycle(
-            initialValue = isSystemInDarkTheme()
-        )
+        val darkMode by rememberUiMode()
 
         NotyTheme(darkTheme = darkMode) {
             Surface {
                 NotyNavigation()
             }
         }
+    }
+
+    @Composable
+    fun rememberUiMode(): State<Boolean> {
+        return preferenceManager.uiModeFlow.collectAsStateWithLifecycle(
+            initialValue = isSystemInDarkTheme()
+        )
     }
 
     private fun observeUiTheme() {
