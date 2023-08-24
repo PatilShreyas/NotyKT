@@ -19,7 +19,7 @@ ext {
     javaVersion = "17"
 
     // Android Plugin
-    androidGradlePluginVersion = '8.0.2'
+    androidGradlePluginVersion = '8.1.1'
 
     // Compose compiler report generator plugin
     composeCompilerReportGenVersion = "1.1.0"
