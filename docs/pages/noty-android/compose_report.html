@@ -123,1382 +123,208 @@ footer {
   </head>
   <body>
     <h1>Compose Compiler Report - NotyKT</h1>
-    <section><button class="collapsible">Brief Statistics</button>
-      <div class="content">
-        <table class="center" style="text-align:left;">
-          <tr>
-            <th>Skippable Composables</th>
-            <td>111</td>
-          </tr>
-          <tr>
-            <th>Restartable Composables</th>
-            <td>147</td>
-          </tr>
-          <tr>
-            <th>Readonly Composables</th>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th>Total Composables</th>
-            <td>155</td>
-          </tr>
-          <tr>
-            <th>Restart Groups</th>
-            <td>147</td>
-          </tr>
-          <tr>
-            <th>Total Groups</th>
-            <td>166</td>
-          </tr>
-          <tr>
-            <th>Static Arguments</th>
-            <td>218</td>
-          </tr>
-          <tr>
-            <th>Certain Arguments</th>
-            <td>166</td>
-          </tr>
-          <tr>
-            <th>Known Stable Arguments</th>
-            <td>1367</td>
-          </tr>
-          <tr>
-            <th>Known Unstable Arguments</th>
-            <td>31</td>
-          </tr>
-          <tr>
-            <th>Unknown Stable Arguments</th>
-            <td>3</td>
-          </tr>
-          <tr>
-            <th>Total Arguments</th>
-            <td>1401</td>
-          </tr>
-          <tr>
-            <th>Marked Stable Classes</th>
-            <td>2</td>
-          </tr>
-          <tr>
-            <th>Inferred Stable Classes</th>
-            <td>8</td>
-          </tr>
-          <tr>
-            <th>Inferred Unstable Classes</th>
-            <td>2</td>
-          </tr>
-          <tr>
-            <th>Inferred Uncertain Classes</th>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th>Effectively Stable Classes</th>
-            <td>10</td>
-          </tr>
-          <tr>
-            <th>Total Classes</th>
-            <td>12</td>
-          </tr>
-          <tr>
-            <th>Memoized Lambdas</th>
-            <td>105</td>
-          </tr>
-          <tr>
-            <th>Singleton Lambdas</th>
-            <td>14</td>
-          </tr>
-          <tr>
-            <th>Singleton Composable Lambdas</th>
-            <td>25</td>
-          </tr>
-          <tr>
-            <th>Composable Lambdas</th>
-            <td>70</td>
-          </tr>
-          <tr>
-            <th>Total Lambdas</th>
-            <td>124</td>
-          </tr>
-        </table>
-      </div>
-    </section>
-    <hr>
-    <section><button class="collapsible">Detailed Statistics</button>
-      <div class="content">
-        <table style="width:100%;">
-          <tr>
-            <th>package</th>
-            <th>name</th>
-            <th>composable</th>
-            <th>skippable</th>
-            <th>restartable</th>
-            <th>readonly</th>
-            <th>inline</th>
-            <th>isLambda</th>
-            <th>hasDefaults</th>
-            <th>defaultsGroup</th>
-            <th>groups</th>
-            <th>calls</th>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus</td>
-            <td>ConnectivityStatus</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.ConnectivityStatusBox</td>
-            <td>ConnectivityStatusBox</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.PinAction</td>
-            <td>PinAction</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.DeleteAction</td>
-            <td>DeleteAction</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.ShareAction</td>
-            <td>ShareAction</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.ShareDropdown</td>
-            <td>ShareDropdown</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.ThemeSwitchAction</td>
-            <td>ThemeSwitchAction</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.LogoutAction</td>
-            <td>LogoutAction</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.action.AboutAction</td>
-            <td>AboutAction</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.anim.LottieAnimation</td>
-            <td>LottieAnimation</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.button.NotyFullWidthButton</td>
-            <td>NotyFullWidthButton</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog</td>
-            <td>LoaderDialog</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog</td>
-            <td>FailureDialog</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog</td>
-            <td>ConfirmationDialog</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.note.NoteCard</td>
-            <td>NoteCard</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.note.PreviewNoteCard</td>
-            <td>PreviewNoteCard</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.note.NotesList</td>
-            <td>NotesList</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold</td>
-            <td>NotyScaffold</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>3</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar</td>
-            <td>NotyTopAppBar</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.text.NotyTextField</td>
-            <td>NotyTextField</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>2</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.text.BasicNotyTextField</td>
-            <td>BasicNotyTextField</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField</td>
-            <td>NoteTitleField</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.text.NoteField</td>
-            <td>NoteField</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField</td>
-            <td>PasswordTextField</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField</td>
-            <td>UsernameTextField</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation</td>
-            <td>NotyNavigation</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.MainActivity.NotyMain</td>
-            <td>NotyMain</td>
-            <td>1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.MainActivity.rememberUiMode</td>
-            <td>rememberUiMode</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AboutScreen</td>
-            <td>AboutScreen</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AboutContent</td>
-            <td>AboutContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LicenseCard</td>
-            <td>LicenseCard</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.VisitCard</td>
-            <td>VisitCard</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AddNoteScreen</td>
-            <td>AddNoteScreen</td>
-            <td>1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.AddNotesContent</td>
-            <td>AddNotesContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginScreen</td>
-            <td>LoginScreen</td>
-            <td>1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginContent</td>
-            <td>LoginContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>3</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.TopGreeting</td>
-            <td>TopGreeting</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginForm</td>
-            <td>LoginForm</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpLink</td>
-            <td>SignUpLink</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>2</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.PreviewLoginContent</td>
-            <td>PreviewLoginContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailsScreen</td>
-            <td>NoteDetailsScreen</td>
-            <td>1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>9</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailContent</td>
-            <td>NoteDetailContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailActions</td>
-            <td>NoteDetailActions</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailBody</td>
-            <td>NoteDetailBody</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.DeleteNoteConfirmation</td>
-            <td>DeleteNoteConfirmation</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen</td>
-            <td>NotesScreen</td>
-            <td>1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.NotesContent</td>
-            <td>NotesContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LogoutConfirmation</td>
-            <td>LogoutConfirmation</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen</td>
-            <td>SignUpScreen</td>
-            <td>1</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>4</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpContent</td>
-            <td>SignUpContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>3</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.SignUpForm</td>
-            <td>SignUpForm</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.LoginLink</td>
-            <td>LoginLink</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>2</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.screens.PreviewSignupContent</td>
-            <td>PreviewSignupContent</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.theme.getTextFieldHintColor</td>
-            <td>getTextFieldHintColor</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme</td>
-            <td>NotyTheme</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>2</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.assistedViewModel</td>
-            <td>assistedViewModel</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.assistedViewModelFactory</td>
-            <td>assistedViewModelFactory</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.collectState</td>
-            <td>collectState</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.currentConnectionState</td>
-            <td>currentConnectionState</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.connectivityState</td>
-            <td>connectivityState</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>2</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.NotyPreview</td>
-            <td>NotyPreview</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.ShowToast</td>
-            <td>ShowToast</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-          <tr>
-            <td>dev.shreyaspatil.noty.composeapp.utils.collection.rememberComposeImmutableList</td>
-            <td>rememberComposeImmutableList</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>1</td>
-            <td>1</td>
-          </tr>
-        </table>
-      </div>
-    </section>
-    <hr>
-    <section><button class="collapsible">Composables Report</button>
-      <div class="content"><button class="collapsible" style="background-color:#D32F2F;font-size:18px;">Composables with issues (Restartable but Not Skippable)</button>
-        <div class="content" style="background-color:#FFEBEE;">
-          <table>
-            <tr>
-              <td>1.</td>
-              <td>
-                <h3 class="code"><span> fun NotyMain</span></h3>
-                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
-                <table></table>
-              </td>
-            </tr>
-            <tr>
-              <td>2.</td>
-              <td>
-                <h3 class="code"><span> fun AddNoteScreen</span></h3>
-                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
-                <table>
-                  <tr>
-                    <th>No.</th>
-                    <th>Stability</th>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                  </tr>
-                  <tr class="background-status-failure">
-                    <td>1</td>
-                    <td>UNSTABLE</td>
-                    <td class="code">viewModel</td>
-                    <td class="code">AddNoteViewModel</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>2</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateUp</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>3.</td>
-              <td>
-                <h3 class="code"><span> fun LoginScreen</span></h3>
-                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
-                <table>
-                  <tr>
-                    <th>No.</th>
-                    <th>Stability</th>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                  </tr>
-                  <tr class="background-status-failure">
-                    <td>1</td>
-                    <td>UNSTABLE</td>
-                    <td class="code">viewModel</td>
-                    <td class="code">LoginViewModel</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>2</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToSignup</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>3</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToNotes</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>4.</td>
-              <td>
-                <h3 class="code"><span> fun NoteDetailsScreen</span></h3>
-                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
-                <table>
-                  <tr>
-                    <th>No.</th>
-                    <th>Stability</th>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                  </tr>
-                  <tr class="background-status-failure">
-                    <td>1</td>
-                    <td>UNSTABLE</td>
-                    <td class="code">viewModel</td>
-                    <td class="code">NoteDetailViewModel</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>2</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateUp</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>5.</td>
-              <td>
-                <h3 class="code"><span> fun NotesScreen</span></h3>
-                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
-                <table>
-                  <tr>
-                    <th>No.</th>
-                    <th>Stability</th>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                  </tr>
-                  <tr class="background-status-failure">
-                    <td>1</td>
-                    <td>UNSTABLE</td>
-                    <td class="code">viewModel</td>
-                    <td class="code">NotesViewModel</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>2</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToAbout</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>3</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToAddNote</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>4</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToNoteDetail</td>
-                    <td class="code">Function1&lt;String, Unit&gt;</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>5</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToLogin</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>6.</td>
-              <td>
-                <h3 class="code"><span> fun SignUpScreen</span></h3>
-                <h4><span class="status-failure">❌ Non Skippable</span><span class="status-success"> ✅ Restartable</span></h4>
-                <table>
-                  <tr>
-                    <th>No.</th>
-                    <th>Stability</th>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                  </tr>
-                  <tr class="background-status-failure">
-                    <td>1</td>
-                    <td>UNSTABLE</td>
-                    <td class="code">viewModel</td>
-                    <td class="code">RegisterViewModel</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>2</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateUp</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                  <tr class="background-status-success">
-                    <td>3</td>
-                    <td>STABLE</td>
-                    <td class="code">onNavigateToNotes</td>
-                    <td class="code">Function0&lt;Unit&gt;</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </div>
-<br>
-        <div class="empty-content">Report for stable composables is disabled in the options</div>
-      </div>
-    </section>
-    <hr>
-    <section>
-      <div><button class="collapsible">Classes Report</button>
-        <div class="content"><button class="collapsible" style="background-color:#D32F2F;font-size:18px;">Unstable Classes</button>
-          <div class="content" style="background-color:#FFEBEE;">
+    <h3>Composables with issues (Restartable but Not Skippable)</h3>
+    <section style="background-color:#FFEBEE;padding:16px;">
+      <table>
+        <tr>
+          <td>1.</td>
+          <td>
+            <h3 class="code"><span> fun NotyMain</span></h3>
+            <h4><span class="status-failure"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V10C13 9.44772 12.5523 9 12 9C11.4477 9 11 9.44772 11 10V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888ZM9.37735 4.66136C10.5204 2.60393 13.4793 2.60393 14.6223 4.66136L21.2233 16.5431C22.3341 18.5427 20.8882 21 18.6008 21H5.39885C3.11139 21 1.66549 18.5427 2.77637 16.5431L9.37735 4.66136Z" fill="#D32F2F"></path></svg>
+Non Skippable</span></span><span class="status-success"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z" fill="#004D40"></path></svg>
+Restartable</span></span></h4>
+            <table></table>
+          </td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>
+            <h3 class="code"><span> fun AddNoteScreen</span></h3>
+            <h4><span class="status-failure"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V10C13 9.44772 12.5523 9 12 9C11.4477 9 11 9.44772 11 10V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888ZM9.37735 4.66136C10.5204 2.60393 13.4793 2.60393 14.6223 4.66136L21.2233 16.5431C22.3341 18.5427 20.8882 21 18.6008 21H5.39885C3.11139 21 1.66549 18.5427 2.77637 16.5431L9.37735 4.66136Z" fill="#D32F2F"></path></svg>
+Non Skippable</span></span><span class="status-success"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z" fill="#004D40"></path></svg>
+Restartable</span></span></h4>
             <table>
               <tr>
-                <td>1.</td>
-                <td>
-                  <h3><span class="status-failure">❌ Unstable</span><span class="code"> class NotyApp</span></h3>
-                  <table>
-                    <tr>
-                      <th>No.</th>
-                      <th>Status</th>
-                      <th>Field</th>
-                      <th>Type</th>
-                    </tr>
-                    <tr style="color:#FFFFFF;background-color:#D32F2F;">
-                      <td>1</td>
-                      <td>UNSTABLE</td>
-                      <td class="code">var workerFactory</td>
-                      <td class="code">HiltWorkerFactory</td>
-                    </tr>
-                  </table>
-                </td>
+                <th>No.</th>
+                <th>Stability</th>
+                <th>Parameter</th>
+                <th>Type</th>
               </tr>
-              <tr>
-                <td>2.</td>
-                <td>
-                  <h3><span class="status-failure">❌ Unstable</span><span class="code"> class MainActivity</span></h3>
-                  <table>
-                    <tr>
-                      <th>No.</th>
-                      <th>Status</th>
-                      <th>Field</th>
-                      <th>Type</th>
-                    </tr>
-                    <tr style="color:#FFFFFF;background-color:#D32F2F;">
-                      <td>1</td>
-                      <td>UNSTABLE</td>
-                      <td class="code">var preferenceManager</td>
-                      <td class="code">PreferenceManager</td>
-                    </tr>
-                  </table>
-                </td>
+              <tr class="background-status-failure">
+                <td>1</td>
+                <td>UNSTABLE</td>
+                <td class="code">viewModel</td>
+                <td class="code">AddNoteViewModel</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>2</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateUp</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
               </tr>
             </table>
-          </div>
-<button class="collapsible" style="background-color:#004D40;font-size:18px;">Stable Classes</button>
-          <div class="content" style="background-color:#F1F8E9;">
+          </td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>
+            <h3 class="code"><span> fun LoginScreen</span></h3>
+            <h4><span class="status-failure"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V10C13 9.44772 12.5523 9 12 9C11.4477 9 11 9.44772 11 10V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888ZM9.37735 4.66136C10.5204 2.60393 13.4793 2.60393 14.6223 4.66136L21.2233 16.5431C22.3341 18.5427 20.8882 21 18.6008 21H5.39885C3.11139 21 1.66549 18.5427 2.77637 16.5431L9.37735 4.66136Z" fill="#D32F2F"></path></svg>
+Non Skippable</span></span><span class="status-success"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z" fill="#004D40"></path></svg>
+Restartable</span></span></h4>
             <table>
               <tr>
-                <td>1.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class ShareActionItem</span></h3>
-                  <table>
-                    <tr>
-                      <th>No.</th>
-                      <th>Status</th>
-                      <th>Field</th>
-                      <th>Type</th>
-                    </tr>
-                    <tr style="color:#000000;background-color:#B2DFDB;">
-                      <td>1</td>
-                      <td>STABLE</td>
-                      <td class="code">val label</td>
-                      <td class="code">String</td>
-                    </tr>
-                    <tr style="color:#000000;background-color:#B2DFDB;">
-                      <td>2</td>
-                      <td>STABLE</td>
-                      <td class="code">val onActionClick</td>
-                      <td class="code">Function0&lt;Unit&gt;</td>
-                    </tr>
-                  </table>
-                </td>
+                <th>No.</th>
+                <th>Stability</th>
+                <th>Parameter</th>
+                <th>Type</th>
               </tr>
-              <tr>
-                <td>2.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class SignUp</span></h3>
-                  <table></table>
-                </td>
+              <tr class="background-status-failure">
+                <td>1</td>
+                <td>UNSTABLE</td>
+                <td class="code">viewModel</td>
+                <td class="code">LoginViewModel</td>
               </tr>
-              <tr>
-                <td>3.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class Login</span></h3>
-                  <table></table>
-                </td>
+              <tr class="background-status-success">
+                <td>2</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToSignup</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
               </tr>
-              <tr>
-                <td>4.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class Notes</span></h3>
-                  <table></table>
-                </td>
-              </tr>
-              <tr>
-                <td>5.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class NotesDetail</span></h3>
-                  <table>
-                    <tr>
-                      <th>No.</th>
-                      <th>Status</th>
-                      <th>Field</th>
-                      <th>Type</th>
-                    </tr>
-                    <tr style="color:#000000;background-color:#B2DFDB;">
-                      <td>1</td>
-                      <td>STABLE</td>
-                      <td class="code">val ARG_NOTE_ID</td>
-                      <td class="code">String</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td>6.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class AddNote</span></h3>
-                  <table></table>
-                </td>
-              </tr>
-              <tr>
-                <td>7.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class About</span></h3>
-                  <table></table>
-                </td>
-              </tr>
-              <tr>
-                <td>8.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class Screen</span></h3>
-                  <table>
-                    <tr>
-                      <th>No.</th>
-                      <th>Status</th>
-                      <th>Field</th>
-                      <th>Type</th>
-                    </tr>
-                    <tr style="color:#000000;background-color:#B2DFDB;">
-                      <td>1</td>
-                      <td>STABLE</td>
-                      <td class="code">val route</td>
-                      <td class="code">String</td>
-                    </tr>
-                    <tr style="color:#000000;background-color:#B2DFDB;">
-                      <td>2</td>
-                      <td>STABLE</td>
-                      <td class="code">val name</td>
-                      <td class="code">String</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td>9.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class IntentUtils</span></h3>
-                  <table></table>
-                </td>
-              </tr>
-              <tr>
-                <td>10.</td>
-                <td>
-                  <h3><span class="status-success">✅ Stable</span><span class="code"> class ComposeImmutableList</span></h3>
-                  <table>
-                    <tr>
-                      <th>No.</th>
-                      <th>Status</th>
-                      <th>Field</th>
-                      <th>Type</th>
-                    </tr>
-                    <tr style="color:#FFFFFF;background-color:#D32F2F;">
-                      <td>1</td>
-                      <td>UNSTABLE</td>
-                      <td class="code">val baseList</td>
-                      <td class="code">List&lt;E&gt;</td>
-                    </tr>
-                  </table>
-                </td>
+              <tr class="background-status-success">
+                <td>3</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToNotes</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
               </tr>
             </table>
-          </div>
-        </div>
-      </div>
+          </td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>
+            <h3 class="code"><span> fun NoteDetailsScreen</span></h3>
+            <h4><span class="status-failure"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V10C13 9.44772 12.5523 9 12 9C11.4477 9 11 9.44772 11 10V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888ZM9.37735 4.66136C10.5204 2.60393 13.4793 2.60393 14.6223 4.66136L21.2233 16.5431C22.3341 18.5427 20.8882 21 18.6008 21H5.39885C3.11139 21 1.66549 18.5427 2.77637 16.5431L9.37735 4.66136Z" fill="#D32F2F"></path></svg>
+Non Skippable</span></span><span class="status-success"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z" fill="#004D40"></path></svg>
+Restartable</span></span></h4>
+            <table>
+              <tr>
+                <th>No.</th>
+                <th>Stability</th>
+                <th>Parameter</th>
+                <th>Type</th>
+              </tr>
+              <tr class="background-status-failure">
+                <td>1</td>
+                <td>UNSTABLE</td>
+                <td class="code">viewModel</td>
+                <td class="code">NoteDetailViewModel</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>2</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateUp</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>
+            <h3 class="code"><span> fun NotesScreen</span></h3>
+            <h4><span class="status-failure"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V10C13 9.44772 12.5523 9 12 9C11.4477 9 11 9.44772 11 10V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888ZM9.37735 4.66136C10.5204 2.60393 13.4793 2.60393 14.6223 4.66136L21.2233 16.5431C22.3341 18.5427 20.8882 21 18.6008 21H5.39885C3.11139 21 1.66549 18.5427 2.77637 16.5431L9.37735 4.66136Z" fill="#D32F2F"></path></svg>
+Non Skippable</span></span><span class="status-success"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z" fill="#004D40"></path></svg>
+Restartable</span></span></h4>
+            <table>
+              <tr>
+                <th>No.</th>
+                <th>Stability</th>
+                <th>Parameter</th>
+                <th>Type</th>
+              </tr>
+              <tr class="background-status-failure">
+                <td>1</td>
+                <td>UNSTABLE</td>
+                <td class="code">viewModel</td>
+                <td class="code">NotesViewModel</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>2</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToAbout</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>3</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToAddNote</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>4</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToNoteDetail</td>
+                <td class="code">Function1&lt;String, Unit&gt;</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>5</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToLogin</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>6.</td>
+          <td>
+            <h3 class="code"><span> fun SignUpScreen</span></h3>
+            <h4><span class="status-failure"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M11 13C11 13.5523 11.4477 14 12 14C12.5523 14 13 13.5523 13 13V10C13 9.44772 12.5523 9 12 9C11.4477 9 11 9.44772 11 10V13ZM13 15.9888C13 15.4365 12.5523 14.9888 12 14.9888C11.4477 14.9888 11 15.4365 11 15.9888V16C11 16.5523 11.4477 17 12 17C12.5523 17 13 16.5523 13 16V15.9888ZM9.37735 4.66136C10.5204 2.60393 13.4793 2.60393 14.6223 4.66136L21.2233 16.5431C22.3341 18.5427 20.8882 21 18.6008 21H5.39885C3.11139 21 1.66549 18.5427 2.77637 16.5431L9.37735 4.66136Z" fill="#D32F2F"></path></svg>
+Non Skippable</span></span><span class="status-success"><span style="font-size:18px;align-items:center;Display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM16.0303 8.96967C16.3232 9.26256 16.3232 9.73744 16.0303 10.0303L11.0303 15.0303C10.7374 15.3232 10.2626 15.3232 9.96967 15.0303L7.96967 13.0303C7.67678 12.7374 7.67678 12.2626 7.96967 11.9697C8.26256 11.6768 8.73744 11.6768 9.03033 11.9697L10.5 13.4393L12.7348 11.2045L14.9697 8.96967C15.2626 8.67678 15.7374 8.67678 16.0303 8.96967Z" fill="#004D40"></path></svg>
+Restartable</span></span></h4>
+            <table>
+              <tr>
+                <th>No.</th>
+                <th>Stability</th>
+                <th>Parameter</th>
+                <th>Type</th>
+              </tr>
+              <tr class="background-status-failure">
+                <td>1</td>
+                <td>UNSTABLE</td>
+                <td class="code">viewModel</td>
+                <td class="code">RegisterViewModel</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>2</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateUp</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
+              </tr>
+              <tr class="background-status-success">
+                <td>3</td>
+                <td>STABLE</td>
+                <td class="code">onNavigateToNotes</td>
+                <td class="code">Function0&lt;Unit&gt;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
     </section>
-    <hr>
     <footer><i>This report is beautified with <a href="https://github.com/PatilShreyas/compose-report-to-html" target="_blank">Compose Report to HTML</a></i></footer>
     <script>var coll = document.getElementsByClassName("collapsible");
 var i;
