@@ -35,7 +35,7 @@ jobs:
         working-directory: noty-android
 
       - name: 🏗 Build with Gradle 🛠️
-        run: ./gradlew build releaseComposeCompilerHtmlReport --stacktrace
+        run: ./gradlew build --stacktrace
         working-directory: noty-android
 
       - name: 🚀 Upload APK 📱
@@ -44,10 +44,11 @@ jobs:
           name: app
           path: noty-android/**/*.apk
           retention-days: 3
-          
-      - name: Update compose compiler metrics and report in docs
+
+      - name: 📊 Generate compose compiler report ️
         if: github.event_name == 'push'
         run: |
+          ./gradlew releaseComposeCompilerHtmlReport --stacktrace
           mv -f noty-android/app/composeapp/build/compose_report/index.html docs/pages/noty-android/compose_report.html
           git config user.name $GITHUB_ACTOR
           git config user.email action@github.com
@@ -57,3 +58,4 @@ jobs:
           git commit -m "Update compose compiler metric and report"
           git status
           git push
+        working-directory: noty-android
