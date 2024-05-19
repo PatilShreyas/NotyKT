@@ -41,7 +41,7 @@ ext {
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.8.1'
     lifecycleVersion = "2.6.1"
-    navigationVersion = '2.6.0'
+    navigationVersion = '2.7.1'
     securityCryptoVersion = '1.1.0-alpha06'
     roomVersion = '2.5.2'
     dataStoreVersion = '1.0.0'
