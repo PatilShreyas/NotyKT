@@ -22,7 +22,7 @@ buildscript {
         coroutinesVersion = "1.7.2"
         ktorVersion = "1.6.8"
         exposedVersion = "0.44.0"
-        postgresVersion = "42.5.4"
+        postgresVersion = "42.7.3"
         logbackVersion = "1.4.14"
         daggerVersion = "2.47"
         testContainerVersion = "1.19.1"
