@@ -19,7 +19,7 @@ ext {
     javaVersion = "17"
 
     // Android Plugin
-    androidGradlePluginVersion = '8.1.1'
+    androidGradlePluginVersion = '8.6.1'
 
     // Compose compiler report generator plugin
     composeCompilerReportGenVersion = "1.3.1"
@@ -35,18 +35,18 @@ ext {
 
     // Android
     appcompatVersion = '1.6.1'
-    coreKtxVersion = '1.10.1'
+    coreKtxVersion = '1.13.1'
     constraintlayoutVersion = "2.1.4"
     swipeRefreshLayoutVersion = "1.1.0"
     recyclerViewVersion = "1.2.1"
     workmanagerVersion = '2.8.1'
-    lifecycleVersion = "2.6.1"
+    lifecycleVersion = '2.8.6'
     navigationVersion = '2.6.0'
     securityCryptoVersion = '1.1.0-alpha06'
     roomVersion = '2.5.2'
-    dataStoreVersion = '1.0.0'
+    dataStoreVersion = '1.1.1'
     legacySupportVersion = "1.0.0"
-    capturableVersion = "1.0.3"
+    capturableVersion = "3.0.0"
 
     // Activity & Fragment
     activityVersion = '1.7.2'
@@ -63,7 +63,7 @@ ext {
 
     // DI
     daggerHiltVersion = '2.44.2'
-    jetpackHiltVersion = "1.0.0"
+    jetpackHiltVersion = '1.2.0'
 
     // Networking
     retrofitVersion = "2.9.0"
@@ -78,7 +78,7 @@ ext {
     javaxInjectVersion = "1"
 
     // Jetpack Compose
-    composeBomVersion = "2023.06.01"
+    composeBomVersion = '2024.10.00'
     composeCompilerVersion = '1.4.8'
 
     // Constrain Layout (Compose)

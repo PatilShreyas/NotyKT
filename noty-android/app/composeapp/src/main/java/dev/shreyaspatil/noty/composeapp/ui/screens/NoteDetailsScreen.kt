@@ -35,7 +35,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -44,7 +46,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import dev.shreyaspatil.capturable.Capturable
+import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
@@ -63,6 +65,7 @@ import dev.shreyaspatil.noty.utils.saveBitmap
 import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun NoteDetailsScreen(
@@ -124,6 +127,7 @@ fun NoteDetailContent(
     onShareNoteAsText: () -> Unit,
     onShareNoteAsImage: (ImageBitmap) -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
     val captureController = rememberCaptureController()
 
@@ -143,7 +147,9 @@ fun NoteDetailContent(
                         onShareNoteAsTextClick = onShareNoteAsText,
                         onShareNoteAsImageClick = {
                             focusRequester.requestFocus()
-                            captureController.capture()
+                            coroutineScope.launch {
+                                onShareNoteAsImage(captureController.captureAsync().await())
+                            }
                         }
                     )
                 }
@@ -152,7 +158,6 @@ fun NoteDetailContent(
         content = {
             NoteDetailBody(
                 captureController = captureController,
-                onCaptured = onShareNoteAsImage,
                 title = title,
                 onTitleChange = onTitleChange,
                 note = note,
@@ -204,42 +209,38 @@ private fun NoteDetailActions(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun NoteDetailBody(
     captureController: CaptureController,
-    onCaptured: (ImageBitmap) -> Unit,
     title: String,
     onTitleChange: (String) -> Unit,
     note: String,
     onNoteChange: (String) -> Unit
 ) {
-    Capturable(
-        controller = captureController,
-        onCaptured = { bitmap, _ -> bitmap?.let(onCaptured) }
+    Column(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
+            .capturable(captureController)
     ) {
-        Column(
-            Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
-        ) {
-            NoteTitleField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colors.background),
-                value = title,
-                onTextChange = onTitleChange
-            )
+        NoteTitleField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.background),
+            value = title,
+            onTextChange = onTitleChange
+        )
 
-            NoteField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(top = 32.dp)
-                    .background(MaterialTheme.colors.background),
-                value = note,
-                onTextChange = onNoteChange
-            )
-        }
+        NoteField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(top = 32.dp)
+                .background(MaterialTheme.colors.background),
+            value = note,
+            onTextChange = onNoteChange
+        )
     }
 }
 
