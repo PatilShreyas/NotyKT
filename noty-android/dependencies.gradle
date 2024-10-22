@@ -43,7 +43,7 @@ ext {
     lifecycleVersion = "2.6.1"
     navigationVersion = '2.6.0'
     securityCryptoVersion = '1.1.0-alpha06'
-    roomVersion = '2.5.2'
+    roomVersion = '2.6.1'
     dataStoreVersion = '1.0.0'
     legacySupportVersion = "1.0.0"
     capturableVersion = "1.0.3"
