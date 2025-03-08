@@ -39,7 +39,7 @@ jobs:
         working-directory: noty-android
 
       - name: 🚀 Upload APK 📱
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: app
           path: noty-android/**/*.apk

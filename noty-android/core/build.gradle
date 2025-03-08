@@ -41,9 +41,6 @@ dependencies {
     testImplementation "io.mockk:mockk:$mockkVersion"
 }
 
-sourceCompatibility javaVersion
-targetCompatibility javaVersion
-
 kotlin {
     jvmToolchain(javaVersion.toInteger())
 }
