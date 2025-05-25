@@ -29,10 +29,9 @@ import dev.shreyaspatil.noty.di.NetworkModule
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [NetworkModule::class]
+    replaces = [NetworkModule::class],
 )
 interface FakeNetworkModule {
-
     @Binds
     fun notyService(repository: FakeNotyService): NotyService
 

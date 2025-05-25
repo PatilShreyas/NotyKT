@@ -14,12 +14,35 @@
  * limitations under the License.
  */
 
-ext {
-    ProjectConfig = [
-            compileSdkVersion: 34,
-            minSdkVersion    : 21,
-            targetSdkVersion : 34,
-            versionCode      : 20230101,
-            versionName      : "2.1.1"
-    ]
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    // Kotlin Stdlib
+    api(libs.kotlin.stdlib)
+
+    // Coroutines
+    api(libs.kotlinx.coroutines.core)
+
+    // JavaX Inject
+    api(libs.javax.inject)
+
+    // Moshi
+    api(libs.moshi.kotlin)
+    api(libs.moshi.adapters)
+
+    // Testing
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.mockk)
+}
+
+kotlin {
+    jvmToolchain(libs.versions.javaVersion.get().toInt())
 }

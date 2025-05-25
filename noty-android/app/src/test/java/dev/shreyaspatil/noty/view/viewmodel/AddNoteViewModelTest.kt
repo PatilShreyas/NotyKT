@@ -33,27 +33,29 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.util.*
+import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddNoteViewModelTest : ViewModelBehaviorSpec({
 
     val repository: NotyNoteRepository = mockk(relaxUnitFun = true)
-    val taskManager: NotyTaskManager = mockk(relaxUnitFun = true) {
-        every { scheduleTask(any()) } returns UUID.randomUUID()
-    }
+    val taskManager: NotyTaskManager =
+        mockk(relaxUnitFun = true) {
+            every { scheduleTask(any()) } returns UUID.randomUUID()
+        }
 
     val viewModel = AddNoteViewModel(repository, taskManager)
 
     Given("The ViewModel") {
-        val expectedState = AddNoteState(
-            title = "",
-            note = "",
-            showSave = false,
-            isAdding = false,
-            added = false,
-            errorMessage = null
-        )
+        val expectedState =
+            AddNoteState(
+                title = "",
+                note = "",
+                showSave = false,
+                isAdding = false,
+                added = false,
+                errorMessage = null,
+            )
 
         When("Initialized") {
             Then("Initial state should be valid") {

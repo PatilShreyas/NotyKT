@@ -41,20 +41,27 @@ import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 
 @Composable
-fun NoteCard(title: String, note: String, isPinned: Boolean, onNoteClick: () -> Unit) {
+fun NoteCard(
+    title: String,
+    note: String,
+    isPinned: Boolean,
+    onNoteClick: () -> Unit,
+) {
     Card(
         shape = RoundedCornerShape(4.dp),
         backgroundColor = MaterialTheme.colors.surface,
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .clickable { onNoteClick() },
-        elevation = 0.dp
+        modifier =
+            Modifier
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .clickable { onNoteClick() },
+        elevation = 0.dp,
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .padding(16.dp),
         ) {
             Row(Modifier.fillMaxWidth()) {
                 Text(
@@ -62,13 +69,13 @@ fun NoteCard(title: String, note: String, isPinned: Boolean, onNoteClick: () -> 
                     style = typography.h5,
                     color = MaterialTheme.colors.onPrimary,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 if (isPinned) {
                     Icon(
                         painterResource(id = R.drawable.ic_pinned),
                         contentDescription = "Pinned Note",
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp),
                     )
                 }
             }
@@ -78,7 +85,7 @@ fun NoteCard(title: String, note: String, isPinned: Boolean, onNoteClick: () -> 
                 style = typography.body1,
                 color = MaterialTheme.colors.onPrimary,
                 lineHeight = 24.sp,
-                maxLines = 2
+                maxLines = 2,
             )
         }
     }
@@ -86,11 +93,12 @@ fun NoteCard(title: String, note: String, isPinned: Boolean, onNoteClick: () -> 
 
 @Preview
 @Composable
-fun PreviewNoteCard() = NotyPreview {
-    NoteCard(
-        title = "Lorem Ipsum",
-        note = "Here is note body...",
-        isPinned = true,
-        onNoteClick = {}
-    )
-}
+fun PreviewNoteCard() =
+    NotyPreview {
+        NoteCard(
+            title = "Lorem Ipsum",
+            note = "Here is note body...",
+            isPinned = true,
+            onNoteClick = {},
+        )
+    }

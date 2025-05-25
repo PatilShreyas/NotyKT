@@ -29,21 +29,23 @@ import dev.shreyaspatil.noty.utils.autoCleaned
 class ErrorDialog(
     var title: String = "",
     var message: String = "",
-    var onDialogDismiss: () -> Unit = {}
+    var onDialogDismiss: () -> Unit = {},
 ) : DialogFragment() {
-
     private var binding: ErrorDialogLayoutBinding by autoCleaned()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = ErrorDialogLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.run {
@@ -60,7 +62,7 @@ class ErrorDialog(
         super.onStart()
         dialog?.window?.setLayout(
             WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT
+            WindowManager.LayoutParams.WRAP_CONTENT,
         )
     }
 

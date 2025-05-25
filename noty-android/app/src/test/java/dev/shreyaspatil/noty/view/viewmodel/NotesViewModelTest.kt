@@ -42,42 +42,46 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
-import java.util.*
+import java.util.UUID
 
 @Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 class NotesViewModelTest : ViewModelBehaviorSpec({
     val fakeNotesFlow = MutableSharedFlow<Either<List<Note>>>(replay = 1)
 
-    val repository: NotyNoteRepository = mockk(relaxUnitFun = true) {
-        every { getAllNotes() } returns fakeNotesFlow
-    }
-    val sessionManager: SessionManager = mockk(relaxUnitFun = true) {
-        every { getToken() } returns "TEST_TOKEN"
-    }
+    val repository: NotyNoteRepository =
+        mockk(relaxUnitFun = true) {
+            every { getAllNotes() } returns fakeNotesFlow
+        }
+    val sessionManager: SessionManager =
+        mockk(relaxUnitFun = true) {
+            every { getToken() } returns "TEST_TOKEN"
+        }
     val preferenceManager: PreferenceManager = mockk(relaxUnitFun = true)
     val taskManager: NotyTaskManager = mockk(relaxUnitFun = true)
     val connectivityObserver = spyk(FakeConnectivityObserver())
 
-    val viewModel = NotesViewModel(
-        notyNoteRepository = repository,
-        sessionManager = sessionManager,
-        preferenceManager = preferenceManager,
-        notyTaskManager = taskManager,
-        connectivityObserver = connectivityObserver
-    )
+    val viewModel =
+        NotesViewModel(
+            notyNoteRepository = repository,
+            sessionManager = sessionManager,
+            preferenceManager = preferenceManager,
+            notyTaskManager = taskManager,
+            connectivityObserver = connectivityObserver,
+        )
 
     Given("The ViewModel") {
         val initialNotes = listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))
         fakeNotesFlow.emit(Either.success(initialNotes))
 
         When("Initialized") {
-            val expectedState = NotesState(
-                isLoading = false,
-                notes = initialNotes,
-                error = null,
-                isUserLoggedIn = true,
-                isConnectivityAvailable = true
-            )
+            val expectedState =
+                NotesState(
+                    isLoading = false,
+                    notes = initialNotes,
+                    error = null,
+                    isUserLoggedIn = true,
+                    isConnectivityAvailable = true,
+                )
 
             Then("Initial state should be valid") {
                 viewModel currentStateShouldBe expectedState
@@ -148,10 +152,11 @@ class NotesViewModelTest : ViewModelBehaviorSpec({
 
             val taskId = UUID.randomUUID()
             every { taskManager.syncNotes() } returns taskId
-            every { taskManager.observeTask(taskId) } returns flowOf(
-                TaskState.SCHEDULED,
-                TaskState.COMPLETED
-            )
+            every { taskManager.observeTask(taskId) } returns
+                flowOf(
+                    TaskState.SCHEDULED,
+                    TaskState.COMPLETED,
+                )
 
             viewModel.syncNotes()
 
@@ -166,10 +171,11 @@ class NotesViewModelTest : ViewModelBehaviorSpec({
             And("Sync is successful") {
                 val taskId = UUID.randomUUID()
                 every { taskManager.syncNotes() } returns taskId
-                every { taskManager.observeTask(taskId) } returns flowOf(
-                    TaskState.SCHEDULED,
-                    TaskState.COMPLETED
-                )
+                every { taskManager.observeTask(taskId) } returns
+                    flowOf(
+                        TaskState.SCHEDULED,
+                        TaskState.COMPLETED,
+                    )
 
                 viewModel.syncNotes()
 
@@ -185,10 +191,11 @@ class NotesViewModelTest : ViewModelBehaviorSpec({
             And("Sync is failed") {
                 val taskId = UUID.randomUUID()
                 every { taskManager.syncNotes() } returns taskId
-                every { taskManager.observeTask(taskId) } returns flowOf(
-                    TaskState.SCHEDULED,
-                    TaskState.FAILED
-                )
+                every { taskManager.observeTask(taskId) } returns
+                    flowOf(
+                        TaskState.SCHEDULED,
+                        TaskState.FAILED,
+                    )
 
                 viewModel.syncNotes()
 

@@ -18,8 +18,11 @@ package dev.shreyaspatil.noty.composeapp.ui
 
 sealed class Screen(val route: String, val name: String) {
     object SignUp : Screen("signup", "Sign Up")
+
     object Login : Screen("login", "Login")
+
     object Notes : Screen("notes", "Notes")
+
     object NotesDetail : Screen("note/{noteId}", "Note details") {
         fun route(noteId: String) = "note/$noteId"
 
@@ -27,5 +30,6 @@ sealed class Screen(val route: String, val name: String) {
     }
 
     object AddNote : Screen("note/new", "New note")
+
     object About : Screen("about", "About")
 }

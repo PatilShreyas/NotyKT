@@ -748,6 +748,7 @@ ij_xml_use_custom_settings = true
 
 [{*.kt, *.kts}]
 ktlint_disabled_rules = no-wildcard-imports, import-ordering
+ktlint_function_naming_ignore_when_annotated_with=Composable
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false

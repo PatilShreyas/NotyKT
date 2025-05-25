@@ -34,83 +34,95 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transformWhile
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NotyTaskManagerImpl @Inject constructor(
-    private val workManager: WorkManager
-) : NotyTaskManager {
+class NotyTaskManagerImpl
+    @Inject
+    constructor(
+        private val workManager: WorkManager,
+    ) : NotyTaskManager {
+        override fun syncNotes(): UUID {
+            val notySyncWorker =
+                OneTimeWorkRequestBuilder<NotySyncWorker>()
+                    .setConstraints(getRequiredConstraints())
+                    .build()
 
-    override fun syncNotes(): UUID {
-        val notySyncWorker = OneTimeWorkRequestBuilder<NotySyncWorker>()
-            .setConstraints(getRequiredConstraints())
-            .build()
+            workManager.enqueueUniqueWork(
+                SYNC_TASK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                notySyncWorker,
+            )
 
-        workManager.enqueueUniqueWork(
-            SYNC_TASK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            notySyncWorker
-        )
+            return notySyncWorker.id
+        }
 
-        return notySyncWorker.id
+        override fun scheduleTask(notyTask: NotyTask): UUID {
+            val notyTaskWorker =
+                OneTimeWorkRequestBuilder<NotyTaskWorker>()
+                    .setConstraints(getRequiredConstraints())
+                    .setInputData(generateData(notyTask))
+                    .build()
+
+            workManager.enqueueUniqueWork(
+                getTaskIdFromNoteId(notyTask.noteId),
+                ExistingWorkPolicy.REPLACE,
+                notyTaskWorker,
+            )
+
+            return notyTaskWorker.id
+        }
+
+        override fun getTaskState(taskId: UUID): TaskState? =
+            runCatching {
+                workManager.getWorkInfoById(taskId)
+                    .get()
+                    ?.let { mapWorkInfoStateToTaskState(it.state) }
+            }.getOrNull()
+
+        override fun observeTask(taskId: UUID): Flow<TaskState> {
+            return workManager.getWorkInfoByIdLiveData(taskId)
+                .asFlow()
+                .map {
+                    it?.let {
+                            workInfo ->
+                        mapWorkInfoStateToTaskState(workInfo.state)
+                    } ?: TaskState.FAILED
+                }
+                .transformWhile { taskState ->
+                    emit(taskState)
+
+                    // This is to terminate this flow when terminal state is arrived
+                    !taskState.isTerminalState
+                }.distinctUntilChanged()
+        }
+
+        override fun abortAllTasks() {
+            workManager.cancelAllWork()
+        }
+
+        private fun mapWorkInfoStateToTaskState(state: State): TaskState =
+            when (state) {
+                State.ENQUEUED, State.RUNNING, State.BLOCKED -> TaskState.SCHEDULED
+                State.CANCELLED -> TaskState.CANCELLED
+                State.FAILED -> TaskState.FAILED
+                State.SUCCEEDED -> TaskState.COMPLETED
+            }
+
+        private fun generateData(notyTask: NotyTask) =
+            Data.Builder()
+                .putString(NotyTaskWorker.KEY_NOTE_ID, notyTask.noteId)
+                .putEnum(NotyTaskWorker.KEY_TASK_TYPE, notyTask.action)
+                .build()
+
+        private fun getRequiredConstraints(): Constraints =
+            Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+        companion object {
+            const val SYNC_TASK_NAME = "Task-Noty-Sync"
+        }
     }
-
-    override fun scheduleTask(notyTask: NotyTask): UUID {
-        val notyTaskWorker = OneTimeWorkRequestBuilder<NotyTaskWorker>()
-            .setConstraints(getRequiredConstraints())
-            .setInputData(generateData(notyTask))
-            .build()
-
-        workManager.enqueueUniqueWork(
-            getTaskIdFromNoteId(notyTask.noteId),
-            ExistingWorkPolicy.REPLACE,
-            notyTaskWorker
-        )
-
-        return notyTaskWorker.id
-    }
-
-    override fun getTaskState(taskId: UUID): TaskState? = runCatching {
-        workManager.getWorkInfoById(taskId)
-            .get()
-            .let { mapWorkInfoStateToTaskState(it.state) }
-    }.getOrNull()
-
-    override fun observeTask(taskId: UUID): Flow<TaskState> {
-        return workManager.getWorkInfoByIdLiveData(taskId)
-            .asFlow()
-            .map { mapWorkInfoStateToTaskState(it.state) }
-            .transformWhile { taskState ->
-                emit(taskState)
-
-                // This is to terminate this flow when terminal state is arrived
-                !taskState.isTerminalState
-            }.distinctUntilChanged()
-    }
-
-    override fun abortAllTasks() {
-        workManager.cancelAllWork()
-    }
-
-    private fun mapWorkInfoStateToTaskState(state: State): TaskState = when (state) {
-        State.ENQUEUED, State.RUNNING, State.BLOCKED -> TaskState.SCHEDULED
-        State.CANCELLED -> TaskState.CANCELLED
-        State.FAILED -> TaskState.FAILED
-        State.SUCCEEDED -> TaskState.COMPLETED
-    }
-
-    private fun generateData(notyTask: NotyTask) = Data.Builder()
-        .putString(NotyTaskWorker.KEY_NOTE_ID, notyTask.noteId)
-        .putEnum(NotyTaskWorker.KEY_TASK_TYPE, notyTask.action)
-        .build()
-
-    private fun getRequiredConstraints(): Constraints = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .build()
-
-    companion object {
-        const val SYNC_TASK_NAME = "Task-Noty-Sync"
-    }
-}

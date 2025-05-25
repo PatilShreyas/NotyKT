@@ -26,26 +26,33 @@ import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.simpleapp.databinding.ItemNoteBinding
 
 class NotesListAdapter(
-    private val onNoteClick: (Note) -> Unit
+    private val onNoteClick: (Note) -> Unit,
 ) : ListAdapter<Note, NotesListAdapter.NoteViewHolder>(DIFF_CALLBACK) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NoteViewHolder(
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ) = NoteViewHolder(
         ItemNoteBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
-            false
-        )
+            false,
+        ),
     )
 
-    override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: NoteViewHolder,
+        position: Int,
+    ) {
         holder.bind(getItem(position), onNoteClick)
     }
 
     inner class NoteViewHolder(
-        private val binding: ItemNoteBinding
+        private val binding: ItemNoteBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(note: Note, onNoteClick: (Note) -> Unit) {
+        fun bind(
+            note: Note,
+            onNoteClick: (Note) -> Unit,
+        ) {
             with(binding) {
                 textTitle.text = note.title
                 textNote.text = note.note
@@ -56,9 +63,17 @@ class NotesListAdapter(
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Note>() {
-            override fun areItemsTheSame(oldItem: Note, newItem: Note) = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: Note, newItem: Note) = oldItem == newItem
-        }
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<Note>() {
+                override fun areItemsTheSame(
+                    oldItem: Note,
+                    newItem: Note,
+                ) = oldItem.id == newItem.id
+
+                override fun areContentsTheSame(
+                    oldItem: Note,
+                    newItem: Note,
+                ) = oldItem == newItem
+            }
     }
 }

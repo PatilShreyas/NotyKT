@@ -33,25 +33,26 @@ import kotlinx.coroutines.flow.toList
 import java.io.IOException
 
 class PreferenceManagerImplTest : BehaviorSpec() {
-
     // This is unused but it's necessary to mock the extension function on DataStore
     val editMock = mockkStatic(DataStore<Preferences>::edit)
 
     private val preferences: MutablePreferences = mockk(relaxUnitFun = true)
 
-    private val dataStore: DataStore<Preferences> = mockk {
-        every { data } returns flow {
-            emit(preference(null))
-            emit(preference(true))
-            emit(preference(false))
-            throw IOException("Fake error")
-        }
+    private val dataStore: DataStore<Preferences> =
+        mockk {
+            every { data } returns
+                flow {
+                    emit(preference(null))
+                    emit(preference(true))
+                    emit(preference(false))
+                    throw IOException("Fake error")
+                }
 
-        coEvery { edit(captureLambda()) } coAnswers {
-            lambda<suspend (MutablePreferences) -> Unit>().coInvoke(preferences)
-            preference(true)
+            coEvery { edit(captureLambda()) } coAnswers {
+                lambda<suspend (MutablePreferences) -> Unit>().coInvoke(preferences)
+                preference(true)
+            }
         }
-    }
 
     private val manager = PreferenceManagerImpl(dataStore)
 
@@ -77,7 +78,8 @@ class PreferenceManagerImplTest : BehaviorSpec() {
         }
     }
 
-    private fun preference(value: Boolean?) = mockk<Preferences> {
-        every { get(PreferenceManagerImpl.IS_DARK_MODE) } returns value
-    }
+    private fun preference(value: Boolean?) =
+        mockk<Preferences> {
+            every { get(PreferenceManagerImpl.IS_DARK_MODE) } returns value
+        }
 }

@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
  * @param initialState The initial state which is mutable
  */
 class StateStore<STATE, MUTABLE_STATE : MutektMutableState<STATE, out STATE>>(
-    initialState: MUTABLE_STATE
+    initialState: MUTABLE_STATE,
 ) {
     /**
      * Mutable state model

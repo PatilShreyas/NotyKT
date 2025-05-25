@@ -16,33 +16,24 @@
 
 package dev.shreyaspatil.noty.fakes
 
-import android.app.PendingIntent
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import androidx.work.Configuration
 import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
-import androidx.work.Operation
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkContinuation
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.WorkQuery
-import androidx.work.WorkRequest
 import com.google.common.util.concurrent.ListenableFuture
 import io.mockk.mockk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 
 /**
- * WorkManager's fake implementation
+ * WorkManager's fake implementation using Mockk
  */
-class FakeWorkManager : WorkManager() {
+class FakeWorkManager {
     /**
      * Useful for capturing scheduled work requests
      */
@@ -63,129 +54,68 @@ class FakeWorkManager : WorkManager() {
      */
     lateinit var fakeWorkStatesForObserve: Flow<WorkInfo.State>
 
-    override fun enqueueUniqueWork(
-        uniqueWorkName: String,
-        existingWorkPolicy: ExistingWorkPolicy,
-        work: MutableList<OneTimeWorkRequest>
-    ): Operation {
-        oneTimeWorkRequests.addAll(work)
-        return mockk()
-    }
+    // Create a mocked WorkManager instance
+    val mockWorkManager = mockk<WorkManager>()
 
-    override fun getWorkInfoById(id: UUID): ListenableFuture<WorkInfo> {
-        return futureWorkInfo(fakeWorkStates[id]!!)
-    }
+    init {
+        // Setup the mock to handle the methods used in tests
+        io.mockk.every {
+            mockWorkManager.enqueueUniqueWork(
+                any(),
+                any<ExistingWorkPolicy>(),
+                any<OneTimeWorkRequest>(),
+            )
+        } answers {
+            val request = thirdArg<OneTimeWorkRequest>()
+            oneTimeWorkRequests.add(request)
+            mockk()
+        }
 
-    override fun cancelAllWork(): Operation {
-        allWorkCancelled = true
-        return mockk()
-    }
+        io.mockk.every {
+            mockWorkManager.getWorkInfoById(any())
+        } answers {
+            val id = firstArg<UUID>()
+            futureWorkInfo(fakeWorkStates[id] ?: WorkInfo.State.FAILED)
+        }
 
-    override fun getWorkInfoByIdLiveData(id: UUID): LiveData<WorkInfo> {
-        return fakeWorkStatesForObserve.map { workInfo(it) }.asLiveData()
-    }
+        io.mockk.every {
+            mockWorkManager.cancelAllWork()
+        } answers {
+            allWorkCancelled = true
+            mockk()
+        }
 
-    override fun getConfiguration(): Configuration {
-        TODO("Not yet implemented")
-    }
-
-    override fun enqueue(requests: MutableList<out WorkRequest>): Operation {
-        TODO("Not yet implemented")
-    }
-
-    override fun beginWith(work: MutableList<OneTimeWorkRequest>): WorkContinuation {
-        TODO("Not yet implemented")
-    }
-
-    override fun beginUniqueWork(
-        uniqueWorkName: String,
-        existingWorkPolicy: ExistingWorkPolicy,
-        work: MutableList<OneTimeWorkRequest>
-    ): WorkContinuation {
-        TODO("Not yet implemented")
-    }
-
-    override fun enqueueUniquePeriodicWork(
-        uniqueWorkName: String,
-        existingPeriodicWorkPolicy: ExistingPeriodicWorkPolicy,
-        periodicWork: PeriodicWorkRequest
-    ): Operation {
-        TODO("Not yet implemented")
-    }
-
-    override fun cancelWorkById(id: UUID): Operation {
-        TODO("Not yet implemented")
-    }
-
-    override fun cancelAllWorkByTag(tag: String): Operation {
-        TODO("Not yet implemented")
-    }
-
-    override fun cancelUniqueWork(uniqueWorkName: String): Operation {
-        TODO("Not yet implemented")
-    }
-
-    override fun createCancelPendingIntent(id: UUID): PendingIntent {
-        TODO("Not yet implemented")
-    }
-
-    override fun pruneWork(): Operation {
-        TODO("Not yet implemented")
-    }
-
-    override fun getLastCancelAllTimeMillisLiveData(): LiveData<Long> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getLastCancelAllTimeMillis(): ListenableFuture<Long> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWorkInfosByTagLiveData(tag: String): LiveData<MutableList<WorkInfo>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWorkInfosByTag(tag: String): ListenableFuture<MutableList<WorkInfo>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWorkInfosForUniqueWorkLiveData(
-        uniqueWorkName: String
-    ): LiveData<MutableList<WorkInfo>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWorkInfosForUniqueWork(
-        uniqueWorkName: String
-    ): ListenableFuture<MutableList<WorkInfo>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWorkInfosLiveData(workQuery: WorkQuery): LiveData<MutableList<WorkInfo>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getWorkInfos(workQuery: WorkQuery): ListenableFuture<MutableList<WorkInfo>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun updateWork(request: WorkRequest): ListenableFuture<UpdateResult> {
-        TODO("Not yet implemented")
+        io.mockk.every {
+            mockWorkManager.getWorkInfoByIdLiveData(any())
+        } answers {
+            fakeWorkStatesForObserve.map { workInfo(it) }.asLiveData()
+        }
     }
 }
 
-fun futureWorkInfo(
-    state: WorkInfo.State
-): ListenableFuture<WorkInfo> = object : ListenableFuture<WorkInfo> {
-    override fun cancel(mayInterruptIfRunning: Boolean): Boolean = true
-    override fun isCancelled(): Boolean = true
-    override fun isDone(): Boolean = true
-    override fun get(): WorkInfo = workInfo(state)
-    override fun get(timeout: Long, unit: TimeUnit?): WorkInfo = TODO("Not needed")
-    override fun addListener(listener: Runnable, executor: Executor) = TODO("Not needed")
-}
+fun futureWorkInfo(state: WorkInfo.State): ListenableFuture<WorkInfo?> =
+    object : ListenableFuture<WorkInfo?> {
+        override fun cancel(mayInterruptIfRunning: Boolean): Boolean = true
+
+        override fun isCancelled(): Boolean = true
+
+        override fun isDone(): Boolean = true
+
+        override fun get(): WorkInfo? = workInfo(state)
+
+        override fun get(
+            timeout: Long,
+            unit: TimeUnit?,
+        ): WorkInfo? = TODO("Not needed")
+
+        override fun addListener(
+            listener: Runnable,
+            executor: Executor,
+        ) = TODO("Not needed")
+    }
 
 fun workInfo(state: WorkInfo.State): WorkInfo {
+    val id = UUID.randomUUID()
     val fakeData = Data.Builder().build()
-    return WorkInfo(UUID.randomUUID(), state, fakeData, emptyList(), fakeData, 1, 0)
+    return WorkInfo(id, state, emptySet<String>(), fakeData, fakeData)
 }

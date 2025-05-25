@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.base
 
 import io.kotest.core.spec.style.BehaviorSpec
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 
@@ -29,7 +29,7 @@ import kotlinx.coroutines.test.setMain
  * sets Test dispatcher as a Main dispatcher so that it becomes easy to test the ViewModel.
  */
 abstract class ViewModelBehaviorSpec(body: BehaviorSpec.() -> Unit = {}) : BehaviorSpec({
-    val dispatcher = TestCoroutineDispatcher()
+    val dispatcher = StandardTestDispatcher()
 
     testCoroutineDispatcher = true
     Dispatchers.setMain(dispatcher)

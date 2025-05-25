@@ -21,11 +21,11 @@ import dev.shreyaspatil.noty.core.model.Note
 data class NotesResponse(
     override val status: State,
     override val message: String,
-    val notes: List<Note> = emptyList()
+    val notes: List<Note> = emptyList(),
 ) : BaseResponse
 
 data class NoteResponse(
     override val status: State,
     override val message: String,
-    val noteId: String?
+    val noteId: String?,
 ) : BaseResponse

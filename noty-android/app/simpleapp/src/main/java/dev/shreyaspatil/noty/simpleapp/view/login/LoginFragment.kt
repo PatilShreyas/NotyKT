@@ -32,7 +32,6 @@ import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewModel>() {
-
     override val viewModel: LoginViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun initView() {
@@ -70,7 +69,7 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewMo
             showErrorDialog(
                 title = getString(R.string.dialog_title_login_failed),
                 message = errorMessage,
-                onDialogDismiss = viewModel::clearError
+                onDialogDismiss = viewModel::clearError,
             )
         }
     }
@@ -81,6 +80,6 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewMo
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = LoginFragmentBinding.inflate(inflater, container, false)
 }

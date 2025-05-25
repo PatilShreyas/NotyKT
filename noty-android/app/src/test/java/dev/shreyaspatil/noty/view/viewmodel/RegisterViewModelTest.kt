@@ -38,17 +38,18 @@ class RegisterViewModelTest : ViewModelBehaviorSpec({
 
     Given("The ViewModel") {
         When("Initialized") {
-            val expectedState = RegisterState(
-                isLoading = false,
-                isLoggedIn = false,
-                error = null,
-                username = "",
-                password = "",
-                confirmPassword = "",
-                isValidUsername = null,
-                isValidPassword = null,
-                isValidConfirmPassword = null
-            )
+            val expectedState =
+                RegisterState(
+                    isLoading = false,
+                    isLoggedIn = false,
+                    error = null,
+                    username = "",
+                    password = "",
+                    confirmPassword = "",
+                    isValidUsername = null,
+                    isValidPassword = null,
+                    isValidConfirmPassword = null,
+                )
             Then("Initial state should be valid") {
                 viewModel currentStateShouldBe expectedState
             }

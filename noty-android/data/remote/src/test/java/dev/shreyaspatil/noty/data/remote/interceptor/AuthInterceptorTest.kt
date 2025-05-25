@@ -39,10 +39,11 @@ class AuthInterceptorTest : BehaviorSpec({
 
     // Init mocks
     val expectedRequest: Request = mockk()
-    val requestBuilder: Request.Builder = mockk {
-        every { header(any(), any()) } returns this
-        every { build() } returns expectedRequest
-    }
+    val requestBuilder: Request.Builder =
+        mockk {
+            every { header(any(), any()) } returns this
+            every { build() } returns expectedRequest
+        }
     val chain = FakeChain(requestBuilder)
 
     Given("An auth token") {
@@ -114,21 +115,31 @@ class FakeChain(private val requestBuilder: Request.Builder) : Interceptor.Chain
 
     override fun request(): Request {
         return mockk {
-            every { newBuilder() } returns mockk {
-                every { newBuilder() } returns requestBuilder
-            }
+            every { newBuilder() } returns
+                mockk {
+                    every { newBuilder() } returns requestBuilder
+                }
         }
     }
 
-    override fun withConnectTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
+    override fun withConnectTimeout(
+        timeout: Int,
+        unit: TimeUnit,
+    ): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 
-    override fun withReadTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
+    override fun withReadTimeout(
+        timeout: Int,
+        unit: TimeUnit,
+    ): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 
-    override fun withWriteTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
+    override fun withWriteTimeout(
+        timeout: Int,
+        unit: TimeUnit,
+    ): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 

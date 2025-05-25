@@ -21,5 +21,5 @@ data class Note(
     val title: String,
     val note: String,
     val created: Long,
-    val isPinned: Boolean = false
+    val isPinned: Boolean = false,
 )

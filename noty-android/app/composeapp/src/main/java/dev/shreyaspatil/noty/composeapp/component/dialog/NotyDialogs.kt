@@ -51,40 +51,45 @@ fun LoaderDialog() {
         Surface(modifier = Modifier.size(128.dp)) {
             LottieAnimation(
                 resId = R.raw.loading,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(100.dp)
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .size(100.dp),
             )
         }
     }
 }
 
 @Composable
-fun FailureDialog(failureMessage: String, onDialogDismiss: () -> Unit = {}) {
+fun FailureDialog(
+    failureMessage: String,
+    onDialogDismiss: () -> Unit = {},
+) {
     Dialog(onDismissRequest = onDialogDismiss) {
         Surface {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 LottieAnimation(
                     resId = R.raw.failure,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(84.dp)
+                    modifier =
+                        Modifier
+                            .padding(16.dp)
+                            .size(84.dp),
                 )
                 Text(
                     text = failureMessage,
                     color = MaterialTheme.colors.onSurface,
                     style = MaterialTheme.typography.subtitle1,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 )
 
                 Button(
                     onClick = onDialogDismiss,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .padding(16.dp)
-
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .padding(16.dp),
                 ) {
                     Text(style = typography.subtitle1, color = Color.White, text = "OK")
                 }
@@ -99,14 +104,15 @@ fun ConfirmationDialog(
     message: String,
     onConfirmedYes: () -> Unit,
     onConfirmedNo: () -> Unit,
-    onDismissed: () -> Unit
+    onDismissed: () -> Unit,
 ) {
     var isDismissed by remember { mutableStateOf(false) }
 
     if (!isDismissed) {
         AlertDialog(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             onDismissRequest = onDismissed,
             title = {
                 Text(text = title)
@@ -114,28 +120,30 @@ fun ConfirmationDialog(
             text = {
                 Text(
                     text = message,
-                    fontSize = 15.sp
+                    fontSize = 15.sp,
                 )
             },
             buttons = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TextButton(
                         onClick = {
                             onConfirmedYes()
                             isDismissed = true
                         },
-                        modifier = Modifier
-                            .padding(4.dp)
+                        modifier =
+                            Modifier
+                                .padding(4.dp),
                     ) {
                         Text(
                             text = "Yes",
-                            style = MaterialTheme.typography.button.copy(
-                                fontWeight = FontWeight.Medium
-                            )
+                            style =
+                                MaterialTheme.typography.button.copy(
+                                    fontWeight = FontWeight.Medium,
+                                ),
                         )
                     }
                     TextButton(
@@ -143,18 +151,20 @@ fun ConfirmationDialog(
                             onConfirmedNo()
                             isDismissed = true
                         },
-                        modifier = Modifier
-                            .padding(4.dp)
+                        modifier =
+                            Modifier
+                                .padding(4.dp),
                     ) {
                         Text(
                             text = "No",
-                            style = MaterialTheme.typography.button.copy(
-                                fontWeight = FontWeight.Medium
-                            )
+                            style =
+                                MaterialTheme.typography.button.copy(
+                                    fontWeight = FontWeight.Medium,
+                                ),
                         )
                     }
                 }
-            }
+            },
         )
     }
 }

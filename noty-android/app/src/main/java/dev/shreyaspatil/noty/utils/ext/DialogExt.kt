@@ -28,7 +28,7 @@ fun Fragment.showDialog(
     positiveAction: (dialogInterface: DialogInterface, i: Int) -> Unit = { _, _ -> },
     negativeActionText: String? = null,
     negativeAction: (dialogInterface: DialogInterface, i: Int) -> Unit = { _, _ -> },
-    isCancelable: Boolean = true
+    isCancelable: Boolean = true,
 ) {
     val dialog: AlertDialog =
         MaterialAlertDialogBuilder(requireContext())

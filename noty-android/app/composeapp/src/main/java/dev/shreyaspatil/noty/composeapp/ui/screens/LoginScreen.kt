@@ -54,7 +54,7 @@ import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
 fun LoginScreen(
     viewModel: LoginViewModel,
     onNavigateToSignup: () -> Unit,
-    onNavigateToNotes: () -> Unit
+    onNavigateToNotes: () -> Unit,
 ) {
     val state by viewModel.collectState()
 
@@ -69,7 +69,7 @@ fun LoginScreen(
         onLoginClick = viewModel::login,
         onSignupClick = onNavigateToSignup,
         onDialogDismiss = viewModel::clearError,
-        error = state.error
+        error = state.error,
     )
 
     LaunchedEffect(state.isLoggedIn) {
@@ -91,7 +91,7 @@ fun LoginContent(
     onLoginClick: () -> Unit,
     onSignupClick: () -> Unit,
     onDialogDismiss: () -> Unit,
-    error: String?
+    error: String?,
 ) {
     if (isLoading) {
         LoaderDialog()
@@ -102,10 +102,11 @@ fun LoginContent(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.surface)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.surface)
+                .verticalScroll(rememberScrollState()),
     ) {
         TopGreeting()
 
@@ -116,7 +117,7 @@ fun LoginContent(
             password = password,
             isValidPassword = isValidPassword,
             onPasswordChange = onPasswordChange,
-            onLoginClick = onLoginClick
+            onLoginClick = onLoginClick,
         )
 
         SignUpLink(Modifier.align(Alignment.CenterHorizontally), onSignupClick = onSignupClick)
@@ -129,17 +130,18 @@ private fun TopGreeting() {
         Image(
             contentDescription = "App Logo",
             painter = painterResource(id = R.drawable.noty_app_logo),
-            modifier = Modifier
-                .padding(top = 60.dp)
-                .requiredSize(92.dp)
-                .align(Alignment.CenterHorizontally),
-            contentScale = ContentScale.FillBounds
+            modifier =
+                Modifier
+                    .padding(top = 60.dp)
+                    .requiredSize(92.dp)
+                    .align(Alignment.CenterHorizontally),
+            contentScale = ContentScale.FillBounds,
         )
 
         Text(
             text = "Welcome\nback",
             style = typography.h4,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 30.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 30.dp),
         )
     }
 }
@@ -152,64 +154,72 @@ private fun LoginForm(
     isValidPassword: Boolean,
     onUsernameChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
 ) {
     UsernameTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(MaterialTheme.colors.background),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .background(MaterialTheme.colors.background),
         value = username,
         onValueChange = onUsernameChange,
-        isError = !isValidUsername
+        isError = !isValidUsername,
     )
 
     PasswordTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(MaterialTheme.colors.background),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .background(MaterialTheme.colors.background),
         value = password,
         onValueChange = onPasswordChange,
-        isError = !isValidPassword
+        isError = !isValidPassword,
     )
 
     NotyFullWidthButton(
         text = "Login",
         onClick = onLoginClick,
-        modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
     )
 }
 
 @Composable
-private fun SignUpLink(modifier: Modifier, onSignupClick: () -> Unit) {
+private fun SignUpLink(
+    modifier: Modifier,
+    onSignupClick: () -> Unit,
+) {
     Text(
-        text = buildAnnotatedString {
-            append("Don't have an account? Signup")
-            addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
-            toAnnotatedString()
-        },
+        text =
+            buildAnnotatedString {
+                append("Don't have an account? Signup")
+                addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
+                toAnnotatedString()
+            },
         style = typography.subtitle1,
-        modifier = modifier
-            .padding(vertical = 24.dp, horizontal = 16.dp)
-            .clickable(onClick = onSignupClick)
+        modifier =
+            modifier
+                .padding(vertical = 24.dp, horizontal = 16.dp)
+                .clickable(onClick = onSignupClick),
     )
 }
 
 @Preview
 @Composable
-fun PreviewLoginContent() = NotyPreview {
-    LoginContent(
-        isLoading = false,
-        username = "johndoe",
-        onUsernameChange = {},
-        password = "password",
-        onPasswordChange = {},
-        onLoginClick = {},
-        onSignupClick = {},
-        isValidPassword = false,
-        isValidUsername = false,
-        onDialogDismiss = {},
-        error = null
-    )
-}
+fun PreviewLoginContent() =
+    NotyPreview {
+        LoginContent(
+            isLoading = false,
+            username = "johndoe",
+            onUsernameChange = {},
+            password = "password",
+            onPasswordChange = {},
+            onLoginClick = {},
+            onSignupClick = {},
+            isValidPassword = false,
+            isValidUsername = false,
+            onDialogDismiss = {},
+            error = null,
+        )
+    }

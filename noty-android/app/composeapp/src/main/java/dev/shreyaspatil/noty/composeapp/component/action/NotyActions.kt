@@ -35,19 +35,24 @@ import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
 
 @Composable
-fun PinAction(isPinned: Boolean, onClick: () -> Unit) {
-    val (icon, contentDescription) = if (isPinned) {
-        R.drawable.ic_pinned to "Pinned"
-    } else {
-        R.drawable.ic_unpinned to "Not Pinned"
-    }
+fun PinAction(
+    isPinned: Boolean,
+    onClick: () -> Unit,
+) {
+    val (icon, contentDescription) =
+        if (isPinned) {
+            R.drawable.ic_pinned to "Pinned"
+        } else {
+            R.drawable.ic_unpinned to "Not Pinned"
+        }
     IconButton(onClick = onClick) {
         Icon(
             painter = painterResource(id = icon),
             contentDescription = contentDescription,
-            modifier = Modifier
-                .padding(8.dp)
-                .testTag("actionTogglePin")
+            modifier =
+                Modifier
+                    .padding(8.dp)
+                    .testTag("actionTogglePin"),
         )
     }
 }
@@ -59,8 +64,9 @@ fun DeleteAction(onClick: () -> Unit) {
         Icon(
             painter = icon,
             contentDescription = "Delete",
-            modifier = Modifier
-                .padding(8.dp)
+            modifier =
+                Modifier
+                    .padding(8.dp),
         )
     }
 }
@@ -73,7 +79,7 @@ fun ShareAction(onClick: () -> Unit) {
             icon,
             "share",
             Modifier
-                .padding(8.dp)
+                .padding(8.dp),
         )
     }
 }
@@ -81,28 +87,29 @@ fun ShareAction(onClick: () -> Unit) {
 @Immutable
 data class ShareActionItem(
     val label: String,
-    val onActionClick: () -> Unit
+    val onActionClick: () -> Unit,
 )
 
 @Composable
 fun ShareDropdown(
     expanded: Boolean,
     shareActions: ComposeImmutableList<ShareActionItem>,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = onDismissRequest,
-        modifier = Modifier
-            .wrapContentHeight()
-            .width(100.dp)
+        modifier =
+            Modifier
+                .wrapContentHeight()
+                .width(100.dp),
     ) {
         shareActions.forEach { shareAction ->
             DropdownMenuItem(
                 onClick = {
                     shareAction.onActionClick.invoke()
                     onDismissRequest.invoke()
-                }
+                },
             ) {
                 Row {
                     Text(text = shareAction.label)
@@ -120,7 +127,7 @@ fun ThemeSwitchAction(onToggle: () -> Unit) {
             icon,
             "Theme switch",
             Modifier
-                .padding(8.dp)
+                .padding(8.dp),
         )
     }
 }
@@ -133,7 +140,7 @@ fun LogoutAction(onLogout: () -> Unit) {
             icon,
             "Logout",
             Modifier
-                .padding(8.dp)
+                .padding(8.dp),
         )
     }
 }
@@ -146,7 +153,7 @@ fun AboutAction(onClick: () -> Unit) {
             icon,
             "About",
             Modifier
-                .padding(8.dp)
+                .padding(8.dp),
         )
     }
 }

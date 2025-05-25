@@ -30,7 +30,7 @@ import java.util.Collections
  */
 @Immutable
 data class ComposeImmutableList<E> private constructor(
-    private val baseList: List<E>
+    private val baseList: List<E>,
 ) : List<E> by baseList {
     companion object {
         /**
@@ -61,7 +61,7 @@ fun <E> composeImmutableListOf(vararg items: E): ComposeImmutableList<E> =
  */
 @Composable
 inline fun <E> rememberComposeImmutableList(
-    crossinline baseList: @DisallowComposableCalls () -> Iterable<E>
+    crossinline baseList: @DisallowComposableCalls () -> Iterable<E>,
 ): State<ComposeImmutableList<E>> {
     return remember { derivedStateOf { baseList().toComposeImmutableList() } }
 }

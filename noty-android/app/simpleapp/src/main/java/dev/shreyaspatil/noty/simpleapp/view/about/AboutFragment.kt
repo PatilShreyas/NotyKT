@@ -35,11 +35,12 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutState, AboutViewMo
 
     override fun initView() {
         binding.run {
-            textAppVersion.text = getString(
-                R.string.text_app_version,
-                BuildConfig.VERSION_NAME,
-                BuildConfig.VERSION_CODE
-            )
+            textAppVersion.text =
+                getString(
+                    R.string.text_app_version,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.VERSION_CODE,
+                )
             licenseCardView.setOnClickListener {
                 launchBrowser(URL_LICENSE)
             }
@@ -52,13 +53,14 @@ class AboutFragment : BaseFragment<FragmentAboutBinding, AboutState, AboutViewMo
 
     override fun render(state: AboutState) {}
 
-    private fun launchBrowser(url: String) = Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
-        startActivity(it)
-    }
+    private fun launchBrowser(url: String) =
+        Intent(Intent.ACTION_VIEW, Uri.parse(url)).also {
+            startActivity(it)
+        }
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentAboutBinding.inflate(inflater, container, false)
 
     companion object {

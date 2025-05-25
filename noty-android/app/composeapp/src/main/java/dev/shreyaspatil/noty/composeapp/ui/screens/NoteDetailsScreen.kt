@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NoteDetailsScreen(
     viewModel: NoteDetailViewModel,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
 ) {
     val state by viewModel.collectState()
     val context = LocalContext.current
@@ -95,13 +95,13 @@ fun NoteDetailsScreen(
             if (uri != null) {
                 context.shareImage(uri)
             }
-        }
+        },
     )
 
     DeleteNoteConfirmation(
         show = showDeleteNoteConfirmation,
         onConfirm = viewModel::delete,
-        onDismiss = { showDeleteNoteConfirmation = false }
+        onDismiss = { showDeleteNoteConfirmation = false },
     )
 
     LaunchedEffect(state.finished) {
@@ -125,7 +125,7 @@ fun NoteDetailContent(
     onNavigateUp: () -> Unit,
     onDeleteClick: () -> Unit,
     onShareNoteAsText: () -> Unit,
-    onShareNoteAsImage: (ImageBitmap) -> Unit
+    onShareNoteAsImage: (ImageBitmap) -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
@@ -133,9 +133,10 @@ fun NoteDetailContent(
 
     NotyScaffold(
         error = error,
-        modifier = Modifier
-            .focusRequester(focusRequester)
-            .focusable(true),
+        modifier =
+            Modifier
+                .focusRequester(focusRequester)
+                .focusable(true),
         notyTopAppBar = {
             NotyTopAppBar(
                 onNavigateUp = onNavigateUp,
@@ -150,9 +151,9 @@ fun NoteDetailContent(
                             coroutineScope.launch {
                                 onShareNoteAsImage(captureController.captureAsync().await())
                             }
-                        }
+                        },
                     )
-                }
+                },
             )
         },
         content = {
@@ -161,7 +162,7 @@ fun NoteDetailContent(
                 title = title,
                 onTitleChange = onTitleChange,
                 note = note,
-                onNoteChange = onNoteChange
+                onNoteChange = onNoteChange,
             )
         },
         floatingActionButton = {
@@ -170,10 +171,10 @@ fun NoteDetailContent(
                     text = { Text("Save", color = Color.White) },
                     icon = { Icon(Icons.Filled.Done, "Save", tint = Color.White) },
                     onClick = onSaveClick,
-                    backgroundColor = MaterialTheme.colors.primary
+                    backgroundColor = MaterialTheme.colors.primary,
                 )
             }
-        }
+        },
     )
 }
 
@@ -183,21 +184,22 @@ private fun NoteDetailActions(
     onPinClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onShareNoteAsTextClick: () -> Unit,
-    onShareNoteAsImageClick: () -> Unit
+    onShareNoteAsImageClick: () -> Unit,
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
-    val shareActions = remember {
-        composeImmutableListOf(
-            ShareActionItem(
-                label = "Text",
-                onActionClick = onShareNoteAsTextClick
-            ),
-            ShareActionItem(
-                label = "Image",
-                onActionClick = onShareNoteAsImageClick
+    val shareActions =
+        remember {
+            composeImmutableListOf(
+                ShareActionItem(
+                    label = "Text",
+                    onActionClick = onShareNoteAsTextClick,
+                ),
+                ShareActionItem(
+                    label = "Image",
+                    onActionClick = onShareNoteAsImageClick,
+                ),
             )
-        )
-    }
+        }
 
     PinAction(isPinned, onClick = onPinClick)
     DeleteAction(onClick = onDeleteClick)
@@ -205,7 +207,7 @@ private fun NoteDetailActions(
     ShareDropdown(
         expanded = dropdownExpanded,
         onDismissRequest = { dropdownExpanded = false },
-        shareActions = shareActions
+        shareActions = shareActions,
     )
 }
 
@@ -216,43 +218,49 @@ private fun NoteDetailBody(
     title: String,
     onTitleChange: (String) -> Unit,
     note: String,
-    onNoteChange: (String) -> Unit
+    onNoteChange: (String) -> Unit,
 ) {
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
-            .capturable(captureController)
+            .capturable(captureController),
     ) {
         NoteTitleField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colors.background),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.background),
             value = title,
-            onTextChange = onTitleChange
+            onTextChange = onTitleChange,
         )
 
         NoteField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 32.dp)
-                .background(MaterialTheme.colors.background),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(top = 32.dp)
+                    .background(MaterialTheme.colors.background),
             value = note,
-            onTextChange = onNoteChange
+            onTextChange = onNoteChange,
         )
     }
 }
 
 @Composable
-fun DeleteNoteConfirmation(show: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun DeleteNoteConfirmation(
+    show: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     if (show) {
         ConfirmationDialog(
             title = "Delete?",
             message = "Sure want to delete this note?",
             onConfirmedYes = onConfirm,
             onConfirmedNo = onDismiss,
-            onDismissed = onDismiss
+            onDismissed = onDismiss,
         )
     }
 }

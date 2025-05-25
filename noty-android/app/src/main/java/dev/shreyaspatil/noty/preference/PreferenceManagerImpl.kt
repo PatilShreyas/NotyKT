@@ -31,23 +31,25 @@ import javax.inject.Inject
 
 val Context.uiModePrefDataStore by preferencesDataStore("ui_mode_pref")
 
-class PreferenceManagerImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
-) : PreferenceManager {
+class PreferenceManagerImpl
+    @Inject
+    constructor(
+        private val dataStore: DataStore<Preferences>,
+    ) : PreferenceManager {
+        override val uiModeFlow: Flow<Boolean> =
+            dataStore.data
+                .catch {
+                    it.printStackTrace()
+                    emit(emptyPreferences())
+                }.map { preference -> preference[IS_DARK_MODE] ?: false }
 
-    override val uiModeFlow: Flow<Boolean> = dataStore.data
-        .catch {
-            it.printStackTrace()
-            emit(emptyPreferences())
-        }.map { preference -> preference[IS_DARK_MODE] ?: false }
+        override suspend fun setDarkMode(enable: Boolean) {
+            dataStore.edit { preferences ->
+                preferences[IS_DARK_MODE] = enable
+            }
+        }
 
-    override suspend fun setDarkMode(enable: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[IS_DARK_MODE] = enable
+        companion object {
+            val IS_DARK_MODE = booleanPreferencesKey("dark_mode")
         }
     }
-
-    companion object {
-        val IS_DARK_MODE = booleanPreferencesKey("dark_mode")
-    }
-}

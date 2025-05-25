@@ -33,10 +33,10 @@ import java.util.concurrent.TimeUnit
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-
-    private val baseRetrofitBuilder: Retrofit.Builder = Retrofit.Builder()
-        .baseUrl(Constant.API_BASE_URL)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+    private val baseRetrofitBuilder: Retrofit.Builder =
+        Retrofit.Builder()
+            .baseUrl(Constant.API_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
 
     private val okHttpClientBuilder: OkHttpClient.Builder =
         OkHttpClient.Builder()

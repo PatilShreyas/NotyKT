@@ -29,7 +29,7 @@ fun UsernameTextField(
     modifier: Modifier = Modifier,
     value: String = "",
     isError: Boolean = false,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     NotyTextField(
         value = value,
@@ -38,6 +38,6 @@ fun UsernameTextField(
         modifier = modifier,
         leadingIcon = { Icon(Icons.Outlined.Person, "User") },
         isError = isError,
-        helperText = stringResource(R.string.message_field_username_invalid)
+        helperText = stringResource(R.string.message_field_username_invalid),
     )
 }

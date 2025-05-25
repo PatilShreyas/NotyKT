@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.core.task
 
 import dev.shreyaspatil.noty.core.model.NotyTask
 import kotlinx.coroutines.flow.Flow
-import java.util.*
+import java.util.UUID
 import javax.inject.Singleton
 
 @Singleton

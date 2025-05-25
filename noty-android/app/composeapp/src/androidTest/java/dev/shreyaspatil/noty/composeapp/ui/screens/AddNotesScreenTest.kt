@@ -27,61 +27,65 @@ import dev.shreyaspatil.noty.composeapp.NotyScreenTest
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+@Suppress("ktlint:standard:function-naming")
 @HiltAndroidTest
 class AddNotesScreenTest : NotyScreenTest() {
+    @Test
+    fun navigateUp_onClickBackIcon() =
+        runTest {
+            var navigatingUp = false
+            setNotyContent { AddNoteScreen(onNavigateUp = { navigatingUp = true }) }
+
+            onNodeWithContentDescription("Back").performClick()
+
+            waitForIdle()
+
+            assertTrue(navigatingUp)
+        }
 
     @Test
-    fun navigateUp_onClickBackIcon() = runTest {
-        var navigatingUp = false
-        setNotyContent { AddNoteScreen(onNavigateUp = { navigatingUp = true }) }
+    fun doNotShowAddButton_onInvalidNoteContentInput() =
+        runTest {
+            setNotyContent { AddNoteScreen() }
 
-        onNodeWithContentDescription("Back").performClick()
+            // We only show save button when title as at least has 4 characters
+            onNodeWithText("Title").performTextInput("Hi")
 
-        waitForIdle()
-
-        assertTrue(navigatingUp)
-    }
-
-    @Test
-    fun doNotShowAddButton_onInvalidNoteContentInput() = runTest {
-        setNotyContent { AddNoteScreen() }
-
-        // We only show save button when title as at least has 4 characters
-        onNodeWithText("Title").performTextInput("Hi")
-
-        onNodeWithText("Save").assertDoesNotExist()
-    }
+            onNodeWithText("Save").assertDoesNotExist()
+        }
 
     @Test
-    fun showAddButton_onValidNoteContentInput() = runTest {
-        setNotyContent { AddNoteScreen() }
+    fun showAddButton_onValidNoteContentInput() =
+        runTest {
+            setNotyContent { AddNoteScreen() }
 
-        onNodeWithText("Title").performTextInput("Hi there")
-        onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
+            onNodeWithText("Title").performTextInput("Hi there")
+            onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
 
-        onNodeWithText("Save").assertIsDisplayed()
-    }
+            onNodeWithText("Save").assertIsDisplayed()
+        }
 
     @Test
-    fun navigateUp_onSuccessfullyAddingNote() = runTest {
-        var navigatingUp = false
-        setNotyContent { AddNoteScreen(onNavigateUp = { navigatingUp = true }) }
+    fun navigateUp_onSuccessfullyAddingNote() =
+        runTest {
+            var navigatingUp = false
+            setNotyContent { AddNoteScreen(onNavigateUp = { navigatingUp = true }) }
 
-        onNodeWithText("Title").performTextInput("Hi there")
-        onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
+            onNodeWithText("Title").performTextInput("Hi there")
+            onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
 
-        waitForIdle()
-        onNodeWithText("Save").performClick()
-        waitForIdle()
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
 
-        assertTrue(navigatingUp)
-    }
+            assertTrue(navigatingUp)
+        }
 
     @Composable
     private fun AddNoteScreen(onNavigateUp: () -> Unit = {}) {
         AddNoteScreen(
             viewModel = viewModel(),
-            onNavigateUp = onNavigateUp
+            onNavigateUp = onNavigateUp,
         )
     }
 }

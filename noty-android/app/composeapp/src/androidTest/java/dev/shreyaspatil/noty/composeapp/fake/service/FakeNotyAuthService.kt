@@ -33,44 +33,46 @@ data class UserCredentials(val username: String, val password: String, val token
  *
  * This stored credentials in memory
  */
-class FakeNotyAuthService @Inject constructor() : NotyAuthService {
-    private val users = mutableListOf<UserCredentials>()
+class FakeNotyAuthService
+    @Inject
+    constructor() : NotyAuthService {
+        private val users = mutableListOf<UserCredentials>()
 
-    init {
-        // Seed one user
-        users.add(
-            UserCredentials(
-                username = "johndoe",
-                password = "johndoe1234",
-                token = "johndoejohndoe"
+        init {
+            // Seed one user
+            users.add(
+                UserCredentials(
+                    username = "johndoe",
+                    password = "johndoe1234",
+                    token = "johndoejohndoe",
+                ),
             )
-        )
-    }
-
-    override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> {
-        val (username, password) = authRequest
-        if (users.any { it.username == username }) {
-            return errorResponse(400, AuthResponse(State.FAILED, "User already exist", null))
         }
-        val credential = AuthCredential("$username-$password")
-        users.add(
-            UserCredentials(
-                username = username,
-                password = password,
-                token = credential.token
-            )
-        )
-        return successResponse(AuthResponse(State.SUCCESS, "", credential.token))
-    }
 
-    override suspend fun login(authRequest: AuthRequest): Response<AuthResponse> {
-        val (username, password) = authRequest
-        return users.find { it.username == username && it.password == password }.let {
-            if (it != null) {
-                successResponse(AuthResponse(State.SUCCESS, "", it.token))
-            } else {
-                errorResponse(401, AuthResponse(State.UNAUTHORIZED, "User not exist", null))
+        override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> {
+            val (username, password) = authRequest
+            if (users.any { it.username == username }) {
+                return errorResponse(400, AuthResponse(State.FAILED, "User already exist", null))
+            }
+            val credential = AuthCredential("$username-$password")
+            users.add(
+                UserCredentials(
+                    username = username,
+                    password = password,
+                    token = credential.token,
+                ),
+            )
+            return successResponse(AuthResponse(State.SUCCESS, "", credential.token))
+        }
+
+        override suspend fun login(authRequest: AuthRequest): Response<AuthResponse> {
+            val (username, password) = authRequest
+            return users.find { it.username == username && it.password == password }.let {
+                if (it != null) {
+                    successResponse(AuthResponse(State.SUCCESS, "", it.token))
+                } else {
+                    errorResponse(401, AuthResponse(State.UNAUTHORIZED, "User not exist", null))
+                }
             }
         }
     }
-}

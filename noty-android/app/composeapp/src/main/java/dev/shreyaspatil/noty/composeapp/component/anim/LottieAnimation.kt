@@ -31,18 +31,18 @@ fun LottieAnimation(
     @RawRes resId: Int,
     modifier: Modifier = Modifier,
     iterations: Int = LottieConstants.IterateForever,
-    restartOnPlay: Boolean = true
+    restartOnPlay: Boolean = true,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(resId))
     val progress by animateLottieCompositionAsState(
         composition,
         iterations = iterations,
-        restartOnPlay = restartOnPlay
+        restartOnPlay = restartOnPlay,
     )
 
     LottieAnimation(
         composition = composition,
         progress = { progress },
-        modifier = modifier
+        modifier = modifier,
     )
 }

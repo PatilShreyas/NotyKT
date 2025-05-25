@@ -29,17 +29,19 @@ import dev.shreyaspatil.noty.composeapp.ui.MainActivity
 
 @Composable
 inline fun <reified VM : ViewModel> assistedViewModel(
-    viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
-        "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
-    },
-    provideFactory: MainActivity.ViewModelFactoryProvider.() -> ViewModelProvider.Factory
+    viewModelStoreOwner: ViewModelStoreOwner =
+        checkNotNull(LocalViewModelStoreOwner.current) {
+            "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+        },
+    provideFactory: MainActivity.ViewModelFactoryProvider.() -> ViewModelProvider.Factory,
 ): VM {
     val factory = provideFactory(assistedViewModelFactory())
     return viewModel(viewModelStoreOwner, factory = factory)
 }
 
 @Composable
-fun assistedViewModelFactory() = EntryPointAccessors.fromActivity(
-    LocalContext.current as Activity,
-    MainActivity.ViewModelFactoryProvider::class.java
-)
+fun assistedViewModelFactory() =
+    EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        MainActivity.ViewModelFactoryProvider::class.java,
+    )

@@ -30,64 +30,65 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val notyUserRepository: NotyUserRepository,
-    private val sessionManager: SessionManager
-) : BaseViewModel<LoginState>() {
+class LoginViewModel
+    @Inject
+    constructor(
+        private val notyUserRepository: NotyUserRepository,
+        private val sessionManager: SessionManager,
+    ) : BaseViewModel<LoginState>() {
+        private val stateStore = StateStore(initialState = LoginState.initialState.mutable())
 
-    private val stateStore = StateStore(initialState = LoginState.initialState.mutable())
+        override val state: StateFlow<LoginState> = stateStore.state
 
-    override val state: StateFlow<LoginState> = stateStore.state
+        fun setUsername(username: String) {
+            setState { this.username = username }
+        }
 
-    fun setUsername(username: String) {
-        setState { this.username = username }
-    }
+        fun setPassword(password: String) {
+            setState { this.password = password }
+        }
 
-    fun setPassword(password: String) {
-        setState { this.password = password }
-    }
+        fun login() {
+            if (!validateCredentials()) return
 
-    fun login() {
-        if (!validateCredentials()) return
+            viewModelScope.launch {
+                val username = currentState.username
+                val password = currentState.password
 
-        viewModelScope.launch {
-            val username = currentState.username
-            val password = currentState.password
+                setState { isLoading = true }
 
-            setState { isLoading = true }
+                val response = notyUserRepository.getUserByUsernameAndPassword(username, password)
 
-            val response = notyUserRepository.getUserByUsernameAndPassword(username, password)
-
-            response.onSuccess { authCredential ->
-                sessionManager.saveToken(authCredential.token)
-                setState {
-                    isLoading = false
-                    isLoggedIn = true
-                    error = null
-                }
-            }.onFailure { message ->
-                setState {
-                    isLoading = false
-                    isLoggedIn = false
-                    error = message
+                response.onSuccess { authCredential ->
+                    sessionManager.saveToken(authCredential.token)
+                    setState {
+                        isLoading = false
+                        isLoggedIn = true
+                        error = null
+                    }
+                }.onFailure { message ->
+                    setState {
+                        isLoading = false
+                        isLoggedIn = false
+                        error = message
+                    }
                 }
             }
         }
-    }
 
-    fun clearError() = setState { error = null }
+        fun clearError() = setState { error = null }
 
-    private fun validateCredentials(): Boolean {
-        val isValidUsername = AuthValidator.isValidUsername(currentState.username)
-        val isValidPassword = AuthValidator.isValidPassword(currentState.password)
+        private fun validateCredentials(): Boolean {
+            val isValidUsername = AuthValidator.isValidUsername(currentState.username)
+            val isValidPassword = AuthValidator.isValidPassword(currentState.password)
 
-        setState {
-            this.isValidUsername = isValidUsername
-            this.isValidPassword = isValidPassword
+            setState {
+                this.isValidUsername = isValidUsername
+                this.isValidPassword = isValidPassword
+            }
+
+            return isValidUsername && isValidPassword
         }
 
-        return isValidUsername && isValidPassword
+        private fun setState(update: MutableLoginState.() -> Unit) = stateStore.setState(update)
     }
-
-    private fun setState(update: MutableLoginState.() -> Unit) = stateStore.setState(update)
-}

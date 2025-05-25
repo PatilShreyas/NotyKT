@@ -35,85 +35,98 @@ import javax.inject.Singleton
  * Source of data of notes from network
  */
 @Singleton
-class NotyRemoteNoteRepository @Inject internal constructor(
-    private val notyService: NotyService
-) : NotyNoteRepository {
+class NotyRemoteNoteRepository
+    @Inject
+    internal constructor(
+        private val notyService: NotyService,
+    ) : NotyNoteRepository {
+        override fun getAllNotes(): Flow<Either<List<Note>>> =
+            flow {
+                val notesResponse = notyService.getAllNotes().getResponse()
 
-    override fun getAllNotes(): Flow<Either<List<Note>>> = flow {
-        val notesResponse = notyService.getAllNotes().getResponse()
+                val state =
+                    when (notesResponse.status) {
+                        State.SUCCESS -> Either.success(notesResponse.notes)
+                        else -> Either.error(notesResponse.message)
+                    }
 
-        val state = when (notesResponse.status) {
-            State.SUCCESS -> Either.success(notesResponse.notes)
-            else -> Either.error(notesResponse.message)
+                emit(state)
+            }.catch { emit(Either.error("Can't sync latest notes")) }
+
+        override suspend fun addNote(
+            title: String,
+            note: String,
+        ): Either<String> {
+            return runCatching {
+                val notesResponse = notyService.addNote(NoteRequest(title, note)).getResponse()
+
+                when (notesResponse.status) {
+                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                    else -> Either.error(notesResponse.message)
+                }
+            }.getOrElse {
+                it.printStackTrace()
+                (Either.error("Something went wrong!"))
+            }
         }
 
-        emit(state)
-    }.catch { emit(Either.error("Can't sync latest notes")) }
+        override suspend fun updateNote(
+            noteId: String,
+            title: String,
+            note: String,
+        ): Either<String> {
+            return runCatching {
+                val notesResponse =
+                    notyService.updateNote(
+                        noteId,
+                        NoteRequest(title, note),
+                    ).getResponse()
 
-    override suspend fun addNote(title: String, note: String): Either<String> {
-        return runCatching {
-            val notesResponse = notyService.addNote(NoteRequest(title, note)).getResponse()
-
-            when (notesResponse.status) {
-                State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                else -> Either.error(notesResponse.message)
-            }
-        }.getOrElse {
-            it.printStackTrace()
-            (Either.error("Something went wrong!"))
+                when (notesResponse.status) {
+                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                    else -> Either.error(notesResponse.message)
+                }
+            }.getOrDefault(Either.error("Something went wrong!"))
         }
+
+        override suspend fun deleteNote(noteId: String): Either<String> {
+            return runCatching {
+                val notesResponse = notyService.deleteNote(noteId).getResponse()
+
+                when (notesResponse.status) {
+                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                    else -> Either.error(notesResponse.message)
+                }
+            }.getOrDefault(Either.error("Something went wrong!"))
+        }
+
+        override suspend fun pinNote(
+            noteId: String,
+            isPinned: Boolean,
+        ): Either<String> {
+            return runCatching {
+                val notesResponse =
+                    notyService.updateNotePin(noteId, NoteUpdatePinRequest(isPinned)).getResponse()
+
+                when (notesResponse.status) {
+                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
+                    else -> Either.error(notesResponse.message)
+                }
+            }.getOrDefault(Either.error("Something went wrong!"))
+        }
+
+        /** Not needed (NO-OP) **/
+        override fun getNoteById(noteId: String): Flow<Note> = emptyFlow()
+
+        /** Not needed (NO-OP) **/
+        override suspend fun addNotes(notes: List<Note>) {}
+
+        /** Not needed (NO-OP) **/
+        override suspend fun deleteAllNotes() {}
+
+        /** Not needed (NO-OP) **/
+        override suspend fun updateNoteId(
+            oldNoteId: String,
+            newNoteId: String,
+        ) {}
     }
-
-    override suspend fun updateNote(
-        noteId: String,
-        title: String,
-        note: String
-    ): Either<String> {
-        return runCatching {
-            val notesResponse = notyService.updateNote(
-                noteId,
-                NoteRequest(title, note)
-            ).getResponse()
-
-            when (notesResponse.status) {
-                State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                else -> Either.error(notesResponse.message)
-            }
-        }.getOrDefault(Either.error("Something went wrong!"))
-    }
-
-    override suspend fun deleteNote(noteId: String): Either<String> {
-        return runCatching {
-            val notesResponse = notyService.deleteNote(noteId).getResponse()
-
-            when (notesResponse.status) {
-                State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                else -> Either.error(notesResponse.message)
-            }
-        }.getOrDefault(Either.error("Something went wrong!"))
-    }
-
-    override suspend fun pinNote(noteId: String, isPinned: Boolean): Either<String> {
-        return runCatching {
-            val notesResponse =
-                notyService.updateNotePin(noteId, NoteUpdatePinRequest(isPinned)).getResponse()
-
-            when (notesResponse.status) {
-                State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                else -> Either.error(notesResponse.message)
-            }
-        }.getOrDefault(Either.error("Something went wrong!"))
-    }
-
-    /** Not needed (NO-OP) **/
-    override fun getNoteById(noteId: String): Flow<Note> = emptyFlow()
-
-    /** Not needed (NO-OP) **/
-    override suspend fun addNotes(notes: List<Note>) {}
-
-    /** Not needed (NO-OP) **/
-    override suspend fun deleteAllNotes() {}
-
-    /** Not needed (NO-OP) **/
-    override suspend fun updateNoteId(oldNoteId: String, newNoteId: String) {}
-}

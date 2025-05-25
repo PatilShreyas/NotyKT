@@ -39,7 +39,7 @@ In Android Studio, just run the application as you want with any one of the modu
 
 ## Development Setup 🖥
 
-You will require latest Canary version of Android Studio 4.2 or newer to be able to build the app. Download latest Canary release from [here](https://developer.android.com/studio/preview).
+You will need Android Studio Hedgehog (2023.1.1) or newer to build the app. Download the latest version from [here](https://developer.android.com/studio).
 
 ## Design / Wireframes ✨
 

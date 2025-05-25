@@ -41,15 +41,16 @@ class LoginViewModelTest : ViewModelBehaviorSpec({
 
     Given("The ViewModel") {
         When("Initialized") {
-            val expectedState = LoginState(
-                isLoading = false,
-                isLoggedIn = false,
-                error = null,
-                username = "",
-                password = "",
-                isValidUsername = null,
-                isValidPassword = null
-            )
+            val expectedState =
+                LoginState(
+                    isLoading = false,
+                    isLoggedIn = false,
+                    error = null,
+                    username = "",
+                    password = "",
+                    isValidUsername = null,
+                    isValidPassword = null,
+                )
             Then("Initial state should be valid") {
                 viewModel currentStateShouldBe expectedState
             }

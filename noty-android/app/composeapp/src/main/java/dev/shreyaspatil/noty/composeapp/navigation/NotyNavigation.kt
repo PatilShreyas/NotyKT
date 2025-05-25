@@ -45,20 +45,20 @@ fun NotyNavigation() {
             SignUpScreen(
                 viewModel = hiltViewModel(),
                 onNavigateUp = { navController.navigateUp() },
-                onNavigateToNotes = { navController.popAllAndNavigateToNotes() }
+                onNavigateToNotes = { navController.popAllAndNavigateToNotes() },
             )
         }
         composable(Screen.Login.route) {
             LoginScreen(
                 viewModel = hiltViewModel(),
                 onNavigateToSignup = { navController.navigateToSignup() },
-                onNavigateToNotes = { navController.popAllAndNavigateToNotes() }
+                onNavigateToNotes = { navController.popAllAndNavigateToNotes() },
             )
         }
         composable(Screen.AddNote.route) {
             AddNoteScreen(
                 viewModel = hiltViewModel(),
-                onNavigateUp = { navController.navigateUp() }
+                onNavigateUp = { navController.navigateUp() },
             )
         }
         composable(Screen.Notes.route) {
@@ -67,21 +67,23 @@ fun NotyNavigation() {
                 onNavigateToAbout = { navController.navigateToAbout() },
                 onNavigateToAddNote = { navController.navigateToAddNote() },
                 onNavigateToNoteDetail = { navController.navigateToNoteDetail(it) },
-                onNavigateToLogin = { navController.popAllAndNavigateToLogin() }
+                onNavigateToLogin = { navController.popAllAndNavigateToLogin() },
             )
         }
         composable(
             Screen.NotesDetail.route,
-            arguments = listOf(
-                navArgument(Screen.NotesDetail.ARG_NOTE_ID) { type = NavType.StringType }
-            )
+            arguments =
+                listOf(
+                    navArgument(Screen.NotesDetail.ARG_NOTE_ID) { type = NavType.StringType },
+                ),
         ) {
             val noteId = requireNotNull(it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID))
             NoteDetailsScreen(
-                viewModel = assistedViewModel {
-                    NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
-                },
-                onNavigateUp = { navController.navigateUp() }
+                viewModel =
+                    assistedViewModel {
+                        NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
+                    },
+                onNavigateUp = { navController.navigateUp() },
             )
         }
         composable(Screen.About.route) {
@@ -113,15 +115,17 @@ fun NavController.navigateToNoteDetail(noteId: String) = navigate(Screen.NotesDe
 /**
  * Clears backstack including current screen and navigates to Login Screen
  */
-fun NavController.popAllAndNavigateToLogin() = navigate(Screen.Login.route) {
-    popUpTo(NOTY_NAV_HOST_ROUTE)
-    launchSingleTop = true
-}
+fun NavController.popAllAndNavigateToLogin() =
+    navigate(Screen.Login.route) {
+        popUpTo(NOTY_NAV_HOST_ROUTE)
+        launchSingleTop = true
+    }
 
 /**
  * Clears backstack including current screen and navigates to Notes Screen
  */
-fun NavController.popAllAndNavigateToNotes() = navigate(Screen.Notes.route) {
-    launchSingleTop = true
-    popUpTo(NOTY_NAV_HOST_ROUTE)
-}
+fun NavController.popAllAndNavigateToNotes() =
+    navigate(Screen.Notes.route) {
+        launchSingleTop = true
+        popUpTo(NOTY_NAV_HOST_ROUTE)
+    }

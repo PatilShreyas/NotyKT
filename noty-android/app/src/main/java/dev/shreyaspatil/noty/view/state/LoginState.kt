@@ -31,14 +31,15 @@ interface LoginState : State {
     val isValidPassword: Boolean?
 
     companion object {
-        val initialState = LoginState(
-            isLoading = false,
-            isLoggedIn = false,
-            error = null,
-            username = "",
-            password = "",
-            isValidUsername = null,
-            isValidPassword = null
-        )
+        val initialState =
+            LoginState(
+                isLoading = false,
+                isLoggedIn = false,
+                error = null,
+                username = "",
+                password = "",
+                isValidUsername = null,
+                isValidPassword = null,
+            )
     }
 }

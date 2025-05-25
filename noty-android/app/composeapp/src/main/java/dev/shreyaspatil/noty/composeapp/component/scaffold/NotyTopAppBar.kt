@@ -42,7 +42,7 @@ import dev.shreyaspatil.noty.composeapp.R
 fun NotyTopAppBar(
     title: String = "NotyKT",
     onNavigateUp: (() -> Unit)? = null,
-    actions: @Composable (RowScope.() -> Unit) = {}
+    actions: @Composable (RowScope.() -> Unit) = {},
 ) {
     TopAppBar(
         title = {
@@ -54,28 +54,29 @@ fun NotyTopAppBar(
                     text = title,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
-        navigationIcon = onNavigateUp?.let {
-            val navigationIcon: @Composable () -> Unit = {
-                IconButton(
-                    modifier = Modifier.padding(start = 4.dp),
-                    onClick = onNavigateUp
-                ) {
-                    Icon(
-                        painterResource(R.drawable.ic_back),
-                        "Back",
-                        tint = MaterialTheme.colors.onPrimary
-                    )
+        navigationIcon =
+            onNavigateUp?.let {
+                val navigationIcon: @Composable () -> Unit = {
+                    IconButton(
+                        modifier = Modifier.padding(start = 4.dp),
+                        onClick = onNavigateUp,
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.ic_back),
+                            "Back",
+                            tint = MaterialTheme.colors.onPrimary,
+                        )
+                    }
                 }
-            }
-            navigationIcon
-        },
+                navigationIcon
+            },
         actions = actions,
         backgroundColor = MaterialTheme.colors.surface,
         contentColor = MaterialTheme.colors.onPrimary,
-        elevation = 0.dp
+        elevation = 0.dp,
     )
 }

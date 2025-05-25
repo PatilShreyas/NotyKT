@@ -18,7 +18,10 @@ package dev.shreyaspatil.noty.utils.ext
 
 import androidx.work.Data
 
-fun <T> Data.Builder.putEnum(key: String, value: T) = apply { putString(key, value.toString()) }
+fun <T> Data.Builder.putEnum(
+    key: String,
+    value: T,
+) = apply { putString(key, value.toString()) }
 
 inline fun <reified T : Enum<T>> Data.getEnum(key: String): T? {
     val enumValue = getString(key)

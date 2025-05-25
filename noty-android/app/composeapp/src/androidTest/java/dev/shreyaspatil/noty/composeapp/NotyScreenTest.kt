@@ -55,12 +55,13 @@ abstract class NotyScreenTest {
         composeTestRule.activity.viewModels<T>().value
 
     fun runTest(
-        body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit
+        body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit,
     ) = composeTestRule.run(body)
 
-    fun setNotyContent(content: @Composable () -> Unit) = composeTestRule.activity.setContent {
-        NotyTheme {
-            content()
+    fun setNotyContent(content: @Composable () -> Unit) =
+        composeTestRule.activity.setContent {
+            NotyTheme {
+                content()
+            }
         }
-    }
 }

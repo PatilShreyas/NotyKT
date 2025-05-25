@@ -24,17 +24,19 @@ import javax.inject.Singleton
  */
 @Singleton
 interface NotyUserRepository {
-
     /**
      * Register/Create a new user using [username] and [password]
      */
-    suspend fun addUser(username: String, password: String): Either<AuthCredential>
+    suspend fun addUser(
+        username: String,
+        password: String,
+    ): Either<AuthCredential>
 
     /**
      * Sign ins a user using [username] and [password] which is already exists.
      */
     suspend fun getUserByUsernameAndPassword(
         username: String,
-        password: String
+        password: String,
     ): Either<AuthCredential>
 }

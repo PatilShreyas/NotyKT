@@ -14,13 +14,30 @@
  * limitations under the License.
  */
 
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+    }
+}
+
 rootProject.name = "Noty"
 
-include ':core'
-include ':data:remote'
-include ':data:local'
-include ':repository'
+include(":core")
+include(":data:remote")
+include(":data:local")
+include(":repository")
 
-include ':app'
-include ':app:simpleapp'
-include ':app:composeapp'
+include(":app")
+include(":app:simpleapp")
+include(":app:composeapp")

@@ -29,8 +29,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
+import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.MainActivityBinding
 import dev.shreyaspatil.noty.utils.ext.hide
 import dev.shreyaspatil.noty.utils.ext.show
@@ -38,7 +38,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     @Inject
     lateinit var preferenceManager: PreferenceManager
 
@@ -52,8 +51,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.topAppBar)
 
-        val navHostFragment: NavHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
+        val navHostFragment: NavHostFragment =
+            supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
 
         observeNavElements(binding, navHostFragment.navController)
 
@@ -67,25 +67,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeUiModePreferences() {
         preferenceManager.uiModeFlow.asLiveData().observe(this) {
-            val uiMode = when (it) {
-                true -> AppCompatDelegate.MODE_NIGHT_YES
-                false -> AppCompatDelegate.MODE_NIGHT_NO
-            }
+            val uiMode =
+                when (it) {
+                    true -> AppCompatDelegate.MODE_NIGHT_YES
+                    false -> AppCompatDelegate.MODE_NIGHT_NO
+                }
 
             AppCompatDelegate.setDefaultNightMode(uiMode)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = item.onNavDestinationSelected(
-        findNavController(R.id.nav_host_fragment)
-    ) || super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem) =
+        item.onNavDestinationSelected(
+            findNavController(R.id.nav_host_fragment),
+        ) || super.onOptionsItemSelected(item)
 
-    override fun onSupportNavigateUp() = findNavController(R.id.nav_host_fragment)
-        .navigateUp(appBarConfiguration)
+    override fun onSupportNavigateUp() =
+        findNavController(R.id.nav_host_fragment)
+            .navigateUp(appBarConfiguration)
 
     private fun observeNavElements(
         binding: MainActivityBinding,
-        navController: NavController
+        navController: NavController,
     ) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {

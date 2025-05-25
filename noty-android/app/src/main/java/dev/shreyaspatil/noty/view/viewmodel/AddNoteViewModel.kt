@@ -33,78 +33,80 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddNoteViewModel @Inject constructor(
-    @LocalRepository private val noteRepository: NotyNoteRepository,
-    private val notyTaskManager: NotyTaskManager
-) : BaseViewModel<AddNoteState>() {
+class AddNoteViewModel
+    @Inject
+    constructor(
+        @LocalRepository private val noteRepository: NotyNoteRepository,
+        private val notyTaskManager: NotyTaskManager,
+    ) : BaseViewModel<AddNoteState>() {
+        private val stateStore = StateStore(AddNoteState.initialState.mutable())
 
-    private val stateStore = StateStore(AddNoteState.initialState.mutable())
+        override val state: StateFlow<AddNoteState> = stateStore.state
 
-    override val state: StateFlow<AddNoteState> = stateStore.state
+        private var job: Job? = null
 
-    private var job: Job? = null
+        fun setTitle(title: String) {
+            setState { this.title = title }
+            validateNote()
+        }
 
-    fun setTitle(title: String) {
-        setState { this.title = title }
-        validateNote()
-    }
+        fun setNote(note: String) {
+            setState { this.note = note }
+            validateNote()
+        }
 
-    fun setNote(note: String) {
-        setState { this.note = note }
-        validateNote()
-    }
+        fun add() {
+            job?.cancel()
+            job =
+                viewModelScope.launch {
+                    val title = state.value.title.trim()
+                    val note = state.value.note.trim()
 
-    fun add() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            val title = state.value.title.trim()
-            val note = state.value.note.trim()
+                    setState { isAdding = true }
 
-            setState { isAdding = true }
+                    val result = noteRepository.addNote(title, note)
 
-            val result = noteRepository.addNote(title, note)
-
-            result.onSuccess { noteId ->
-                scheduleNoteCreate(noteId)
-                setState {
-                    isAdding = false
-                    added = true
+                    result.onSuccess { noteId ->
+                        scheduleNoteCreate(noteId)
+                        setState {
+                            isAdding = false
+                            added = true
+                        }
+                    }.onFailure { message ->
+                        setState {
+                            isAdding = false
+                            added = false
+                            errorMessage = message
+                        }
+                    }
                 }
-            }.onFailure { message ->
-                setState {
-                    isAdding = false
-                    added = false
-                    errorMessage = message
-                }
+        }
+
+        private fun scheduleNoteCreate(noteId: String) =
+            notyTaskManager.scheduleTask(NotyTask.create(noteId))
+
+        private fun validateNote() {
+            val isValid = NoteValidator.isValidNote(currentState.title, currentState.note)
+            setState { showSave = isValid }
+        }
+
+        /**
+         * In simpleapp module, ViewModel's instance is created using Hilt NavGraph ViewModel so it
+         * doesn't clears the ViewModel when the Fragment's onDestroy() lifecycle is invoked and
+         * thus it holds the stale state when the same fragment is relaunched. So this method is
+         * simply a way for Fragment to ask ViewModel to reset the state.
+         */
+        fun resetState() {
+            setState {
+                note = ""
+                title = ""
+                note = ""
+                showSave = false
+                isAdding = false
+                added = false
+                errorMessage = null
             }
         }
+
+        private fun setState(update: MutableAddNoteState.() -> Unit) = stateStore.setState(update)
     }
-
-    private fun scheduleNoteCreate(noteId: String) =
-        notyTaskManager.scheduleTask(NotyTask.create(noteId))
-
-    private fun validateNote() {
-        val isValid = NoteValidator.isValidNote(currentState.title, currentState.note)
-        setState { showSave = isValid }
-    }
-
-    /**
-     * In simpleapp module, ViewModel's instance is created using Hilt NavGraph ViewModel so it
-     * doesn't clears the ViewModel when the Fragment's onDestroy() lifecycle is invoked and
-     * thus it holds the stale state when the same fragment is relaunched. So this method is
-     * simply a way for Fragment to ask ViewModel to reset the state.
-     */
-    fun resetState() {
-        setState {
-            note = ""
-            title = ""
-            note = ""
-            showSave = false
-            isAdding = false
-            added = false
-            errorMessage = null
-        }
-    }
-
-    private fun setState(update: MutableAddNoteState.() -> Unit) = stateStore.setState(update)
-}

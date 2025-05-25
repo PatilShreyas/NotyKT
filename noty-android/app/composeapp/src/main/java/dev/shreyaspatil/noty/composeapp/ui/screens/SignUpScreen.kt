@@ -51,7 +51,7 @@ import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 fun SignUpScreen(
     viewModel: RegisterViewModel,
     onNavigateUp: () -> Unit,
-    onNavigateToNotes: () -> Unit
+    onNavigateToNotes: () -> Unit,
 ) {
     val state by viewModel.collectState()
 
@@ -69,7 +69,7 @@ fun SignUpScreen(
         onSignUpClick = viewModel::register,
         onDialogDismiss = viewModel::clearError,
         onNavigateUp = onNavigateUp,
-        error = state.error
+        error = state.error,
     )
 
     LaunchedEffect(state.isLoggedIn) {
@@ -94,7 +94,7 @@ fun SignUpContent(
     onDialogDismiss: () -> Unit,
     isValidUsername: Boolean,
     isValidPassword: Boolean,
-    error: String?
+    error: String?,
 ) {
     if (isLoading) {
         LoaderDialog()
@@ -105,15 +105,16 @@ fun SignUpContent(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.surface)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.surface)
+                .verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Create\naccount",
             style = typography.h4,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 60.dp, bottom = 16.dp)
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 60.dp, bottom = 16.dp),
         )
 
         SignUpForm(
@@ -126,7 +127,7 @@ fun SignUpContent(
             confirmPassword = confirmPassword,
             onConfirmPasswordChanged = onConfirmPasswordChanged,
             isValidConfirmPassword = isValidConfirmPassword,
-            onSignUpClick = onSignUpClick
+            onSignUpClick = onSignUpClick,
         )
 
         LoginLink(Modifier.align(Alignment.CenterHorizontally), onLoginClick = onNavigateUp)
@@ -144,53 +145,57 @@ private fun SignUpForm(
     confirmPassword: String,
     onConfirmPasswordChanged: (String) -> Unit,
     isValidConfirmPassword: Boolean,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
 ) {
     Column(
         Modifier.padding(
             start = 16.dp,
             top = 32.dp,
             end = 16.dp,
-            bottom = 16.dp
-        )
+            bottom = 16.dp,
+        ),
     ) {
         UsernameTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .background(MaterialTheme.colors.background),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .background(MaterialTheme.colors.background),
             value = username,
             onValueChange = onUsernameChange,
-            isError = !isValidUsername
+            isError = !isValidUsername,
         )
 
         PasswordTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .background(MaterialTheme.colors.background),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .background(MaterialTheme.colors.background),
             value = password,
             onValueChange = onPasswordChange,
-            isError = !isValidPassword
+            isError = !isValidPassword,
         )
 
         PasswordTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .background(MaterialTheme.colors.background),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+                    .background(MaterialTheme.colors.background),
             value = confirmPassword,
             label = "Confirm Password",
             onValueChange = onConfirmPasswordChanged,
-            isError = !isValidConfirmPassword
+            isError = !isValidConfirmPassword,
         )
 
         Button(
             onClick = onSignUpClick,
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth()
-                .height(60.dp)
+            modifier =
+                Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth()
+                    .height(60.dp),
         ) {
             Text(style = typography.subtitle1, color = Color.White, text = "Create account")
         }
@@ -198,36 +203,42 @@ private fun SignUpForm(
 }
 
 @Composable
-private fun LoginLink(modifier: Modifier, onLoginClick: () -> Unit) {
+private fun LoginLink(
+    modifier: Modifier,
+    onLoginClick: () -> Unit,
+) {
     Text(
-        text = buildAnnotatedString {
-            append("Already have an account? Login")
-            addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
-        },
+        text =
+            buildAnnotatedString {
+                append("Already have an account? Login")
+                addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
+            },
         style = typography.subtitle1,
-        modifier = modifier
-            .padding(vertical = 24.dp, horizontal = 16.dp)
-            .clickable(onClick = onLoginClick)
+        modifier =
+            modifier
+                .padding(vertical = 24.dp, horizontal = 16.dp)
+                .clickable(onClick = onLoginClick),
     )
 }
 
 @Preview
 @Composable
-fun PreviewSignupContent() = NotyPreview {
-    SignUpContent(
-        isLoading = false,
-        username = "johndoe",
-        onUsernameChange = {},
-        onPasswordChange = {},
-        password = "password",
-        confirmPassword = "password",
-        onConfirmPasswordChanged = {},
-        isValidConfirmPassword = false,
-        onNavigateUp = {},
-        onSignUpClick = {},
-        onDialogDismiss = {},
-        isValidUsername = false,
-        isValidPassword = false,
-        error = null
-    )
-}
+fun PreviewSignupContent() =
+    NotyPreview {
+        SignUpContent(
+            isLoading = false,
+            username = "johndoe",
+            onUsernameChange = {},
+            onPasswordChange = {},
+            password = "password",
+            confirmPassword = "password",
+            onConfirmPasswordChanged = {},
+            isValidConfirmPassword = false,
+            onNavigateUp = {},
+            onSignUpClick = {},
+            onDialogDismiss = {},
+            isValidUsername = false,
+            isValidPassword = false,
+            error = null,
+        )
+    }

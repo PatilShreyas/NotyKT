@@ -33,7 +33,7 @@ import io.mockk.coVerify
 import io.mockk.spyk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -104,17 +104,18 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
 
         When("Note is updated") {
             And("Inputs are valid") {
-                val response = repository.updateNote(
-                    noteId = "1111",
-                    title = "Lorem Ipsum",
-                    note = "Hey there!"
-                )
+                val response =
+                    repository.updateNote(
+                        noteId = "1111",
+                        title = "Lorem Ipsum",
+                        note = "Hey there!",
+                    )
 
                 Then("Note update should be requested") {
                     coVerify {
                         service.updateNote(
                             noteId = "1111",
-                            noteRequest = NoteRequest("Lorem Ipsum", "Hey there!")
+                            noteRequest = NoteRequest("Lorem Ipsum", "Hey there!"),
                         )
                     }
                 }
@@ -126,17 +127,18 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
             }
 
             And("Inputs are invalid") {
-                val response = repository.updateNote(
-                    noteId = "2222",
-                    title = "Lorem Ipsum",
-                    note = "Hey there!"
-                )
+                val response =
+                    repository.updateNote(
+                        noteId = "2222",
+                        title = "Lorem Ipsum",
+                        note = "Hey there!",
+                    )
 
                 Then("Note update should be requested") {
                     coVerify {
                         service.updateNote(
                             noteId = "2222",
-                            noteRequest = NoteRequest("Lorem Ipsum", "Hey there!")
+                            noteRequest = NoteRequest("Lorem Ipsum", "Hey there!"),
                         )
                     }
                 }
@@ -186,7 +188,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                     coVerify {
                         service.updateNotePin(
                             noteId = "1111",
-                            NoteUpdatePinRequest(isPinned = true)
+                            NoteUpdatePinRequest(isPinned = true),
                         )
                     }
                 }
@@ -204,7 +206,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                     coVerify {
                         service.updateNotePin(
                             noteId = "2222",
-                            NoteUpdatePinRequest(isPinned = true)
+                            NoteUpdatePinRequest(isPinned = true),
                         )
                     }
                 }
@@ -224,7 +226,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                     coVerify {
                         service.updateNotePin(
                             noteId = "1111",
-                            NoteUpdatePinRequest(isPinned = false)
+                            NoteUpdatePinRequest(isPinned = false),
                         )
                     }
                 }
@@ -242,7 +244,7 @@ class NotyRemoteNoteRepositoryTest : BehaviorSpec({
                     coVerify {
                         service.updateNotePin(
                             noteId = "2222",
-                            NoteUpdatePinRequest(isPinned = false)
+                            NoteUpdatePinRequest(isPinned = false),
                         )
                     }
                 }
@@ -273,7 +275,7 @@ class FakeNotyService : NotyService {
 
     override suspend fun updateNote(
         noteId: String,
-        noteRequest: NoteRequest
+        noteRequest: NoteRequest,
     ): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
@@ -292,7 +294,7 @@ class FakeNotyService : NotyService {
 
     override suspend fun updateNotePin(
         noteId: String,
-        noteRequest: NoteUpdatePinRequest
+        noteRequest: NoteUpdatePinRequest,
     ): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
@@ -307,10 +309,11 @@ class FakeNotyService : NotyService {
             Response.success(NoteResponse(State.SUCCESS, "Success", "1111"))
         } else {
             val response = NoteResponse(State.FAILED, "Failed to perform operation", null)
-            val body = ResponseBody.create(
-                MediaType.parse("application/json"),
-                moshi.adapter<NoteResponse>().toJson(response)
-            )
+            val body =
+                ResponseBody.create(
+                    "application/json".toMediaTypeOrNull(),
+                    moshi.adapter<NoteResponse>().toJson(response),
+                )
             Response.error(400, body)
         }
     }
@@ -322,15 +325,16 @@ class FakeNotyService : NotyService {
                 NotesResponse(
                     status = State.SUCCESS,
                     message = "Success",
-                    notes = listOf(Note("1111", "Lorem Ipsum", "Hey there", 0))
-                )
+                    notes = listOf(Note("1111", "Lorem Ipsum", "Hey there", 0)),
+                ),
             )
         } else {
             val response = NotesResponse(State.FAILED, "Failed to perform operation", emptyList())
-            val body = ResponseBody.create(
-                MediaType.parse("application/json"),
-                moshi.adapter<NotesResponse>().toJson(response)
-            )
+            val body =
+                ResponseBody.create(
+                    "application/json".toMediaTypeOrNull(),
+                    moshi.adapter<NotesResponse>().toJson(response),
+                )
             Response.error(400, body)
         }
     }

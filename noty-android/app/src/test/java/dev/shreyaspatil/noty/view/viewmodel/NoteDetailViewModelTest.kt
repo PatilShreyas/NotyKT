@@ -32,34 +32,37 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import java.util.*
+import java.util.UUID
 
 class NoteDetailViewModelTest : ViewModelBehaviorSpec({
     val note = note("note-1234")
-    val repository: NotyNoteRepository = mockk {
-        coEvery { getNoteById("note-1234") } returns flowOf(note)
-    }
+    val repository: NotyNoteRepository =
+        mockk {
+            coEvery { getNoteById("note-1234") } returns flowOf(note)
+        }
 
     val scheduledTasks = mutableListOf<NotyTask>()
 
-    val taskManager: NotyTaskManager = mockk {
-        every { scheduleTask(capture(scheduledTasks)) } returns UUID.randomUUID()
-    }
+    val taskManager: NotyTaskManager =
+        mockk {
+            every { scheduleTask(capture(scheduledTasks)) } returns UUID.randomUUID()
+        }
 
     val noteId = "note-1234"
 
     val viewModel = NoteDetailViewModel(taskManager, repository, noteId)
 
     Given("The ViewModel") {
-        val expectedState = NoteDetailState(
-            isLoading = false,
-            title = "Lorem Ipsum",
-            note = "Hey there! This is note content",
-            showSave = false,
-            finished = false,
-            error = null,
-            isPinned = false
-        )
+        val expectedState =
+            NoteDetailState(
+                isLoading = false,
+                title = "Lorem Ipsum",
+                note = "Hey there! This is note content",
+                showSave = false,
+                finished = false,
+                error = null,
+                isPinned = false,
+            )
 
         When("Initialized") {
             Then("Initial state should be valid") {
@@ -132,9 +135,10 @@ class NoteDetailViewModelTest : ViewModelBehaviorSpec({
         viewModel.setNote(note)
 
         And("Note is not yet synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns Either.success(
-                data = "TMP_$noteId"
-            )
+            coEvery { repository.updateNote(noteId, title, note) } returns
+                Either.success(
+                    data = "TMP_$noteId",
+                )
 
             When("Note is saved") {
                 viewModel.save()
@@ -160,9 +164,10 @@ class NoteDetailViewModelTest : ViewModelBehaviorSpec({
         }
 
         And("Note is synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns Either.success(
-                data = noteId
-            )
+            coEvery { repository.updateNote(noteId, title, note) } returns
+                Either.success(
+                    data = noteId,
+                )
 
             When("Note is updated") {
                 viewModel.save()
@@ -188,9 +193,10 @@ class NoteDetailViewModelTest : ViewModelBehaviorSpec({
         }
 
         And("Error occurs") {
-            coEvery { repository.updateNote(noteId, title, note) } returns Either.error(
-                message = "Error occurred"
-            )
+            coEvery { repository.updateNote(noteId, title, note) } returns
+                Either.error(
+                    message = "Error occurred",
+                )
 
             When("Note is updated") {
                 viewModel.save()

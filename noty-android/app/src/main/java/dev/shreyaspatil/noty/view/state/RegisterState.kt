@@ -33,16 +33,17 @@ interface RegisterState : State {
     val error: String?
 
     companion object {
-        val initialState = RegisterState(
-            isLoading = false,
-            isLoggedIn = false,
-            username = "",
-            password = "",
-            confirmPassword = "",
-            isValidUsername = null,
-            isValidPassword = null,
-            isValidConfirmPassword = null,
-            error = null
-        )
+        val initialState =
+            RegisterState(
+                isLoading = false,
+                isLoggedIn = false,
+                username = "",
+                password = "",
+                confirmPassword = "",
+                isValidUsername = null,
+                isValidPassword = null,
+                isValidConfirmPassword = null,
+                error = null,
+            )
     }
 }

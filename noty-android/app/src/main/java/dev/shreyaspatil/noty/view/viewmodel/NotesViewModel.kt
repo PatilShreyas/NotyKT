@@ -43,104 +43,110 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NotesViewModel @Inject constructor(
-    @LocalRepository private val notyNoteRepository: NotyNoteRepository,
-    private val sessionManager: SessionManager,
-    private val preferenceManager: PreferenceManager,
-    private val notyTaskManager: NotyTaskManager,
-    private val connectivityObserver: ConnectivityObserver
-) : BaseViewModel<NotesState>() {
+class NotesViewModel
+    @Inject
+    constructor(
+        @LocalRepository private val notyNoteRepository: NotyNoteRepository,
+        private val sessionManager: SessionManager,
+        private val preferenceManager: PreferenceManager,
+        private val notyTaskManager: NotyTaskManager,
+        private val connectivityObserver: ConnectivityObserver,
+    ) : BaseViewModel<NotesState>() {
+        private val stateStore = StateStore(initialState = NotesState.initialState.mutable())
 
-    private val stateStore = StateStore(initialState = NotesState.initialState.mutable())
+        override val state: StateFlow<NotesState> = stateStore.state
 
-    override val state: StateFlow<NotesState> = stateStore.state
+        private var syncJob: Job? = null
 
-    private var syncJob: Job? = null
+        init {
+            checkUserSession()
+            observeNotes()
+            syncNotes()
+            observeConnectivity()
+        }
 
-    init {
-        checkUserSession()
-        observeNotes()
-        syncNotes()
-        observeConnectivity()
-    }
+        fun syncNotes() {
+            if (sessionManager.getToken() == null) return
+            if (syncJob?.isActive == true) return
 
-    fun syncNotes() {
-        if (sessionManager.getToken() == null) return
-        if (syncJob?.isActive == true) return
+            syncJob =
+                viewModelScope.launch {
+                    val taskId = notyTaskManager.syncNotes()
 
-        syncJob = viewModelScope.launch {
-            val taskId = notyTaskManager.syncNotes()
+                    try {
+                        notyTaskManager.observeTask(taskId).collect { taskState ->
+                            when (taskState) {
+                                TaskState.SCHEDULED -> setState { isLoading = true }
+                                TaskState.COMPLETED, TaskState.CANCELLED ->
+                                    setState {
+                                        isLoading = false
+                                    }
+                                TaskState.FAILED ->
+                                    setState {
+                                        isLoading = false
+                                        error = "Failed to sync notes"
+                                    }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Can't find work by ID '$taskId'")
+                    }
+                }
+        }
 
-            try {
-                notyTaskManager.observeTask(taskId).collect { taskState ->
-                    when (taskState) {
-                        TaskState.SCHEDULED -> setState { isLoading = true }
-                        TaskState.COMPLETED, TaskState.CANCELLED -> setState { isLoading = false }
-                        TaskState.FAILED -> setState {
+        fun logout() {
+            viewModelScope.launch {
+                sessionManager.saveToken(null)
+                notyTaskManager.abortAllTasks()
+                notyNoteRepository.deleteAllNotes()
+                setState { isUserLoggedIn = false }
+            }
+        }
+
+        suspend fun isDarkModeEnabled() = preferenceManager.uiModeFlow.first()
+
+        fun setDarkMode(enable: Boolean) {
+            viewModelScope.launch {
+                preferenceManager.setDarkMode(enable)
+            }
+        }
+
+        private fun checkUserSession() {
+            setState { isUserLoggedIn = sessionManager.getToken() != null }
+        }
+
+        private fun observeNotes() {
+            notyNoteRepository.getAllNotes()
+                .distinctUntilChanged()
+                .onEach { response ->
+                    response.onSuccess { notes ->
+                        setState {
+                            this.isLoading = false
+                            this.notes = notes
+                        }
+                    }.onFailure { message ->
+                        setState {
                             isLoading = false
-                            error = "Failed to sync notes"
+                            error = message
                         }
                     }
+                }.onStart { setState { isLoading = true } }
+                .launchIn(viewModelScope)
+        }
+
+        private fun observeConnectivity() {
+            connectivityObserver.connectionState
+                .distinctUntilChanged()
+                .map { it === Available }
+                .onEach {
+                    setState { isConnectivityAvailable = it }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Can't find work by ID '$taskId'")
-            }
+                .launchIn(viewModelScope)
+        }
+
+        private fun setState(update: MutableNotesState.() -> Unit) = stateStore.setState(update)
+
+        companion object {
+            private const val TAG = "NotesViewModel"
         }
     }
-
-    fun logout() {
-        viewModelScope.launch {
-            sessionManager.saveToken(null)
-            notyTaskManager.abortAllTasks()
-            notyNoteRepository.deleteAllNotes()
-            setState { isUserLoggedIn = false }
-        }
-    }
-
-    suspend fun isDarkModeEnabled() = preferenceManager.uiModeFlow.first()
-
-    fun setDarkMode(enable: Boolean) {
-        viewModelScope.launch {
-            preferenceManager.setDarkMode(enable)
-        }
-    }
-
-    private fun checkUserSession() {
-        setState { isUserLoggedIn = sessionManager.getToken() != null }
-    }
-
-    private fun observeNotes() {
-        notyNoteRepository.getAllNotes()
-            .distinctUntilChanged()
-            .onEach { response ->
-                response.onSuccess { notes ->
-                    setState {
-                        this.isLoading = false
-                        this.notes = notes
-                    }
-                }.onFailure { message ->
-                    setState {
-                        isLoading = false
-                        error = message
-                    }
-                }
-            }.onStart { setState { isLoading = true } }
-            .launchIn(viewModelScope)
-    }
-
-    private fun observeConnectivity() {
-        connectivityObserver.connectionState
-            .distinctUntilChanged()
-            .map { it === Available }
-            .onEach {
-                setState { isConnectivityAvailable = it }
-            }
-            .launchIn(viewModelScope)
-    }
-
-    private fun setState(update: MutableNotesState.() -> Unit) = stateStore.setState(update)
-
-    companion object {
-        private const val TAG = "NotesViewModel"
-    }
-}

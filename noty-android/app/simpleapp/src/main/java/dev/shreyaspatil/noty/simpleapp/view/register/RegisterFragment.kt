@@ -32,7 +32,6 @@ import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
 
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, RegisterViewModel>() {
-
     override val viewModel: RegisterViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun initView() {
@@ -76,7 +75,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, Re
             showErrorDialog(
                 title = getString(R.string.dialog_title_signup_failed),
                 message = errorMessage,
-                onDialogDismiss = viewModel::clearError
+                onDialogDismiss = viewModel::clearError,
             )
         }
     }
@@ -89,6 +88,6 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, Re
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = RegisterFragmentBinding.inflate(inflater, container, false)
 }

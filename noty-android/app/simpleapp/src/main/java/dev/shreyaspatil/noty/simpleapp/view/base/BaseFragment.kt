@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.onEach
  */
 abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<STATE>> :
     Fragment() {
-
     private var _binding: VB by autoCleaned()
     val binding: VB get() = _binding
 
@@ -51,16 +50,20 @@ abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = getViewBinding(inflater, container)
         return binding.root
     }
 
     abstract fun initView()
+
     abstract fun render(state: STATE)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         observeState()
@@ -91,7 +94,7 @@ abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<
     fun showErrorDialog(
         title: String,
         message: String,
-        onDialogDismiss: () -> Unit = {}
+        onDialogDismiss: () -> Unit = {},
     ) {
         if (errorDialog == null) {
             errorDialog = ErrorDialog()
@@ -122,7 +125,10 @@ abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<
         super.onDestroyView()
     }
 
-    protected abstract fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+    protected abstract fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): VB
 
     companion object {
         private const val TAG_PROGRESS_DIALOG = "progress_dialog"
