@@ -114,4 +114,6 @@ dependencies {
     testImplementation(libs.kotest.property)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    debugImplementation(libs.leakcanary)
 }
