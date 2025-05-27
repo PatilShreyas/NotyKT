@@ -86,7 +86,6 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNav" }
-androidx-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
 androidx-work-multiprocess = { group = "androidx.work", name = "work-multiprocess", version.ref = "workmanager" }
 androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "workmanager" }
@@ -117,7 +116,6 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 # Dagger Hilt
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
-dagger-hilt-gradle-plugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "daggerHilt" }
 dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "daggerHilt" }
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "jetpackHilt" }
 androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "jetpackHilt" }
@@ -148,12 +146,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
-ktlint-gradle = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlint" }
-jacoco-core = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
 mutekt-core = { group = "dev.shreyaspatil.mutekt", name = "mutekt-core", version.ref = "mutekt" }
 mutekt-codegen = { group = "dev.shreyaspatil.mutekt", name = "mutekt-codegen", version.ref = "mutekt" }
 capturable = { group = "dev.shreyaspatil", name = "capturable", version.ref = "capturable" }
-compose-compiler-report-generator = { group = "dev.shreyaspatil.compose-compiler-report-generator", name = "gradle-plugin", version.ref = "composeCompilerReportGen" }
 leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 
 [plugins]
