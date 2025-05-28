@@ -60,7 +60,7 @@ class FakeWorkManager {
             mockWorkManager.enqueueUniqueWork(
                 any(),
                 any<ExistingWorkPolicy>(),
-                any<OneTimeWorkRequest>()
+                any<OneTimeWorkRequest>(),
             )
         } answers {
             oneTimeWorkRequests.add(arg<OneTimeWorkRequest>(2))
@@ -70,11 +70,12 @@ class FakeWorkManager {
         // Set up the mock to handle getWorkInfoById
         every { mockWorkManager.getWorkInfoById(any()) } answers {
             val id = arg<UUID>(0)
-            fakeWorkStates[id]?.let { state -> 
+            fakeWorkStates[id]?.let { state ->
                 mockk<ListenableFuture<WorkInfo?>> {
-                    every { get() } returns mockk<WorkInfo> {
-                        every { this@mockk.state } returns state
-                    }
+                    every { get() } returns
+                        mockk<WorkInfo> {
+                            every { this@mockk.state } returns state
+                        }
                 }
             } ?: mockk(relaxed = true)
         }
@@ -87,7 +88,7 @@ class FakeWorkManager {
 
         // Set up the mock to handle getWorkInfoByIdLiveData
         every { mockWorkManager.getWorkInfoByIdLiveData(any()) } answers {
-            fakeWorkStatesForObserve.map { state -> 
+            fakeWorkStatesForObserve.map { state ->
                 mockk<WorkInfo> {
                     every { this@mockk.state } returns state
                 }
