@@ -29,12 +29,10 @@ import kotlinx.coroutines.test.setMain
  * sets Test dispatcher as a Main dispatcher so that it becomes easy to test the ViewModel.
  */
 abstract class ViewModelBehaviorSpec(body: BehaviorSpec.() -> Unit = {}) : BehaviorSpec({
-    val dispatcher = StandardTestDispatcher()
+    coroutineTestScope = true
 
-    testCoroutineDispatcher = true
-    Dispatchers.setMain(dispatcher)
+    beforeTest { Dispatchers.setMain(StandardTestDispatcher()) }
+    afterTest { Dispatchers.resetMain() }
 
     apply(body)
-
-    afterSpec { Dispatchers.resetMain() }
 })

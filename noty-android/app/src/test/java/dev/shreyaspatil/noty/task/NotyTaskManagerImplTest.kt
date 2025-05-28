@@ -30,17 +30,19 @@ import dev.shreyaspatil.noty.utils.ext.getEnum
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.core.test.testCoroutineScheduler
 import io.kotest.matchers.shouldBe
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import java.util.UUID
 
+@OptIn(ExperimentalStdlibApi::class)
 class NotyTaskManagerImplTest : BehaviorSpec() {
     override suspend fun beforeSpec(spec: Spec) {
         super.beforeSpec(spec)
@@ -48,8 +50,7 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
     }
 
     init {
-        // LiveData's asFlow() method uses Main dispatcher under the hood
-        Dispatchers.setMain(StandardTestDispatcher())
+        coroutineTestScope = true
 
         val fakeWorkManager = FakeWorkManager()
         val workManager = fakeWorkManager.mockWorkManager
@@ -58,6 +59,7 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
         val manager = NotyTaskManagerImpl(workManager)
 
         Given("The tasks") {
+            Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testCoroutineScheduler))
             val workStates =
                 listOf(
                     UUID.randomUUID() to WorkInfo.State.ENQUEUED,
@@ -82,7 +84,7 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
                     delay(100)
                     emit(WorkInfo.State.FAILED)
                     delay(100)
-                }.flowOn(Dispatchers.Unconfined)
+                }
 
             When("Notes are synced") {
                 manager.syncNotes()
@@ -171,6 +173,7 @@ class NotyTaskManagerImplTest : BehaviorSpec() {
 
     override suspend fun afterSpec(spec: Spec) {
         super.afterSpec(spec)
+        Dispatchers.resetMain()
         cleanupAsyncTaskExecutor()
     }
 

@@ -17,23 +17,23 @@
 package dev.shreyaspatil.noty.fakes
 
 import androidx.lifecycle.asLiveData
-import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.common.util.concurrent.ListenableFuture
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.UUID
-import java.util.concurrent.Executor
-import java.util.concurrent.TimeUnit
 
 /**
- * WorkManager's fake implementation using Mockk
+ * WorkManager's fake implementation
  */
 class FakeWorkManager {
+    val mockWorkManager: WorkManager = mockk(relaxed = true)
+
     /**
      * Useful for capturing scheduled work requests
      */
@@ -54,68 +54,44 @@ class FakeWorkManager {
      */
     lateinit var fakeWorkStatesForObserve: Flow<WorkInfo.State>
 
-    // Create a mocked WorkManager instance
-    val mockWorkManager = mockk<WorkManager>()
-
     init {
-        // Setup the mock to handle the methods used in tests
-        io.mockk.every {
+        // Set up the mock to handle enqueueUniqueWork
+        every {
             mockWorkManager.enqueueUniqueWork(
                 any(),
                 any<ExistingWorkPolicy>(),
-                any<OneTimeWorkRequest>(),
+                any<OneTimeWorkRequest>()
             )
         } answers {
-            val request = thirdArg<OneTimeWorkRequest>()
-            oneTimeWorkRequests.add(request)
+            oneTimeWorkRequests.add(arg<OneTimeWorkRequest>(2))
             mockk()
         }
 
-        io.mockk.every {
-            mockWorkManager.getWorkInfoById(any())
-        } answers {
-            val id = firstArg<UUID>()
-            futureWorkInfo(fakeWorkStates[id] ?: WorkInfo.State.FAILED)
+        // Set up the mock to handle getWorkInfoById
+        every { mockWorkManager.getWorkInfoById(any()) } answers {
+            val id = arg<UUID>(0)
+            fakeWorkStates[id]?.let { state -> 
+                mockk<ListenableFuture<WorkInfo?>> {
+                    every { get() } returns mockk<WorkInfo> {
+                        every { this@mockk.state } returns state
+                    }
+                }
+            } ?: mockk(relaxed = true)
         }
 
-        io.mockk.every {
-            mockWorkManager.cancelAllWork()
-        } answers {
+        // Set up the mock to handle cancelAllWork
+        every { mockWorkManager.cancelAllWork() } answers {
             allWorkCancelled = true
             mockk()
         }
 
-        io.mockk.every {
-            mockWorkManager.getWorkInfoByIdLiveData(any())
-        } answers {
-            fakeWorkStatesForObserve.map { workInfo(it) }.asLiveData()
+        // Set up the mock to handle getWorkInfoByIdLiveData
+        every { mockWorkManager.getWorkInfoByIdLiveData(any()) } answers {
+            fakeWorkStatesForObserve.map { state -> 
+                mockk<WorkInfo> {
+                    every { this@mockk.state } returns state
+                }
+            }.asLiveData()
         }
     }
-}
-
-fun futureWorkInfo(state: WorkInfo.State): ListenableFuture<WorkInfo?> =
-    object : ListenableFuture<WorkInfo?> {
-        override fun cancel(mayInterruptIfRunning: Boolean): Boolean = true
-
-        override fun isCancelled(): Boolean = true
-
-        override fun isDone(): Boolean = true
-
-        override fun get(): WorkInfo? = workInfo(state)
-
-        override fun get(
-            timeout: Long,
-            unit: TimeUnit?,
-        ): WorkInfo? = TODO("Not needed")
-
-        override fun addListener(
-            listener: Runnable,
-            executor: Executor,
-        ) = TODO("Not needed")
-    }
-
-fun workInfo(state: WorkInfo.State): WorkInfo {
-    val id = UUID.randomUUID()
-    val fakeData = Data.Builder().build()
-    return WorkInfo(id, state, emptySet<String>(), fakeData, fakeData)
 }
