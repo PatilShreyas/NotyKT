@@ -1,11 +1,9 @@
 name: Build (Android)
 on:
   push: 
-    paths:
-      - 'noty-android/**'
+    branches: [master]
   pull_request:
-    paths:
-      - 'noty-android/**'
+    branches: [master]
 
 jobs:
   build:
