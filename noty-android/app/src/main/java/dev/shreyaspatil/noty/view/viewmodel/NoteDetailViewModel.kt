@@ -40,168 +40,180 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-class NoteDetailViewModel @AssistedInject constructor(
-    private val notyTaskManager: NotyTaskManager,
-    @LocalRepository private val noteRepository: NotyNoteRepository,
-    @Assisted private val noteId: String
-) : BaseViewModel<NoteDetailState>() {
+class NoteDetailViewModel
+    @AssistedInject
+    constructor(
+        private val notyTaskManager: NotyTaskManager,
+        @LocalRepository private val noteRepository: NotyNoteRepository,
+        @Assisted private val noteId: String,
+    ) : BaseViewModel<NoteDetailState>() {
+        private val stateStore = StateStore(initialState = NoteDetailState.initialState.mutable())
 
-    private val stateStore = StateStore(initialState = NoteDetailState.initialState.mutable())
+        override val state: StateFlow<NoteDetailState> = stateStore.state
 
-    override val state: StateFlow<NoteDetailState> = stateStore.state
+        private var job: Job? = null
+        private lateinit var currentNote: Note
 
-    private var job: Job? = null
-    private lateinit var currentNote: Note
-
-    init {
-        loadNote()
-    }
-
-    fun setTitle(title: String) {
-        setState { this.title = title }
-        validateNote()
-    }
-
-    fun setNote(note: String) {
-        setState { this.note = note }
-        validateNote()
-    }
-
-    private fun loadNote() {
-        viewModelScope.launch {
-            setState { isLoading = true }
-            val note = noteRepository.getNoteById(noteId).firstOrNull()
-            if (note != null) {
-                currentNote = note
-                setState {
-                    this.isLoading = false
-                    this.title = note.title
-                    this.note = note.note
-                    this.isPinned = note.isPinned
-                }
-            } else {
-                setState {
-                    isLoading = false
-                    finished = true
-                }
-            }
+        init {
+            loadNote()
         }
-    }
 
-    fun save() {
-        val title = currentState.title?.trim() ?: return
-        val note = currentState.note?.trim() ?: return
+        fun setTitle(title: String) {
+            setState { this.title = title }
+            validateNote()
+        }
 
-        job?.cancel()
-        job = viewModelScope.launch {
-            setState { isLoading = true }
+        fun setNote(note: String) {
+            setState { this.note = note }
+            validateNote()
+        }
 
-            val response = noteRepository.updateNote(noteId, title, note)
-
-            setState { isLoading = false }
-
-            response.onSuccess { noteId ->
-                if (NotyNoteRepository.isTemporaryNote(noteId)) {
-                    scheduleNoteCreate(noteId)
+        private fun loadNote() {
+            viewModelScope.launch {
+                setState { isLoading = true }
+                val note = noteRepository.getNoteById(noteId).firstOrNull()
+                if (note != null) {
+                    currentNote = note
+                    setState {
+                        this.isLoading = false
+                        this.title = note.title
+                        this.note = note.note
+                        this.isPinned = note.isPinned
+                    }
                 } else {
-                    scheduleNoteUpdate(noteId)
+                    setState {
+                        isLoading = false
+                        finished = true
+                    }
                 }
-                setState { finished = true }
-            }.onFailure { message ->
-                setState { error = message }
             }
         }
-    }
 
-    fun delete() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            setState { isLoading = true }
+        fun save() {
+            val title = currentState.title?.trim() ?: return
+            val note = currentState.note?.trim() ?: return
 
-            val response = noteRepository.deleteNote(noteId)
+            job?.cancel()
+            job =
+                viewModelScope.launch {
+                    setState { isLoading = true }
 
-            setState { isLoading = false }
+                    val response = noteRepository.updateNote(noteId, title, note)
 
-            response.onSuccess { noteId ->
-                if (!NotyNoteRepository.isTemporaryNote(noteId)) {
-                    scheduleNoteDelete(noteId)
+                    setState { isLoading = false }
+
+                    response.onSuccess { noteId ->
+                        if (NotyNoteRepository.isTemporaryNote(noteId)) {
+                            scheduleNoteCreate(noteId)
+                        } else {
+                            scheduleNoteUpdate(noteId)
+                        }
+                        setState { finished = true }
+                    }.onFailure { message ->
+                        setState { error = message }
+                    }
                 }
-                setState { finished = true }
-            }.onFailure { message ->
-                setState { error = message }
-            }
         }
-    }
 
-    fun togglePin() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            setState { isLoading = true }
+        fun delete() {
+            job?.cancel()
+            job =
+                viewModelScope.launch {
+                    setState { isLoading = true }
 
-            val response = noteRepository.pinNote(noteId, !currentState.isPinned)
+                    val response = noteRepository.deleteNote(noteId)
 
-            setState {
-                isLoading = false
-                isPinned = !currentState.isPinned
-            }
+                    setState { isLoading = false }
 
-            response.onSuccess { noteId ->
-                if (!NotyNoteRepository.isTemporaryNote(noteId)) {
-                    scheduleNoteUpdatePin(noteId)
+                    response.onSuccess { noteId ->
+                        if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                            scheduleNoteDelete(noteId)
+                        }
+                        setState { finished = true }
+                    }.onFailure { message ->
+                        setState { error = message }
+                    }
                 }
-            }.onFailure { message ->
-                setState { error = message }
+        }
+
+        fun togglePin() {
+            job?.cancel()
+            job =
+                viewModelScope.launch {
+                    setState { isLoading = true }
+
+                    val response = noteRepository.pinNote(noteId, !currentState.isPinned)
+
+                    setState {
+                        isLoading = false
+                        isPinned = !currentState.isPinned
+                    }
+
+                    response.onSuccess { noteId ->
+                        if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                            scheduleNoteUpdatePin(noteId)
+                        }
+                    }.onFailure { message ->
+                        setState { error = message }
+                    }
+                }
+        }
+
+        private fun validateNote() {
+            try {
+                val oldTitle = currentNote.title
+                val oldNote = currentNote.note
+
+                val title = currentState.title
+                val note = currentState.note
+
+                val isValid =
+                    title != null &&
+                        note != null &&
+                        NoteValidator.isValidNote(title, note)
+
+                val areOldAndUpdatedNoteSame = oldTitle == title?.trim() && oldNote == note?.trim()
+
+                setState { showSave = isValid && !areOldAndUpdatedNoteSame }
+            } catch (error: Throwable) {
             }
         }
-    }
 
-    private fun validateNote() {
-        try {
-            val oldTitle = currentNote.title
-            val oldNote = currentNote.note
+        private fun scheduleNoteCreate(noteId: String) =
+            notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
-            val title = currentState.title
-            val note = currentState.note
+        private fun scheduleNoteUpdate(noteId: String) =
+            notyTaskManager.scheduleTask(NotyTask.update(noteId))
 
-            val isValid = title != null && note != null && NoteValidator.isValidNote(title, note)
-            val areOldAndUpdatedNoteSame = oldTitle == title?.trim() && oldNote == note?.trim()
+        private fun scheduleNoteDelete(noteId: String) =
+            notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-            setState { showSave = isValid && !areOldAndUpdatedNoteSame }
-        } catch (error: Throwable) {
+        private fun scheduleNoteUpdatePin(noteId: String) =
+            notyTaskManager.scheduleTask(NotyTask.pin(noteId))
+
+        private fun setState(update: MutableNoteDetailState.() -> Unit) =
+            stateStore.setState(
+                update,
+            )
+
+        @AssistedFactory
+        interface Factory {
+            fun create(noteId: String): NoteDetailViewModel
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        companion object {
+            fun provideFactory(
+                assistedFactory: Factory,
+                noteId: String,
+            ): ViewModelProvider.Factory =
+                object : ViewModelProvider.Factory {
+                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                        return assistedFactory.create(noteId) as T
+                    }
+                }
         }
     }
-
-    private fun scheduleNoteCreate(noteId: String) =
-        notyTaskManager.scheduleTask(NotyTask.create(noteId))
-
-    private fun scheduleNoteUpdate(noteId: String) =
-        notyTaskManager.scheduleTask(NotyTask.update(noteId))
-
-    private fun scheduleNoteDelete(noteId: String) =
-        notyTaskManager.scheduleTask(NotyTask.delete(noteId))
-
-    private fun scheduleNoteUpdatePin(noteId: String) =
-        notyTaskManager.scheduleTask(NotyTask.pin(noteId))
-
-    private fun setState(update: MutableNoteDetailState.() -> Unit) = stateStore.setState(update)
-
-    @AssistedFactory
-    interface Factory {
-        fun create(noteId: String): NoteDetailViewModel
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    companion object {
-        fun provideFactory(
-            assistedFactory: Factory,
-            noteId: String
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(noteId) as T
-            }
-        }
-    }
-}
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)

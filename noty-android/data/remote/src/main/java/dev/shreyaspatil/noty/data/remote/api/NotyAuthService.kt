@@ -23,10 +23,13 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface NotyAuthService {
-
     @POST("/auth/register")
-    suspend fun register(@Body authRequest: AuthRequest): Response<AuthResponse>
+    suspend fun register(
+        @Body authRequest: AuthRequest,
+    ): Response<AuthResponse>
 
     @POST("/auth/login")
-    suspend fun login(@Body authRequest: AuthRequest): Response<AuthResponse>
+    suspend fun login(
+        @Body authRequest: AuthRequest,
+    ): Response<AuthResponse>
 }

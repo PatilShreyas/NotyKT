@@ -59,18 +59,19 @@ fun AboutScreen(onNavigateUp: () -> Unit) {
         },
         content = {
             AboutContent()
-        }
+        },
     )
 }
 
 @Composable
 fun AboutContent() {
     Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .padding(8.dp)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(60.dp))
 
@@ -79,7 +80,7 @@ fun AboutContent() {
             modifier = Modifier.size(92.dp, 92.dp),
             painter = image,
             contentDescription = "About Noty app",
-            alignment = Alignment.Center
+            alignment = Alignment.Center,
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -88,10 +89,11 @@ fun AboutContent() {
             text = "Noty",
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colors.onBackground
-            )
+            style =
+                TextStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colors.onBackground,
+                ),
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -99,7 +101,7 @@ fun AboutContent() {
         Text(
             text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.subtitle2
+            style = MaterialTheme.typography.subtitle2,
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -116,16 +118,17 @@ fun AboutContent() {
 fun LicenseCard() {
     Card(shape = RoundedCornerShape(4.dp), elevation = 2.dp) {
         Column(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
         ) {
             val licenseTitle = stringResource(id = R.string.text_license_title)
             Text(
                 text = licenseTitle,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
-                style = TextStyle(fontWeight = FontWeight.Bold)
+                style = TextStyle(fontWeight = FontWeight.Bold),
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -133,7 +136,7 @@ fun LicenseCard() {
             Text(
                 text = license,
                 textAlign = TextAlign.Center,
-                fontSize = 14.sp
+                fontSize = 14.sp,
             )
         }
     }
@@ -143,16 +146,17 @@ fun LicenseCard() {
 fun VisitCard() {
     Card(shape = RoundedCornerShape(4.dp), elevation = 2.dp) {
         Column(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
         ) {
             val visit = stringResource(id = R.string.text_visit)
             Text(
                 text = visit,
                 textAlign = TextAlign.Center,
                 fontSize = 18.sp,
-                style = TextStyle(fontWeight = FontWeight.Bold)
+                style = TextStyle(fontWeight = FontWeight.Bold),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -163,15 +167,15 @@ fun VisitCard() {
                 Modifier.clickable(
                     onClick = {
                         IntentUtils.launchBrowser(context = context, visitUrl)
-                    }
-                )
+                    },
+                ),
             ) {
                 Text(
                     text = visitUrl,
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.primaryColor),
-                    style = TextStyle(textDecoration = TextDecoration.Underline)
+                    style = TextStyle(textDecoration = TextDecoration.Underline),
                 )
             }
         }

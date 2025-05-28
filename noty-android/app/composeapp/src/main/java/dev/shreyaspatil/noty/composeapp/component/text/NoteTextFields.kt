@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 fun NoteTitleField(
     modifier: Modifier = Modifier,
     value: String = "",
-    onTextChange: (String) -> Unit
+    onTextChange: (String) -> Unit,
 ) {
     BasicNotyTextField(
         modifier,
@@ -35,7 +35,7 @@ fun NoteTitleField(
         label = "Title",
         onTextChange = onTextChange,
         textStyle = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.Bold),
-        maxLines = 2
+        maxLines = 2,
     )
 }
 
@@ -43,13 +43,13 @@ fun NoteTitleField(
 fun NoteField(
     modifier: Modifier = Modifier,
     value: String = "",
-    onTextChange: (String) -> Unit
+    onTextChange: (String) -> Unit,
 ) {
     BasicNotyTextField(
         modifier,
         value = value,
         label = "Write note here",
         onTextChange = onTextChange,
-        textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Light)
+        textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Light),
     )
 }

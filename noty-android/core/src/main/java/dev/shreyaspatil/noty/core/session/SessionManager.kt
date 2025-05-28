@@ -23,7 +23,6 @@ import javax.inject.Singleton
  */
 @Singleton
 interface SessionManager {
-
     /**
      * Saves [token] in persistence storage.
      * The saved token can be retrieved anytime in the future using [getToken]

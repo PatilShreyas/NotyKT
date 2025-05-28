@@ -53,7 +53,7 @@ fun ConnectivityStatus(isConnected: Boolean) {
     AnimatedVisibility(
         visible = visibility,
         enter = expandVertically(),
-        exit = shrinkVertically()
+        exit = shrinkVertically(),
     ) {
         ConnectivityStatusBox(isConnected = isConnected)
     }
@@ -72,18 +72,20 @@ fun ConnectivityStatus(isConnected: Boolean) {
 fun ConnectivityStatusBox(isConnected: Boolean) {
     val backgroundColor by animateColorAsState(if (isConnected) green else red)
     val message = if (isConnected) "Back Online!" else "No Internet Connection!"
-    val iconResource = if (isConnected) {
-        R.drawable.ic_connectivity_available
-    } else {
-        R.drawable.ic_connectivity_unavailable
-    }
+    val iconResource =
+        if (isConnected) {
+            R.drawable.ic_connectivity_available
+        } else {
+            R.drawable.ic_connectivity_unavailable
+        }
 
     Box(
-        modifier = Modifier
-            .background(backgroundColor)
-            .fillMaxWidth()
-            .padding(8.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .background(backgroundColor)
+                .fillMaxWidth()
+                .padding(8.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(painterResource(id = iconResource), "Connectivity Icon", tint = Color.White)

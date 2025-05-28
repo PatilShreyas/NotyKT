@@ -26,33 +26,35 @@ import org.junit.Test
 
 class ConnectivityStatusTest : NotyComposableTest() {
     @Test
-    fun testNoConnectivity() = runTest {
-        setContent {
-            ConnectivityStatus(isConnected = false)
-        }
+    fun testNoConnectivity() =
+        runTest {
+            setContent {
+                ConnectivityStatus(isConnected = false)
+            }
 
-        onNodeWithText("No Internet Connection!").assertIsDisplayed()
-    }
+            onNodeWithText("No Internet Connection!").assertIsDisplayed()
+        }
 
     @Test
-    fun testConnectivityBackAfterNoConnectivity() = runTest {
-        var isConnected by mutableStateOf(false)
-        setContent {
-            ConnectivityStatus(isConnected = isConnected)
+    fun testConnectivityBackAfterNoConnectivity() =
+        runTest {
+            var isConnected by mutableStateOf(false)
+            setContent {
+                ConnectivityStatus(isConnected = isConnected)
+            }
+
+            // First, no connectivity should be displayed
+            onNodeWithText("No Internet Connection!").assertIsDisplayed()
+
+            // Bring connectivity back
+            isConnected = true
+            onNodeWithText("No Internet Connection!").assertDoesNotExist()
+            onNodeWithText("Back Online!").assertIsDisplayed()
+
+            // Wait for 2 seconds
+            mainClock.advanceTimeBy(2000)
+
+            // Status should be vanished
+            onNodeWithText("Back Online!").assertDoesNotExist()
         }
-
-        // First, no connectivity should be displayed
-        onNodeWithText("No Internet Connection!").assertIsDisplayed()
-
-        // Bring connectivity back
-        isConnected = true
-        onNodeWithText("No Internet Connection!").assertDoesNotExist()
-        onNodeWithText("Back Online!").assertIsDisplayed()
-
-        // Wait for 2 seconds
-        mainClock.advanceTimeBy(2000)
-
-        // Status should be vanished
-        onNodeWithText("Back Online!").assertDoesNotExist()
-    }
 }

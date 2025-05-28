@@ -17,5 +17,8 @@
 package dev.shreyaspatil.noty.utils.validator
 
 object NoteValidator {
-    fun isValidNote(title: String, note: String) = (title.trim().length >= 4 && note.isNotBlank())
+    fun isValidNote(
+        title: String,
+        note: String,
+    ) = (title.trim().length >= 4 && note.isNotBlank())
 }

@@ -30,11 +30,11 @@ import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 fun NotyFullWidthButton(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().height(60.dp)
+        modifier = modifier.fillMaxWidth().height(60.dp),
     ) {
         Text(style = typography.subtitle1, color = Color.White, text = text)
     }

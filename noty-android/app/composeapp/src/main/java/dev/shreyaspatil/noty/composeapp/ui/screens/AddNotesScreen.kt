@@ -45,7 +45,7 @@ import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 @Composable
 fun AddNoteScreen(
     viewModel: AddNoteViewModel,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
 ) {
     val state by viewModel.collectState()
 
@@ -58,7 +58,7 @@ fun AddNoteScreen(
         onNoteChange = viewModel::setNote,
         onClickAddNote = viewModel::add,
         error = state.errorMessage,
-        onNavigateUp = onNavigateUp
+        onNavigateUp = onNavigateUp,
     )
 
     LaunchedEffect(state.added) {
@@ -78,7 +78,7 @@ fun AddNotesContent(
     onNoteChange: (String) -> Unit,
     onClickAddNote: () -> Unit,
     error: String?,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
 ) {
     NotyScaffold(
         isLoading = isLoading,
@@ -88,24 +88,26 @@ fun AddNotesContent(
             Column(
                 Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
+                    .padding(16.dp),
             ) {
                 NoteTitleField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.background),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.background),
                     value = title,
-                    onTextChange = onTitleChange
+                    onTextChange = onTitleChange,
                 )
 
                 NoteField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(top = 32.dp)
-                        .background(MaterialTheme.colors.background),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(top = 32.dp)
+                            .background(MaterialTheme.colors.background),
                     value = note,
-                    onTextChange = onNoteChange
+                    onTextChange = onNoteChange,
                 )
             }
         },
@@ -117,13 +119,13 @@ fun AddNotesContent(
                         Icon(
                             Icons.Filled.Done,
                             "Save",
-                            tint = Color.White
+                            tint = Color.White,
                         )
                     },
                     onClick = onClickAddNote,
-                    backgroundColor = MaterialTheme.colors.primary
+                    backgroundColor = MaterialTheme.colors.primary,
                 )
             }
-        }
+        },
     )
 }

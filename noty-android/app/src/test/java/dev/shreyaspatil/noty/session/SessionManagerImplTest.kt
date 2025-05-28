@@ -25,15 +25,17 @@ import io.mockk.verify
 import io.mockk.verifySequence
 
 class SessionManagerImplTest : BehaviorSpec({
-    val preferenceEditor: SharedPreferences.Editor = mockk {
-        every { putString(any(), any()) } returns this
-        every { clear() } returns this
-        every { commit() } returns true
-    }
+    val preferenceEditor: SharedPreferences.Editor =
+        mockk {
+            every { putString(any(), any()) } returns this
+            every { clear() } returns this
+            every { commit() } returns true
+        }
 
-    val preference: SharedPreferences = mockk(relaxUnitFun = true) {
-        every { edit() } returns preferenceEditor
-    }
+    val preference: SharedPreferences =
+        mockk(relaxUnitFun = true) {
+            every { edit() } returns preferenceEditor
+        }
 
     val manager = SessionManagerImpl(preference)
 

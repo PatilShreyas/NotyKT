@@ -17,8 +17,8 @@
 package dev.shreyaspatil.noty.repository
 
 import dev.shreyaspatil.noty.core.model.AuthCredential
-import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.core.repository.Either
+import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
 import dev.shreyaspatil.noty.data.remote.model.response.State
@@ -30,35 +30,39 @@ import javax.inject.Singleton
  * Single source of data of User of the app.
  */
 @Singleton
-class DefaultNotyUserRepository @Inject internal constructor(
-    private val authService: NotyAuthService
-) : NotyUserRepository {
+class DefaultNotyUserRepository
+    @Inject
+    internal constructor(
+        private val authService: NotyAuthService,
+    ) : NotyUserRepository {
+        override suspend fun addUser(
+            username: String,
+            password: String,
+        ): Either<AuthCredential> {
+            return runCatching {
+                val authResponse =
+                    authService.register(
+                        AuthRequest(username, password),
+                    ).getResponse()
 
-    override suspend fun addUser(
-        username: String,
-        password: String
-    ): Either<AuthCredential> {
-        return runCatching {
-            val authResponse = authService.register(AuthRequest(username, password)).getResponse()
+                when (authResponse.status) {
+                    State.SUCCESS -> Either.success(AuthCredential(authResponse.token!!))
+                    else -> Either.error(authResponse.message)
+                }
+            }.getOrDefault(Either.error("Something went wrong!"))
+        }
 
-            when (authResponse.status) {
-                State.SUCCESS -> Either.success(AuthCredential(authResponse.token!!))
-                else -> Either.error(authResponse.message)
-            }
-        }.getOrDefault(Either.error("Something went wrong!"))
+        override suspend fun getUserByUsernameAndPassword(
+            username: String,
+            password: String,
+        ): Either<AuthCredential> {
+            return runCatching {
+                val authResponse = authService.login(AuthRequest(username, password)).getResponse()
+
+                when (authResponse.status) {
+                    State.SUCCESS -> Either.success(AuthCredential(authResponse.token!!))
+                    else -> Either.error(authResponse.message)
+                }
+            }.getOrDefault(Either.error("Something went wrong!"))
+        }
     }
-
-    override suspend fun getUserByUsernameAndPassword(
-        username: String,
-        password: String
-    ): Either<AuthCredential> {
-        return runCatching {
-            val authResponse = authService.login(AuthRequest(username, password)).getResponse()
-
-            when (authResponse.status) {
-                State.SUCCESS -> Either.success(AuthCredential(authResponse.token!!))
-                else -> Either.error(authResponse.message)
-            }
-        }.getOrDefault(Either.error("Something went wrong!"))
-    }
-}

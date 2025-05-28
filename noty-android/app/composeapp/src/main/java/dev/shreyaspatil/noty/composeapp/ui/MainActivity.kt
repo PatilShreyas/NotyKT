@@ -43,7 +43,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var preferenceManager: PreferenceManager
 
@@ -76,7 +75,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun rememberUiMode(): State<Boolean> {
         return preferenceManager.uiModeFlow.collectAsStateWithLifecycle(
-            initialValue = isSystemInDarkTheme()
+            initialValue = isSystemInDarkTheme(),
         )
     }
 
@@ -85,10 +84,11 @@ class MainActivity : ComponentActivity() {
             .uiModeFlow
             .flowWithLifecycle(lifecycle)
             .onEach { isDarkMode ->
-                val mode = when (isDarkMode) {
-                    true -> AppCompatDelegate.MODE_NIGHT_YES
-                    false -> AppCompatDelegate.MODE_NIGHT_NO
-                }
+                val mode =
+                    when (isDarkMode) {
+                        true -> AppCompatDelegate.MODE_NIGHT_YES
+                        false -> AppCompatDelegate.MODE_NIGHT_NO
+                    }
                 AppCompatDelegate.setDefaultNightMode(mode)
             }.launchIn(lifecycleScope)
     }

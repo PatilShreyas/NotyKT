@@ -25,16 +25,16 @@ import dev.shreyaspatil.noty.data.local.entity.NoteEntity
 
 @Database(
     entities = [NoteEntity::class],
-    version = DatabaseMigrations.DB_VERSION
+    version = DatabaseMigrations.DB_VERSION,
 )
 abstract class NotyDatabase : RoomDatabase() {
-
     abstract fun getNotesDao(): NotesDao
 
     companion object {
         private const val DB_NAME = "noty_database"
 
         @Volatile
+        @Suppress("ktlint:standard:property-naming")
         private var INSTANCE: NotyDatabase? = null
 
         fun getInstance(context: Context): NotyDatabase {
@@ -44,11 +44,12 @@ abstract class NotyDatabase : RoomDatabase() {
             }
 
             synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    NotyDatabase::class.java,
-                    DB_NAME
-                ).addMigrations(*DatabaseMigrations.MIGRATIONS).build()
+                val instance =
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        NotyDatabase::class.java,
+                        DB_NAME,
+                    ).addMigrations(*DatabaseMigrations.MIGRATIONS).build()
 
                 INSTANCE = instance
                 return instance

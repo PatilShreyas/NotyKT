@@ -46,7 +46,6 @@ import javax.inject.Inject
 @DelicateCoroutinesApi
 @HiltAndroidTest
 class NotesScreenTest : NotyScreenTest() {
-
     @LocalRepository
     @Inject
     lateinit var noteRepository: NotyNoteRepository
@@ -62,180 +61,189 @@ class NotesScreenTest : NotyScreenTest() {
     }
 
     @Test
-    fun navigateToLogin_whenUserNotExistsInSession() = runTest {
-        // Remove user from session
-        sessionManager.saveToken(null)
+    fun navigateToLogin_whenUserNotExistsInSession() =
+        runTest {
+            // Remove user from session
+            sessionManager.saveToken(null)
 
-        var navigatingToLogin = false
-        setNotyContent {
-            NotesScreen(onNavigateToLogin = { navigatingToLogin = true })
+            var navigatingToLogin = false
+            setNotyContent {
+                NotesScreen(onNavigateToLogin = { navigatingToLogin = true })
+            }
+
+            waitForIdle()
+
+            assertTrue(navigatingToLogin)
         }
 
-        waitForIdle()
-
-        assertTrue(navigatingToLogin)
-    }
-
     @Test
-    fun navigateToAbout_onClickAboutIcon() = runTest {
-        var navigatingToAbout = false
-        setNotyContent {
-            NotesScreen(onNavigateToAbout = { navigatingToAbout = true })
+    fun navigateToAbout_onClickAboutIcon() =
+        runTest {
+            var navigatingToAbout = false
+            setNotyContent {
+                NotesScreen(onNavigateToAbout = { navigatingToAbout = true })
+            }
+
+            onNodeWithContentDescription("About").performClick()
+            waitForIdle()
+            assertTrue(navigatingToAbout)
         }
 
-        onNodeWithContentDescription("About").performClick()
-        waitForIdle()
-        assertTrue(navigatingToAbout)
-    }
-
     @Test
-    fun navigateToAddNote_onClickAddIcon() = runTest {
-        var navigateToAddNote = false
-        setNotyContent {
-            NotesScreen(onNavigateToAddNote = { navigateToAddNote = true })
+    fun navigateToAddNote_onClickAddIcon() =
+        runTest {
+            var navigateToAddNote = false
+            setNotyContent {
+                NotesScreen(onNavigateToAddNote = { navigateToAddNote = true })
+            }
+
+            onNodeWithContentDescription("Add").performClick()
+            waitForIdle()
+            assertTrue(navigateToAddNote)
         }
 
-        onNodeWithContentDescription("Add").performClick()
-        waitForIdle()
-        assertTrue(navigateToAddNote)
-    }
-
     @Test
-    fun navigateToLogin_onClickLogoutIconAndConfirmedLogin() = runTest {
-        var navigatingToLogin = false
-        setNotyContent {
-            NotesScreen(onNavigateToLogin = { navigatingToLogin = true })
+    fun navigateToLogin_onClickLogoutIconAndConfirmedLogin() =
+        runTest {
+            var navigatingToLogin = false
+            setNotyContent {
+                NotesScreen(onNavigateToLogin = { navigatingToLogin = true })
+            }
+
+            val logoutNode = onNodeWithContentDescription("Logout")
+            logoutNode.performClick()
+
+            // Should show confirmation dialog
+            onNodeWithText("Logout?").assertIsDisplayed()
+            onNodeWithText("Sure want to logout?").assertIsDisplayed()
+
+            // Confirm logout
+            onNodeWithText("Yes").performClick()
+            waitForIdle()
+            assertTrue(navigatingToLogin)
         }
 
-        val logoutNode = onNodeWithContentDescription("Logout")
-        logoutNode.performClick()
-
-        // Should show confirmation dialog
-        onNodeWithText("Logout?").assertIsDisplayed()
-        onNodeWithText("Sure want to logout?").assertIsDisplayed()
-
-        // Confirm logout
-        onNodeWithText("Yes").performClick()
-        waitForIdle()
-        assertTrue(navigatingToLogin)
-    }
-
     @Test
-    fun shouldNotNavigateToLogin_onClickLogoutIconAndDeniedLogin() = runTest {
-        var navigatingToLogin = false
-        setNotyContent {
-            NotesScreen(onNavigateToLogin = { navigatingToLogin = true })
+    fun shouldNotNavigateToLogin_onClickLogoutIconAndDeniedLogin() =
+        runTest {
+            var navigatingToLogin = false
+            setNotyContent {
+                NotesScreen(onNavigateToLogin = { navigatingToLogin = true })
+            }
+
+            val logoutNode = onNodeWithContentDescription("Logout")
+            logoutNode.performClick()
+
+            // Should show confirmation dialog
+            onNodeWithText("Logout?").assertIsDisplayed()
+            onNodeWithText("Sure want to logout?").assertIsDisplayed()
+
+            // Confirm logout
+            onNodeWithText("No").performClick()
+            waitForIdle()
+            assertFalse(navigatingToLogin)
         }
 
-        val logoutNode = onNodeWithContentDescription("Logout")
-        logoutNode.performClick()
+    @Test
+    fun showNotes_whenNotesAreLoaded() =
+        runTest {
+            setNotyContent { NotesScreen() }
+            registerIdlingResource(prefillNotes())
 
-        // Should show confirmation dialog
-        onNodeWithText("Logout?").assertIsDisplayed()
-        onNodeWithText("Sure want to logout?").assertIsDisplayed()
+            waitForIdle()
+            onNodeWithTag("notesList").performScrollToIndex(0)
+            waitForIdle()
 
-        // Confirm logout
-        onNodeWithText("No").performClick()
-        waitForIdle()
-        assertFalse(navigatingToLogin)
-    }
+            val notes = notes()
+            onNodeWithText(notes.first().title).assertExists()
+            onNodeWithText(notes.first().note).assertExists()
+
+            // Since it's LazyColumn, last note should not exist
+            onNodeWithText(notes.last().title).assertDoesNotExist()
+            onNodeWithText(notes.last().note).assertDoesNotExist()
+
+            // Perform scrolling till end
+            onNodeWithTag("notesList").performScrollToIndex(49)
+
+            waitForIdle()
+
+            // After scrolling, last item should be displayed
+            onNodeWithText(notes.last().title).assertIsDisplayed()
+            onNodeWithText(notes.last().note).assertIsDisplayed()
+        }
 
     @Test
-    fun showNotes_whenNotesAreLoaded() = runTest {
-        setNotyContent { NotesScreen() }
-        registerIdlingResource(prefillNotes())
+    fun showNoteOnRealtime_whenNewNoteIsAddedOrDeleted() =
+        runTest {
+            setNotyContent { NotesScreen() }
 
-        waitForIdle()
-        onNodeWithTag("notesList").performScrollToIndex(0)
-        waitForIdle()
+            registerIdlingResource(prefillNotes())
+            registerIdlingResource(addNote(title = "New Note", note = "Hey there!"))
 
-        val notes = notes()
-        onNodeWithText(notes.first().title).assertExists()
-        onNodeWithText(notes.first().note).assertExists()
+            waitForIdle()
+            onNodeWithTag("notesList").performScrollToIndex(0)
+            waitForIdle()
 
-        // Since it's LazyColumn, last note should not exist
-        onNodeWithText(notes.last().title).assertDoesNotExist()
-        onNodeWithText(notes.last().note).assertDoesNotExist()
+            // Newly added note should be displayed on UI
+            onNodeWithText("New Note").assertIsDisplayed()
+            onNodeWithText("Hey there!").assertIsDisplayed()
 
-        // Perform scrolling till end
-        onNodeWithTag("notesList").performScrollToIndex(49)
+            registerIdlingResource(deleteNote("1"))
 
-        waitForIdle()
-
-        // After scrolling, last item should be displayed
-        onNodeWithText(notes.last().title).assertIsDisplayed()
-        onNodeWithText(notes.last().note).assertIsDisplayed()
-    }
+            // Deleted note should not exist
+            onNodeWithText("Lorem Ipsum 1").assertDoesNotExist()
+            onNodeWithText("Hello World 1").assertDoesNotExist()
+        }
 
     @Test
-    fun showNoteOnRealtime_whenNewNoteIsAddedOrDeleted() = runTest {
-        setNotyContent { NotesScreen() }
+    fun navigateToNoteDetail_onClickingNoteContent() =
+        runTest {
+            var navigateToNoteId: String? = null
 
-        registerIdlingResource(prefillNotes())
-        registerIdlingResource(addNote(title = "New Note", note = "Hey there!"))
+            setNotyContent { NotesScreen(onNavigateToNoteDetail = { navigateToNoteId = it }) }
+            registerIdlingResource(prefillNotes())
 
-        waitForIdle()
-        onNodeWithTag("notesList").performScrollToIndex(0)
-        waitForIdle()
+            onNodeWithText("Lorem Ipsum 2", useUnmergedTree = true).performClick()
+            waitForIdle()
+            assertEquals("2", navigateToNoteId)
 
-        // Newly added note should be displayed on UI
-        onNodeWithText("New Note").assertIsDisplayed()
-        onNodeWithText("Hey there!").assertIsDisplayed()
-
-        registerIdlingResource(deleteNote("1"))
-
-        // Deleted note should not exist
-        onNodeWithText("Lorem Ipsum 1").assertDoesNotExist()
-        onNodeWithText("Hello World 1").assertDoesNotExist()
-    }
+            onNodeWithText("Hello World 3", useUnmergedTree = true).performClick()
+            waitForIdle()
+            assertEquals("3", navigateToNoteId)
+        }
 
     @Test
-    fun navigateToNoteDetail_onClickingNoteContent() = runTest {
-        var navigateToNoteId: String? = null
+    fun showPinnedNotesFirst_whenPinnedNotesArePresent() =
+        runTest {
+            setNotyContent { NotesScreen() }
 
-        setNotyContent { NotesScreen(onNavigateToNoteDetail = { navigateToNoteId = it }) }
-        registerIdlingResource(prefillNotes())
+            registerIdlingResource(prefillNotes())
+            registerIdlingResource(pinNotes("49", "50"))
 
-        onNodeWithText("Lorem Ipsum 2", useUnmergedTree = true).performClick()
-        waitForIdle()
-        assertEquals("2", navigateToNoteId)
+            waitForIdle()
 
-        onNodeWithText("Hello World 3", useUnmergedTree = true).performClick()
-        waitForIdle()
-        assertEquals("3", navigateToNoteId)
-    }
+            // Scroll to the top of screen
+            onNodeWithTag("notesList").performScrollToIndex(0)
+            waitForIdle()
 
-    @Test
-    fun showPinnedNotesFirst_whenPinnedNotesArePresent() = runTest {
-        setNotyContent { NotesScreen() }
-
-        registerIdlingResource(prefillNotes())
-        registerIdlingResource(pinNotes("49", "50"))
-
-        waitForIdle()
-
-        // Scroll to the top of screen
-        onNodeWithTag("notesList").performScrollToIndex(0)
-        waitForIdle()
-
-        // Pinned notes should be displayed on top of screen
-        onNodeWithText("Lorem Ipsum 49").assertIsDisplayed()
-        onNodeWithText("Lorem Ipsum 50").assertIsDisplayed()
-    }
+            // Pinned notes should be displayed on top of screen
+            onNodeWithText("Lorem Ipsum 49").assertIsDisplayed()
+            onNodeWithText("Lorem Ipsum 50").assertIsDisplayed()
+        }
 
     @Composable
     private fun NotesScreen(
         onNavigateToAbout: () -> Unit = {},
         onNavigateToAddNote: () -> Unit = {},
         onNavigateToNoteDetail: (String) -> Unit = {},
-        onNavigateToLogin: () -> Unit = {}
+        onNavigateToLogin: () -> Unit = {},
     ) {
         NotesScreen(
             viewModel = viewModel(),
             onNavigateToAbout = onNavigateToAbout,
             onNavigateToAddNote = onNavigateToAddNote,
             onNavigateToNoteDetail = onNavigateToNoteDetail,
-            onNavigateToLogin = onNavigateToLogin
+            onNavigateToLogin = onNavigateToLogin,
         )
     }
 
@@ -249,7 +257,7 @@ class NotesScreenTest : NotyScreenTest() {
                 id = it.toString(),
                 title = "$title $it",
                 note = "$note $it",
-                created = currentTime - it.toLong()
+                created = currentTime - it.toLong(),
             )
         }
     }
@@ -264,7 +272,10 @@ class NotesScreenTest : NotyScreenTest() {
     }
 
     @Suppress("SameParameterValue")
-    private fun addNote(title: String, note: String) = object : IdlingResource {
+    private fun addNote(
+        title: String,
+        note: String,
+    ) = object : IdlingResource {
         override var isIdleNow: Boolean = false
 
         init {
@@ -276,42 +287,45 @@ class NotesScreenTest : NotyScreenTest() {
         }
     }
 
-    private fun updateNotePins(noteIds: List<String>) = object : IdlingResource {
-        override var isIdleNow: Boolean = false
+    private fun updateNotePins(noteIds: List<String>) =
+        object : IdlingResource {
+            override var isIdleNow: Boolean = false
 
-        init {
-            GlobalScope.launch {
-                noteIds.forEach { noteId ->
-                    noteRepository.pinNote(noteId, true)
+            init {
+                GlobalScope.launch {
+                    noteIds.forEach { noteId ->
+                        noteRepository.pinNote(noteId, true)
+                    }
+                    delay(1_000)
+                    isIdleNow = true
                 }
-                delay(1_000)
-                isIdleNow = true
             }
         }
-    }
 
     @Suppress("SameParameterValue")
-    private fun deleteNote(id: String) = object : IdlingResource {
-        override var isIdleNow: Boolean = false
+    private fun deleteNote(id: String) =
+        object : IdlingResource {
+            override var isIdleNow: Boolean = false
 
-        init {
-            GlobalScope.launch {
-                noteRepository.deleteNote(id)
-                delay(1_000)
-                isIdleNow = true
+            init {
+                GlobalScope.launch {
+                    noteRepository.deleteNote(id)
+                    delay(1_000)
+                    isIdleNow = true
+                }
             }
         }
-    }
 
-    private fun addNotes(notes: List<Note>) = object : IdlingResource {
-        override var isIdleNow: Boolean = false
+    private fun addNotes(notes: List<Note>) =
+        object : IdlingResource {
+            override var isIdleNow: Boolean = false
 
-        init {
-            GlobalScope.launch {
-                noteRepository.addNotes(notes)
-                delay(1000)
-                isIdleNow = true
+            init {
+                GlobalScope.launch {
+                    noteRepository.addNotes(notes)
+                    delay(1000)
+                    isIdleNow = true
+                }
             }
         }
-    }
 }

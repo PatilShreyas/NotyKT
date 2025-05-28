@@ -24,7 +24,6 @@ import org.junit.Rule
  * A base spec class for testing Composable function.
  */
 abstract class NotyComposableTest {
-
     @JvmField
     @Rule
     val composeTestRule = createComposeRule()

@@ -32,20 +32,21 @@ import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import java.util.*
+import java.util.Date
 
 class NotyLocalNoteRepositoryTest : BehaviorSpec({
     val notesDao: NotesDao = mockk(relaxUnitFun = true)
     val repository = NotyLocalNoteRepository(notesDao)
 
     Given("Notes for addition") {
-        val note = Note(
-            id = "UNIQUE_ID",
-            title = "Lorem Ipsum",
-            note = "This is body of a note!",
-            created = Date().time,
-            isPinned = false
-        )
+        val note =
+            Note(
+                id = "UNIQUE_ID",
+                title = "Lorem Ipsum",
+                note = "This is body of a note!",
+                created = Date().time,
+                isPinned = false,
+            )
 
         val expectedEntity = NoteEntity(note.id, note.title, note.note, note.created, note.isPinned)
 
@@ -91,13 +92,14 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
     }
 
     Given("A note") {
-        val noteEntity = NoteEntity(
-            noteId = "UNIQUE_ID",
-            title = "Lorem Ipsum",
-            note = "This is body of a note!",
-            created = Date().time,
-            isPinned = false
-        )
+        val noteEntity =
+            NoteEntity(
+                noteId = "UNIQUE_ID",
+                title = "Lorem Ipsum",
+                note = "This is body of a note!",
+                created = Date().time,
+                isPinned = false,
+            )
 
         When("Note is observed") {
             coEvery { notesDao.getNoteById(noteEntity.noteId) } returns flowOf(noteEntity)
@@ -203,9 +205,10 @@ class NotyLocalNoteRepositoryTest : BehaviorSpec({
             val notes = repository.getAllNotes().first()
 
             Then("All notes should be retrieved") {
-                (notes as Success).data shouldBe noteEntities.map {
-                    Note(it.noteId, it.title, it.note, it.created, it.isPinned)
-                }
+                (notes as Success).data shouldBe
+                    noteEntities.map {
+                        Note(it.noteId, it.title, it.note, it.created, it.isPinned)
+                    }
             }
         }
 

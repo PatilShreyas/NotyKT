@@ -22,7 +22,7 @@ import retrofit2.Response
 
 inline fun <reified T> errorResponse(
     code: Int,
-    response: T
+    response: T,
 ): Response<T> = Response.error(code, ResponseBody.create(null, response.json))
 
 inline fun <reified T> successResponse(response: T): Response<T> = Response.success(response)

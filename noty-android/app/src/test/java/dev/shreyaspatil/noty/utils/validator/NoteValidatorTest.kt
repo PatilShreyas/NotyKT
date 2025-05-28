@@ -23,16 +23,18 @@ import io.kotest.matchers.collections.shouldNotContain
 class NoteValidatorTest : BehaviorSpec({
     Given("Note title and note content") {
         And("They are valid") {
-            val titleAndNote = listOf(
-                "title" to "content",
-                "    Hey there    " to "Hey there, this is body of a note",
-                "1234" to "Hi"
-            )
+            val titleAndNote =
+                listOf(
+                    "title" to "content",
+                    "    Hey there    " to "Hey there, this is body of a note",
+                    "1234" to "Hi",
+                )
 
             When("Title and note is validated") {
-                val areValid = titleAndNote.map { (title, note) ->
-                    NoteValidator.isValidNote(title, note)
-                }
+                val areValid =
+                    titleAndNote.map { (title, note) ->
+                        NoteValidator.isValidNote(title, note)
+                    }
 
                 Then("Note should be valid") {
                     areValid shouldContain true
@@ -42,16 +44,18 @@ class NoteValidatorTest : BehaviorSpec({
         }
 
         And("They are invalid") {
-            val titleAndNote = listOf(
-                "hi" to "content",
-                "    Hey   " to "Hey there, this is body of a note",
-                "1234" to ""
-            )
+            val titleAndNote =
+                listOf(
+                    "hi" to "content",
+                    "    Hey   " to "Hey there, this is body of a note",
+                    "1234" to "",
+                )
 
             When("Title and note is validated") {
-                val areValid = titleAndNote.map { (title, note) ->
-                    NoteValidator.isValidNote(title, note)
-                }
+                val areValid =
+                    titleAndNote.map { (title, note) ->
+                        NoteValidator.isValidNote(title, note)
+                    }
 
                 Then("Note should be valid") {
                     areValid shouldContain false

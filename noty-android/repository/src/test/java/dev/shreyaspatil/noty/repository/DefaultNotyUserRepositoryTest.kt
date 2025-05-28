@@ -27,7 +27,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.coVerify
 import io.mockk.spyk
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -67,10 +67,11 @@ class DefaultNotyUserRepositoryTest : BehaviorSpec({
 
         When("A user is retrieved by credentials") {
             And("Credentials are valid") {
-                val response = repository.getUserByUsernameAndPassword(
-                    username = "admin",
-                    password = "admin"
-                )
+                val response =
+                    repository.getUserByUsernameAndPassword(
+                        username = "admin",
+                        password = "admin",
+                    )
 
                 Then("User login should be get requested") {
                     coVerify { authService.login(AuthRequest("admin", "admin")) }
@@ -83,10 +84,11 @@ class DefaultNotyUserRepositoryTest : BehaviorSpec({
             }
 
             And("Credentials are invalid") {
-                val response = repository.getUserByUsernameAndPassword(
-                    username = "john",
-                    password = "doe"
-                )
+                val response =
+                    repository.getUserByUsernameAndPassword(
+                        username = "john",
+                        password = "doe",
+                    )
 
                 Then("User login should be get requested") {
                     coVerify { authService.login(AuthRequest("john", "doe")) }
@@ -116,10 +118,11 @@ class FakeAuthService : NotyAuthService {
             Response.success(AuthResponse(State.SUCCESS, "Success", "Bearer ABCD"))
         } else {
             val response = AuthResponse(State.UNAUTHORIZED, "Invalid credentials", null)
-            val body = ResponseBody.create(
-                MediaType.parse("application/json"),
-                moshi.adapter<AuthResponse>().toJson(response)
-            )
+            val body =
+                ResponseBody.create(
+                    "application/json".toMediaTypeOrNull(),
+                    moshi.adapter<AuthResponse>().toJson(response),
+                )
             Response.error(401, body)
         }
     }

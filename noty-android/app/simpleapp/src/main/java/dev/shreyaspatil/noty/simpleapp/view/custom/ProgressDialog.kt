@@ -25,13 +25,12 @@ import dev.shreyaspatil.noty.simpleapp.databinding.LoadingDialogLayoutBinding
 import dev.shreyaspatil.noty.utils.autoCleaned
 
 class ProgressDialog : DialogFragment() {
-
     private var binding: LoadingDialogLayoutBinding by autoCleaned()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = LoadingDialogLayoutBinding.inflate(inflater, container, false)
         return binding.root

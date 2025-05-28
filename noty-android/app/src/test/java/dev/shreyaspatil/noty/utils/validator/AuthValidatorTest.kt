@@ -65,12 +65,13 @@ class AuthValidatorTest : BehaviorSpec({
         }
 
         And("Passwords are invalid") {
-            val passwords = listOf(
-                "12345", // Short
-                "johndoe", // Short
-                "   hey       ", // Including whitespace
-                "123456789012345678901234567890123456789012345678901234567890" // More than 50 chars
-            )
+            val passwords =
+                listOf(
+                    "12345",
+                    "johndoe",
+                    "   hey       ",
+                    "123456789012345678901234567890123456789012345678901234567890",
+                )
 
             When("Passwords are validated") {
                 val arePasswordsValid = passwords.map { AuthValidator.isValidPassword(it) }
@@ -89,10 +90,11 @@ class AuthValidatorTest : BehaviorSpec({
             val confirmPassword = "password1234"
 
             When("They are checked whether they are same") {
-                val areSame = AuthValidator.isPasswordAndConfirmPasswordSame(
-                    password = password,
-                    confirmedPassword = confirmPassword
-                )
+                val areSame =
+                    AuthValidator.isPasswordAndConfirmPasswordSame(
+                        password = password,
+                        confirmedPassword = confirmPassword,
+                    )
 
                 Then("They should be the same") {
                     areSame shouldBe true
@@ -105,10 +107,11 @@ class AuthValidatorTest : BehaviorSpec({
             val confirmPassword = "confirmPassword"
 
             When("They are checked whether they are same") {
-                val areSame = AuthValidator.isPasswordAndConfirmPasswordSame(
-                    password = password,
-                    confirmedPassword = confirmPassword
-                )
+                val areSame =
+                    AuthValidator.isPasswordAndConfirmPasswordSame(
+                        password = password,
+                        confirmedPassword = confirmPassword,
+                    )
 
                 Then("They should NOT be the same") {
                     areSame shouldBe false

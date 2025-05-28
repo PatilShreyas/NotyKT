@@ -1,11 +1,9 @@
 name: Build (Android)
 on:
   push: 
-    paths:
-      - 'noty-android/**'
+    branches: [master]
   pull_request:
-    paths:
-      - 'noty-android/**'
+    branches: [master]
 
 jobs:
   build:
@@ -13,37 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout branch
+        uses: actions/checkout@v3.5.3
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 17
-
-      - name: Cache Gradle and wrapper
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: temurin
+          cache: gradle
 
       - name: Grant Permission to Execute
         run: chmod +x gradlew
         working-directory: noty-android
 
       - name: 🏗 Build with Gradle 🛠️
-        run: ./gradlew build --stacktrace
+        run: ./gradlew ktlintCheck test assembleDebug --stacktrace
         working-directory: noty-android
-
-      - name: 🚀 Upload APK 📱
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: noty-android/**/*.apk
-          retention-days: 3
 
       - name: 📊 Generate compose compiler report ️
         if: github.event_name == 'push'

@@ -26,7 +26,6 @@ import dev.shreyaspatil.noty.task.NotyTaskManagerImpl
 @Module
 @InstallIn(SingletonComponent::class)
 interface NotyTaskManagerModule {
-
     @Binds
     fun notyTaskManager(notyTaskManager: NotyTaskManagerImpl): NotyTaskManager
 }

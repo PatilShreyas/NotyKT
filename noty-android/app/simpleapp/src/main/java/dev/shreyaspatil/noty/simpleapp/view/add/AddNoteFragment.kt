@@ -32,7 +32,6 @@ import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 
 @AndroidEntryPoint
 class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteState, AddNoteViewModel>() {
-
     override val viewModel: AddNoteViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun initView() {
@@ -63,7 +62,7 @@ class AddNoteFragment : BaseFragment<AddNoteFragmentBinding, AddNoteState, AddNo
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = AddNoteFragmentBinding.inflate(inflater, container, false)
 
     override fun onDestroyView() {

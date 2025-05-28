@@ -18,7 +18,7 @@ package dev.shreyaspatil.noty.core.repository
 
 import dev.shreyaspatil.noty.core.model.Note
 import kotlinx.coroutines.flow.Flow
-import java.util.*
+import java.util.UUID
 import javax.inject.Singleton
 
 /**
@@ -26,7 +26,6 @@ import javax.inject.Singleton
  */
 @Singleton
 interface NotyNoteRepository {
-
     /**
      * Returns a note
      *
@@ -45,7 +44,10 @@ interface NotyNoteRepository {
      * @param title Title of a note
      * @param note Body of a note
      */
-    suspend fun addNote(title: String, note: String): Either<String>
+    suspend fun addNote(
+        title: String,
+        note: String,
+    ): Either<String>
 
     /**
      * Adds a list of notes. Replaces notes if already exists
@@ -62,7 +64,7 @@ interface NotyNoteRepository {
     suspend fun updateNote(
         noteId: String,
         title: String,
-        note: String
+        note: String,
     ): Either<String>
 
     /**
@@ -73,7 +75,10 @@ interface NotyNoteRepository {
     /**
      * Pins/unpins a note having ID [noteId] based on [isPinned]
      */
-    suspend fun pinNote(noteId: String, isPinned: Boolean): Either<String>
+    suspend fun pinNote(
+        noteId: String,
+        isPinned: Boolean,
+    ): Either<String>
 
     /**
      * Deletes all notes.
@@ -83,11 +88,16 @@ interface NotyNoteRepository {
     /**
      * Updates ID of a note
      */
-    suspend fun updateNoteId(oldNoteId: String, newNoteId: String)
+    suspend fun updateNoteId(
+        oldNoteId: String,
+        newNoteId: String,
+    )
 
     companion object {
         private const val PREFIX_TEMP_NOTE_ID = "TMP"
+
         fun generateTemporaryId() = "$PREFIX_TEMP_NOTE_ID-${UUID.randomUUID()}"
+
         fun isTemporaryNote(noteId: String) = noteId.startsWith(PREFIX_TEMP_NOTE_ID)
     }
 }

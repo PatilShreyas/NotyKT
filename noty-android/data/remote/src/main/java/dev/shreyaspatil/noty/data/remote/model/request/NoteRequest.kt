@@ -18,5 +18,5 @@ package dev.shreyaspatil.noty.data.remote.model.request
 
 data class NoteRequest(
     val title: String,
-    val note: String
+    val note: String,
 )

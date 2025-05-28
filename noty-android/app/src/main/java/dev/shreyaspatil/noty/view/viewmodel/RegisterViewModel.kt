@@ -30,77 +30,79 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(
-    private val notyUserRepository: NotyUserRepository,
-    private val sessionManager: SessionManager
-) : BaseViewModel<RegisterState>() {
+class RegisterViewModel
+    @Inject
+    constructor(
+        private val notyUserRepository: NotyUserRepository,
+        private val sessionManager: SessionManager,
+    ) : BaseViewModel<RegisterState>() {
+        private val stateStore = StateStore(initialState = RegisterState.initialState.mutable())
 
-    private val stateStore = StateStore(initialState = RegisterState.initialState.mutable())
+        override val state: StateFlow<RegisterState> = stateStore.state
 
-    override val state: StateFlow<RegisterState> = stateStore.state
+        fun setUsername(username: String) {
+            setState { this.username = username }
+        }
 
-    fun setUsername(username: String) {
-        setState { this.username = username }
-    }
+        fun setPassword(password: String) {
+            setState { this.password = password }
+        }
 
-    fun setPassword(password: String) {
-        setState { this.password = password }
-    }
+        fun setConfirmPassword(password: String) {
+            setState { this.confirmPassword = password }
+        }
 
-    fun setConfirmPassword(password: String) {
-        setState { this.confirmPassword = password }
-    }
+        fun register() {
+            if (!validateCredentials()) return
 
-    fun register() {
-        if (!validateCredentials()) return
+            viewModelScope.launch {
+                val username = currentState.username
+                val password = currentState.password
 
-        viewModelScope.launch {
-            val username = currentState.username
-            val password = currentState.password
+                setState { isLoading = true }
 
-            setState { isLoading = true }
+                val response = notyUserRepository.addUser(username, password)
 
-            val response = notyUserRepository.addUser(username, password)
-
-            response.onSuccess { authCredential ->
-                sessionManager.saveToken(authCredential.token)
-                setState {
-                    isLoading = false
-                    isLoggedIn = true
-                    error = null
-                }
-            }.onFailure { message ->
-                setState {
-                    isLoading = false
-                    error = message
-                    isLoggedIn = false
+                response.onSuccess { authCredential ->
+                    sessionManager.saveToken(authCredential.token)
+                    setState {
+                        isLoading = false
+                        isLoggedIn = true
+                        error = null
+                    }
+                }.onFailure { message ->
+                    setState {
+                        isLoading = false
+                        error = message
+                        isLoggedIn = false
+                    }
                 }
             }
         }
-    }
 
-    fun clearError() = setState { error = null }
+        fun clearError() = setState { error = null }
 
-    private fun validateCredentials(): Boolean {
-        val username = currentState.username
-        val password = currentState.password
-        val confirmPassword = currentState.confirmPassword
+        private fun validateCredentials(): Boolean {
+            val username = currentState.username
+            val password = currentState.password
+            val confirmPassword = currentState.confirmPassword
 
-        val isValidUsername = AuthValidator.isValidUsername(username)
-        val isValidPassword = AuthValidator.isValidPassword(password)
-        val arePasswordAndConfirmPasswordSame = AuthValidator.isPasswordAndConfirmPasswordSame(
-            password,
-            confirmPassword
-        )
+            val isValidUsername = AuthValidator.isValidUsername(username)
+            val isValidPassword = AuthValidator.isValidPassword(password)
+            val arePasswordAndConfirmPasswordSame =
+                AuthValidator.isPasswordAndConfirmPasswordSame(
+                    password,
+                    confirmPassword,
+                )
 
-        setState {
-            this.isValidUsername = isValidUsername
-            this.isValidPassword = isValidPassword
-            this.isValidConfirmPassword = arePasswordAndConfirmPasswordSame
+            setState {
+                this.isValidUsername = isValidUsername
+                this.isValidPassword = isValidPassword
+                this.isValidConfirmPassword = arePasswordAndConfirmPasswordSame
+            }
+
+            return isValidUsername && isValidPassword && arePasswordAndConfirmPasswordSame
         }
 
-        return isValidUsername && isValidPassword && arePasswordAndConfirmPasswordSame
+        private fun setState(update: MutableRegisterState.() -> Unit) = stateStore.setState(update)
     }
-
-    private fun setState(update: MutableRegisterState.() -> Unit) = stateStore.setState(update)
-}

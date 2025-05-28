@@ -30,13 +30,14 @@ interface AddNoteState : State {
     val errorMessage: String?
 
     companion object {
-        val initialState = AddNoteState(
-            title = "",
-            note = "",
-            showSave = false,
-            isAdding = false,
-            added = false,
-            errorMessage = null
-        )
+        val initialState =
+            AddNoteState(
+                title = "",
+                note = "",
+                showSave = false,
+                isAdding = false,
+                added = false,
+                errorMessage = null,
+            )
     }
 }

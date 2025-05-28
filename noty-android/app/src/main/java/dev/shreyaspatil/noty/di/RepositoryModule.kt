@@ -30,7 +30,6 @@ import javax.inject.Qualifier
 @Module
 @InstallIn(SingletonComponent::class)
 interface RepositoryModule {
-
     @Binds
     fun notyAuthRepository(notyAuthRepository: DefaultNotyUserRepository): NotyUserRepository
 

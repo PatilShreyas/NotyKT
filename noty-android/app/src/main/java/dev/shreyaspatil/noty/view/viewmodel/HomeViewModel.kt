@@ -25,17 +25,18 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    sessionManager: SessionManager
-) : BaseViewModel<HomeState>() {
+class HomeViewModel
+    @Inject
+    constructor(
+        sessionManager: SessionManager,
+    ) : BaseViewModel<HomeState>() {
+        private val stateStore = StateStore(initialState = HomeState.initialState.mutable())
 
-    private val stateStore = StateStore(initialState = HomeState.initialState.mutable())
+        override val state: StateFlow<HomeState> = stateStore.state
 
-    override val state: StateFlow<HomeState> = stateStore.state
-
-    init {
-        stateStore.setState {
-            isLoggedIn = sessionManager.getToken() != null
+        init {
+            stateStore.setState {
+                isLoggedIn = sessionManager.getToken() != null
+            }
         }
     }
-}

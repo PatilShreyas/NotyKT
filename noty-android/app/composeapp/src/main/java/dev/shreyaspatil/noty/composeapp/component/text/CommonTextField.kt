@@ -52,7 +52,7 @@ fun NotyTextField(
     isError: Boolean = false,
     helperText: String = "",
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    trailingIcon: @Composable (() -> Unit)? = null
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     Surface(modifier) {
         Column {
@@ -66,7 +66,7 @@ fun NotyTextField(
                 isError = isError,
                 visualTransformation = visualTransformation,
                 shape = RoundedCornerShape(8.dp),
-                trailingIcon = trailingIcon
+                trailingIcon = trailingIcon,
             )
             if (helperText.isNotEmpty()) {
                 Spacer(modifier = Modifier.padding(2.dp))
@@ -83,7 +83,7 @@ fun BasicNotyTextField(
     label: String = "",
     textStyle: TextStyle = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Normal),
     onTextChange: (String) -> Unit,
-    maxLines: Int = Int.MAX_VALUE
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     BasicTextField(
         modifier = modifier,
@@ -97,10 +97,10 @@ fun BasicNotyTextField(
                 Text(
                     text = label,
                     color = getTextFieldHintColor(),
-                    style = textStyle
+                    style = textStyle,
                 )
             }
             inlineTextField()
-        }
+        },
     )
 }

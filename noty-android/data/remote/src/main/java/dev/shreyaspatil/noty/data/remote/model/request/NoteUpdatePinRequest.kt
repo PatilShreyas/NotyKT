@@ -21,5 +21,5 @@ package dev.shreyaspatil.noty.data.remote.model.request
  * @since 07,October,2022
  */
 data class NoteUpdatePinRequest(
-    val isPinned: Boolean
+    val isPinned: Boolean,
 )

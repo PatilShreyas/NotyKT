@@ -58,7 +58,7 @@ fun NotesScreen(
     onNavigateToAbout: () -> Unit,
     onNavigateToAddNote: () -> Unit,
     onNavigateToNoteDetail: (String) -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
 ) {
     val state by viewModel.collectState()
 
@@ -77,13 +77,13 @@ fun NotesScreen(
         onAboutClick = onNavigateToAbout,
         onAddNoteClick = onNavigateToAddNote,
         onLogoutClick = { showLogoutConfirmation = true },
-        onNavigateToNoteDetail = onNavigateToNoteDetail
+        onNavigateToNoteDetail = onNavigateToNoteDetail,
     )
 
     LogoutConfirmation(
         show = showLogoutConfirmation,
         onConfirm = viewModel::logout,
-        onDismiss = { showLogoutConfirmation = false }
+        onDismiss = { showLogoutConfirmation = false },
     )
 
     val isUserLoggedIn = state.isUserLoggedIn
@@ -106,7 +106,7 @@ fun NotesContent(
     onAboutClick: () -> Unit,
     onAddNoteClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    onNavigateToNoteDetail: (String) -> Unit
+    onNavigateToNoteDetail: (String) -> Unit,
 ) {
     NotyScaffold(
         error = error,
@@ -116,18 +116,20 @@ fun NotesContent(
                     ThemeSwitchAction(onToggleTheme)
                     AboutAction(onAboutClick)
                     LogoutAction(onLogout = onLogoutClick)
-                }
+                },
             )
         },
         content = {
-            val pullRefreshState = rememberPullRefreshState(
-                refreshing = isLoading,
-                onRefresh = onRefresh
-            )
+            val pullRefreshState =
+                rememberPullRefreshState(
+                    refreshing = isLoading,
+                    onRefresh = onRefresh,
+                )
             Box(
-                modifier = Modifier
-                    .pullRefresh(pullRefreshState)
-                    .fillMaxSize()
+                modifier =
+                    Modifier
+                        .pullRefresh(pullRefreshState)
+                        .fillMaxSize(),
             ) {
                 Column {
                     if (isConnectivityAvailable != null) {
@@ -139,34 +141,38 @@ fun NotesContent(
                 PullRefreshIndicator(
                     refreshing = isLoading,
                     state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    modifier = Modifier.align(Alignment.TopCenter),
                 )
             }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddNoteClick,
-                backgroundColor = MaterialTheme.colors.primary
+                backgroundColor = MaterialTheme.colors.primary,
             ) {
                 Icon(
                     Icons.Filled.Add,
                     "Add",
-                    tint = Color.White
+                    tint = Color.White,
                 )
             }
-        }
+        },
     )
 }
 
 @Composable
-fun LogoutConfirmation(show: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun LogoutConfirmation(
+    show: Boolean,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     if (show) {
         ConfirmationDialog(
             title = "Logout?",
             message = "Sure want to logout?",
             onConfirmedYes = onConfirm,
             onConfirmedNo = onDismiss,
-            onDismissed = onDismiss
+            onDismissed = onDismiss,
         )
     }
 }

@@ -30,25 +30,28 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface NotyService {
-
     @GET("/notes")
     suspend fun getAllNotes(): Response<NotesResponse>
 
     @POST("/note/new")
-    suspend fun addNote(@Body noteRequest: NoteRequest): Response<NoteResponse>
+    suspend fun addNote(
+        @Body noteRequest: NoteRequest,
+    ): Response<NoteResponse>
 
     @PUT("/note/{noteId}")
     suspend fun updateNote(
         @Path("noteId") noteId: String,
-        @Body noteRequest: NoteRequest
+        @Body noteRequest: NoteRequest,
     ): Response<NoteResponse>
 
     @DELETE("/note/{noteId}")
-    suspend fun deleteNote(@Path("noteId") noteId: String): Response<NoteResponse>
+    suspend fun deleteNote(
+        @Path("noteId") noteId: String,
+    ): Response<NoteResponse>
 
     @PATCH("/note/{noteId}/pin")
     suspend fun updateNotePin(
         @Path("noteId") noteId: String,
-        @Body noteRequest: NoteUpdatePinRequest
+        @Body noteRequest: NoteUpdatePinRequest,
     ): Response<NoteResponse>
 }

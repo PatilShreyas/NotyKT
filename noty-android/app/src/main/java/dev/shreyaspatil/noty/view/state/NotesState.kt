@@ -30,12 +30,13 @@ interface NotesState : State {
     val isConnectivityAvailable: Boolean?
 
     companion object {
-        val initialState = NotesState(
-            isLoading = false,
-            notes = emptyList(),
-            error = null,
-            isUserLoggedIn = null,
-            isConnectivityAvailable = null
-        )
+        val initialState =
+            NotesState(
+                isLoading = false,
+                notes = emptyList(),
+                error = null,
+                isUserLoggedIn = null,
+                isConnectivityAvailable = null,
+            )
     }
 }

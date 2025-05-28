@@ -31,14 +31,15 @@ interface NoteDetailState : State {
     val error: String?
 
     companion object {
-        val initialState = NoteDetailState(
-            isLoading = false,
-            title = null,
-            note = null,
-            isPinned = false,
-            showSave = false,
-            finished = false,
-            error = null
-        )
+        val initialState =
+            NoteDetailState(
+                isLoading = false,
+                title = null,
+                note = null,
+                isPinned = false,
+                showSave = false,
+                finished = false,
+                error = null,
+            )
     }
 }

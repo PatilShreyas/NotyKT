@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotesDao {
-
     /**
      * The return type of this method is nullable because internally it throws an error if
      * entity doesn't exist.
@@ -51,7 +50,11 @@ interface NotesDao {
     suspend fun addNotes(notes: List<NoteEntity>)
 
     @Query("UPDATE notes SET title = :title, note = :note WHERE noteId = :noteId")
-    suspend fun updateNoteById(noteId: String, title: String, note: String)
+    suspend fun updateNoteById(
+        noteId: String,
+        title: String,
+        note: String,
+    )
 
     @Query("DELETE FROM notes WHERE noteId = :noteId")
     suspend fun deleteNoteById(noteId: String)
@@ -60,8 +63,14 @@ interface NotesDao {
     suspend fun deleteAllNotes()
 
     @Query("UPDATE notes SET noteId = :newNoteId WHERE noteId = :oldNoteId")
-    fun updateNoteId(oldNoteId: String, newNoteId: String)
+    fun updateNoteId(
+        oldNoteId: String,
+        newNoteId: String,
+    )
 
     @Query("UPDATE notes SET isPinned = :isPinned WHERE noteId = :noteId")
-    suspend fun updateNotePin(noteId: String, isPinned: Boolean)
+    suspend fun updateNotePin(
+        noteId: String,
+        isPinned: Boolean,
+    )
 }

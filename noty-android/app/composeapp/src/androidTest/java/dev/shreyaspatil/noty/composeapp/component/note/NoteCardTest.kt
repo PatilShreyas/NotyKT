@@ -24,27 +24,27 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class NoteCardTest : NotyComposableTest() {
-
     @Test
-    fun testNoteCard() = runTest {
-        var clickCount = 0
-        setContent {
-            NoteCard(title = "Lorem Ipsum", note = "Hello World", isPinned = false) {
-                clickCount++
+    fun testNoteCard() =
+        runTest {
+            var clickCount = 0
+            setContent {
+                NoteCard(title = "Lorem Ipsum", note = "Hello World", isPinned = false) {
+                    clickCount++
+                }
             }
+
+            val titleNode = onNodeWithText("Lorem Ipsum")
+            val noteNode = onNodeWithText("Hello World")
+
+            // Title and note should be displayed
+            titleNode.assertIsDisplayed()
+            noteNode.assertIsDisplayed()
+
+            // Perform click twice
+            titleNode.performClick()
+            noteNode.performClick()
+
+            assertEquals(2, clickCount)
         }
-
-        val titleNode = onNodeWithText("Lorem Ipsum")
-        val noteNode = onNodeWithText("Hello World")
-
-        // Title and note should be displayed
-        titleNode.assertIsDisplayed()
-        noteNode.assertIsDisplayed()
-
-        // Perform click twice
-        titleNode.performClick()
-        noteNode.performClick()
-
-        assertEquals(2, clickCount)
-    }
 }

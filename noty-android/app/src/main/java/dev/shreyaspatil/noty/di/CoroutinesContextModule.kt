@@ -28,7 +28,6 @@ import kotlin.coroutines.EmptyCoroutineContext
 @InstallIn(SingletonComponent::class)
 @Module
 object CoroutinesContextModule {
-
     @DefaultDispatcher
     @Provides
     fun providesDefaultDispatcher(): CoroutineContext = Dispatchers.Default

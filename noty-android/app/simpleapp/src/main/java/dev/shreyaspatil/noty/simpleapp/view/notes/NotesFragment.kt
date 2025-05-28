@@ -50,12 +50,14 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewModel>() {
-
     override val viewModel: NotesViewModel by hiltNotyMainNavGraphViewModels()
 
     private val notesListAdapter by autoCleaned(initializer = { NotesListAdapter(::onNoteClicked) })
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         setupMenu()
@@ -70,7 +72,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
             swipeRefreshNotes.apply {
                 setColorSchemeColors(
                     ContextCompat.getColor(requireContext(), R.color.secondaryColor),
-                    ContextCompat.getColor(requireContext(), R.color.onSecondary)
+                    ContextCompat.getColor(requireContext(), R.color.onSecondary),
                 )
                 setOnRefreshListener { viewModel.syncNotes() }
             }
@@ -114,7 +116,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private fun onNoteClicked(note: Note) {
         findNavController().navigate(
-            NotesFragmentDirections.actionNotesFragmentToNoteDetailFragment(note.id)
+            NotesFragmentDirections.actionNotesFragmentToNoteDetailFragment(note.id),
         )
     }
 
@@ -124,15 +126,15 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                 setDrawableLeft(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_connectivity_unavailable
-                    )
+                        R.drawable.ic_connectivity_unavailable,
+                    ),
                 )
                 text = getString(R.string.text_no_connectivity)
             }
 
             networkStatusLayout.apply {
                 setBackgroundColor(
-                    ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme)
+                    ResourcesCompat.getColor(resources, R.color.error, requireActivity().theme),
                 )
             }.also { it.show() }
         }
@@ -140,15 +142,17 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private fun onConnectivityAvailable() {
         viewLifecycleOwner.lifecycleScope.launch {
-            if (shouldSyncNotes()) { viewModel.syncNotes() }
+            if (shouldSyncNotes()) {
+                viewModel.syncNotes()
+            }
         }
         with(binding) {
             textNetworkStatus.apply {
                 setDrawableLeft(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_connectivity_available
-                    )
+                        R.drawable.ic_connectivity_available,
+                    ),
                 )
                 text = getString(R.string.text_connectivity)
             }
@@ -158,19 +162,21 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     ResourcesCompat.getColor(
                         resources,
                         R.color.success,
-                        requireActivity().theme
-                    )
+                        requireActivity().theme,
+                    ),
                 )
             }.also {
                 it.animate()
                     .alpha(1f)
                     .setStartDelay(ANIMATION_DURATION)
                     .setDuration(ANIMATION_DURATION)
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            it.hide()
-                        }
-                    })
+                    .setListener(
+                        object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                it.hide()
+                            }
+                        },
+                    )
             }
         }
     }
@@ -181,7 +187,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = NotesFragmentBinding.inflate(inflater, container, false)
 
     private fun confirmLogout() {
@@ -193,7 +199,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
             negativeActionText = "No",
             negativeAction = { dialog, _ ->
                 dialog.dismiss()
-            }
+            },
         )
     }
 
@@ -215,7 +221,6 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
         menuHost.addMenuProvider(
             object : MenuProvider {
-
                 override fun onPrepareMenu(menu: Menu) {
                     viewLifecycleOwner.lifecycleScope.launch {
                         when (viewModel.isDarkModeEnabled()) {
@@ -230,7 +235,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     }
                 }
 
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    menuInflater: MenuInflater,
+                ) {
                     menuInflater.inflate(R.menu.main_menu, menu)
                 }
 
@@ -246,7 +254,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                 }
             },
             viewLifecycleOwner,
-            Lifecycle.State.RESUMED
+            Lifecycle.State.RESUMED,
         )
     }
 

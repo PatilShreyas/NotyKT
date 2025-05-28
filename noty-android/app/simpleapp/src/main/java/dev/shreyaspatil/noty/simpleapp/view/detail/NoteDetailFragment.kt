@@ -53,7 +53,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class NoteDetailFragment :
     BaseFragment<NoteDetailFragmentBinding, NoteDetailState, NoteDetailViewModel>() {
-
     private val args: NoteDetailFragmentArgs by navArgs()
 
     @Inject
@@ -77,20 +76,24 @@ class NoteDetailFragment :
         } ?: throw IllegalStateException("'noteId' shouldn't be null")
     }
 
-    private val requestLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            shareImage()
-        } else {
-            showErrorDialog(
-                title = getString(R.string.dialog_title_failed_image_share),
-                message = getString(R.string.dialog_message_failed_image_share)
-            )
+    private val requestLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission(),
+        ) { isGranted ->
+            if (isGranted) {
+                shareImage()
+            } else {
+                showErrorDialog(
+                    title = getString(R.string.dialog_title_failed_image_share),
+                    message = getString(R.string.dialog_message_failed_image_share),
+                )
+            }
         }
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         setupMenu()
@@ -142,7 +145,10 @@ class NoteDetailFragment :
                     super.onPrepareMenu(menu)
                 }
 
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    menuInflater: MenuInflater,
+                ) {
                     menuInflater.inflate(R.menu.note_menu, menu)
                 }
 
@@ -157,7 +163,7 @@ class NoteDetailFragment :
                 }
             },
             viewLifecycleOwner,
-            Lifecycle.State.RESUMED
+            Lifecycle.State.RESUMED,
         )
     }
 
@@ -181,24 +187,26 @@ class NoteDetailFragment :
             return
         }
 
-        val imageUri = binding.noteLayout.noteContentLayout.drawToBitmap().let { bitmap ->
-            saveBitmap(requireActivity(), bitmap)
-        } ?: run {
-            toast("Error occurred!")
-            return
-        }
+        val imageUri =
+            binding.noteLayout.noteContentLayout.drawToBitmap().let { bitmap ->
+                saveBitmap(requireActivity(), bitmap)
+            } ?: run {
+                toast("Error occurred!")
+                return
+            }
 
         requireContext().shareImage(imageUri)
     }
 
-    private fun isStoragePermissionGranted(): Boolean = ContextCompat.checkSelfPermission(
-        requireContext(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    ) == PackageManager.PERMISSION_GRANTED
+    private fun isStoragePermissionGranted(): Boolean =
+        ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        ) == PackageManager.PERMISSION_GRANTED
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = NoteDetailFragmentBinding.inflate(inflater, container, false)
 
     private fun confirmNoteDeletion() {
@@ -212,7 +220,7 @@ class NoteDetailFragment :
             negativeActionText = "No",
             negativeAction = { dialog, _ ->
                 dialog.dismiss()
-            }
+            },
         )
     }
 }

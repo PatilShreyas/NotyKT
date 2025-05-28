@@ -27,10 +27,13 @@ import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
 import dev.shreyaspatil.noty.core.model.Note
 
 @Composable
-fun NotesList(notes: ComposeImmutableList<Note>, onClick: (Note) -> Unit) {
+fun NotesList(
+    notes: ComposeImmutableList<Note>,
+    onClick: (Note) -> Unit,
+) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 4.dp),
-        modifier = Modifier.testTag("notesList")
+        modifier = Modifier.testTag("notesList"),
     ) {
         items(
             items = notes,
@@ -39,10 +42,10 @@ fun NotesList(notes: ComposeImmutableList<Note>, onClick: (Note) -> Unit) {
                     title = note.title,
                     note = note.note,
                     isPinned = note.isPinned,
-                    onNoteClick = { onClick(note) }
+                    onNoteClick = { onClick(note) },
                 )
             },
-            key = { Triple(it.id, it.title, it.note) }
+            key = { Triple(it.id, it.title, it.note) },
         )
     }
 }

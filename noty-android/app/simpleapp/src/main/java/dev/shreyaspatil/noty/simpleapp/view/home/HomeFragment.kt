@@ -32,7 +32,6 @@ import dev.shreyaspatil.noty.view.viewmodel.HomeViewModel
  */
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeFragmentBinding, HomeState, HomeViewModel>() {
-
     override val viewModel: HomeViewModel by hiltNotyMainNavGraphViewModels()
 
     override fun initView() {}
@@ -40,16 +39,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding, HomeState, HomeViewModel>
     override fun render(state: HomeState) {
         val isLoggedIn = state.isLoggedIn ?: return
 
-        val destination = if (isLoggedIn) {
-            R.id.action_homeFragment_to_loginFragment
-        } else {
-            R.id.action_homeFragment_to_notesFragment
-        }
+        val destination =
+            if (isLoggedIn) {
+                R.id.action_homeFragment_to_loginFragment
+            } else {
+                R.id.action_homeFragment_to_notesFragment
+            }
         findNavController().navigate(destination)
     }
 
     override fun getViewBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = HomeFragmentBinding.inflate(inflater, container, false)
 }

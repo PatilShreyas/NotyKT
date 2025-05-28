@@ -33,7 +33,7 @@ fun NotyScaffold(
     content: @Composable (PaddingValues) -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     isLoading: Boolean = false,
-    error: String? = null
+    error: String? = null,
 ) {
     if (isLoading) {
         LoaderDialog()
@@ -45,6 +45,6 @@ fun NotyScaffold(
         modifier = modifier,
         topBar = notyTopAppBar,
         content = content,
-        floatingActionButton = floatingActionButton
+        floatingActionButton = floatingActionButton,
     )
 }
