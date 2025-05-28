@@ -28,15 +28,8 @@ jobs:
         working-directory: noty-android
 
       - name: 🏗 Build with Gradle 🛠️
-        run: ./gradlew build --stacktrace
+        run: ./gradlew ktlintCheck test assembleDebug --stacktrace
         working-directory: noty-android
-
-      - name: 🚀 Upload APK 📱
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: noty-android/**/*.apk
-          retention-days: 3
 
       - name: 📊 Generate compose compiler report ️
         if: github.event_name == 'push'
