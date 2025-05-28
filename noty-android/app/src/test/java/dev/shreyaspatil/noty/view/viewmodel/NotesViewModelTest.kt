@@ -57,7 +57,11 @@ class NotesViewModelTest : ViewModelBehaviorSpec({
             every { getToken() } returns "TEST_TOKEN"
         }
     val preferenceManager: PreferenceManager = mockk(relaxUnitFun = true)
-    val taskManager: NotyTaskManager = mockk(relaxUnitFun = true)
+    val defaultTaskId = UUID.randomUUID()
+    val taskManager: NotyTaskManager = mockk(relaxUnitFun = true) {
+        every { syncNotes() } returns defaultTaskId
+        every { observeTask(defaultTaskId) } returns flowOf(TaskState.SCHEDULED, TaskState.COMPLETED)
+    }
     val connectivityObserver = spyk(FakeConnectivityObserver())
 
     val viewModel =
