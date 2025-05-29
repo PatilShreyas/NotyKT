@@ -1,6 +1,7 @@
 plugins {
     application
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 group = "dev.shreyaspatil.noty.application"
@@ -32,15 +33,24 @@ dependencies {
     implementation(libs.ktor.server.auth)
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.status.pages)
     implementation(libs.ktor.serialization)
 
     // Logging
     implementation(libs.logback)
 
+    // Dagger
+    implementation(libs.dagger)
+    ksp(libs.dagger.compiler)
+
     // Testing
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.testcontainers.core)
     testImplementation(libs.testcontainers.postgres)
+    testImplementation(libs.kotest.runner)
+    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.kotest.property)
 }
 
 tasks.named("build") {

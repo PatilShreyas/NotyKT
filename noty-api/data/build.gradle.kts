@@ -8,19 +8,6 @@ plugins {
 group = "dev.shreyaspatil.noty.data"
 version = "0.1.0"
 
-sourceSets {
-    main {
-        kotlin.srcDirs("src")
-        java.srcDirs("src")
-        resources.srcDirs("resources")
-    }
-    test {
-        kotlin.srcDirs("test")
-        java.srcDirs("test")
-        resources.srcDirs("testresources")
-    }
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInt())
