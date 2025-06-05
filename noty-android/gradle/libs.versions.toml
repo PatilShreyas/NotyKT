@@ -26,7 +26,7 @@ lifecycle = "2.9.0"
 navigation = "2.9.0"
 workmanager = "2.10.1"
 dataStore = "1.1.7"
-securityCrypto = "1.1.0-alpha07"
+securityCrypto = "1.1.0-beta01"
 room = "2.7.1"
 
 # Compose
