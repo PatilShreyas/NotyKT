@@ -2,8 +2,12 @@ name: Build (Android)
 on:
   push: 
     branches: [master]
+    paths:
+      - 'noty-android/**'
   pull_request:
     branches: [master]
+    paths:
+      - 'noty-android/**'
 
 jobs:
   build:
@@ -28,6 +32,15 @@ jobs:
       - name: 🏗 Build with Gradle 🛠️
         run: ./gradlew ktlintCheck test assembleDebug --stacktrace
         working-directory: noty-android
+        
+      - name: 🧪 Run UI Tests
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: default
+          arch: x86
+          disable-animations: true
+          script: cd noty-android && ./gradlew :app:composeapp:connectedCheck --stacktrace
 
       - name: 📊 Generate compose compiler report ️
         if: github.event_name == 'push'
