@@ -40,9 +40,10 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContainIgnoringCase
 import io.kotest.matchers.string.shouldInclude
 import io.ktor.server.config.MapApplicationConfig
-import io.ktor.server.testing.*
+import io.ktor.server.testing.ApplicationTestBuilder
+import io.ktor.server.testing.testApplication
 import org.testcontainers.containers.PostgreSQLContainer
-import java.util.*
+import java.util.UUID
 
 @Suppress("unused")
 class ApplicationTest : AnnotationSpec() {
@@ -419,10 +420,5 @@ class ApplicationTest : AnnotationSpec() {
         sqlContainer.stop()
     }
 
-    inner class DatabaseContainer : PostgreSQLContainer<DatabaseContainer>()
+    inner class DatabaseContainer : PostgreSQLContainer<DatabaseContainer>("postgres")
 }
-
-data class FailedResponse(
-    val status: String,
-    val message: String
-)
