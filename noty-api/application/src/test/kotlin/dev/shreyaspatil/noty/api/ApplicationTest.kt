@@ -146,7 +146,7 @@ class ApplicationTest : AnnotationSpec() {
     fun whenProvidedInvalidCredentials_shouldFailAndShowError() = testApp {
         post(
             "/auth/login",
-            AuthRequest("usernotexists", "test1234").toJson()
+            AuthRequest("usernotexists", "test1234").toJson(),
         ).toModel<AuthResponse>().let {
             it.status shouldBe State.UNAUTHORIZED
             it.message shouldBe "Invalid credentials"
@@ -178,7 +178,7 @@ class ApplicationTest : AnnotationSpec() {
     fun whenProvidedInvalidNoteBody_shouldThrowException() = testApp {
         val token = post(
             "/auth/register",
-            AuthRequest("newnoteuser", "newnoteuser1234").toJson()
+            AuthRequest("newnoteuser", "newnoteuser1234").toJson(),
         ).toModel<AuthResponse>().token
 
         shouldThrow<BadRequestException> {
@@ -199,7 +199,7 @@ class ApplicationTest : AnnotationSpec() {
         // Create user
         val authResponse = post(
             "/auth/register",
-            AuthRequest("notemaster", "notemaster").toJson()
+            AuthRequest("notemaster", "notemaster").toJson(),
         ).toModel<AuthResponse>()
 
         // Create note
@@ -208,7 +208,7 @@ class ApplicationTest : AnnotationSpec() {
         val newNoteResponse = post(
             "/note/new",
             newNoteJson,
-            "Bearer ${authResponse.token}"
+            "Bearer ${authResponse.token}",
         ).toModel<NoteResponse>()
 
         newNoteResponse.status shouldBe State.SUCCESS
@@ -232,7 +232,7 @@ class ApplicationTest : AnnotationSpec() {
         put(
             "/note/${newNoteResponse.noteId}",
             updateRequest,
-            "Bearer ${authResponse.token}"
+            "Bearer ${authResponse.token}",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.SUCCESS
             response.noteId shouldNotBe null
@@ -243,7 +243,7 @@ class ApplicationTest : AnnotationSpec() {
         patch(
             "/note/${newNoteResponse.noteId}/pin",
             pinRequest,
-            "Bearer ${authResponse.token}"
+            "Bearer ${authResponse.token}",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.SUCCESS
             response.noteId shouldNotBe null
@@ -265,7 +265,7 @@ class ApplicationTest : AnnotationSpec() {
         patch(
             "/note/${newNoteResponse.noteId}/pin",
             unpinRequest,
-            "Bearer ${authResponse.token}"
+            "Bearer ${authResponse.token}",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.SUCCESS
             response.noteId shouldNotBe null
@@ -286,7 +286,7 @@ class ApplicationTest : AnnotationSpec() {
         // Delete note
         delete(
             "/note/${newNoteResponse.noteId}",
-            "Bearer ${authResponse.token}"
+            "Bearer ${authResponse.token}",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.SUCCESS
             response.noteId shouldNotBe null
@@ -304,13 +304,13 @@ class ApplicationTest : AnnotationSpec() {
         // Create User A
         val userTokenA = post(
             "/auth/register",
-            AuthRequest("userA", "userA1234").toJson()
+            AuthRequest("userA", "userA1234").toJson(),
         ).toModel<AuthResponse>().token
 
         // Create User B
         val userTokenB = post(
             "/auth/register",
-            AuthRequest("userB", "userB1234").toJson()
+            AuthRequest("userB", "userB1234").toJson(),
         ).toModel<AuthResponse>().token
 
         // User A creates note
@@ -318,14 +318,14 @@ class ApplicationTest : AnnotationSpec() {
         val noteId = post(
             "/note/new",
             noteRequest,
-            "Bearer $userTokenA"
+            "Bearer $userTokenA",
         ).toModel<NoteResponse>().noteId
 
         // User B tries to delete note created by user A
         // Should show access denied (Unauthorized access) message.
         delete(
             "/note/$noteId",
-            "Bearer $userTokenB"
+            "Bearer $userTokenB",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.UNAUTHORIZED
             response.message shouldBe "Access denied"
@@ -337,7 +337,7 @@ class ApplicationTest : AnnotationSpec() {
     fun whenNoteRequestIsInvalid_shouldRespondFailedStateWithMessage() = testApp {
         val token = post(
             "/auth/register",
-            AuthRequest("usertest", "userA1234").toJson()
+            AuthRequest("usertest", "userA1234").toJson(),
         ).toModel<AuthResponse>().token
         println(token)
 
@@ -346,7 +346,7 @@ class ApplicationTest : AnnotationSpec() {
         post(
             "/note/new",
             noteRequest1,
-            "Bearer $token"
+            "Bearer $token",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.FAILED
             response.noteId shouldBe null
@@ -358,7 +358,7 @@ class ApplicationTest : AnnotationSpec() {
         post(
             "/note/new",
             noteRequest2,
-            "Bearer $token"
+            "Bearer $token",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.FAILED
             response.noteId shouldBe null
@@ -370,14 +370,14 @@ class ApplicationTest : AnnotationSpec() {
     fun whenNoteNotExists_requestedUpdateDelete_shouldShowErrorMessage() = testApp {
         val token = post(
             "/auth/register",
-            AuthRequest("usernotenotexist", "test1234").toJson()
+            AuthRequest("usernotenotexist", "test1234").toJson(),
         ).toModel<AuthResponse>().token
 
         val noteId = UUID.randomUUID().toString()
         put(
             "note/$noteId",
             NoteRequest("Title", "Body").toJson(),
-            "Bearer $token"
+            "Bearer $token",
         ).toModel<NoteResponse>().let {
             it.status shouldBe State.NOT_FOUND
             it.message shouldBe "Note not exist with ID '$noteId'"
@@ -386,7 +386,7 @@ class ApplicationTest : AnnotationSpec() {
 
         delete(
             "note/$noteId",
-            "Bearer $token"
+            "Bearer $token",
         ).toModel<NoteResponse>().let {
             it.status shouldBe State.NOT_FOUND
             it.message shouldBe "Note not exist with ID '$noteId'"

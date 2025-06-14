@@ -21,8 +21,10 @@ import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.*
-import io.ktor.server.testing.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.server.testing.ApplicationTestBuilder
 
 suspend fun ApplicationTestBuilder.get(url: String, token: String? = null) =
     getResponse(HttpMethod.Get, url, null, token)
@@ -43,7 +45,7 @@ suspend fun ApplicationTestBuilder.getResponse(
     method: HttpMethod,
     url: String,
     body: String? = null,
-    token: String? = null
+    token: String? = null,
 ) = client.request {
     this.method = method
     this.url(url)
