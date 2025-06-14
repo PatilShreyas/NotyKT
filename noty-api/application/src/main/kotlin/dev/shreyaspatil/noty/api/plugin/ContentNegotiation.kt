@@ -16,11 +16,11 @@
 
 package dev.shreyaspatil.noty.api.plugin
 
+import io.ktor.http.ContentType
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 fun Application.configureContentNegotiation() {
@@ -29,7 +29,7 @@ fun Application.configureContentNegotiation() {
             json = Json {
                 prettyPrint = true
             },
-            contentType = ContentType.Application.Json
+            contentType = ContentType.Application.Json,
         )
     }
 }

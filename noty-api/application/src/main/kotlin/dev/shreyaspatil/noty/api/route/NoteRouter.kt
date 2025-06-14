@@ -30,9 +30,15 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
-import io.ktor.server.routing.*
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.patch
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 
-fun Route.NoteApi(notesController: Lazy<NotesController> = controllers.notesController()) {
+fun Route.notes(notesController: Lazy<NotesController> = controllers.notesController()) {
     authenticate {
         get("/notes") {
             val principal = call.principal<UserPrincipal>()

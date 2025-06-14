@@ -16,7 +16,13 @@
 
 package dev.shreyaspatil.noty.api
 
-import dev.shreyaspatil.noty.api.plugin.*
+import dev.shreyaspatil.noty.api.plugin.appComponent
+import dev.shreyaspatil.noty.api.plugin.configureAuthentication
+import dev.shreyaspatil.noty.api.plugin.configureCORS
+import dev.shreyaspatil.noty.api.plugin.configureContentNegotiation
+import dev.shreyaspatil.noty.api.plugin.configureDI
+import dev.shreyaspatil.noty.api.plugin.configureRouting
+import dev.shreyaspatil.noty.api.plugin.configureStatusPages
 import dev.shreyaspatil.noty.data.database.initDatabase
 import io.ktor.server.application.Application
 

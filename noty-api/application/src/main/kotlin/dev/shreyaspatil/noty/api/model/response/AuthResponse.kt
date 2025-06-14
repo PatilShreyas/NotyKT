@@ -25,25 +25,25 @@ import kotlinx.serialization.Serializable
 data class AuthResponse(
     override val status: State,
     override val message: String,
-    val token: String? = null
+    val token: String? = null,
 ) : Response {
 
     companion object {
 
         fun failed(message: String) = AuthResponse(
             State.FAILED,
-            message
+            message,
         )
 
         fun unauthorized(message: String) = AuthResponse(
             State.UNAUTHORIZED,
-            message
+            message,
         )
 
         fun success(token: String, message: String) = AuthResponse(
             State.SUCCESS,
             message,
-            token
+            token,
         )
     }
 }

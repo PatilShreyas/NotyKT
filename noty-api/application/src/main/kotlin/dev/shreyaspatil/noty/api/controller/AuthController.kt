@@ -33,7 +33,7 @@ import javax.inject.Singleton
 class AuthController @Inject constructor(
     private val userDao: UserDao,
     private val jwt: JWTController,
-    private val encryptor: Encryptor
+    private val encryptor: Encryptor,
 ) {
 
     fun register(username: String, password: String): AuthResponse {

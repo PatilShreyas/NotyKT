@@ -23,7 +23,7 @@ data class Note(
     val title: String,
     val note: String,
     val created: Long,
-    val isPinned: Boolean
+    val isPinned: Boolean,
 ) {
     companion object {
         fun fromEntity(entity: EntityNote) = Note(
@@ -31,7 +31,7 @@ data class Note(
             entity.title,
             entity.note,
             entity.created.millis,
-            entity.isPinned
+            entity.isPinned,
         )
     }
 }

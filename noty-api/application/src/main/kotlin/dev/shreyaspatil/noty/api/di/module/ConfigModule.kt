@@ -39,7 +39,7 @@ object ConfigModule {
             user = dbConfig.property("user").getString(),
             password = dbConfig.property("password").getString(),
             driver = dbConfig.property("driver").getString(),
-            maxPoolSize = dbConfig.property("maxPoolSize").getString().toInt()
+            maxPoolSize = dbConfig.property("maxPoolSize").getString().toInt(),
         )
     }
 

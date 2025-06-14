@@ -31,19 +31,19 @@ data class Note(val id: String, val title: String, val note: String, val created
 data class NotesResponse(
     override val status: State,
     override val message: String,
-    val notes: List<Note> = emptyList()
+    val notes: List<Note> = emptyList(),
 
 ) : Response {
     companion object {
         fun unauthorized(message: String) = NotesResponse(
             State.UNAUTHORIZED,
-            message
+            message,
         )
 
         fun success(notes: List<Note>) = NotesResponse(
             State.SUCCESS,
             "Task successful",
-            notes
+            notes,
         )
     }
 }
@@ -56,28 +56,28 @@ data class NotesResponse(
 data class NoteResponse(
     override val status: State,
     override val message: String,
-    val noteId: String? = null
+    val noteId: String? = null,
 ) : Response {
     companion object {
         fun unauthorized(message: String) = NoteResponse(
             State.UNAUTHORIZED,
-            message
+            message,
         )
 
         fun failed(message: String) = NoteResponse(
             State.FAILED,
-            message
+            message,
         )
 
         fun notFound(message: String) = NoteResponse(
             State.NOT_FOUND,
-            message
+            message,
         )
 
         fun success(id: String) = NoteResponse(
             State.SUCCESS,
             "Task successful",
-            id
+            id,
         )
     }
 }

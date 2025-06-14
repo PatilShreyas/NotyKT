@@ -16,7 +16,7 @@
 
 package dev.shreyaspatil.noty.api
 
-import io.ktor.server.config.*
+import io.ktor.server.config.ApplicationConfig
 
 /**
  * Class containing Configuration values or secret key which will be provided from

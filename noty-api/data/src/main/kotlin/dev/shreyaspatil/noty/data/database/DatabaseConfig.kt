@@ -23,5 +23,5 @@ class DatabaseConfig(
     val user: String,
     val password: String,
     val driver: String,
-    val maxPoolSize: Int
+    val maxPoolSize: Int,
 )

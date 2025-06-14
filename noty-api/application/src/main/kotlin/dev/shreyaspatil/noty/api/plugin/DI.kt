@@ -19,9 +19,10 @@ package dev.shreyaspatil.noty.api.plugin
 import dev.shreyaspatil.noty.api.di.component.AppComponent
 import dev.shreyaspatil.noty.api.di.component.ControllerComponent
 import dev.shreyaspatil.noty.api.di.component.DaggerAppComponent
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
-import io.ktor.util.*
+import io.ktor.server.application.Application
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.application
+import io.ktor.util.AttributeKey
 
 fun Application.configureDI() {
     val appComponent = DaggerAppComponent.builder().withApplication(this).build()

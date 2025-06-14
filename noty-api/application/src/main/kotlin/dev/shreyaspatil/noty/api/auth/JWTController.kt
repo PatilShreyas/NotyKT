@@ -51,12 +51,12 @@ class NotyJWTController @Inject constructor(@SecretKey secret: String) : JWTCont
         .create()
         .withIssuer(ISSUER)
         .withAudience(AUDIENCE)
-        .withClaim(ClAIM, data)
+        .withClaim(CLAIM, data)
         .sign(algorithm)
 
     companion object {
         private const val ISSUER = "NotyKT-JWT-Issuer"
         private const val AUDIENCE = "https://notykt-production.up.railway.app"
-        const val ClAIM = "userId"
+        const val CLAIM = "userId"
     }
 }

@@ -16,14 +16,14 @@
 
 package dev.shreyaspatil.noty.api.plugin
 
-import dev.shreyaspatil.noty.api.route.AuthApi
-import dev.shreyaspatil.noty.api.route.NoteApi
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
+import dev.shreyaspatil.noty.api.route.notes
+import dev.shreyaspatil.noty.api.route.userAuthentication
+import io.ktor.server.application.Application
+import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
     routing {
-        AuthApi()
-        NoteApi()
+        userAuthentication()
+        notes()
     }
 }

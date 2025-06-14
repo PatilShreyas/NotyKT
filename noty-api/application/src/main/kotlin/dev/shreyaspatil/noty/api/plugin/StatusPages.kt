@@ -31,21 +31,21 @@ fun Application.configureStatusPages() {
         exception<BadRequestException> { call, cause ->
             call.respond(
                 HttpStatusCode.BadRequest,
-                FailureResponse(State.FAILED, cause.message ?: "Bad Request")
+                FailureResponse(State.FAILED, cause.message ?: "Bad Request"),
             )
         }
 
         status(HttpStatusCode.InternalServerError) { call, _ ->
             call.respond(
                 HttpStatusCode.InternalServerError,
-                FailureResponse(State.FAILED, FailureMessages.MESSAGE_FAILED)
+                FailureResponse(State.FAILED, FailureMessages.MESSAGE_FAILED),
             )
         }
 
         status(HttpStatusCode.Unauthorized) { call, _ ->
             call.respond(
                 HttpStatusCode.Unauthorized,
-                FailureResponse(State.UNAUTHORIZED, FailureMessages.MESSAGE_ACCESS_DENIED)
+                FailureResponse(State.UNAUTHORIZED, FailureMessages.MESSAGE_ACCESS_DENIED),
             )
         }
     }

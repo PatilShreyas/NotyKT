@@ -24,20 +24,19 @@ import dev.shreyaspatil.noty.data.dao.UserDao
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
-import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import java.util.UUID
 
 fun Application.configureAuthentication(
     jwtController: Lazy<JWTController> = appComponent.controllerComponent().jwtController(),
-    userDao: Lazy<UserDao> = appComponent.daoComponent().userDao()
+    userDao: Lazy<UserDao> = appComponent.daoComponent().userDao(),
 ) {
     install(Authentication) {
         jwt {
             verifier(jwtController.get().verifier)
             validate {
                 // Extract userId from token
-                val userId = it.payload.getClaim(NotyJWTController.ClAIM).asString()
+                val userId = it.payload.getClaim(NotyJWTController.CLAIM).asString()
 
                 // Return Principle if user exists otherwise null
                 val user = userDao.get().findByUUID(UUID.fromString(userId))

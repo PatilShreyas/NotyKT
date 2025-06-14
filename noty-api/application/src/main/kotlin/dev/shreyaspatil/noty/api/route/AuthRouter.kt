@@ -29,7 +29,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 
-fun Route.AuthApi(authController: Lazy<AuthController> = controllers.authController()) {
+fun Route.userAuthentication(authController: Lazy<AuthController> = controllers.authController()) {
     route("/auth") {
         post("/register") {
             val authRequest = runCatching { call.receive<AuthRequest>() }.getOrElse {
