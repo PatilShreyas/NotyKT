@@ -10,7 +10,7 @@ services:
     environment:
       - PORT=${PORT:-8080}
       - SECRET_KEY=${SECRET_KEY}
-      - PGHOST=db
+      - PGHOST=${PGHOST:-db}
       - PGPORT=${PGPORT:-5432}
       - PGDATABASE=${PGDATABASE:-noty}
       - PGUSER=${PGUSER:-postgres}
