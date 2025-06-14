@@ -1,7 +1,6 @@
 # NotyKT (API)
 
 ![Build (API)](https://github.com/PatilShreyas/NotyKT/workflows/Build%20(API)/badge.svg)
-![Deploy (API)](https://github.com/PatilShreyas/NotyKT/workflows/Deploy%20(API)/badge.svg)
 
 Noty backend _REST API_ is built with Ktor framework with PostgreSQL as database and deployed on the [Railway](https://railway.app).
 
