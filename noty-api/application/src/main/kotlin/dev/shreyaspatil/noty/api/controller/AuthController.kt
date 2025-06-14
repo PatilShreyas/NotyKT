@@ -56,13 +56,11 @@ class AuthController @Inject constructor(
             validateCredentialsOrThrowException(username, password)
 
             val user = userDao.findByUsernameAndPassword(username, encryptor.encrypt(password))
-                ?: throw UnauthorizedActivityException("Invalid credentials")
+                ?: throw BadRequestException("Invalid credentials")
 
             AuthResponse.success(jwt.sign(user.id), "Login successful")
         } catch (bre: BadRequestException) {
             AuthResponse.failed(bre.message)
-        } catch (uae: UnauthorizedActivityException) {
-            AuthResponse.unauthorized(uae.message)
         }
     }
 
