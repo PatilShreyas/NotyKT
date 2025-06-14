@@ -13,7 +13,7 @@ kover = "0.9.1"
 ktor = "3.1.3"
 
 # Database
-exposed = "0.50.1"
+exposed = "0.61.0"
 postgres = "42.7.6"
 hikari = "6.3.0"
 
