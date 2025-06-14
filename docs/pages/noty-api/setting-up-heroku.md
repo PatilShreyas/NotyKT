@@ -1,8 +1,10 @@
-# Set up Heroku for Deployment 🚀
+# Set up Heroku for Deployment 🚀 [ARCHIVED]
 
-This project is currently deployed on [Heroku](https://heroku.com) which provides free of cost service for deployment and database. 
+> **Note:** Heroku is no longer being used for deployment as they have started charging for their services. 
+> The NotyKT API has been moved to Koyeb. Please refer to the [Koyeb deployment documentation](./deployment-koyeb.md) 
+> for current deployment information. 
 
-_Currently this API was deployed on https://noty-api.herokuapp.com._
+_This API was deployed on https://noty-api.herokuapp.com._
 
 ## 🤖 Setting up Heroku CLI  
 

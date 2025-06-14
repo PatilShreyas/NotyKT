@@ -1,4 +1,8 @@
-# Deployment on Railway.app
+# Deployment on Railway.app (ARCHIVED)
+
+> **Note:** Railway is no longer being used for deployment as they have started charging for their services. The NotyKT API has been moved to Koyeb. Please refer to the [Koyeb deployment documentation](./deployment-koyeb.md) for current deployment information.
+
+This documentation is kept for historical reference.
 
 This project is currently deployed on Railway.app on the following URL
 - https://notykt-production.up.railway.app/notes
