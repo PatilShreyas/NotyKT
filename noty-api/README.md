@@ -25,6 +25,8 @@ This project has two modules as following:
 
 ## Development Setup 🖥
 
+### Using IntelliJ IDEA
+
 You will require latest stable version of JetBrains IntelliJ Idea to build and run the server application.
 
 - Import this project in IntelliJ Idea
@@ -51,6 +53,51 @@ Replace database credentials with your local config.
 - Run command `./gradlew :application:run`.
 - Hit `http://localhost:8080` and API will be live🔥.
 - You can find sample HTTP requests [here](http/) and can directly send requests from IntelliJ itself.
+
+### Using Docker
+
+You can also use Docker to run the application and its dependencies. This is the recommended approach for a consistent 
+development environment.
+
+#### Prerequisites
+
+- [Docker](https://www.docker.com/get-started) installed on your machine
+- [Docker Compose](https://docs.docker.com/compose/install/) installed on your machine
+
+#### Steps to run with Docker
+
+1. Clone the repository
+2. Navigate to the project root directory
+3. Create a `.env` file in the root directory with the required environment variables (see example above)
+4. Run the following command to start the application and database:
+
+```bash
+docker-compose up
+```
+
+This will start:
+- PostgreSQL database on port 5432
+- NotyKT API application on port 8080
+
+To run the services in the background, use:
+
+```bash
+docker-compose up -d
+```
+
+To stop the services:
+
+```bash
+docker-compose down
+```
+
+To rebuild the application after making changes:
+
+```bash
+docker-compose up --build
+```
+
+You can access the API at `http://localhost:8080` once the services are up and running.
 
 ## Built with 🛠
 

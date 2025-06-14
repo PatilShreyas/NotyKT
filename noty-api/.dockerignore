@@ -1,0 +1,34 @@
+# Gradle files
+.gradle/
+build/
+*/build/
+
+# Local configuration file
+local.properties
+
+# Log Files
+*.log
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Mac OS files
+.DS_Store
+
+# Docker files (to avoid recursive copying)
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Git files
+.git/
+.gitignore
+
+# Temporary files
+*~
+*.swp
+*.swo
