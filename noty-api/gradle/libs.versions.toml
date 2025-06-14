@@ -21,7 +21,7 @@ hikari = "6.3.0"
 logback = "1.5.11"
 
 # Dependency Injection
-dagger = "2.51" # Keeping Dagger at 2.51. If you update Kotlin to 2.1.x, you might need Dagger 2.55+ for full KSP2 compatibility.
+dagger = "2.56.2" # Keeping Dagger at 2.51. If you update Kotlin to 2.1.x, you might need Dagger 2.55+ for full KSP2 compatibility.
 
 # Testing
 testcontainers = "1.21.0"
