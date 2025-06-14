@@ -53,6 +53,10 @@ dependencies {
     testImplementation(libs.kotest.property)
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 tasks.named("build") {
     finalizedBy("installDist")
 }
