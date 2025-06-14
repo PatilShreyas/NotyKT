@@ -54,4 +54,4 @@ PGPASSWORD=your_db_password
 
 Once deployed, your API will be accessible at the URL provided by Koyeb. 
 
-You can use this URL for all API endpoints as described in the [API documentation](./getting-started.md).
+You can use this URL for all API endpoints as described in the [API documentation](getting-started.md).
