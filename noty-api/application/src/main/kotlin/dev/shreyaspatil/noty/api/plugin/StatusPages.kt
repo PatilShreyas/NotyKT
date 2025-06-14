@@ -16,13 +16,13 @@
 
 package dev.shreyaspatil.noty.api.plugin
 
+import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.response.FailureResponse
 import dev.shreyaspatil.noty.api.model.response.State
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
-import dev.shreyaspatil.noty.api.exception.BadRequestException
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respond
 

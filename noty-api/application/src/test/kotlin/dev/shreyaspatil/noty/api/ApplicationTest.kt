@@ -16,12 +16,12 @@
 
 package dev.shreyaspatil.noty.api
 
-import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
 import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
+import dev.shreyaspatil.noty.api.model.response.FailureResponse
 import dev.shreyaspatil.noty.api.model.response.NoteResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.api.model.response.State
@@ -32,13 +32,12 @@ import dev.shreyaspatil.noty.api.testutils.post
 import dev.shreyaspatil.noty.api.testutils.put
 import dev.shreyaspatil.noty.api.testutils.toJson
 import dev.shreyaspatil.noty.api.testutils.toModel
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContainIgnoringCase
 import io.kotest.matchers.string.shouldInclude
+import io.ktor.client.statement.bodyAsText
 import io.ktor.server.config.MapApplicationConfig
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
@@ -148,7 +147,7 @@ class ApplicationTest : AnnotationSpec() {
             "/auth/login",
             AuthRequest("usernotexists", "test1234").toJson(),
         ).toModel<AuthResponse>().let {
-            it.status shouldBe State.UNAUTHORIZED
+            it.status shouldBe State.FAILED
             it.message shouldBe "Invalid credentials"
             it.token shouldBe null
         }
@@ -156,22 +155,22 @@ class ApplicationTest : AnnotationSpec() {
 
     @Test
     fun authorizationKeyIsNotProvided_whenNotesAreRetrieved_shouldGetUnauthResponse() = testApp {
-        get("/notes") shouldInclude "UNAUTHORIZED"
+        get("/notes").bodyAsText() shouldInclude "UNAUTHORIZED"
     }
 
     @Test
     fun whenProvidedInvalidAuthBody_shouldThrowException() = testApp {
-        shouldThrow<BadRequestException> {
-            post("/auth/register", null)
-        }.let {
-            it.message shouldContainIgnoringCase FailureMessages.MESSAGE_MISSING_CREDENTIALS
-        }
+        val response = post("/auth/register", null).toModel<FailureResponse>()
 
-        shouldThrow<BadRequestException> {
-            post("/auth/login", null)
-        }.let {
-            it.message shouldContainIgnoringCase FailureMessages.MESSAGE_MISSING_CREDENTIALS
-        }
+        response.status shouldBe State.FAILED
+        response.message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
+    }
+
+    @Test
+    fun whenProvidedInvalidAuthBodyForLogin_shouldThrowException() = testApp {
+        val response = post("/auth/login", null).toModel<FailureResponse>()
+        response.status shouldBe State.FAILED
+        response.message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
     }
 
     @Test
@@ -181,15 +180,13 @@ class ApplicationTest : AnnotationSpec() {
             AuthRequest("newnoteuser", "newnoteuser1234").toJson(),
         ).toModel<AuthResponse>().token
 
-        shouldThrow<BadRequestException> {
-            post("note/new", null, "Bearer $token")
-        }.let {
+        post("note/new", null, "Bearer $token").toModel<FailureResponse>().let {
+            it.status shouldBe State.FAILED
             it.message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
         }
 
-        shouldThrow<BadRequestException> {
-            put("note/testnote", null, "Bearer $token")
-        }.let {
+        put("note/testnote", null, "Bearer $token").toModel<FailureResponse>().let {
+            it.status shouldBe State.FAILED
             it.message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
         }
     }
@@ -328,7 +325,7 @@ class ApplicationTest : AnnotationSpec() {
             "Bearer $userTokenB",
         ).toModel<NoteResponse>().let { response ->
             response.status shouldBe State.UNAUTHORIZED
-            response.message shouldBe "Access denied"
+            response.message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
             response.noteId shouldBe null
         }
     }

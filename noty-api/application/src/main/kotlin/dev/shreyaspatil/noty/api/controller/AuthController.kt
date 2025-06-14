@@ -19,7 +19,6 @@ package dev.shreyaspatil.noty.api.controller
 import dev.shreyaspatil.noty.api.auth.Encryptor
 import dev.shreyaspatil.noty.api.auth.JWTController
 import dev.shreyaspatil.noty.api.exception.BadRequestException
-import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.utils.isAlphaNumeric
 import dev.shreyaspatil.noty.data.dao.UserDao

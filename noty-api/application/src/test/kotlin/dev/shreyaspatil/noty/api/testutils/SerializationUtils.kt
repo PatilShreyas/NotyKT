@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.api.testutils
 
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -23,3 +25,5 @@ import kotlinx.serialization.json.Json
 inline fun <reified T> T.toJson(): String = Json.encodeToString(this)
 
 inline fun <reified T> String?.toModel(): T = this!!.let { json -> Json.decodeFromString(json) }
+
+suspend inline fun <reified T> HttpResponse.toModel(): T = bodyAsText().toModel()
