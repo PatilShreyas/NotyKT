@@ -38,135 +38,140 @@ import org.junit.Test
 @HiltAndroidTest
 class LoginScreenTest : NotyScreenTest() {
     @Test
-    fun navigateToSignup_onClickingSignupText() = runTest {
-        var navigatingToSignup = false
-        setNotyContent {
-            LoginScreen(onNavigateToSignup = { navigatingToSignup = true })
+    fun navigateToSignup_onClickingSignupText() =
+        runTest {
+            var navigatingToSignup = false
+            setNotyContent {
+                LoginScreen(onNavigateToSignup = { navigatingToSignup = true })
+            }
+
+            onNodeWithText("Don't have an account? Signup").performClick()
+            waitForIdle()
+
+            assertTrue(navigatingToSignup)
         }
-
-        onNodeWithText("Don't have an account? Signup").performClick()
-        waitForIdle()
-
-        assertTrue(navigatingToSignup)
-    }
 
     @Test
-    fun showDoNothing_whenEnteredInvalidCredentials() = runTest {
-        var navigatedToNotes = false
-        val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
-        setNotyContent {
-            LoginScreen(
-                closeKeyboard = closeKeyboard,
-                onNavigateToNotes = { navigatedToNotes = true }
-            )
+    fun showDoNothing_whenEnteredInvalidCredentials() =
+        runTest {
+            var navigatedToNotes = false
+            val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
+            setNotyContent {
+                LoginScreen(
+                    closeKeyboard = closeKeyboard,
+                    onNavigateToNotes = { navigatedToNotes = true },
+                )
+            }
+
+            onNodeWithTag("Username").performTextInput("john")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithTag("Password").performTextInput("doe")
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithText("Login").performClick()
+            waitForIdle()
+
+            assertFalse(navigatedToNotes)
         }
-
-        onNodeWithTag("Username").performTextInput("john")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithTag("Password").performTextInput("doe")
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithText("Login").performClick()
-        waitForIdle()
-
-        assertFalse(navigatedToNotes)
-    }
 
     @Test
-    fun showDoNotExistError_whenEnteredWrongCredentials() = runTest {
-        var navigatedToNotes = false
-        val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
-        setNotyContent {
-            LoginScreen(
-                closeKeyboard = closeKeyboard,
-                onNavigateToNotes = { navigatedToNotes = true }
-            )
+    fun showDoNotExistError_whenEnteredWrongCredentials() =
+        runTest {
+            var navigatedToNotes = false
+            val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
+            setNotyContent {
+                LoginScreen(
+                    closeKeyboard = closeKeyboard,
+                    onNavigateToNotes = { navigatedToNotes = true },
+                )
+            }
+
+            onNodeWithTag("Username").performTextInput("johndoe")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            Thread.sleep(500)
+
+            onNodeWithTag("Password").performTextInput("wrongpassword")
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            Thread.sleep(500)
+
+            onNodeWithText("Login").performClick()
+            waitForIdle()
+
+            assertFalse(navigatedToNotes)
+
+            // Should show error in dialog
+            onNodeWithText("User not exist").assertExists()
         }
-
-        onNodeWithTag("Username").performTextInput("johndoe")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        Thread.sleep(500)
-
-        onNodeWithTag("Password").performTextInput("wrongpassword")
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        Thread.sleep(500)
-
-        onNodeWithText("Login").performClick()
-        waitForIdle()
-
-        assertFalse(navigatedToNotes)
-
-        // Should show error in dialog
-        onNodeWithText("User not exist").assertExists()
-    }
 
     @Test
-    fun navigateToNotes_onSuccessfulLogin() = runTest {
-        var navigatedToNotes = false
-        val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
-        setNotyContent {
-            LoginScreen(
-                closeKeyboard = closeKeyboard,
-                onNavigateToNotes = { navigatedToNotes = true }
-            )
+    fun navigateToNotes_onSuccessfulLogin() =
+        runTest {
+            var navigatedToNotes = false
+            val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
+            setNotyContent {
+                LoginScreen(
+                    closeKeyboard = closeKeyboard,
+                    onNavigateToNotes = { navigatedToNotes = true },
+                )
+            }
+
+            onNodeWithTag("Username").performTextInput("johndoe")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            Thread.sleep(500)
+
+            onNodeWithTag("Password").performTextInput("johndoe1234")
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            Thread.sleep(500)
+
+            onNodeWithText("Login").performClick()
+            waitForIdle()
+
+            assertTrue(navigatedToNotes)
         }
-
-        onNodeWithTag("Username").performTextInput("johndoe")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        Thread.sleep(500)
-
-        onNodeWithTag("Password").performTextInput("johndoe1234")
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        Thread.sleep(500)
-
-        onNodeWithText("Login").performClick()
-        waitForIdle()
-
-        assertTrue(navigatedToNotes)
-    }
 
     @Test
-    fun testIfPasswordIsVisible_onEyeButtonClicked() = runTest {
-        setNotyContent {
-            LoginScreen()
-        }
-        onNodeWithTag(
-            testTag = "TogglePasswordVisibility",
-            useUnmergedTree = true
-        ).performClick()
+    fun testIfPasswordIsVisible_onEyeButtonClicked() =
+        runTest {
+            setNotyContent {
+                LoginScreen()
+            }
+            onNodeWithTag(
+                testTag = "TogglePasswordVisibility",
+                useUnmergedTree = true,
+            ).performClick()
 
-        onNodeWithTag(
-            testTag = "TogglePasswordVisibility",
-            useUnmergedTree = true
-        ).assertContentDescriptionEquals("Hide password")
-    }
+            onNodeWithTag(
+                testTag = "TogglePasswordVisibility",
+                useUnmergedTree = true,
+            ).assertContentDescriptionEquals("Hide password")
+        }
 
     @Composable
     private fun LoginScreen(
         closeKeyboard: Flow<Unit> = emptyFlow(),
         onNavigateToSignup: () -> Unit = {},
-        onNavigateToNotes: () -> Unit = {}
+        onNavigateToNotes: () -> Unit = {},
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
 
         LoginScreen(
             viewModel = viewModel(),
             onNavigateToSignup = onNavigateToSignup,
-            onNavigateToNotes = onNavigateToNotes
+            onNavigateToNotes = onNavigateToNotes,
         )
 
         LaunchedEffect(Unit) {

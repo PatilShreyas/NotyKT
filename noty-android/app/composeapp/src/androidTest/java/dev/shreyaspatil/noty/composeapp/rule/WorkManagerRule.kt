@@ -26,7 +26,10 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 
 class WorkManagerRule : TestRule {
-    override fun apply(base: Statement?, description: Description?): Statement {
+    override fun apply(
+        base: Statement?,
+        description: Description?,
+    ): Statement {
         return object : Statement() {
             override fun evaluate() {
                 val context = InstrumentationRegistry.getInstrumentation().targetContext

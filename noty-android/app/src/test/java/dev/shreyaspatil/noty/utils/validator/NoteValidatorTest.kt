@@ -28,7 +28,7 @@ class NoteValidatorTest {
             listOf(
                 "title" to "content",
                 "    Hey there    " to "Hey there, this is body of a note",
-                "1234" to "Hi"
+                "1234" to "Hi",
             )
 
         // When & Then
@@ -44,7 +44,7 @@ class NoteValidatorTest {
             listOf(
                 "hi" to "content",
                 "    Hey   " to "Hey there, this is body of a note",
-                "1234" to ""
+                "1234" to "",
             )
 
         // When & Then

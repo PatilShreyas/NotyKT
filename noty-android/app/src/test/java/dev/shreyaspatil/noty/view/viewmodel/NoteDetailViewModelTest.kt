@@ -28,7 +28,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import java.util.UUID
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -37,6 +36,7 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class NoteDetailViewModelTest : ViewModelTest() {
     private lateinit var note: dev.shreyaspatil.noty.core.model.Note
@@ -75,7 +75,7 @@ class NoteDetailViewModelTest : ViewModelTest() {
                 showSave = false,
                 finished = false,
                 error = null,
-                isPinned = false
+                isPinned = false,
             )
 
         // Then
@@ -131,170 +131,179 @@ class NoteDetailViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun `save should update note and schedule task when note is not yet synced`() = runTest {
-        // Given
-        val title = "Lorem Ipsum"
-        val noteContent = "Updated body of a note"
+    fun `save should update note and schedule task when note is not yet synced`() =
+        runTest {
+            // Given
+            val title = "Lorem Ipsum"
+            val noteContent = "Updated body of a note"
 
-        viewModel.setTitle(title)
-        viewModel.setNote(noteContent)
+            viewModel.setTitle(title)
+            viewModel.setNote(noteContent)
 
-        coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.success("TMP_$noteId")
+            coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.success("TMP_$noteId")
 
-        // When
-        viewModel.save()
+            // When
+            viewModel.save()
 
-        // Then
-        coVerify { repository.updateNote(noteId, title, noteContent) }
-        assertFalse(viewModel.currentState.isLoading)
-        assertTrue(viewModel.currentState.finished)
+            // Then
+            coVerify { repository.updateNote(noteId, title, noteContent) }
+            assertFalse(viewModel.currentState.isLoading)
+            assertTrue(viewModel.currentState.finished)
 
-        val lastTask = scheduledTasks.last()
-        assertEquals("TMP_$noteId", lastTask.noteId)
-        assertEquals(NotyTaskAction.CREATE, lastTask.action)
-    }
-
-    @Test
-    fun `save should update note and schedule task when note is synced`() = runTest {
-        // Given
-        val title = "Lorem Ipsum"
-        val noteContent = "Updated body of a note"
-
-        viewModel.setTitle(title)
-        viewModel.setNote(noteContent)
-
-        coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.success(noteId)
-
-        // When
-        viewModel.save()
-
-        // Then
-        coVerify { repository.updateNote(noteId, title, noteContent) }
-        assertFalse(viewModel.currentState.isLoading)
-        assertTrue(viewModel.currentState.finished)
-
-        val lastTask = scheduledTasks.last()
-        assertEquals(noteId, lastTask.noteId)
-        assertEquals(NotyTaskAction.UPDATE, lastTask.action)
-    }
+            val lastTask = scheduledTasks.last()
+            assertEquals("TMP_$noteId", lastTask.noteId)
+            assertEquals(NotyTaskAction.CREATE, lastTask.action)
+        }
 
     @Test
-    fun `save should update state with error when update fails`() = runTest {
-        // Given
-        val title = "Lorem Ipsum"
-        val noteContent = "Updated body of a note"
+    fun `save should update note and schedule task when note is synced`() =
+        runTest {
+            // Given
+            val title = "Lorem Ipsum"
+            val noteContent = "Updated body of a note"
 
-        viewModel.setTitle(title)
-        viewModel.setNote(noteContent)
+            viewModel.setTitle(title)
+            viewModel.setNote(noteContent)
 
-        coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.error("Error occurred")
+            coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.success(noteId)
 
-        // When
-        viewModel.save()
+            // When
+            viewModel.save()
 
-        // Then
-        coVerify { repository.updateNote(noteId, title, noteContent) }
-        assertEquals("Error occurred", viewModel.currentState.error)
-    }
+            // Then
+            coVerify { repository.updateNote(noteId, title, noteContent) }
+            assertFalse(viewModel.currentState.isLoading)
+            assertTrue(viewModel.currentState.finished)
 
-    @Test
-    fun `delete should delete note without scheduling task when note is not yet synced`() = runTest {
-        // Given
-        coEvery { repository.deleteNote(noteId) } returns Either.success("TMP_$noteId")
-
-        // When
-        viewModel.delete()
-
-        // Then
-        coVerify { repository.deleteNote(noteId) }
-        assertTrue(viewModel.currentState.finished)
-
-        // No task should be scheduled for deletion of unsynced note
-        val deleteTask =
-            scheduledTasks.find {
-                it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.DELETE
-            }
-        assertNull(deleteTask)
-    }
+            val lastTask = scheduledTasks.last()
+            assertEquals(noteId, lastTask.noteId)
+            assertEquals(NotyTaskAction.UPDATE, lastTask.action)
+        }
 
     @Test
-    fun `delete should delete note and schedule task when note is synced`() = runTest {
-        // Given
-        coEvery { repository.deleteNote(noteId) } returns Either.success(noteId)
+    fun `save should update state with error when update fails`() =
+        runTest {
+            // Given
+            val title = "Lorem Ipsum"
+            val noteContent = "Updated body of a note"
 
-        // When
-        viewModel.delete()
+            viewModel.setTitle(title)
+            viewModel.setNote(noteContent)
 
-        // Then
-        coVerify { repository.deleteNote(noteId) }
-        assertTrue(viewModel.currentState.finished)
+            coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.error("Error occurred")
 
-        val lastTask = scheduledTasks.last()
-        assertEquals(noteId, lastTask.noteId)
-        assertEquals(NotyTaskAction.DELETE, lastTask.action)
-    }
+            // When
+            viewModel.save()
 
-    @Test
-    fun `delete should update state with error when deletion fails`() = runTest {
-        // Given
-        coEvery { repository.deleteNote(noteId) } returns Either.error("Error occurred")
-
-        // When
-        viewModel.delete()
-
-        // Then
-        coVerify { repository.deleteNote(noteId) }
-        assertEquals("Error occurred", viewModel.currentState.error)
-    }
+            // Then
+            coVerify { repository.updateNote(noteId, title, noteContent) }
+            assertEquals("Error occurred", viewModel.currentState.error)
+        }
 
     @Test
-    fun `togglePin should update pin status without scheduling task when note is not yet synced`() = runTest {
-        // Given
-        val wasPinned = viewModel.currentState.isPinned
-        coEvery { repository.pinNote(noteId, any()) } returns Either.success("TMP_$noteId")
+    fun `delete should delete note without scheduling task when note is not yet synced`() =
+        runTest {
+            // Given
+            coEvery { repository.deleteNote(noteId) } returns Either.success("TMP_$noteId")
 
-        // When
-        viewModel.togglePin()
+            // When
+            viewModel.delete()
 
-        // Then
-        coVerify { repository.pinNote(noteId, !wasPinned) }
-        assertEquals(!wasPinned, viewModel.currentState.isPinned)
+            // Then
+            coVerify { repository.deleteNote(noteId) }
+            assertTrue(viewModel.currentState.finished)
 
-        // No task should be scheduled for pin toggle of unsynced note
-        val pinTask =
-            scheduledTasks.find {
-                it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.PIN
-            }
-        assertNull(pinTask)
-    }
-
-    @Test
-    fun `togglePin should update pin status and schedule task when note is synced`() = runTest {
-        // Given
-        val wasPinned = viewModel.currentState.isPinned
-        coEvery { repository.pinNote(noteId, any()) } returns Either.success(noteId)
-
-        // When
-        viewModel.togglePin()
-
-        // Then
-        coVerify { repository.pinNote(noteId, !wasPinned) }
-        assertEquals(!wasPinned, viewModel.currentState.isPinned)
-
-        val lastTask = scheduledTasks.last()
-        assertEquals(noteId, lastTask.noteId)
-        assertEquals(NotyTaskAction.PIN, lastTask.action)
-    }
+            // No task should be scheduled for deletion of unsynced note
+            val deleteTask =
+                scheduledTasks.find {
+                    it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.DELETE
+                }
+            assertNull(deleteTask)
+        }
 
     @Test
-    fun `togglePin should update state with error when pin toggle fails`() = runTest {
-        // Given
-        coEvery { repository.pinNote(noteId, any()) } returns Either.error("Error occurred")
+    fun `delete should delete note and schedule task when note is synced`() =
+        runTest {
+            // Given
+            coEvery { repository.deleteNote(noteId) } returns Either.success(noteId)
 
-        // When
-        viewModel.togglePin()
+            // When
+            viewModel.delete()
 
-        // Then
-        assertEquals("Error occurred", viewModel.currentState.error)
-    }
+            // Then
+            coVerify { repository.deleteNote(noteId) }
+            assertTrue(viewModel.currentState.finished)
+
+            val lastTask = scheduledTasks.last()
+            assertEquals(noteId, lastTask.noteId)
+            assertEquals(NotyTaskAction.DELETE, lastTask.action)
+        }
+
+    @Test
+    fun `delete should update state with error when deletion fails`() =
+        runTest {
+            // Given
+            coEvery { repository.deleteNote(noteId) } returns Either.error("Error occurred")
+
+            // When
+            viewModel.delete()
+
+            // Then
+            coVerify { repository.deleteNote(noteId) }
+            assertEquals("Error occurred", viewModel.currentState.error)
+        }
+
+    @Test
+    fun `togglePin should update pin status without scheduling task when note is not yet synced`() =
+        runTest {
+            // Given
+            val wasPinned = viewModel.currentState.isPinned
+            coEvery { repository.pinNote(noteId, any()) } returns Either.success("TMP_$noteId")
+
+            // When
+            viewModel.togglePin()
+
+            // Then
+            coVerify { repository.pinNote(noteId, !wasPinned) }
+            assertEquals(!wasPinned, viewModel.currentState.isPinned)
+
+            // No task should be scheduled for pin toggle of unsynced note
+            val pinTask =
+                scheduledTasks.find {
+                    it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.PIN
+                }
+            assertNull(pinTask)
+        }
+
+    @Test
+    fun `togglePin should update pin status and schedule task when note is synced`() =
+        runTest {
+            // Given
+            val wasPinned = viewModel.currentState.isPinned
+            coEvery { repository.pinNote(noteId, any()) } returns Either.success(noteId)
+
+            // When
+            viewModel.togglePin()
+
+            // Then
+            coVerify { repository.pinNote(noteId, !wasPinned) }
+            assertEquals(!wasPinned, viewModel.currentState.isPinned)
+
+            val lastTask = scheduledTasks.last()
+            assertEquals(noteId, lastTask.noteId)
+            assertEquals(NotyTaskAction.PIN, lastTask.action)
+        }
+
+    @Test
+    fun `togglePin should update state with error when pin toggle fails`() =
+        runTest {
+            // Given
+            coEvery { repository.pinNote(noteId, any()) } returns Either.error("Error occurred")
+
+            // When
+            viewModel.togglePin()
+
+            // Then
+            assertEquals("Error occurred", viewModel.currentState.error)
+        }
 }

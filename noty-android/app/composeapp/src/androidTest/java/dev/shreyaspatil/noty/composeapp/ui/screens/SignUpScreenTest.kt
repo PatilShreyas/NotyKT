@@ -39,140 +39,144 @@ import org.junit.Test
 @HiltAndroidTest
 class SignUpScreenTest : NotyScreenTest() {
     @Test
-    fun navigateUp_onClickingLoginText() = runTest {
-        var navigatingUp = false
-        setNotyContent {
-            SignUpScreen(onNavigateUp = { navigatingUp = true })
+    fun navigateUp_onClickingLoginText() =
+        runTest {
+            var navigatingUp = false
+            setNotyContent {
+                SignUpScreen(onNavigateUp = { navigatingUp = true })
+            }
+
+            onNodeWithText("Already have an account? Login").performClick()
+            waitForIdle()
+
+            assertTrue(navigatingUp)
         }
-
-        onNodeWithText("Already have an account? Login").performClick()
-        waitForIdle()
-
-        assertTrue(navigatingUp)
-    }
 
     @Test
-    fun showDoNothing_whenEnteredInvalidCredentials() = runTest {
-        var navigatedToNotes = false
-        val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
-        setNotyContent {
-            SignUpScreen(
-                closeKeyboard = closeKeyboard,
-                onNavigateToNotes = { navigatedToNotes = true }
-            )
+    fun showDoNothing_whenEnteredInvalidCredentials() =
+        runTest {
+            var navigatedToNotes = false
+            val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1)
+            setNotyContent {
+                SignUpScreen(
+                    closeKeyboard = closeKeyboard,
+                    onNavigateToNotes = { navigatedToNotes = true },
+                )
+            }
+
+            onNodeWithTag("Username").performTextInput("john")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithTag("Password").performTextInput("doe")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithTag("Confirm Password").performTextInput("doe1234")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithText("Create account").performClick()
+            waitForIdle()
+
+            assertFalse(navigatedToNotes)
         }
-
-        onNodeWithTag("Username").performTextInput("john")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithTag("Password").performTextInput("doe")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithTag("Confirm Password").performTextInput("doe1234")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithText("Create account").performClick()
-        waitForIdle()
-
-        assertFalse(navigatedToNotes)
-    }
 
     @Test
-    fun showDoNothing_whenEnteredWrongCredentials() = runTest {
-        var navigatedToNotes = false
-        val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 2)
-        setNotyContent {
-            SignUpScreen(
-                closeKeyboard = closeKeyboard,
-                onNavigateToNotes = { navigatedToNotes = true }
-            )
+    fun showDoNothing_whenEnteredWrongCredentials() =
+        runTest {
+            var navigatedToNotes = false
+            val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 2)
+            setNotyContent {
+                SignUpScreen(
+                    closeKeyboard = closeKeyboard,
+                    onNavigateToNotes = { navigatedToNotes = true },
+                )
+            }
+
+            waitForIdle()
+            onNodeWithTag("Username").performTextInput("johndoe")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithTag("Password").performTextInput("johndoe1234")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            runBlocking { delay(500) }
+
+            // I don't know why I can't type on this field without adding delay
+            onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            runBlocking { delay(500) }
+            // I don't know why I can't click this button without adding delay
+            onNodeWithText("Create account").performClick()
+            waitForIdle()
+
+            assertFalse(navigatedToNotes)
+
+            onNodeWithText("User already exist").assertExists()
         }
-
-        waitForIdle()
-        onNodeWithTag("Username").performTextInput("johndoe")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithTag("Password").performTextInput("johndoe1234")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        runBlocking { delay(500) }
-
-        // I don't know why I can't type on this field without adding delay
-        onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        runBlocking { delay(500) }
-        // I don't know why I can't click this button without adding delay
-        onNodeWithText("Create account").performClick()
-        waitForIdle()
-
-        assertFalse(navigatedToNotes)
-
-        onNodeWithText("User already exist").assertExists()
-    }
 
     @Test
-    fun navigateToNotes_onSuccessfulSignup() = runTest {
-        var navigatedToNotes = false
-        val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 2)
-        setNotyContent {
-            SignUpScreen(
-                closeKeyboard = closeKeyboard,
-                onNavigateToNotes = { navigatedToNotes = true }
-            )
+    fun navigateToNotes_onSuccessfulSignup() =
+        runTest {
+            var navigatedToNotes = false
+            val closeKeyboard = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 2)
+            setNotyContent {
+                SignUpScreen(
+                    closeKeyboard = closeKeyboard,
+                    onNavigateToNotes = { navigatedToNotes = true },
+                )
+            }
+
+            waitForIdle()
+            onNodeWithTag("Username").performTextInput("shreyaspatil")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            onNodeWithTag("Password").performTextInput("johndoe1234")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            runBlocking { delay(500) }
+
+            // I don't know why I can't type on this field without adding delay
+            onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
+            waitForIdle()
+            closeKeyboard.tryEmit(Unit)
+            waitForIdle()
+
+            runBlocking { delay(500) }
+            // I don't know why I can't click this button without adding delay
+            onNodeWithText("Create account").performClick()
+            waitForIdle()
+
+            assertTrue(navigatedToNotes)
         }
-
-        waitForIdle()
-        onNodeWithTag("Username").performTextInput("shreyaspatil")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        onNodeWithTag("Password").performTextInput("johndoe1234")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        runBlocking { delay(500) }
-
-        // I don't know why I can't type on this field without adding delay
-        onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
-        waitForIdle()
-        closeKeyboard.tryEmit(Unit)
-        waitForIdle()
-
-        runBlocking { delay(500) }
-        // I don't know why I can't click this button without adding delay
-        onNodeWithText("Create account").performClick()
-        waitForIdle()
-
-        assertTrue(navigatedToNotes)
-    }
 
     @Composable
     private fun SignUpScreen(
         closeKeyboard: Flow<Unit> = emptyFlow(),
         onNavigateToNotes: () -> Unit = {},
-        onNavigateUp: () -> Unit = {}
+        onNavigateUp: () -> Unit = {},
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
 
         SignUpScreen(
             viewModel = viewModel(),
             onNavigateToNotes = onNavigateToNotes,
-            onNavigateUp = onNavigateUp
+            onNavigateUp = onNavigateUp,
         )
 
         LaunchedEffect(Unit) {

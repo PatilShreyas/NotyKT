@@ -23,40 +23,45 @@ import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.remote.model.response.State
-import javax.inject.Inject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Path
+import javax.inject.Inject
 
 /**
  * Fake implementation for remote note Service.
  */
 class FakeNotyService
-@Inject
-constructor() : NotyService {
-    override suspend fun getAllNotes(): Response<NotesResponse> {
-        return successResponse(NotesResponse(State.SUCCESS, "", emptyList()))
-    }
+    @Inject
+    constructor() : NotyService {
+        override suspend fun getAllNotes(): Response<NotesResponse> {
+            return successResponse(NotesResponse(State.SUCCESS, "", emptyList()))
+        }
 
-    override suspend fun addNote(@Body noteRequest: NoteRequest): Response<NoteResponse> {
-        // Do nothing, just return success
-        return successResponse(NoteResponse(State.SUCCESS, "", ""))
-    }
+        override suspend fun addNote(
+            @Body noteRequest: NoteRequest,
+        ): Response<NoteResponse> {
+            // Do nothing, just return success
+            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+        }
 
-    override suspend fun updateNote(
-        @Path(value = "noteId") noteId: String,
-        @Body noteRequest: NoteRequest
-    ): Response<NoteResponse> {
-        // Do nothing, just return success
-        return successResponse(NoteResponse(State.SUCCESS, "", ""))
-    }
+        override suspend fun updateNote(
+            @Path(value = "noteId") noteId: String,
+            @Body noteRequest: NoteRequest,
+        ): Response<NoteResponse> {
+            // Do nothing, just return success
+            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+        }
 
-    override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
-        // Do nothing, just return success
-        return successResponse(NoteResponse(State.SUCCESS, "", ""))
-    }
+        override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
+            // Do nothing, just return success
+            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+        }
 
-    override suspend fun updateNotePin(noteId: String, noteRequest: NoteUpdatePinRequest): Response<NoteResponse> {
-        return successResponse(NoteResponse(State.SUCCESS, "", ""))
+        override suspend fun updateNotePin(
+            noteId: String,
+            noteRequest: NoteUpdatePinRequest,
+        ): Response<NoteResponse> {
+            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+        }
     }
-}

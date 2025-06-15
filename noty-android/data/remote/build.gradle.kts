@@ -58,7 +58,7 @@ android {
                     "META-INF/NOTICE.txt",
                     "META-INF/NOTICE",
                     "META-INF/LICENSE",
-                    "META-INF/DEPENDENCIES"
+                    "META-INF/DEPENDENCIES",
                 )
         }
     }

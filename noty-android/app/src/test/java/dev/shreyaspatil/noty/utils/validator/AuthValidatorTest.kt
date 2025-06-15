@@ -63,7 +63,7 @@ class AuthValidatorTest {
                 "12345",
                 "johndoe",
                 "   hey       ",
-                "123456789012345678901234567890123456789012345678901234567890"
+                "123456789012345678901234567890123456789012345678901234567890",
             )
 
         // When & Then
@@ -82,7 +82,7 @@ class AuthValidatorTest {
         val areSame =
             AuthValidator.isPasswordAndConfirmPasswordSame(
                 password = password,
-                confirmedPassword = confirmPassword
+                confirmedPassword = confirmPassword,
             )
 
         // Then
@@ -99,7 +99,7 @@ class AuthValidatorTest {
         val areSame =
             AuthValidator.isPasswordAndConfirmPasswordSame(
                 password = password,
-                confirmedPassword = confirmPassword
+                confirmedPassword = confirmPassword,
             )
 
         // Then

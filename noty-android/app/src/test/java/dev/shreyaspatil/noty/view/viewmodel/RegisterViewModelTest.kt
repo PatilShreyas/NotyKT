@@ -59,7 +59,7 @@ class RegisterViewModelTest : ViewModelTest() {
                 confirmPassword = "",
                 isValidUsername = null,
                 isValidPassword = null,
-                isValidConfirmPassword = null
+                isValidConfirmPassword = null,
             )
 
         // Then
@@ -125,48 +125,50 @@ class RegisterViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun `register should update state with error when repository fails`() = runTest {
-        // Given
-        val username = "john"
-        val password = "doe12345"
+    fun `register should update state with error when repository fails`() =
+        runTest {
+            // Given
+            val username = "john"
+            val password = "doe12345"
 
-        viewModel.setUsername(username)
-        viewModel.setPassword(password)
-        viewModel.setConfirmPassword(password)
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
+            viewModel.setConfirmPassword(password)
 
-        coEvery { repository.addUser(username, password) }
-            .returns(Either.error("Invalid credentials"))
+            coEvery { repository.addUser(username, password) }
+                .returns(Either.error("Invalid credentials"))
 
-        // When
-        viewModel.register()
+            // When
+            viewModel.register()
 
-        // Then
-        coVerify { repository.addUser(username, password) }
-        assertEquals("Invalid credentials", viewModel.currentState.error)
-    }
+            // Then
+            coVerify { repository.addUser(username, password) }
+            assertEquals("Invalid credentials", viewModel.currentState.error)
+        }
 
     @Test
-    fun `register should save token and update state when credentials are valid`() = runTest {
-        // Given
-        val username = "johndoe"
-        val password = "eodnhoj1234"
-        val token = "Bearer TOKEN_ABC"
+    fun `register should save token and update state when credentials are valid`() =
+        runTest {
+            // Given
+            val username = "johndoe"
+            val password = "eodnhoj1234"
+            val token = "Bearer TOKEN_ABC"
 
-        viewModel.setUsername(username)
-        viewModel.setPassword(password)
-        viewModel.setConfirmPassword(password)
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
+            viewModel.setConfirmPassword(password)
 
-        coEvery { repository.addUser(username, password) }
-            .returns(Either.success(AuthCredential(token)))
+            coEvery { repository.addUser(username, password) }
+                .returns(Either.success(AuthCredential(token)))
 
-        // When
-        viewModel.register()
+            // When
+            viewModel.register()
 
-        // Then
-        coVerify { repository.addUser(username, password) }
-        verify { sessionManager.saveToken(eq(token)) }
+            // Then
+            coVerify { repository.addUser(username, password) }
+            verify { sessionManager.saveToken(eq(token)) }
 
-        assertTrue(viewModel.currentState.isLoggedIn)
-        assertNull(viewModel.currentState.error)
-    }
+            assertTrue(viewModel.currentState.isLoggedIn)
+            assertNull(viewModel.currentState.error)
+        }
 }

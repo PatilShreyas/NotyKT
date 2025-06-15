@@ -29,7 +29,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import java.util.UUID
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -37,6 +36,7 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class AddNoteViewModelTest : ViewModelTest() {
     private lateinit var repository: NotyNoteRepository
@@ -63,7 +63,7 @@ class AddNoteViewModelTest : ViewModelTest() {
                 showSave = false,
                 isAdding = false,
                 added = false,
-                errorMessage = null
+                errorMessage = null,
             )
 
         // Then
@@ -87,7 +87,7 @@ class AddNoteViewModelTest : ViewModelTest() {
                 showSave = false,
                 isAdding = false,
                 added = false,
-                errorMessage = null
+                errorMessage = null,
             )
         assertEquals(expectedState, viewModel.currentState)
     }
@@ -125,49 +125,51 @@ class AddNoteViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun `add should update state and schedule task when note addition is successful`() = runTest {
-        // Given
-        val title = "Lorem Ipsum"
-        val note = "Hey there, this is not content"
+    fun `add should update state and schedule task when note addition is successful`() =
+        runTest {
+            // Given
+            val title = "Lorem Ipsum"
+            val note = "Hey there, this is not content"
 
-        viewModel.setTitle(title)
-        viewModel.setNote(note)
-        coEvery { repository.addNote(title, note) } returns Either.success("note-11")
+            viewModel.setTitle(title)
+            viewModel.setNote(note)
+            coEvery { repository.addNote(title, note) } returns Either.success("note-11")
 
-        // When
-        viewModel.add()
+            // When
+            viewModel.add()
 
-        // Then
-        assertFalse(viewModel.currentState.isAdding)
-        assertTrue(viewModel.currentState.added)
-        assertNull(viewModel.currentState.errorMessage)
+            // Then
+            assertFalse(viewModel.currentState.isAdding)
+            assertTrue(viewModel.currentState.added)
+            assertNull(viewModel.currentState.errorMessage)
 
-        val actualTask = slot<NotyTask>()
-        verify { taskManager.scheduleTask(capture(actualTask)) }
+            val actualTask = slot<NotyTask>()
+            verify { taskManager.scheduleTask(capture(actualTask)) }
 
-        assertEquals("note-11", actualTask.captured.noteId)
-        assertEquals(NotyTaskAction.CREATE, actualTask.captured.action)
-    }
+            assertEquals("note-11", actualTask.captured.noteId)
+            assertEquals(NotyTaskAction.CREATE, actualTask.captured.action)
+        }
 
     @Test
-    fun `add should update state with error when note addition fails`() = runTest {
-        // Given
-        val title = "Lorem Ipsum"
-        val note = "Hey there, this is not content"
+    fun `add should update state with error when note addition fails`() =
+        runTest {
+            // Given
+            val title = "Lorem Ipsum"
+            val note = "Hey there, this is not content"
 
-        viewModel.setTitle(title)
-        viewModel.setNote(note)
-        clearAllMocks()
-        coEvery { repository.addNote(title, note) } returns Either.error("Failed")
+            viewModel.setTitle(title)
+            viewModel.setNote(note)
+            clearAllMocks()
+            coEvery { repository.addNote(title, note) } returns Either.error("Failed")
 
-        // When
-        viewModel.add()
+            // When
+            viewModel.add()
 
-        // Then
-        assertFalse(viewModel.currentState.isAdding)
-        assertFalse(viewModel.currentState.added)
-        assertEquals("Failed", viewModel.currentState.errorMessage)
+            // Then
+            assertFalse(viewModel.currentState.isAdding)
+            assertFalse(viewModel.currentState.added)
+            assertEquals("Failed", viewModel.currentState.errorMessage)
 
-        verify(exactly = 0) { taskManager.scheduleTask(any()) }
-    }
+            verify(exactly = 0) { taskManager.scheduleTask(any()) }
+        }
 }

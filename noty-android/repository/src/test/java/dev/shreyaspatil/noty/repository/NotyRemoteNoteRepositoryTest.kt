@@ -50,183 +50,195 @@ class NotyRemoteNoteRepositoryTest {
     }
 
     @Test
-    fun `getAllNotes should return notes when operation is successful`() = runTest {
-        // Given
-        service.returnSuccessOnGetAllNotes = true
+    fun `getAllNotes should return notes when operation is successful`() =
+        runTest {
+            // Given
+            service.returnSuccessOnGetAllNotes = true
 
-        // When
-        val response = repository.getAllNotes().first()
+            // When
+            val response = repository.getAllNotes().first()
 
-        // Then
-        coVerify { service.getAllNotes() }
-        val notes = (response as Either.Success).data
-        assertEquals(1, notes.size)
-        assertEquals(Note("1111", "Lorem Ipsum", "Hey there", 0), notes.first())
-    }
-
-    @Test
-    fun `getAllNotes should return error when operation is unsuccessful`() = runTest {
-        // Given
-        service.returnSuccessOnGetAllNotes = false
-
-        // When
-        val response = repository.getAllNotes().first()
-
-        // Then
-        coVerify { service.getAllNotes() }
-        val message = (response as Either.Error).message
-        assertEquals("Failed to perform operation", message)
-    }
-
-    @Test
-    fun `addNote should return note id when inputs are valid`() = runTest {
-        // When
-        val response = repository.addNote("Lorem Ipsum", "Hey there!")
-
-        // Then
-        coVerify { service.addNote(NoteRequest("Lorem Ipsum", "Hey there!")) }
-        val id = (response as Either.Success).data
-        assertEquals("1111", id)
-    }
-
-    @Test
-    fun `addNote should return error when inputs are invalid`() = runTest {
-        // When
-        val response = repository.addNote("Test note", "Hey there!")
-
-        // Then
-        coVerify { service.addNote(NoteRequest("Test note", "Hey there!")) }
-        val message = (response as Either.Error).message
-        assertEquals("Failed to perform operation", message)
-    }
-
-    @Test
-    fun `updateNote should return note id when inputs are valid`() = runTest {
-        // When
-        val response =
-            repository.updateNote(
-                noteId = "1111",
-                title = "Lorem Ipsum",
-                note = "Hey there!"
-            )
-
-        // Then
-        coVerify {
-            service.updateNote(
-                noteId = "1111",
-                noteRequest = NoteRequest("Lorem Ipsum", "Hey there!")
-            )
+            // Then
+            coVerify { service.getAllNotes() }
+            val notes = (response as Either.Success).data
+            assertEquals(1, notes.size)
+            assertEquals(Note("1111", "Lorem Ipsum", "Hey there", 0), notes.first())
         }
-        val id = (response as Either.Success).data
-        assertEquals("1111", id)
-    }
 
     @Test
-    fun `updateNote should return error when inputs are invalid`() = runTest {
-        // When
-        val response =
-            repository.updateNote(
-                noteId = "2222",
-                title = "Lorem Ipsum",
-                note = "Hey there!"
-            )
+    fun `getAllNotes should return error when operation is unsuccessful`() =
+        runTest {
+            // Given
+            service.returnSuccessOnGetAllNotes = false
 
-        // Then
-        coVerify {
-            service.updateNote(
-                noteId = "2222",
-                noteRequest = NoteRequest("Lorem Ipsum", "Hey there!")
-            )
+            // When
+            val response = repository.getAllNotes().first()
+
+            // Then
+            coVerify { service.getAllNotes() }
+            val message = (response as Either.Error).message
+            assertEquals("Failed to perform operation", message)
         }
-        val message = (response as Either.Error).message
-        assertEquals("Failed to perform operation", message)
-    }
 
     @Test
-    fun `deleteNote should return note id when inputs are valid`() = runTest {
-        // When
-        val response = repository.deleteNote(noteId = "1111")
+    fun `addNote should return note id when inputs are valid`() =
+        runTest {
+            // When
+            val response = repository.addNote("Lorem Ipsum", "Hey there!")
 
-        // Then
-        coVerify { service.deleteNote(noteId = "1111") }
-        val id = (response as Either.Success).data
-        assertEquals("1111", id)
-    }
-
-    @Test
-    fun `deleteNote should return error when inputs are invalid`() = runTest {
-        // When
-        val response = repository.deleteNote(noteId = "2222")
-
-        // Then
-        coVerify { service.deleteNote(noteId = "2222") }
-        val message = (response as Either.Error).message
-        assertEquals("Failed to perform operation", message)
-    }
-
-    @Test
-    fun `pinNote should return note id when inputs are valid and note is pinned`() = runTest {
-        // When
-        val response = repository.pinNote(noteId = "1111", isPinned = true)
-
-        // Then
-        coVerify {
-            service.updateNotePin(
-                noteId = "1111",
-                NoteUpdatePinRequest(isPinned = true)
-            )
+            // Then
+            coVerify { service.addNote(NoteRequest("Lorem Ipsum", "Hey there!")) }
+            val id = (response as Either.Success).data
+            assertEquals("1111", id)
         }
-        val id = (response as Either.Success).data
-        assertEquals("1111", id)
-    }
 
     @Test
-    fun `pinNote should return error when inputs are invalid and note is pinned`() = runTest {
-        // When
-        val response = repository.pinNote(noteId = "2222", isPinned = true)
+    fun `addNote should return error when inputs are invalid`() =
+        runTest {
+            // When
+            val response = repository.addNote("Test note", "Hey there!")
 
-        // Then
-        coVerify {
-            service.updateNotePin(
-                noteId = "2222",
-                NoteUpdatePinRequest(isPinned = true)
-            )
+            // Then
+            coVerify { service.addNote(NoteRequest("Test note", "Hey there!")) }
+            val message = (response as Either.Error).message
+            assertEquals("Failed to perform operation", message)
         }
-        val message = (response as Either.Error).message
-        assertEquals("Failed to perform operation", message)
-    }
 
     @Test
-    fun `pinNote should return note id when inputs are valid and note is unpinned`() = runTest {
-        // When
-        val response = repository.pinNote(noteId = "1111", isPinned = false)
+    fun `updateNote should return note id when inputs are valid`() =
+        runTest {
+            // When
+            val response =
+                repository.updateNote(
+                    noteId = "1111",
+                    title = "Lorem Ipsum",
+                    note = "Hey there!",
+                )
 
-        // Then
-        coVerify {
-            service.updateNotePin(
-                noteId = "1111",
-                NoteUpdatePinRequest(isPinned = false)
-            )
+            // Then
+            coVerify {
+                service.updateNote(
+                    noteId = "1111",
+                    noteRequest = NoteRequest("Lorem Ipsum", "Hey there!"),
+                )
+            }
+            val id = (response as Either.Success).data
+            assertEquals("1111", id)
         }
-        val id = (response as Either.Success).data
-        assertEquals("1111", id)
-    }
 
     @Test
-    fun `pinNote should return error when inputs are invalid and note is unpinned`() = runTest {
-        // When
-        val response = repository.pinNote(noteId = "2222", isPinned = false)
+    fun `updateNote should return error when inputs are invalid`() =
+        runTest {
+            // When
+            val response =
+                repository.updateNote(
+                    noteId = "2222",
+                    title = "Lorem Ipsum",
+                    note = "Hey there!",
+                )
 
-        // Then
-        coVerify {
-            service.updateNotePin(
-                noteId = "2222",
-                NoteUpdatePinRequest(isPinned = false)
-            )
+            // Then
+            coVerify {
+                service.updateNote(
+                    noteId = "2222",
+                    noteRequest = NoteRequest("Lorem Ipsum", "Hey there!"),
+                )
+            }
+            val message = (response as Either.Error).message
+            assertEquals("Failed to perform operation", message)
         }
-        val message = (response as Either.Error).message
-        assertEquals("Failed to perform operation", message)
-    }
+
+    @Test
+    fun `deleteNote should return note id when inputs are valid`() =
+        runTest {
+            // When
+            val response = repository.deleteNote(noteId = "1111")
+
+            // Then
+            coVerify { service.deleteNote(noteId = "1111") }
+            val id = (response as Either.Success).data
+            assertEquals("1111", id)
+        }
+
+    @Test
+    fun `deleteNote should return error when inputs are invalid`() =
+        runTest {
+            // When
+            val response = repository.deleteNote(noteId = "2222")
+
+            // Then
+            coVerify { service.deleteNote(noteId = "2222") }
+            val message = (response as Either.Error).message
+            assertEquals("Failed to perform operation", message)
+        }
+
+    @Test
+    fun `pinNote should return note id when inputs are valid and note is pinned`() =
+        runTest {
+            // When
+            val response = repository.pinNote(noteId = "1111", isPinned = true)
+
+            // Then
+            coVerify {
+                service.updateNotePin(
+                    noteId = "1111",
+                    NoteUpdatePinRequest(isPinned = true),
+                )
+            }
+            val id = (response as Either.Success).data
+            assertEquals("1111", id)
+        }
+
+    @Test
+    fun `pinNote should return error when inputs are invalid and note is pinned`() =
+        runTest {
+            // When
+            val response = repository.pinNote(noteId = "2222", isPinned = true)
+
+            // Then
+            coVerify {
+                service.updateNotePin(
+                    noteId = "2222",
+                    NoteUpdatePinRequest(isPinned = true),
+                )
+            }
+            val message = (response as Either.Error).message
+            assertEquals("Failed to perform operation", message)
+        }
+
+    @Test
+    fun `pinNote should return note id when inputs are valid and note is unpinned`() =
+        runTest {
+            // When
+            val response = repository.pinNote(noteId = "1111", isPinned = false)
+
+            // Then
+            coVerify {
+                service.updateNotePin(
+                    noteId = "1111",
+                    NoteUpdatePinRequest(isPinned = false),
+                )
+            }
+            val id = (response as Either.Success).data
+            assertEquals("1111", id)
+        }
+
+    @Test
+    fun `pinNote should return error when inputs are invalid and note is unpinned`() =
+        runTest {
+            // When
+            val response = repository.pinNote(noteId = "2222", isPinned = false)
+
+            // Then
+            coVerify {
+                service.updateNotePin(
+                    noteId = "2222",
+                    NoteUpdatePinRequest(isPinned = false),
+                )
+            }
+            val message = (response as Either.Error).message
+            assertEquals("Failed to perform operation", message)
+        }
 }
 
 class FakeNotyService : NotyService {
@@ -244,7 +256,10 @@ class FakeNotyService : NotyService {
         }
     }
 
-    override suspend fun updateNote(noteId: String, noteRequest: NoteRequest): Response<NoteResponse> {
+    override suspend fun updateNote(
+        noteId: String,
+        noteRequest: NoteRequest,
+    ): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
@@ -260,7 +275,10 @@ class FakeNotyService : NotyService {
         }
     }
 
-    override suspend fun updateNotePin(noteId: String, noteRequest: NoteUpdatePinRequest): Response<NoteResponse> {
+    override suspend fun updateNotePin(
+        noteId: String,
+        noteRequest: NoteUpdatePinRequest,
+    ): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
@@ -277,7 +295,7 @@ class FakeNotyService : NotyService {
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),
-                    moshi.adapter<NoteResponse>().toJson(response)
+                    moshi.adapter<NoteResponse>().toJson(response),
                 )
             Response.error(400, body)
         }
@@ -290,15 +308,15 @@ class FakeNotyService : NotyService {
                 NotesResponse(
                     status = State.SUCCESS,
                     message = "Success",
-                    notes = listOf(Note("1111", "Lorem Ipsum", "Hey there", 0))
-                )
+                    notes = listOf(Note("1111", "Lorem Ipsum", "Hey there", 0)),
+                ),
             )
         } else {
             val response = NotesResponse(State.FAILED, "Failed to perform operation", emptyList())
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),
-                    moshi.adapter<NotesResponse>().toJson(response)
+                    moshi.adapter<NotesResponse>().toJson(response),
                 )
             Response.error(400, body)
         }

@@ -21,7 +21,6 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.concurrent.TimeUnit
 import okhttp3.Call
 import okhttp3.Connection
 import okhttp3.Interceptor
@@ -31,9 +30,9 @@ import okhttp3.Response
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.concurrent.TimeUnit
 
 class AuthInterceptorTest {
-
     private lateinit var sessionManager: SessionManager
     private lateinit var interceptor: AuthInterceptor
     private lateinit var expectedRequest: Request
@@ -47,10 +46,11 @@ class AuthInterceptorTest {
 
         // Init mocks
         expectedRequest = mockk()
-        requestBuilder = mockk {
-            every { header(any(), any()) } returns this
-            every { build() } returns expectedRequest
-        }
+        requestBuilder =
+            mockk {
+                every { header(any(), any()) } returns this
+                every { build() } returns expectedRequest
+            }
         chain = FakeChain(requestBuilder)
     }
 
@@ -124,15 +124,24 @@ class FakeChain(private val requestBuilder: Request.Builder) : Interceptor.Chain
         }
     }
 
-    override fun withConnectTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
+    override fun withConnectTimeout(
+        timeout: Int,
+        unit: TimeUnit,
+    ): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 
-    override fun withReadTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
+    override fun withReadTimeout(
+        timeout: Int,
+        unit: TimeUnit,
+    ): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 
-    override fun withWriteTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
+    override fun withWriteTimeout(
+        timeout: Int,
+        unit: TimeUnit,
+    ): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 

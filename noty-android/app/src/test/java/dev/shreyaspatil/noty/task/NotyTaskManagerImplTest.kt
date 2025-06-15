@@ -29,7 +29,6 @@ import dev.shreyaspatil.noty.fakes.FakeWorkManager
 import dev.shreyaspatil.noty.utils.ext.getEnum
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import io.mockk.verify
-import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -42,6 +41,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 @OptIn(ExperimentalStdlibApi::class)
 class NotyTaskManagerImplTest {
@@ -69,7 +69,7 @@ class NotyTaskManagerImplTest {
                 UUID.randomUUID() to WorkInfo.State.BLOCKED,
                 UUID.randomUUID() to WorkInfo.State.CANCELLED,
                 UUID.randomUUID() to WorkInfo.State.SUCCEEDED,
-                UUID.randomUUID() to WorkInfo.State.FAILED
+                UUID.randomUUID() to WorkInfo.State.FAILED,
             )
 
         workStates.forEach { (id, state) -> fakeWorkManager.fakeWorkStates[id] = state }
@@ -105,7 +105,7 @@ class NotyTaskManagerImplTest {
             workManager.enqueueUniqueWork(
                 NotyTaskManagerImpl.SYNC_TASK_NAME,
                 ExistingWorkPolicy.REPLACE,
-                any<OneTimeWorkRequest>()
+                any<OneTimeWorkRequest>(),
             )
         }
 
@@ -127,7 +127,7 @@ class NotyTaskManagerImplTest {
             workManager.enqueueUniqueWork(
                 noteId,
                 ExistingWorkPolicy.REPLACE,
-                any<OneTimeWorkRequest>()
+                any<OneTimeWorkRequest>(),
             )
         }
 
@@ -155,20 +155,21 @@ class NotyTaskManagerImplTest {
                 TaskState.SCHEDULED,
                 TaskState.CANCELLED,
                 TaskState.COMPLETED,
-                TaskState.FAILED
+                TaskState.FAILED,
             ),
-            taskStates
+            taskStates,
         )
     }
 
     @Test
-    fun `observeTask should emit correct task states`() = runTest {
-        // When
-        val taskStates = manager.observeTask(UUID.randomUUID()).toList()
+    fun `observeTask should emit correct task states`() =
+        runTest {
+            // When
+            val taskStates = manager.observeTask(UUID.randomUUID()).toList()
 
-        // Then
-        assertEquals(listOf(TaskState.SCHEDULED, TaskState.FAILED), taskStates)
-    }
+            // Then
+            assertEquals(listOf(TaskState.SCHEDULED, TaskState.FAILED), taskStates)
+        }
 
     @Test
     fun `abortAllTasks should cancel all work in WorkManager`() {
@@ -193,7 +194,7 @@ class NotyTaskManagerImplTest {
                 override fun isMainThread(): Boolean {
                     return true
                 }
-            }
+            },
         )
     }
 

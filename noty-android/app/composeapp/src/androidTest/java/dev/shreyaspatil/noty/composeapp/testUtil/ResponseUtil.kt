@@ -20,7 +20,9 @@ import dev.shreyaspatil.noty.core.utils.json
 import okhttp3.ResponseBody
 import retrofit2.Response
 
-inline fun <reified T> errorResponse(code: Int, response: T): Response<T> =
-    Response.error(code, ResponseBody.create(null, response.json))
+inline fun <reified T> errorResponse(
+    code: Int,
+    response: T,
+): Response<T> = Response.error(code, ResponseBody.create(null, response.json))
 
 inline fun <reified T> successResponse(response: T): Response<T> = Response.success(response)

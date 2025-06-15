@@ -44,56 +44,60 @@ class DefaultNotyUserRepositoryTest {
     }
 
     @Test
-    fun `addUser should return success with token when credentials are valid`() = runTest {
-        // When
-        val response = repository.addUser(username = "admin", password = "admin")
+    fun `addUser should return success with token when credentials are valid`() =
+        runTest {
+            // When
+            val response = repository.addUser(username = "admin", password = "admin")
 
-        // Then
-        coVerify { authService.register(AuthRequest("admin", "admin")) }
-        val credentials = (response as Either.Success).data
-        assertEquals("Bearer ABCD", credentials.token)
-    }
-
-    @Test
-    fun `addUser should return error when credentials are invalid`() = runTest {
-        // When
-        val response = repository.addUser(username = "john", password = "doe")
-
-        // Then
-        coVerify { authService.register(AuthRequest("john", "doe")) }
-        val message = (response as Either.Error).message
-        assertEquals("Invalid credentials", message)
-    }
+            // Then
+            coVerify { authService.register(AuthRequest("admin", "admin")) }
+            val credentials = (response as Either.Success).data
+            assertEquals("Bearer ABCD", credentials.token)
+        }
 
     @Test
-    fun `getUserByUsernameAndPassword should return success with token when credentials are valid`() = runTest {
-        // When
-        val response =
-            repository.getUserByUsernameAndPassword(
-                username = "admin",
-                password = "admin"
-            )
+    fun `addUser should return error when credentials are invalid`() =
+        runTest {
+            // When
+            val response = repository.addUser(username = "john", password = "doe")
 
-        // Then
-        coVerify { authService.login(AuthRequest("admin", "admin")) }
-        val credentials = (response as Either.Success).data
-        assertEquals("Bearer ABCD", credentials.token)
-    }
+            // Then
+            coVerify { authService.register(AuthRequest("john", "doe")) }
+            val message = (response as Either.Error).message
+            assertEquals("Invalid credentials", message)
+        }
 
     @Test
-    fun `getUserByUsernameAndPassword should return error when credentials are invalid`() = runTest {
-        // When
-        val response =
-            repository.getUserByUsernameAndPassword(
-                username = "john",
-                password = "doe"
-            )
+    fun `getUserByUsernameAndPassword should return success with token when credentials are valid`() =
+        runTest {
+            // When
+            val response =
+                repository.getUserByUsernameAndPassword(
+                    username = "admin",
+                    password = "admin",
+                )
 
-        // Then
-        coVerify { authService.login(AuthRequest("john", "doe")) }
-        val message = (response as Either.Error).message
-        assertEquals("Invalid credentials", message)
-    }
+            // Then
+            coVerify { authService.login(AuthRequest("admin", "admin")) }
+            val credentials = (response as Either.Success).data
+            assertEquals("Bearer ABCD", credentials.token)
+        }
+
+    @Test
+    fun `getUserByUsernameAndPassword should return error when credentials are invalid`() =
+        runTest {
+            // When
+            val response =
+                repository.getUserByUsernameAndPassword(
+                    username = "john",
+                    password = "doe",
+                )
+
+            // Then
+            coVerify { authService.login(AuthRequest("john", "doe")) }
+            val message = (response as Either.Error).message
+            assertEquals("Invalid credentials", message)
+        }
 }
 
 class FakeAuthService : NotyAuthService {
@@ -114,7 +118,7 @@ class FakeAuthService : NotyAuthService {
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),
-                    moshi.adapter<AuthResponse>().toJson(response)
+                    moshi.adapter<AuthResponse>().toJson(response),
                 )
             Response.error(401, body)
         }

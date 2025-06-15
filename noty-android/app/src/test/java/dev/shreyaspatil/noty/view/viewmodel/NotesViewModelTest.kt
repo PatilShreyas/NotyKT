@@ -35,7 +35,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +45,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 @Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
 class NotesViewModelTest : ViewModelTest() {
@@ -82,7 +82,7 @@ class NotesViewModelTest : ViewModelTest() {
                 every { observeTask(defaultTaskId) } returns
                     flowOf(
                         TaskState.SCHEDULED,
-                        TaskState.COMPLETED
+                        TaskState.COMPLETED,
                     )
             }
 
@@ -94,53 +94,56 @@ class NotesViewModelTest : ViewModelTest() {
                 sessionManager = sessionManager,
                 preferenceManager = preferenceManager,
                 notyTaskManager = taskManager,
-                connectivityObserver = connectivityObserver
+                connectivityObserver = connectivityObserver,
             )
     }
 
     @Test
-    fun `initial state should be valid with notes loaded`() = runTest {
-        // Given
-        val initialNotes = listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))
-        fakeNotesFlow.emit(Either.success(initialNotes))
+    fun `initial state should be valid with notes loaded`() =
+        runTest {
+            // Given
+            val initialNotes = listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))
+            fakeNotesFlow.emit(Either.success(initialNotes))
 
-        // Then
-        val expectedState =
-            NotesState(
-                isLoading = false,
-                notes = initialNotes,
-                error = null,
-                isUserLoggedIn = true,
-                isConnectivityAvailable = true
-            )
+            // Then
+            val expectedState =
+                NotesState(
+                    isLoading = false,
+                    notes = initialNotes,
+                    error = null,
+                    isUserLoggedIn = true,
+                    isConnectivityAvailable = true,
+                )
 
-        assertEquals(expectedState, viewModel.currentState)
-        verify { sessionManager.getToken() }
-        verify { taskManager.syncNotes() }
-    }
-
-    @Test
-    fun `state should update when notes are successfully loaded`() = runTest {
-        // Given
-        val notes = listOf(note("1"), note("2"), note("3"))
-
-        // When
-        fakeNotesFlow.emit(Either.success(notes))
-
-        // Then
-        assertEquals(notes, viewModel.currentState.notes)
-        assertFalse(viewModel.currentState.isLoading)
-    }
+            assertEquals(expectedState, viewModel.currentState)
+            verify { sessionManager.getToken() }
+            verify { taskManager.syncNotes() }
+        }
 
     @Test
-    fun `state should update with error when notes loading fails`() = runTest {
-        // When
-        fakeNotesFlow.emit(Either.error("Error occurred"))
+    fun `state should update when notes are successfully loaded`() =
+        runTest {
+            // Given
+            val notes = listOf(note("1"), note("2"), note("3"))
 
-        // Then
-        assertEquals("Error occurred", viewModel.currentState.error)
-        assertFalse(viewModel.currentState.isLoading)
-    }
+            // When
+            fakeNotesFlow.emit(Either.success(notes))
+
+            // Then
+            assertEquals(notes, viewModel.currentState.notes)
+            assertFalse(viewModel.currentState.isLoading)
+        }
+
+    @Test
+    fun `state should update with error when notes loading fails`() =
+        runTest {
+            // When
+            fakeNotesFlow.emit(Either.error("Error occurred"))
+
+            // Then
+            assertEquals("Error occurred", viewModel.currentState.error)
+            assertFalse(viewModel.currentState.isLoading)
+        }
 
     @Test
     fun `state should update when connectivity is available`() {
@@ -174,48 +177,50 @@ class NotesViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun `syncNotes should schedule task and update state when sync is successful`() = runTest {
-        // Given
-        clearAllMocks(answers = false)
-        every { sessionManager.getToken() } returns "ABCD1234"
+    fun `syncNotes should schedule task and update state when sync is successful`() =
+        runTest {
+            // Given
+            clearAllMocks(answers = false)
+            every { sessionManager.getToken() } returns "ABCD1234"
 
-        val taskId = UUID.randomUUID()
-        every { taskManager.syncNotes() } returns taskId
-        every { taskManager.observeTask(taskId) } returns
-            flowOf(
-                TaskState.SCHEDULED,
-                TaskState.COMPLETED
-            )
+            val taskId = UUID.randomUUID()
+            every { taskManager.syncNotes() } returns taskId
+            every { taskManager.observeTask(taskId) } returns
+                flowOf(
+                    TaskState.SCHEDULED,
+                    TaskState.COMPLETED,
+                )
 
-        // When
-        viewModel.syncNotes()
+            // When
+            viewModel.syncNotes()
 
-        // Then
-        verify(exactly = 1) { taskManager.syncNotes() }
-        assertFalse(viewModel.currentState.isLoading)
-    }
+            // Then
+            verify(exactly = 1) { taskManager.syncNotes() }
+            assertFalse(viewModel.currentState.isLoading)
+        }
 
     @Test
-    fun `syncNotes should update state with error when sync fails`() = runTest {
-        // Given
-        clearAllMocks(answers = false)
-        every { sessionManager.getToken() } returns "ABCD1234"
+    fun `syncNotes should update state with error when sync fails`() =
+        runTest {
+            // Given
+            clearAllMocks(answers = false)
+            every { sessionManager.getToken() } returns "ABCD1234"
 
-        val taskId = UUID.randomUUID()
-        every { taskManager.syncNotes() } returns taskId
-        every { taskManager.observeTask(taskId) } returns
-            flowOf(
-                TaskState.SCHEDULED,
-                TaskState.FAILED
-            )
+            val taskId = UUID.randomUUID()
+            every { taskManager.syncNotes() } returns taskId
+            every { taskManager.observeTask(taskId) } returns
+                flowOf(
+                    TaskState.SCHEDULED,
+                    TaskState.FAILED,
+                )
 
-        // When
-        viewModel.syncNotes()
+            // When
+            viewModel.syncNotes()
 
-        // Then
-        assertFalse(viewModel.currentState.isLoading)
-        assertEquals("Failed to sync notes", viewModel.currentState.error)
-    }
+            // Then
+            assertFalse(viewModel.currentState.isLoading)
+            assertEquals("Failed to sync notes", viewModel.currentState.error)
+        }
 
     @Test
     fun `setDarkMode should save preference`() {
@@ -230,17 +235,18 @@ class NotesViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun `isDarkModeEnabled should return correct UI mode`() = runTest {
-        // Given
-        val expectedUiMode = true
-        coEvery { preferenceManager.uiModeFlow } returns flowOf(expectedUiMode)
+    fun `isDarkModeEnabled should return correct UI mode`() =
+        runTest {
+            // Given
+            val expectedUiMode = true
+            coEvery { preferenceManager.uiModeFlow } returns flowOf(expectedUiMode)
 
-        // When
-        val actualUiMode = viewModel.isDarkModeEnabled()
+            // When
+            val actualUiMode = viewModel.isDarkModeEnabled()
 
-        // Then
-        assertEquals(expectedUiMode, actualUiMode)
-    }
+            // Then
+            assertEquals(expectedUiMode, actualUiMode)
+        }
 
     @Test
     fun `logout should clear session, abort tasks, delete notes, and update state`() {

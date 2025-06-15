@@ -58,7 +58,7 @@ class LoginViewModelTest : ViewModelTest() {
                 username = "",
                 password = "",
                 isValidUsername = null,
-                isValidPassword = null
+                isValidPassword = null,
             )
         viewModel currentStateShouldBe expectedState
     }
@@ -88,78 +88,81 @@ class LoginViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun `login should validate credentials and update state when credentials are incomplete`() = runTest {
-        // Given
-        val username = "john"
-        val password = "eod"
+    fun `login should validate credentials and update state when credentials are incomplete`() =
+        runTest {
+            // Given
+            val username = "john"
+            val password = "eod"
 
-        viewModel.setUsername(username)
-        viewModel.setPassword(password)
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
 
-        // When
-        viewModel.login()
+            // When
+            viewModel.login()
 
-        // Then
-        viewModel.withState {
-            assertTrue(isValidUsername!!)
-            assertFalse(isValidPassword!!)
+            // Then
+            viewModel.withState {
+                assertTrue(isValidUsername!!)
+                assertFalse(isValidPassword!!)
+            }
+
+            coVerify(exactly = 0) {
+                repository.getUserByUsernameAndPassword(username, password)
+            }
         }
-
-        coVerify(exactly = 0) {
-            repository.getUserByUsernameAndPassword(username, password)
-        }
-    }
 
     @Test
-    fun `login should authenticate user and update state when credentials are valid`() = runTest {
-        // Given
-        val username = "johndoe1234"
-        val password = "4321eodnhoj"
-        val token = "Bearer TOKEN_ABC"
+    fun `login should authenticate user and update state when credentials are valid`() =
+        runTest {
+            // Given
+            val username = "johndoe1234"
+            val password = "4321eodnhoj"
+            val token = "Bearer TOKEN_ABC"
 
-        viewModel.setUsername(username)
-        viewModel.setPassword(password)
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
 
-        coEvery { repository.getUserByUsernameAndPassword(username, password) }
-            .returns(Either.success(AuthCredential(token)))
+            coEvery { repository.getUserByUsernameAndPassword(username, password) }
+                .returns(Either.success(AuthCredential(token)))
 
-        // When
-        viewModel.login()
+            // When
+            viewModel.login()
 
-        // Then
-        coVerify { repository.getUserByUsernameAndPassword(username, password) }
-        verify { sessionManager.saveToken(eq(token)) }
+            // Then
+            coVerify { repository.getUserByUsernameAndPassword(username, password) }
+            verify { sessionManager.saveToken(eq(token)) }
 
-        viewModel.withState {
-            assertTrue(isValidUsername!!)
-            assertTrue(isValidPassword!!)
-            assertFalse(isLoading)
-            assertTrue(isLoggedIn)
-            assertNull(error)
+            viewModel.withState {
+                assertTrue(isValidUsername!!)
+                assertTrue(isValidPassword!!)
+                assertFalse(isLoading)
+                assertTrue(isLoggedIn)
+                assertNull(error)
+            }
         }
-    }
 
     @Test
-    fun `login should update state with error when repository fails`() = runTest {
-        // Given
-        val username = "johndoe12345"
-        val password = "54321eodnhoj"
+    fun `login should update state with error when repository fails`() =
+        runTest {
+            // Given
+            val username = "johndoe12345"
+            val password = "54321eodnhoj"
 
-        viewModel.setUsername(username)
-        viewModel.setPassword(password)
+            viewModel.setUsername(username)
+            viewModel.setPassword(password)
 
-        coEvery { repository.getUserByUsernameAndPassword(username, password) }
-            .returns(Either.error("User not exist"))
+            coEvery { repository.getUserByUsernameAndPassword(username, password) }
+                .returns(Either.error("User not exist"))
 
-        // When
-        viewModel.login()
+            // When
+            viewModel.login()
 
-        // Then
-        coVerify { repository.getUserByUsernameAndPassword(username, password) }
+            // Then
+            coVerify { repository.getUserByUsernameAndPassword(username, password) }
 
-        viewModel.withState {
-            assertFalse(isLoggedIn)
-            assertEquals("User not exist", error)
+            viewModel.withState {
+                assertFalse(isLoggedIn)
+                assertEquals("User not exist", error)
+            }
         }
-    }
 }

@@ -26,13 +26,13 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import java.io.IOException
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.IOException
 
 class PreferenceManagerImplTest {
     // This is unused but it's necessary to mock the extension function on DataStore
@@ -65,26 +65,29 @@ class PreferenceManagerImplTest {
     }
 
     @Test
-    fun `uiModeFlow should emit valid UI preferences`() = runTest {
-        // When
-        val modes = manager.uiModeFlow.toList()
+    fun `uiModeFlow should emit valid UI preferences`() =
+        runTest {
+            // When
+            val modes = manager.uiModeFlow.toList()
 
-        // Then
-        assertEquals(listOf(false, true, false, false), modes)
-    }
+            // Then
+            assertEquals(listOf(false, true, false, false), modes)
+        }
 
     @Test
-    fun `setDarkMode should update UI preference`() = runTest {
-        // When
-        manager.setDarkMode(true)
+    fun `setDarkMode should update UI preference`() =
+        runTest {
+            // When
+            manager.setDarkMode(true)
 
-        // Then
-        verify {
-            preferences.set(PreferenceManagerImpl.IS_DARK_MODE, true)
+            // Then
+            verify {
+                preferences.set(PreferenceManagerImpl.IS_DARK_MODE, true)
+            }
         }
-    }
 
-    private fun preference(value: Boolean?) = mockk<Preferences> {
-        every { get(PreferenceManagerImpl.IS_DARK_MODE) } returns value
-    }
+    private fun preference(value: Boolean?) =
+        mockk<Preferences> {
+            every { get(PreferenceManagerImpl.IS_DARK_MODE) } returns value
+        }
 }
