@@ -17,54 +17,63 @@
 package dev.shreyaspatil.noty.session
 
 import android.content.SharedPreferences
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class SessionManagerImplTest : BehaviorSpec({
-    val preferenceEditor: SharedPreferences.Editor =
-        mockk {
-            every { putString(any(), any()) } returns this
-            every { clear() } returns this
-            every { commit() } returns true
+class SessionManagerImplTest {
+    private lateinit var preferenceEditor: SharedPreferences.Editor
+    private lateinit var preference: SharedPreferences
+    private lateinit var manager: SessionManagerImpl
+
+    @BeforeEach
+    fun setup() {
+        preferenceEditor =
+            mockk {
+                every { putString(any(), any()) } returns this
+                every { clear() } returns this
+                every { commit() } returns true
+            }
+
+        preference =
+            mockk(relaxUnitFun = true) {
+                every { edit() } returns preferenceEditor
+            }
+
+        manager = SessionManagerImpl(preference)
+    }
+
+    @Test
+    fun `saveToken should save token in preference storage`() {
+        // Given
+        val expectedToken = "Bearer ABCD"
+
+        // When
+        manager.saveToken(expectedToken)
+
+        // Then
+        verifySequence {
+            preference.edit()
+            preferenceEditor.putString("auth_token", expectedToken)
+            preferenceEditor.commit()
         }
+    }
 
-    val preference: SharedPreferences =
-        mockk(relaxUnitFun = true) {
-            every { edit() } returns preferenceEditor
-        }
-
-    val manager = SessionManagerImpl(preference)
-
-    Given("A authentication token") {
+    @Test
+    fun `getToken should retrieve token from preference storage`() {
+        // Given
         val expectedToken = "Bearer ABCD"
         every { preference.getString("auth_token", any()) } returns expectedToken
 
-        When("The token is saved in the preference storage") {
-            manager.saveToken(expectedToken)
+        // When
+        val actualToken = manager.getToken()
 
-            Then("Token should get saved in the preference storage") {
-                verifySequence {
-                    preference.edit()
-                    preferenceEditor.putString("auth_token", expectedToken)
-                    preferenceEditor.commit()
-                }
-            }
-        }
-
-        When("The token is retrieved from storage") {
-            val actualToken = manager.getToken()
-
-            Then("Manager should request token from preference storage") {
-                verify(exactly = 1) { preference.getString("auth_token", null) }
-            }
-
-            Then("Retrieved token should be valid") {
-                actualToken shouldBe expectedToken
-            }
-        }
+        // Then
+        verify(exactly = 1) { preference.getString("auth_token", null) }
+        assertEquals(expectedToken, actualToken)
     }
-})
+}

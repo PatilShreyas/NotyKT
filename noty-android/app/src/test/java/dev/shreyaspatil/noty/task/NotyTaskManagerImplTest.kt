@@ -28,10 +28,6 @@ import dev.shreyaspatil.noty.core.task.TaskState
 import dev.shreyaspatil.noty.fakes.FakeWorkManager
 import dev.shreyaspatil.noty.utils.ext.getEnum
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
-import io.kotest.core.spec.Spec
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.core.test.testCoroutineScheduler
-import io.kotest.matchers.shouldBe
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -39,142 +35,149 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.UUID
 
 @OptIn(ExperimentalStdlibApi::class)
-class NotyTaskManagerImplTest : BehaviorSpec() {
-    override suspend fun beforeSpec(spec: Spec) {
-        super.beforeSpec(spec)
+class NotyTaskManagerImplTest {
+    private lateinit var fakeWorkManager: FakeWorkManager
+    private lateinit var workManager: androidx.work.WorkManager
+    private lateinit var workRequests: MutableList<OneTimeWorkRequest>
+    private lateinit var manager: NotyTaskManagerImpl
+    private lateinit var workStates: List<Pair<UUID, WorkInfo.State>>
+
+    @BeforeEach
+    fun setup() {
         setupAsyncTaskExecutor()
+
+        fakeWorkManager = FakeWorkManager()
+        workManager = fakeWorkManager.mockWorkManager
+        workRequests = fakeWorkManager.oneTimeWorkRequests
+        manager = NotyTaskManagerImpl(workManager)
+
+        // Setup test data
+        Dispatchers.setMain(UnconfinedTestDispatcher())
+        workStates =
+            listOf(
+                UUID.randomUUID() to WorkInfo.State.ENQUEUED,
+                UUID.randomUUID() to WorkInfo.State.RUNNING,
+                UUID.randomUUID() to WorkInfo.State.BLOCKED,
+                UUID.randomUUID() to WorkInfo.State.CANCELLED,
+                UUID.randomUUID() to WorkInfo.State.SUCCEEDED,
+                UUID.randomUUID() to WorkInfo.State.FAILED,
+            )
+
+        workStates.forEach { (id, state) -> fakeWorkManager.fakeWorkStates[id] = state }
+
+        // To test observing work status flow
+        // Here delay is added because LiveData conflates the emitted result if emissions
+        // are too fast and that's the reason we have used Unconfined dispatcher here so that
+        // it can respect the delay.
+        fakeWorkManager.fakeWorkStatesForObserve =
+            flow {
+                emit(WorkInfo.State.ENQUEUED)
+                delay(100)
+                emit(WorkInfo.State.RUNNING)
+                delay(100)
+                emit(WorkInfo.State.FAILED)
+                delay(100)
+            }
     }
 
-    init {
-        coroutineTestScope = true
-
-        val fakeWorkManager = FakeWorkManager()
-        val workManager = fakeWorkManager.mockWorkManager
-        val workRequests = fakeWorkManager.oneTimeWorkRequests
-
-        val manager = NotyTaskManagerImpl(workManager)
-
-        Given("The tasks") {
-            Dispatchers.setMain(UnconfinedTestDispatcher(testScope.testCoroutineScheduler))
-            val workStates =
-                listOf(
-                    UUID.randomUUID() to WorkInfo.State.ENQUEUED,
-                    UUID.randomUUID() to WorkInfo.State.RUNNING,
-                    UUID.randomUUID() to WorkInfo.State.BLOCKED,
-                    UUID.randomUUID() to WorkInfo.State.CANCELLED,
-                    UUID.randomUUID() to WorkInfo.State.SUCCEEDED,
-                    UUID.randomUUID() to WorkInfo.State.FAILED,
-                )
-
-            workStates.forEach { (id, state) -> fakeWorkManager.fakeWorkStates[id] = state }
-
-            // To test observing work status flow
-            // Here delay is added because LiveData conflates the emitted result if emissions
-            // are too fast and that's the reason we have used Unconfined dispatcher here so that
-            // it can respect the delay.
-            fakeWorkManager.fakeWorkStatesForObserve =
-                flow {
-                    emit(WorkInfo.State.ENQUEUED)
-                    delay(100)
-                    emit(WorkInfo.State.RUNNING)
-                    delay(100)
-                    emit(WorkInfo.State.FAILED)
-                    delay(100)
-                }
-
-            When("Notes are synced") {
-                manager.syncNotes()
-
-                Then("Unique work should be get scheduled") {
-                    verify(exactly = 1) {
-                        workManager.enqueueUniqueWork(
-                            NotyTaskManagerImpl.SYNC_TASK_NAME,
-                            ExistingWorkPolicy.REPLACE,
-                            any<OneTimeWorkRequest>(),
-                        )
-                    }
-                }
-
-                Then("Work spec should contain internet connectivity constraint") {
-                    val spec = workRequests.last().workSpec
-                    spec.constraints.requiredNetworkType shouldBe NetworkType.CONNECTED
-                }
-            }
-
-            When("The noty task is scheduled") {
-                val noteId = "note-1234"
-                val notyTask = NotyTask.create(noteId)
-
-                manager.scheduleTask(notyTask)
-
-                Then("Unique work should be get scheduled with work name having note ID") {
-                    verify(exactly = 1) {
-                        workManager.enqueueUniqueWork(
-                            noteId,
-                            ExistingWorkPolicy.REPLACE,
-                            any<OneTimeWorkRequest>(),
-                        )
-                    }
-                }
-
-                val spec = workRequests.last().workSpec
-
-                Then("Work spec should contain internet connectivity constraint") {
-                    spec.constraints.requiredNetworkType shouldBe NetworkType.CONNECTED
-                }
-
-                Then("Work spec should contain data") {
-                    val inputData = spec.input
-                    val actualNoteId = inputData.getString(NotyTaskWorker.KEY_NOTE_ID)
-                    val actualTask = inputData.getEnum<NotyTaskAction>(NotyTaskWorker.KEY_TASK_TYPE)
-
-                    actualNoteId shouldBe noteId
-                    actualTask shouldBe NotyTaskAction.CREATE
-                }
-            }
-
-            When("The task state is retrieved") {
-                val taskStates = workStates.map { (id, _) -> manager.getTaskState(id) }
-
-                Then("Valid mapped task state should be returned") {
-                    taskStates shouldBe
-                        listOf(
-                            TaskState.SCHEDULED,
-                            TaskState.SCHEDULED,
-                            TaskState.SCHEDULED,
-                            TaskState.CANCELLED,
-                            TaskState.COMPLETED,
-                            TaskState.FAILED,
-                        )
-                }
-            }
-
-            When("The task is observed") {
-                val taskStates = manager.observeTask(UUID.randomUUID()).toList()
-
-                Then("Valid task states should be emitted") {
-                    taskStates shouldBe listOf(TaskState.SCHEDULED, TaskState.FAILED)
-                }
-            }
-
-            When("All tasks are aborted") {
-                manager.abortAllTasks()
-
-                Then("All tasks should get cancelled in WorkManager") {
-                    verify(exactly = 1) { workManager.cancelAllWork() }
-                }
-            }
-        }
-    }
-
-    override suspend fun afterSpec(spec: Spec) {
-        super.afterSpec(spec)
+    @AfterEach
+    fun tearDown() {
         Dispatchers.resetMain()
         cleanupAsyncTaskExecutor()
+    }
+
+    @Test
+    fun `syncNotes should schedule unique work with internet connectivity constraint`() {
+        // When
+        manager.syncNotes()
+
+        // Then
+        verify(exactly = 1) {
+            workManager.enqueueUniqueWork(
+                NotyTaskManagerImpl.SYNC_TASK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                any<OneTimeWorkRequest>(),
+            )
+        }
+
+        val spec = workRequests.last().workSpec
+        assertEquals(NetworkType.CONNECTED, spec.constraints.requiredNetworkType)
+    }
+
+    @Test
+    fun `scheduleTask should schedule unique work with proper constraints and data`() {
+        // Given
+        val noteId = "note-1234"
+        val notyTask = NotyTask.create(noteId)
+
+        // When
+        manager.scheduleTask(notyTask)
+
+        // Then
+        verify(exactly = 1) {
+            workManager.enqueueUniqueWork(
+                noteId,
+                ExistingWorkPolicy.REPLACE,
+                any<OneTimeWorkRequest>(),
+            )
+        }
+
+        val spec = workRequests.last().workSpec
+        assertEquals(NetworkType.CONNECTED, spec.constraints.requiredNetworkType)
+
+        val inputData = spec.input
+        val actualNoteId = inputData.getString(NotyTaskWorker.KEY_NOTE_ID)
+        val actualTask = inputData.getEnum<NotyTaskAction>(NotyTaskWorker.KEY_TASK_TYPE)
+
+        assertEquals(noteId, actualNoteId)
+        assertEquals(NotyTaskAction.CREATE, actualTask)
+    }
+
+    @Test
+    fun `getTaskState should return correct mapped task state`() {
+        // When
+        val taskStates = workStates.map { (id, _) -> manager.getTaskState(id) }
+
+        // Then
+        assertEquals(
+            listOf(
+                TaskState.SCHEDULED,
+                TaskState.SCHEDULED,
+                TaskState.SCHEDULED,
+                TaskState.CANCELLED,
+                TaskState.COMPLETED,
+                TaskState.FAILED,
+            ),
+            taskStates,
+        )
+    }
+
+    @Test
+    fun `observeTask should emit correct task states`() =
+        runTest {
+            // When
+            val taskStates = manager.observeTask(UUID.randomUUID()).toList()
+
+            // Then
+            assertEquals(listOf(TaskState.SCHEDULED, TaskState.FAILED), taskStates)
+        }
+
+    @Test
+    fun `abortAllTasks should cancel all work in WorkManager`() {
+        // When
+        manager.abortAllTasks()
+
+        // Then
+        verify(exactly = 1) { workManager.cancelAllWork() }
     }
 
     private fun setupAsyncTaskExecutor() {

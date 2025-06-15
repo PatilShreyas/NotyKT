@@ -20,8 +20,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coInvoke
 import io.mockk.every
@@ -30,53 +28,63 @@ import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.IOException
 
-class PreferenceManagerImplTest : BehaviorSpec() {
+class PreferenceManagerImplTest {
     // This is unused but it's necessary to mock the extension function on DataStore
-    val editMock = mockkStatic(DataStore<Preferences>::edit)
+    private val editMock = mockkStatic(DataStore<Preferences>::edit)
+    private lateinit var preferences: MutablePreferences
+    private lateinit var dataStore: DataStore<Preferences>
+    private lateinit var manager: PreferenceManagerImpl
 
-    private val preferences: MutablePreferences = mockk(relaxUnitFun = true)
+    @BeforeEach
+    fun setup() {
+        preferences = mockk(relaxUnitFun = true)
 
-    private val dataStore: DataStore<Preferences> =
-        mockk {
-            every { data } returns
-                flow {
-                    emit(preference(null))
-                    emit(preference(true))
-                    emit(preference(false))
-                    throw IOException("Fake error")
-                }
-
-            coEvery { edit(captureLambda()) } coAnswers {
-                lambda<suspend (MutablePreferences) -> Unit>().coInvoke(preferences)
-                preference(true)
-            }
-        }
-
-    private val manager = PreferenceManagerImpl(dataStore)
-
-    init {
-        Given("The UI mode") {
-            When("UI Preferences are retrieved") {
-                val modes = manager.uiModeFlow.toList()
-
-                Then("Valid UI preferences should be emitted") {
-                    modes shouldBe listOf(false, true, false, false)
-                }
-            }
-
-            When("The UI preference is updated") {
-                manager.setDarkMode(true)
-
-                Then("UI preference should be updated") {
-                    verify {
-                        preferences.set(PreferenceManagerImpl.IS_DARK_MODE, true)
+        dataStore =
+            mockk {
+                every { data } returns
+                    flow {
+                        emit(preference(null))
+                        emit(preference(true))
+                        emit(preference(false))
+                        throw IOException("Fake error")
                     }
+
+                coEvery { edit(captureLambda()) } coAnswers {
+                    lambda<suspend (MutablePreferences) -> Unit>().coInvoke(preferences)
+                    preference(true)
                 }
             }
-        }
+
+        manager = PreferenceManagerImpl(dataStore)
     }
+
+    @Test
+    fun `uiModeFlow should emit valid UI preferences`() =
+        runTest {
+            // When
+            val modes = manager.uiModeFlow.toList()
+
+            // Then
+            assertEquals(listOf(false, true, false, false), modes)
+        }
+
+    @Test
+    fun `setDarkMode should update UI preference`() =
+        runTest {
+            // When
+            manager.setDarkMode(true)
+
+            // Then
+            verify {
+                preferences.set(PreferenceManagerImpl.IS_DARK_MODE, true)
+            }
+        }
 
     private fun preference(value: Boolean?) =
         mockk<Preferences> {

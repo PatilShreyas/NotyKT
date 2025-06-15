@@ -89,6 +89,12 @@ android {
         buildConfig = true
     }
 
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+
     lint {
         abortOnError = false
     }
@@ -163,7 +169,11 @@ dependencies {
     implementation(libs.capturable)
 
     // Testing
-    testImplementation(libs.junit)
+    testImplementation(libs.junit5.api)
+    testImplementation(libs.junit5.params)
+    testRuntimeOnly(libs.junit5.engine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Android Testing
     androidTestImplementation(libs.androidx.test.core)

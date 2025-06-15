@@ -17,8 +17,6 @@
 package dev.shreyaspatil.noty.data.remote.interceptor
 
 import dev.shreyaspatil.noty.core.session.SessionManager
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -29,56 +27,60 @@ import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 
-@Suppress("BlockingMethodInNonBlockingContext")
-class AuthInterceptorTest : BehaviorSpec({
+class AuthInterceptorTest {
+    private lateinit var sessionManager: SessionManager
+    private lateinit var interceptor: AuthInterceptor
+    private lateinit var expectedRequest: Request
+    private lateinit var requestBuilder: Request.Builder
+    private lateinit var chain: FakeChain
 
-    val sessionManager: SessionManager = mockk()
-    val interceptor = AuthInterceptor(sessionManager)
+    @BeforeEach
+    fun setup() {
+        sessionManager = mockk()
+        interceptor = AuthInterceptor(sessionManager)
 
-    // Init mocks
-    val expectedRequest: Request = mockk()
-    val requestBuilder: Request.Builder =
-        mockk {
-            every { header(any(), any()) } returns this
-            every { build() } returns expectedRequest
-        }
-    val chain = FakeChain(requestBuilder)
-
-    Given("An auth token") {
-        every { sessionManager.getToken() } returns "ABCD1234"
-
-        When("The request goes through interceptor") {
-            interceptor.intercept(chain)
-
-            Then("Auth Bearer Token should get added in the header") {
-                verify { requestBuilder.header("Authorization", "Bearer ABCD1234") }
+        // Init mocks
+        expectedRequest = mockk()
+        requestBuilder =
+            mockk {
+                every { header(any(), any()) } returns this
+                every { build() } returns expectedRequest
             }
-
-            Then("The chain should proceed with the new request") {
-                chain.proceededRequest shouldBe expectedRequest
-            }
-        }
+        chain = FakeChain(requestBuilder)
     }
 
-    Given("No auth token available") {
+    @Test
+    fun `intercept should add auth token to header when token is available`() {
+        // Given
+        every { sessionManager.getToken() } returns "ABCD1234"
+
+        // When
+        interceptor.intercept(chain)
+
+        // Then
+        verify { requestBuilder.header("Authorization", "Bearer ABCD1234") }
+        assertEquals(expectedRequest, chain.proceededRequest)
+    }
+
+    @Test
+    fun `intercept should not add auth token to header when token is not available`() {
+        // Given
         clearAllMocks(answers = false)
         every { sessionManager.getToken() } returns null
 
-        When("The request goes through interceptor") {
-            interceptor.intercept(chain)
+        // When
+        interceptor.intercept(chain)
 
-            Then("Auth Bearer Token should NOT get added in the header") {
-                verify(exactly = 0) { requestBuilder.header("Authorization", any()) }
-            }
-
-            Then("The chain should proceed with the new request") {
-                chain.proceededRequest shouldBe expectedRequest
-            }
-        }
+        // Then
+        verify(exactly = 0) { requestBuilder.header("Authorization", any()) }
+        assertEquals(expectedRequest, chain.proceededRequest)
     }
-})
+}
 
 /**
  * Fake implementation of [Interceptor.Chain]
