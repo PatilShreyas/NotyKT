@@ -49,7 +49,6 @@ class NotesListAdapter(
     inner class NoteViewHolder(
         private val binding: ItemNoteBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        
         init {
             binding.root.setOnClickListener {
                 val position = adapterPosition
@@ -58,7 +57,7 @@ class NotesListAdapter(
                 }
             }
         }
-        
+
         fun bind(note: Note) {
             with(binding) {
                 textTitle.text = note.title
