@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -55,6 +57,10 @@ fun NotyNavigation() {
                 .displayCutoutPadding(),
         startDestination = Screen.Notes.route,
         route = NOTY_NAV_HOST_ROUTE,
+        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(700)) },
+        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(700)) },
+        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(700)) },
+        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(700)) },
     ) {
         composable(Screen.SignUp.route) {
             SignUpScreen(
