@@ -54,6 +54,7 @@ androidTestRunner = "1.6.2"
 junit5 = "5.10.2"
 mockk = "1.14.2"
 jacoco = "0.8.13"
+robolectric = "4.11.1"
 
 # Other
 materialDesign = "1.12.0"
@@ -133,6 +134,7 @@ junit = { group = "junit", name = "junit", version.ref = "jUnit" }
 junit5-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
 junit5-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
 junit5-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
+junit5-vintage = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit5" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidJUnit" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidTestCore" }
@@ -140,6 +142,7 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 # Other
 material = { group = "com.google.android.material", name = "material", version.ref = "materialDesign" }

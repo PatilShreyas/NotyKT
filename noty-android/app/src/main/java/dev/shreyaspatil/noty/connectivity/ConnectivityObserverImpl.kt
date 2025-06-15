@@ -21,10 +21,8 @@ import dev.shreyaspatil.noty.core.connectivity.ConnectionState
 import dev.shreyaspatil.noty.core.connectivity.ConnectivityObserver
 import dev.shreyaspatil.noty.utils.currentConnectivityState
 import dev.shreyaspatil.noty.utils.observeConnectivityAsFlow
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class ConnectivityObserverImpl(
     private val connectivityManager: ConnectivityManager,
 ) : ConnectivityObserver {
