@@ -23,7 +23,9 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import dev.shreyaspatil.noty.core.connectivity.ConnectionState
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
@@ -41,11 +43,10 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-@Config(manifest = Config.NONE, sdk=[Build.VERSION_CODES.S])
+@Config(manifest = Config.NONE, sdk = [Build.VERSION_CODES.S])
 class ConnectivityObserverImplTest {
-
     private lateinit var connectivityManager: ConnectivityManager
     private lateinit var connectivityObserver: ConnectivityObserverImpl
     private lateinit var network: Network
@@ -56,105 +57,168 @@ class ConnectivityObserverImplTest {
         connectivityManager = mockk(relaxed = true)
         network = mockk()
         networkCapabilities = mockk()
-        
+
         connectivityObserver = ConnectivityObserverImpl(connectivityManager)
     }
 
     @Test
-    fun `currentConnectionState should return Available when network has internet capability`() {
+    fun `currentConnectionState should return Available when network has internet capability and is validated`() {
         // Given
-        val networks = arrayOf(network)
-        every { connectivityManager.getAllNetworks() } returns networks
+        every { connectivityManager.activeNetwork } returns network
         every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
         every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
-        
+        every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns true
+
         // When
         val result = connectivityObserver.currentConnectionState
-        
+
         // Then
         assertEquals(ConnectionState.Available, result)
+    }
+
+    @Test
+    fun `currentConnectionState should return Unavailable when network has internet capability but is not validated`() {
+        // Given
+        every { connectivityManager.activeNetwork } returns network
+        every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
+        every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+        every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns false
+
+        // When
+        val result = connectivityObserver.currentConnectionState
+
+        // Then
+        assertEquals(ConnectionState.Unavailable, result)
     }
 
     @Test
     fun `currentConnectionState should return Unavailable when network has no internet capability`() {
         // Given
-        val networks = arrayOf(network)
-        every { connectivityManager.allNetworks } returns networks
+        every { connectivityManager.activeNetwork } returns network
         every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
         every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns false
-        
+        every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns true
+
         // When
         val result = connectivityObserver.currentConnectionState
-        
+
         // Then
         assertEquals(ConnectionState.Unavailable, result)
     }
 
     @Test
-    fun `currentConnectionState should return Unavailable when no networks available`() {
+    fun `currentConnectionState should return Unavailable when no active network`() {
         // Given
-        every { connectivityManager.allNetworks } returns arrayOf()
-        
+        every { connectivityManager.activeNetwork } returns null
+
         // When
         val result = connectivityObserver.currentConnectionState
-        
+
         // Then
         assertEquals(ConnectionState.Unavailable, result)
     }
 
     @Test
-    fun `connectionState should emit initial state based on current connectivity`() = runTest {
-        // Given
-        val networks = arrayOf(network)
-        every { connectivityManager.allNetworks } returns networks
-        every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
-        every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
-        
-        // Capture the callback to simulate network events
-        val callbackSlot = slot<NetworkCallback>()
-        every { 
-            connectivityManager.registerNetworkCallback(any<NetworkRequest>(), capture(callbackSlot))
-        } answers { /* do nothing */ }
-        
-        // When
-        val result = connectivityObserver.connectionState.first()
-        
-        // Then
-        assertEquals(ConnectionState.Available, result)
-        verify { connectivityManager.registerNetworkCallback(any<NetworkRequest>(), any<NetworkCallback>()) }
-    }
+    fun `connectionState should emit initial state based on current connectivity`() =
+        runTest {
+            // Given
+            every { connectivityManager.activeNetwork } returns network
+            every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns true
 
-    @Test
-    fun `connectionState should emit network state changes`() = runTest {
-        // Given - Initial state is Unavailable
-        every { connectivityManager.allNetworks } returns arrayOf()
-        
-        // Capture the callback to simulate network events
-        val callbackSlot = slot<NetworkCallback>()
-        every { 
-            connectivityManager.registerNetworkCallback(any<NetworkRequest>(), capture(callbackSlot))
-        } answers { /* do nothing */ }
-        
-        // When - Collect flow in background
-        val results = mutableListOf<ConnectionState>()
-        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
-            connectivityObserver.connectionState.take(3).toList(results)
+            // Capture the callback to simulate network events
+            val callbackSlot = slot<NetworkCallback>()
+            every {
+                connectivityManager.registerNetworkCallback(any<NetworkRequest>(), capture(callbackSlot))
+            } answers { /* do nothing */ }
+
+            // When
+            val result = connectivityObserver.connectionState.first()
+
+            // Then
+            assertEquals(ConnectionState.Available, result)
+            verify { connectivityManager.registerNetworkCallback(any<NetworkRequest>(), any<NetworkCallback>()) }
         }
-        
-        // Then - Simulate network callbacks
-        callbackSlot.captured.onAvailable(network) // First emission (after initial)
-        callbackSlot.captured.onUnavailable() // Second emission
-        callbackSlot.captured.onUnavailable() // Third emission (same as previous, so should not receive this one)
 
-        // Wait for collection to complete
-        collectJob.cancel()
-        
-        // Verify we got the expected sequence of states
-        assertEquals(3, results.size)
-        assertEquals(ConnectionState.Unavailable, results[0]) // Initial state
-        assertEquals(ConnectionState.Available, results[1]) // From onUnavailable
-        assertEquals(ConnectionState.Unavailable, results[2]) // From onAvailable
+    @Test
+    fun `connectionState should emit network state changes through callbacks`() =
+        runTest {
+            // Given - Initial state is Unavailable (no active network)
+            every { connectivityManager.activeNetwork } returns null
 
-        verify { connectivityManager.registerNetworkCallback(any<NetworkRequest>(), any<NetworkCallback>()) }
-    }
+            // Capture the callback to simulate network events
+            val callbackSlot = slot<NetworkCallback>()
+            every { connectivityManager.registerNetworkCallback(any(), capture(callbackSlot)) } just Runs
+
+            // When - Collect flow in background
+            val results = mutableListOf<ConnectionState>()
+            val collectJob =
+                launch(UnconfinedTestDispatcher(testScheduler)) {
+                    connectivityObserver.connectionState.take(3).toList(results)
+                }
+
+            // Then - Simulate network state changes
+
+            // 1. Network becomes available and validated
+            every { connectivityManager.activeNetwork } returns network
+            every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns true
+
+            callbackSlot.captured.onAvailable(network) // Triggers re-evaluation
+
+            // 2. Network becomes unavailable
+            every { connectivityManager.activeNetwork } returns null
+
+            callbackSlot.captured.onLost(network) // Triggers re-evaluation
+
+            // Wait for collection to complete
+            collectJob.cancel()
+
+            // Verify we got the expected sequence of states
+            println("Results = $results")
+            assertEquals(3, results.size)
+            assertEquals(ConnectionState.Unavailable, results[0]) // Initial state
+            assertEquals(ConnectionState.Available, results[1]) // After network becomes available
+            assertEquals(ConnectionState.Unavailable, results[2]) // After network is lost
+
+            verify { connectivityManager.registerNetworkCallback(any<NetworkRequest>(), any<NetworkCallback>()) }
+        }
+
+    @Test
+    fun `connectionState should emit state changes when capabilities change`() =
+        runTest {
+            // Given - Initial state with unvalidated network
+            every { connectivityManager.activeNetwork } returns network
+            every { connectivityManager.getNetworkCapabilities(network) } returns networkCapabilities
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) } returns true
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns false
+
+            // Capture the callback to simulate network events
+            val callbackSlot = slot<NetworkCallback>()
+            every { connectivityManager.registerNetworkCallback(any(), capture(callbackSlot)) } just Runs
+
+            // When - Collect flow in background
+            val results = mutableListOf<ConnectionState>()
+            val collectJob =
+                launch(UnconfinedTestDispatcher(testScheduler)) {
+                    connectivityObserver.connectionState.take(2).toList(results)
+                }
+
+            // Then - Simulate network validation
+            every { networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) } returns true
+
+            callbackSlot.captured.onCapabilitiesChanged(network, networkCapabilities) // Triggers re-evaluation
+
+            // Wait for collection to complete
+            collectJob.cancel()
+
+            // Verify we got the expected sequence of states
+            assertEquals(2, results.size)
+            assertEquals(ConnectionState.Unavailable, results[0]) // Initial state (unvalidated)
+            assertEquals(ConnectionState.Available, results[1]) // After validation
+
+            verify { connectivityManager.registerNetworkCallback(any<NetworkRequest>(), any<NetworkCallback>()) }
+        }
 }
