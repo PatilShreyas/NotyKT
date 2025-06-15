@@ -16,7 +16,11 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -40,7 +44,14 @@ const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 fun NotyNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
+    NavHost(
+        navController,
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
+        startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE
+    ) {
         composable(Screen.SignUp.route) {
             SignUpScreen(
                 viewModel = hiltViewModel(),
