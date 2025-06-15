@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.component.scaffold
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -30,6 +32,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,7 +51,11 @@ fun NotyTopAppBar(
         title = {
             Row {
                 val image = painterResource(id = R.drawable.ic_noty_logo)
-                Image(painter = image, contentDescription = "Noty Icon")
+                Image(
+                    painter = image,
+                    contentDescription = "Noty Icon",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onBackground)
+                )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = title,
