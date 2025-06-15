@@ -32,7 +32,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -48,15 +48,11 @@ import dev.shreyaspatil.noty.utils.share.shareImage
 import dev.shreyaspatil.noty.utils.share.shareNoteText
 import dev.shreyaspatil.noty.view.state.NoteDetailState
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class NoteDetailFragment :
     BaseFragment<NoteDetailFragmentBinding, NoteDetailState, NoteDetailViewModel>() {
     private val args: NoteDetailFragmentArgs by navArgs()
-
-    @Inject
-    lateinit var viewModelAssistedFactory: NoteDetailViewModel.Factory
 
     /**
      * Since we are continuously listening to the [NoteDetailState] for state updates, we get
@@ -70,10 +66,10 @@ class NoteDetailFragment :
 
     private var pinMenuItem: MenuItem? = null
 
-    override val viewModel: NoteDetailViewModel by viewModels {
-        args.noteId?.let { noteId ->
-            NoteDetailViewModel.provideFactory(viewModelAssistedFactory, noteId)
-        } ?: throw IllegalStateException("'noteId' shouldn't be null")
+    override val viewModel: NoteDetailViewModel by hiltNavGraphViewModels(
+        R.id.nav_graph,
+    ) { factory: NoteDetailViewModel.Factory ->
+        factory.create(args.noteId ?: error("'noteId' shouldn't be null"))
     }
 
     private val requestLauncher =

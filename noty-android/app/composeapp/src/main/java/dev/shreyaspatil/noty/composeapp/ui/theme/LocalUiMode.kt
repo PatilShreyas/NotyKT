@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package dev.shreyaspatil.noty.data.remote
+package dev.shreyaspatil.noty.composeapp.ui.theme
 
-object Constant {
-    const val API_BASE_URL = "https://notykt-api.shreyaspatil.dev/"
-}
+import androidx.compose.runtime.compositionLocalOf
+
+val LocalUiInDarkMode = compositionLocalOf<Boolean> { error("Dark mode is not set") }
