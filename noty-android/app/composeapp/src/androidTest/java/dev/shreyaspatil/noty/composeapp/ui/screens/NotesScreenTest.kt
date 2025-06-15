@@ -18,8 +18,9 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.test.IdlingResource
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -33,10 +34,6 @@ import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.di.LocalRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -45,6 +42,7 @@ import org.junit.Before
 import org.junit.Test
 import javax.inject.Inject
 
+@OptIn(ExperimentalTestApi::class)
 @DelicateCoroutinesApi
 @HiltAndroidTest
 class NotesScreenTest : NotyScreenTest() {
@@ -60,6 +58,11 @@ class NotesScreenTest : NotyScreenTest() {
         inject()
         // Mock fake authentication
         sessionManager.saveToken("Bearer ABCD")
+    }
+
+    @After
+    fun tearDown() {
+        sessionManager.saveToken(null)
     }
 
     @Test
@@ -149,14 +152,14 @@ class NotesScreenTest : NotyScreenTest() {
     @Test
     fun showNotes_whenNotesAreLoaded() =
         runTest {
+            val notes = notes()
             setNotyContent { NotesScreen() }
-            registerIdlingResource(prefillNotes())
+            setIdleAfter { prefillNotes(notes) }
+            waitUntilAtLeastOneExists(hasText(notes.first().title), timeoutMillis = 5000)
 
-            waitForIdle()
             onNodeWithTag("notesList").performScrollToIndex(0)
             waitForIdle()
 
-            val notes = notes()
             onNodeWithText(notes.first().title).assertExists()
             onNodeWithText(notes.first().note).assertExists()
 
@@ -178,19 +181,21 @@ class NotesScreenTest : NotyScreenTest() {
     fun showNoteOnRealtime_whenNewNoteIsAddedOrDeleted() =
         runTest {
             setNotyContent { NotesScreen() }
+            setIdleAfter { prefillNotes(notes()) }
+            setIdleAfter { addNote(title = "New Note", note = "Hey there!") }
 
-            registerIdlingResource(prefillNotes())
-            registerIdlingResource(addNote(title = "New Note", note = "Hey there!"))
-
-            waitForIdle()
             onNodeWithTag("notesList").performScrollToIndex(0)
             waitForIdle()
 
             // Newly added note should be displayed on UI
+            waitUntilAtLeastOneExists(hasText("New Note"), timeoutMillis = 5000)
             onNodeWithText("New Note").assertIsDisplayed()
             onNodeWithText("Hey there!").assertIsDisplayed()
 
-            registerIdlingResource(deleteNote("1"))
+            setIdleAfter { deleteNote("1") }
+
+            // Wait for deletion to take effect
+            waitForIdle()
 
             // Deleted note should not exist
             onNodeWithText("Lorem Ipsum 1").assertDoesNotExist()
@@ -203,7 +208,9 @@ class NotesScreenTest : NotyScreenTest() {
             var navigateToNoteId: String? = null
 
             setNotyContent { NotesScreen(onNavigateToNoteDetail = { navigateToNoteId = it }) }
-            registerIdlingResource(prefillNotes())
+            val notes = notes()
+            setIdleAfter { prefillNotes(notes) }
+            waitUntilAtLeastOneExists(hasText(notes.first().title), timeoutMillis = 5000)
 
             onNodeWithText("Lorem Ipsum 2", useUnmergedTree = true).performClick()
             waitForIdle()
@@ -218,11 +225,9 @@ class NotesScreenTest : NotyScreenTest() {
     fun showPinnedNotesFirst_whenPinnedNotesArePresent() =
         runTest {
             setNotyContent { NotesScreen() }
-
-            registerIdlingResource(prefillNotes())
-            registerIdlingResource(pinNotes("49", "50"))
-
-            waitForIdle()
+            setIdleAfter { prefillNotes(notes()) }
+            setIdleAfter { pinNotes("49", "50") }
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum 49"), timeoutMillis = 5000)
 
             // Scroll to the top of screen
             onNodeWithTag("notesList").performScrollToIndex(0)
@@ -266,70 +271,22 @@ class NotesScreenTest : NotyScreenTest() {
         }
     }
 
-    @After
-    fun tearDown() = runBlocking { noteRepository.deleteAllNotes() }
-
-    private fun prefillNotes() = addNotes(notes())
-
-    private fun pinNotes(vararg noteIds: String): IdlingResource {
-        return updateNotePins(noteIds.toList())
+    // Simple suspend functions for data setup
+    private suspend fun prefillNotes(notes: List<Note>) {
+        noteRepository.addNotes(notes)
     }
 
-    @Suppress("SameParameterValue")
-    private fun addNote(
-        title: String,
-        note: String,
-    ) = object : IdlingResource {
-        override var isIdleNow: Boolean = false
-
-        init {
-            GlobalScope.launch {
-                noteRepository.addNote(title, note)
-                delay(1_000)
-                isIdleNow = true
-            }
-        }
+    private suspend fun addNote(title: String, note: String) {
+        noteRepository.addNote(title, note)
     }
 
-    private fun updateNotePins(noteIds: List<String>) =
-        object : IdlingResource {
-            override var isIdleNow: Boolean = false
+    private suspend fun deleteNote(id: String) {
+        noteRepository.deleteNote(id)
+    }
 
-            init {
-                GlobalScope.launch {
-                    noteIds.forEach { noteId ->
-                        noteRepository.pinNote(noteId, true)
-                    }
-                    delay(1_000)
-                    isIdleNow = true
-                }
-            }
+    private suspend fun pinNotes(vararg noteIds: String) {
+        noteIds.forEach { noteId ->
+            noteRepository.pinNote(noteId, true)
         }
-
-    @Suppress("SameParameterValue")
-    private fun deleteNote(id: String) =
-        object : IdlingResource {
-            override var isIdleNow: Boolean = false
-
-            init {
-                GlobalScope.launch {
-                    noteRepository.deleteNote(id)
-                    delay(1_000)
-                    isIdleNow = true
-                }
-            }
-        }
-
-    private fun addNotes(notes: List<Note>) =
-        object : IdlingResource {
-            override var isIdleNow: Boolean = false
-
-            init {
-                GlobalScope.launch {
-                    noteRepository.addNotes(notes)
-                    delay(1000)
-                    isIdleNow = true
-                }
-            }
-        }
+    }
 }
