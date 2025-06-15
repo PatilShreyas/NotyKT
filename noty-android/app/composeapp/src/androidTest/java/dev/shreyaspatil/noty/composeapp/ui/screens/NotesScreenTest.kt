@@ -17,6 +17,7 @@
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.IdlingResource
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -26,6 +27,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
 import dagger.hilt.android.testing.HiltAndroidTest
 import dev.shreyaspatil.noty.composeapp.NotyScreenTest
+import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.session.SessionManager
@@ -238,13 +240,15 @@ class NotesScreenTest : NotyScreenTest() {
         onNavigateToNoteDetail: (String) -> Unit = {},
         onNavigateToLogin: () -> Unit = {},
     ) {
-        NotesScreen(
-            viewModel = viewModel(),
-            onNavigateToAbout = onNavigateToAbout,
-            onNavigateToAddNote = onNavigateToAddNote,
-            onNavigateToNoteDetail = onNavigateToNoteDetail,
-            onNavigateToLogin = onNavigateToLogin,
-        )
+        CompositionLocalProvider(LocalUiInDarkMode provides true) {
+            NotesScreen(
+                viewModel = viewModel(),
+                onNavigateToAbout = onNavigateToAbout,
+                onNavigateToAddNote = onNavigateToAddNote,
+                onNavigateToNoteDetail = onNavigateToNoteDetail,
+                onNavigateToLogin = onNavigateToLogin,
+            )
+        }
     }
 
     private fun notes(): List<Note> {
