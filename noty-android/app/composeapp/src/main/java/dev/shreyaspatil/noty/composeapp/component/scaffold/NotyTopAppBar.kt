@@ -16,8 +16,6 @@
 
 package dev.shreyaspatil.noty.composeapp.component.scaffold
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -54,7 +52,7 @@ fun NotyTopAppBar(
                 Image(
                     painter = image,
                     contentDescription = "Noty Icon",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onBackground)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onBackground),
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(

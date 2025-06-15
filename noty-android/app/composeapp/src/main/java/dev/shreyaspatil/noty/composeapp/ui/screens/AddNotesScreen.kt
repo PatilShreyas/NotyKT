@@ -125,7 +125,7 @@ fun AddNotesContent(
                     },
                     onClick = onClickAddNote,
                     backgroundColor = MaterialTheme.colors.primary,
-                    modifier = Modifier.imePadding()
+                    modifier = Modifier.imePadding(),
                 )
             }
         },

@@ -47,12 +47,14 @@ fun NotyNavigation() {
 
     NavHost(
         navController,
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .displayCutoutPadding(),
-        startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .displayCutoutPadding(),
+        startDestination = Screen.Notes.route,
+        route = NOTY_NAV_HOST_ROUTE,
     ) {
         composable(Screen.SignUp.route) {
             SignUpScreen(

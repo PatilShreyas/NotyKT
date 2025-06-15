@@ -173,7 +173,7 @@ fun NoteDetailContent(
                     icon = { Icon(Icons.Filled.Done, "Save", tint = Color.White) },
                     onClick = onSaveClick,
                     backgroundColor = MaterialTheme.colors.primary,
-                    modifier = Modifier.imePadding()
+                    modifier = Modifier.imePadding(),
                 )
             }
         },
