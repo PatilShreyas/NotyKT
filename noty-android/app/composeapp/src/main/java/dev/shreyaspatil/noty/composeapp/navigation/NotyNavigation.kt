@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -49,7 +50,8 @@ fun NotyNavigation() {
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .navigationBarsPadding(),
+            .navigationBarsPadding()
+            .displayCutoutPadding(),
         startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE
     ) {
         composable(Screen.SignUp.route) {
