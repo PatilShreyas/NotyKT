@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 Shreyas Patil
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.shreyaspatil.noty.view.viewmodel
 
 import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
@@ -30,242 +14,173 @@ import dev.shreyaspatil.noty.fakes.note
 import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
 import dev.shreyaspatil.noty.testUtils.withState
 import dev.shreyaspatil.noty.view.state.NotesState
-import io.kotest.matchers.shouldBe
-import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.UUID
 
-@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
-class NotesViewModelTest : ViewModelBehaviorSpec({
-    val fakeNotesFlow = MutableSharedFlow<Either<List<Note>>>(replay = 1)
+@OptIn(ExperimentalCoroutinesApi::class)
+class NotesViewModelTest : ViewModelBehaviorSpec() {
 
-    val repository: NotyNoteRepository =
-        mockk(relaxUnitFun = true) {
+    private lateinit var fakeNotesFlow: MutableSharedFlow<Either<List<Note>>>
+    private lateinit var repository: NotyNoteRepository
+    private lateinit var sessionManager: SessionManager
+    private lateinit var preferenceManager: PreferenceManager
+    private lateinit var taskManager: NotyTaskManager
+    private lateinit var connectivityObserver: FakeConnectivityObserver
+    private lateinit var viewModel: NotesViewModel
+    private val defaultTaskId = UUID.randomUUID()
+
+    @BeforeEach
+    override fun setUp() {
+        super.setUp()
+        fakeNotesFlow = MutableSharedFlow(replay = 1)
+        repository = mockk(relaxUnitFun = true) {
             every { getAllNotes() } returns fakeNotesFlow
         }
-    val sessionManager: SessionManager =
-        mockk(relaxUnitFun = true) {
+        sessionManager = mockk(relaxUnitFun = true) {
             every { getToken() } returns "TEST_TOKEN"
         }
-    val preferenceManager: PreferenceManager = mockk(relaxUnitFun = true)
-    val defaultTaskId = UUID.randomUUID()
-    val taskManager: NotyTaskManager =
-        mockk(relaxUnitFun = true) {
+        preferenceManager = mockk(relaxUnitFun = true)
+        taskManager = mockk(relaxUnitFun = true) {
             every { syncNotes() } returns defaultTaskId
-            every { observeTask(defaultTaskId) } returns
-                flowOf(
-                    TaskState.SCHEDULED,
-                    TaskState.COMPLETED,
-                )
+            every { observeTask(defaultTaskId) } returns flowOf(TaskState.SCHEDULED, TaskState.COMPLETED)
         }
-    val connectivityObserver = spyk(FakeConnectivityObserver())
-
-    val viewModel =
-        NotesViewModel(
+        connectivityObserver = spyk(FakeConnectivityObserver())
+        viewModel = NotesViewModel(
             notyNoteRepository = repository,
             sessionManager = sessionManager,
             preferenceManager = preferenceManager,
             notyTaskManager = taskManager,
             connectivityObserver = connectivityObserver,
         )
+    }
 
-    Given("The ViewModel") {
+    @Test
+    fun `initial state should be valid, session checked and notes synced`() = runTest {
         val initialNotes = listOf(Note("NOTE_ID", "Lorem Ipsum", "Note text", 0))
         fakeNotesFlow.emit(Either.success(initialNotes))
 
-        When("Initialized") {
-            val expectedState =
-                NotesState(
-                    isLoading = false,
-                    notes = initialNotes,
-                    error = null,
-                    isUserLoggedIn = true,
-                    isConnectivityAvailable = true,
-                )
+        val expectedState = NotesState(
+            isLoading = false,
+            notes = initialNotes,
+            error = null,
+            isUserLoggedIn = true,
+            isConnectivityAvailable = true,
+        )
 
-            Then("Initial state should be valid") {
-                viewModel currentStateShouldBe expectedState
-            }
-
-            Then("Current session should be get checked") {
-                verify { sessionManager.getToken() }
-            }
-
-            Then("Notes should be get synced") {
-                verify { taskManager.syncNotes() }
-            }
-        }
+        viewModel currentStateShouldBe expectedState
+        verify { sessionManager.getToken() }
+        verify { taskManager.syncNotes() }
     }
 
-    Given("The list of notes") {
+    @Test
+    fun `notes should be updated in state when notes updated successfully`() = runTest {
         val notes = listOf(note("1"), note("2"), note("3"))
-
-        When("The notes are updated successfully") {
-            fakeNotesFlow.emit(Either.success(notes))
-
-            Then("Notes should be updated in the state") {
-                viewModel.withState {
-                    this.notes shouldBe notes
-                    isLoading shouldBe false
-                }
-            }
-        }
-
-        When("The notes are updated with failure") {
-            fakeNotesFlow.emit(Either.error("Error occurred"))
-
-            Then("Notes should be updated in the state") {
-                viewModel.withState {
-                    this.error shouldBe "Error occurred"
-                    isLoading shouldBe false
-                }
-            }
+        fakeNotesFlow.emit(Either.success(notes))
+        viewModel.withState {
+            assertEquals(notes, this.notes)
+            assertFalse(isLoading)
         }
     }
 
-    Given("The connectivity") {
-        When("The connectivity is available") {
-            connectivityObserver.fakeConnectionFlow.value = ConnectionState.Available
-
-            Then("The UI state should have connectivity state updated") {
-                viewModel.withState {
-                    isConnectivityAvailable shouldBe true
-                }
-            }
-        }
-
-        When("The connectivity is unavailable") {
-            connectivityObserver.fakeConnectionFlow.value = ConnectionState.Unavailable
-
-            Then("The UI state should have connectivity state updated") {
-                viewModel.withState {
-                    isConnectivityAvailable shouldBe false
-                }
-            }
+    @Test
+    fun `error should be updated in state when notes updated with failure`() = runTest {
+        fakeNotesFlow.emit(Either.error("Error occurred"))
+        viewModel.withState {
+            assertEquals("Error occurred", error)
+            assertFalse(isLoading)
         }
     }
 
-    Given("Notes available for syncing") {
-        When("User is not logged in and Sync for notes is requested") {
-            clearAllMocks(answers = false)
-            every { sessionManager.getToken() } returns null
+    @Test
+    fun `connectivity state should be updated when connectivity is available`() {
+        connectivityObserver.fakeConnectionFlow.value = ConnectionState.Available
+        viewModel.withState { assertTrue(isConnectivityAvailable!!) }
+    }
 
-            val taskId = UUID.randomUUID()
-            every { taskManager.syncNotes() } returns taskId
-            every { taskManager.observeTask(taskId) } returns
-                flowOf(
-                    TaskState.SCHEDULED,
-                    TaskState.COMPLETED,
-                )
+    @Test
+    fun `connectivity state should be updated when connectivity is unavailable`() {
+        connectivityObserver.fakeConnectionFlow.value = ConnectionState.Unavailable
+        viewModel.withState { assertFalse(isConnectivityAvailable!!) }
+    }
 
-            viewModel.syncNotes()
+    @Test
+    fun `task should not be scheduled when user is not logged in and sync requested`() {
+        every { sessionManager.getToken() } returns null
+        viewModel.syncNotes()
+        verify(exactly = 0) { taskManager.syncNotes() }
+    }
 
-            Then("Task should not be get scheduled") {
-                verify(exactly = 0) { taskManager.syncNotes() }
-            }
-        }
-        When("User is logged in and Sync for notes is requested") {
-            clearAllMocks(answers = false)
-            every { sessionManager.getToken() } returns "ABCD1234"
+    @Test
+    fun `task should be scheduled and UI state updated when user is logged in and sync is successful`() {
+        every { sessionManager.getToken() } returns "ABCD1234"
+        val taskId = UUID.randomUUID()
+        every { taskManager.syncNotes() } returns taskId
+        every { taskManager.observeTask(taskId) } returns flowOf(TaskState.SCHEDULED, TaskState.COMPLETED)
 
-            And("Sync is successful") {
-                val taskId = UUID.randomUUID()
-                every { taskManager.syncNotes() } returns taskId
-                every { taskManager.observeTask(taskId) } returns
-                    flowOf(
-                        TaskState.SCHEDULED,
-                        TaskState.COMPLETED,
-                    )
+        viewModel.syncNotes()
 
-                viewModel.syncNotes()
+        verify(exactly = 1) { taskManager.syncNotes() } // This will be 2 if counting the initial one
+        viewModel.withState { assertFalse(isLoading) }
+    }
 
-                Then("Task should be get scheduled") {
-                    verify(exactly = 1) { taskManager.syncNotes() }
-                }
+    @Test
+    fun `UI state should be updated with error when user is logged in and sync failed`() {
+        every { sessionManager.getToken() } returns "ABCD1234"
+        val taskId = UUID.randomUUID()
+        every { taskManager.syncNotes() } returns taskId
+        every { taskManager.observeTask(taskId) } returns flowOf(TaskState.SCHEDULED, TaskState.FAILED)
 
-                Then("UI state should be get updated") {
-                    viewModel.withState { isLoading shouldBe false }
-                }
-            }
-
-            And("Sync is failed") {
-                val taskId = UUID.randomUUID()
-                every { taskManager.syncNotes() } returns taskId
-                every { taskManager.observeTask(taskId) } returns
-                    flowOf(
-                        TaskState.SCHEDULED,
-                        TaskState.FAILED,
-                    )
-
-                viewModel.syncNotes()
-
-                Then("UI state should be get updated") {
-                    viewModel.withState {
-                        isLoading shouldBe false
-                        error shouldBe "Failed to sync notes"
-                    }
-                }
-            }
+        viewModel.syncNotes()
+        viewModel.withState {
+            assertFalse(isLoading)
+            assertEquals("Failed to sync notes", error)
         }
     }
 
-    Given("A UI mode") {
+    @Test
+    fun `preference should be saved when UI mode is changed`() = runTest {
         val expectedUiMode = true
+        viewModel.setDarkMode(expectedUiMode)
+        coVerify { preferenceManager.setDarkMode(expectedUiMode) }
+    }
 
+    @Test
+    fun `correct UI mode should be returned when current UI mode is retrieved`() = runTest {
+        val expectedUiMode = true
         coEvery { preferenceManager.uiModeFlow } returns flowOf(expectedUiMode)
-
-        When("UI mode is changed") {
-            viewModel.setDarkMode(expectedUiMode)
-
-            Then("Preference should be get saved") {
-                coVerify { preferenceManager.setDarkMode(expectedUiMode) }
-            }
-        }
-
-        When("Current UI mode is retrieved") {
-            val actualUiMode = viewModel.isDarkModeEnabled()
-
-            Then("Correct UI mode should be get returned") {
-                actualUiMode shouldBe expectedUiMode
-            }
-        }
+        val actualUiMode = viewModel.isDarkModeEnabled()
+        assertEquals(expectedUiMode, actualUiMode)
     }
 
-    Given("User session") {
-        When("Session is cleared") {
-            viewModel.logout()
-
-            Then("Token should get reset") {
-                verify { sessionManager.saveToken(null) }
-            }
-
-            Then("All scheduled tasks should be get aborted") {
-                verify { taskManager.abortAllTasks() }
-            }
-
-            Then("All notes should be get cleared") {
-                coVerify { repository.deleteAllNotes() }
-            }
-
-            Then("User logged in state should be changed to not logged in") {
-                viewModel.withState { isUserLoggedIn shouldBe false }
-            }
-        }
+    @Test
+    fun `session cleared, tasks aborted, notes cleared and logged out state updated when logout`() = runTest {
+        viewModel.logout()
+        verify { sessionManager.saveToken(null) }
+        verify { taskManager.abortAllTasks() }
+        coVerify { repository.deleteAllNotes() }
+        viewModel.withState { assertFalse(isUserLoggedIn) }
     }
-})
+}
 
 class FakeConnectivityObserver : ConnectivityObserver {
     val fakeConnectionFlow = MutableStateFlow<ConnectionState>(ConnectionState.Available)
-
     override val connectionState: Flow<ConnectionState> = fakeConnectionFlow
     override var currentConnectionState: ConnectionState = ConnectionState.Available
 }

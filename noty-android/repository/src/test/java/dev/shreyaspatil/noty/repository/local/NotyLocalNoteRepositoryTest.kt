@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 Shreyas Patil
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.shreyaspatil.noty.repository.local
 
 import dev.shreyaspatil.noty.core.model.Note
@@ -21,203 +5,153 @@ import dev.shreyaspatil.noty.core.repository.Either.Error
 import dev.shreyaspatil.noty.core.repository.Either.Success
 import dev.shreyaspatil.noty.data.local.dao.NotesDao
 import dev.shreyaspatil.noty.data.local.entity.NoteEntity
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldStartWith
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.Date
 
-class NotyLocalNoteRepositoryTest : BehaviorSpec({
-    val notesDao: NotesDao = mockk(relaxUnitFun = true)
-    val repository = NotyLocalNoteRepository(notesDao)
+@OptIn(ExperimentalCoroutinesApi::class)
+class NotyLocalNoteRepositoryTest {
+    private lateinit var notesDao: NotesDao
+    private lateinit var repository: NotyLocalNoteRepository
 
-    Given("Notes for addition") {
-        val note =
-            Note(
-                id = "UNIQUE_ID",
-                title = "Lorem Ipsum",
-                note = "This is body of a note!",
-                created = Date().time,
-                isPinned = false,
-            )
+    private val testNote = Note(
+        id = "UNIQUE_ID",
+        title = "Lorem Ipsum",
+        note = "This is body of a note!",
+        created = Date().time,
+        isPinned = false,
+    )
+    private val testNoteEntity = NoteEntity(testNote.id, testNote.title, testNote.note, testNote.created, testNote.isPinned)
 
-        val expectedEntity = NoteEntity(note.id, note.title, note.note, note.created, note.isPinned)
-
-        When("Note is added") {
-            And("DAO can add note") {
-                val response = repository.addNote(note.title, note.note)
-                val noteId = (response as Success).data
-
-                Then("Temporary note ID should be returned") {
-                    noteId shouldStartWith "TMP"
-                }
-
-                Then("Note should be get added in DAO") {
-                    val actualNoteEntity = slot<NoteEntity>()
-
-                    coVerify { notesDao.addNote(capture(actualNoteEntity)) }
-
-                    with(actualNoteEntity.captured) {
-                        this.title shouldBe expectedEntity.title
-                        this.note shouldBe expectedEntity.note
-                    }
-                }
-            }
-
-            And("DAO cannot add note") {
-                coEvery { notesDao.addNote(any()) } throws Exception("")
-
-                val response = repository.addNote(note.title, note.note)
-
-                Then("Error response should be returned") {
-                    (response as Error).message shouldBe "Unable to create a new note"
-                }
-            }
-        }
-
-        When("Notes are added in bulk") {
-            repository.addNotes(listOf(note))
-
-            Then("Notes should be get added in DAO") {
-                coVerify { notesDao.addNotes(listOf(expectedEntity)) }
-            }
-        }
+    @BeforeEach
+    fun setUp() {
+        notesDao = mockk(relaxUnitFun = true)
+        repository = NotyLocalNoteRepository(notesDao)
     }
 
-    Given("A note") {
-        val noteEntity =
-            NoteEntity(
-                noteId = "UNIQUE_ID",
-                title = "Lorem Ipsum",
-                note = "This is body of a note!",
-                created = Date().time,
-                isPinned = false,
-            )
+    @Test
+    fun `addNote with successful DAO operation should return temporary noteId and add to DAO`() = runTest {
+        val response = repository.addNote(testNote.title, testNote.note)
+        val noteId = (response as Success).data
 
-        When("Note is observed") {
-            coEvery { notesDao.getNoteById(noteEntity.noteId) } returns flowOf(noteEntity)
+        assertTrue(noteId.startsWith("TMP"))
 
-            val actualNote = repository.getNoteById(noteEntity.noteId)
+        val actualNoteEntity = slot<NoteEntity>()
+        coVerify { notesDao.addNote(capture(actualNoteEntity)) }
 
-            Then("Note should be returned") {
-                with(actualNote.first()) {
-                    this.id shouldBe noteEntity.noteId
-                    this.title shouldBe noteEntity.title
-                    this.note shouldBe noteEntity.note
-                    this.created shouldBe noteEntity.created
-                }
-            }
-        }
-
-        When("Note is updated") {
-            val newTitle = "New title"
-            val newNote = "New note body"
-
-            And("DAO can update note") {
-                coEvery { notesDao.updateNoteById(any(), any(), any()) } just Runs
-
-                repository.updateNote(noteEntity.noteId, newTitle, newNote)
-
-                Then("Note should be get updated in DAO") {
-                    coVerify { notesDao.updateNoteById(noteEntity.noteId, newTitle, newNote) }
-                }
-            }
-
-            And("DAO can NOT update note") {
-                coEvery { notesDao.updateNoteById(any(), any(), any()) } throws Exception()
-
-                val response = repository.updateNote(noteEntity.noteId, newTitle, newNote)
-
-                Then("Error response should be returned") {
-                    (response as Error).message shouldBe "Unable to update a note"
-                }
-            }
-        }
-
-        When("Note ID is updated") {
-            val newNoteId = "NEW_NOTE_ID"
-            repository.updateNoteId(oldNoteId = noteEntity.noteId, newNoteId = newNoteId)
-
-            Then("Note ID should be get updated in DAO") {
-                coVerify { notesDao.updateNoteId(noteEntity.noteId, newNoteId) }
-            }
-        }
-
-        When("Note is deleted") {
-            And("DAO can delete note") {
-                coEvery { notesDao.deleteNoteById(any()) } just Runs
-
-                repository.deleteNote(noteEntity.noteId)
-
-                Then("Note should be get deleted in DAO") {
-                    coVerify { notesDao.deleteNoteById(noteEntity.noteId) }
-                }
-            }
-
-            And("DAO can NOT delete note") {
-                coEvery { notesDao.deleteNoteById(any()) } throws Exception()
-
-                val response = repository.deleteNote(noteEntity.noteId)
-
-                Then("Error response should be returned") {
-                    (response as Error).message shouldBe "Unable to delete a note"
-                }
-            }
-        }
-
-        When("Note is pinned") {
-            And("DAO can pin note") {
-                coEvery { notesDao.updateNotePin(any(), any()) } just Runs
-
-                repository.pinNote(noteEntity.noteId, true)
-
-                Then("Note should be get pinned in DAO") {
-                    coVerify { notesDao.updateNotePin(noteEntity.noteId, true) }
-                }
-            }
-
-            And("DAO will be unable to pin note") {
-                coEvery { notesDao.updateNotePin(any(), any()) } throws Exception()
-
-                val response = repository.pinNote(noteEntity.noteId, false)
-
-                Then("Error response should be returned") {
-                    (response as Error).message shouldBe "Unable to pin the note"
-                }
-            }
-        }
+        assertEquals(testNoteEntity.title, actualNoteEntity.captured.title)
+        assertEquals(testNoteEntity.note, actualNoteEntity.captured.note)
     }
 
-    Given("All notes") {
-        val note = NoteEntity("ID", "Title", "Note", 0, false)
-        val noteEntities = listOf(note.copy(noteId = "1"), note.copy(noteId = "2"))
-
-        When("Notes are observed") {
-            coEvery { notesDao.getAllNotes() } returns flowOf(noteEntities)
-
-            val notes = repository.getAllNotes().first()
-
-            Then("All notes should be retrieved") {
-                (notes as Success).data shouldBe
-                    noteEntities.map {
-                        Note(it.noteId, it.title, it.note, it.created, it.isPinned)
-                    }
-            }
-        }
-
-        When("Notes are deleted in bulk") {
-            repository.deleteAllNotes()
-
-            Then("All notes should be get deleted in DAO") {
-                coVerify { notesDao.deleteAllNotes() }
-            }
-        }
+    @Test
+    fun `addNote with failed DAO operation should return error`() = runTest {
+        coEvery { notesDao.addNote(any()) } throws Exception("")
+        val response = repository.addNote(testNote.title, testNote.note)
+        assertEquals("Unable to create a new note", (response as Error).message)
     }
-})
+
+    @Test
+    fun `addNotes should add notes to DAO`() = runTest {
+        repository.addNotes(listOf(testNote))
+        coVerify { notesDao.addNotes(listOf(testNoteEntity)) }
+    }
+
+    @Test
+    fun `getNoteById should return note from DAO`() = runTest {
+        coEvery { notesDao.getNoteById(testNoteEntity.noteId) } returns flowOf(testNoteEntity)
+        val actualNote = repository.getNoteById(testNoteEntity.noteId).first()
+
+        assertEquals(testNoteEntity.noteId, actualNote.id)
+        assertEquals(testNoteEntity.title, actualNote.title)
+        assertEquals(testNoteEntity.note, actualNote.note)
+        assertEquals(testNoteEntity.created, actualNote.created)
+    }
+
+    @Test
+    fun `updateNote with successful DAO operation should update note in DAO`() = runTest {
+        val newTitle = "New title"
+        val newNote = "New note body"
+        coEvery { notesDao.updateNoteById(any(), any(), any()) } just Runs
+
+        repository.updateNote(testNoteEntity.noteId, newTitle, newNote)
+
+        coVerify { notesDao.updateNoteById(testNoteEntity.noteId, newTitle, newNote) }
+    }
+
+    @Test
+    fun `updateNote with failed DAO operation should return error`() = runTest {
+        val newTitle = "New title"
+        val newNote = "New note body"
+        coEvery { notesDao.updateNoteById(any(), any(), any()) } throws Exception()
+
+        val response = repository.updateNote(testNoteEntity.noteId, newTitle, newNote)
+        assertEquals("Unable to update a note", (response as Error).message)
+    }
+
+    @Test
+    fun `updateNoteId should update noteId in DAO`() = runTest {
+        val newNoteId = "NEW_NOTE_ID"
+        repository.updateNoteId(oldNoteId = testNoteEntity.noteId, newNoteId = newNoteId)
+        coVerify { notesDao.updateNoteId(testNoteEntity.noteId, newNoteId) }
+    }
+
+    @Test
+    fun `deleteNote with successful DAO operation should delete note in DAO`() = runTest {
+        coEvery { notesDao.deleteNoteById(any()) } just Runs
+        repository.deleteNote(testNoteEntity.noteId)
+        coVerify { notesDao.deleteNoteById(testNoteEntity.noteId) }
+    }
+
+    @Test
+    fun `deleteNote with failed DAO operation should return error`() = runTest {
+        coEvery { notesDao.deleteNoteById(any()) } throws Exception()
+        val response = repository.deleteNote(testNoteEntity.noteId)
+        assertEquals("Unable to delete a note", (response as Error).message)
+    }
+
+    @Test
+    fun `pinNote with successful DAO operation should pin note in DAO`() = runTest {
+        coEvery { notesDao.updateNotePin(any(), any()) } just Runs
+        repository.pinNote(testNoteEntity.noteId, true)
+        coVerify { notesDao.updateNotePin(testNoteEntity.noteId, true) }
+    }
+
+    @Test
+    fun `pinNote with failed DAO operation should return error`() = runTest {
+        coEvery { notesDao.updateNotePin(any(), any()) } throws Exception()
+        val response = repository.pinNote(testNoteEntity.noteId, false)
+        assertEquals("Unable to pin the note", (response as Error).message)
+    }
+
+    @Test
+    fun `getAllNotes should retrieve all notes from DAO`() = runTest {
+        val noteEntities = listOf(testNoteEntity.copy(noteId = "1"), testNoteEntity.copy(noteId = "2"))
+        coEvery { notesDao.getAllNotes() } returns flowOf(noteEntities)
+
+        val notesResponse = repository.getAllNotes().first()
+        val notes = (notesResponse as Success).data
+
+        assertEquals(
+            noteEntities.map { Note(it.noteId, it.title, it.note, it.created, it.isPinned) },
+            notes
+        )
+    }
+
+    @Test
+    fun `deleteAllNotes should delete all notes in DAO`() = runTest {
+        repository.deleteAllNotes()
+        coVerify { notesDao.deleteAllNotes() }
+    }
+}

@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 Shreyas Patil
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.shreyaspatil.noty.view.viewmodel
 
 import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
@@ -26,313 +10,230 @@ import dev.shreyaspatil.noty.fakes.note
 import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
 import dev.shreyaspatil.noty.testUtils.withState
 import dev.shreyaspatil.noty.view.state.NoteDetailState
-import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.UUID
 
-class NoteDetailViewModelTest : ViewModelBehaviorSpec({
-    val note = note("note-1234")
-    val repository: NotyNoteRepository =
-        mockk {
-            coEvery { getNoteById("note-1234") } returns flowOf(note)
+@OptIn(ExperimentalCoroutinesApi::class)
+class NoteDetailViewModelTest : ViewModelBehaviorSpec() {
+
+    private val note = note("note-1234")
+    private lateinit var repository: NotyNoteRepository
+    private lateinit var taskManager: NotyTaskManager
+    private lateinit var viewModel: NoteDetailViewModel
+    private val noteId = "note-1234"
+    private val scheduledTasks = mutableListOf<NotyTask>()
+
+    @BeforeEach
+    override fun setUp() {
+        super.setUp()
+        scheduledTasks.clear()
+        repository = mockk {
+            coEvery { getNoteById(noteId) } returns flowOf(note)
         }
-
-    val scheduledTasks = mutableListOf<NotyTask>()
-
-    val taskManager: NotyTaskManager =
-        mockk {
+        taskManager = mockk {
             every { scheduleTask(capture(scheduledTasks)) } returns UUID.randomUUID()
         }
-
-    val noteId = "note-1234"
-
-    val viewModel = NoteDetailViewModel(taskManager, repository, noteId)
-
-    Given("The ViewModel") {
-        val expectedState =
-            NoteDetailState(
-                isLoading = false,
-                title = "Lorem Ipsum",
-                note = "Hey there! This is note content",
-                showSave = false,
-                finished = false,
-                error = null,
-                isPinned = false,
-            )
-
-        When("Initialized") {
-            Then("Initial state should be valid") {
-                viewModel currentStateShouldBe expectedState
-            }
-        }
+        viewModel = NoteDetailViewModel(taskManager, repository, noteId)
     }
 
-    Given("Note contents") {
-        And("Note contents are invalid") {
-            val title = "hi"
-            val note = ""
-
-            When("When note contents are set") {
-                viewModel.setTitle(title)
-                viewModel.setNote(note)
-
-                Then("UI state should have validation details") {
-                    viewModel.withState {
-                        this.title shouldBe title
-                        this.note shouldBe note
-                        showSave shouldBe false
-                    }
-                }
-            }
-        }
-
-        And("Note contents are valid") {
-            val title = "Hey there"
-            val note = "This is body"
-
-            When("When note contents are set") {
-                viewModel.setTitle(title)
-                viewModel.setNote(note)
-
-                Then("UI state should have validation details") {
-                    viewModel.withState {
-                        this.title shouldBe title
-                        this.note shouldBe note
-                        showSave shouldBe true
-                    }
-                }
-            }
-        }
-
-        And("Note contents are same as existing note contents") {
-            val title = note.title
-            val note = note.note
-
-            When("When note contents are set") {
-                viewModel.setTitle(title)
-                viewModel.setNote(note)
-
-                Then("UI state should have validation details") {
-                    viewModel.withState {
-                        this.title shouldBe title
-                        this.note shouldBe note
-                        showSave shouldBe false
-                    }
-                }
-            }
-        }
+    @Test
+    fun `initial state should be valid`() {
+        val expectedState = NoteDetailState(
+            isLoading = false,
+            title = "Lorem Ipsum",
+            note = "Hey there! This is note content",
+            showSave = false,
+            finished = false,
+            error = null,
+            isPinned = false,
+        )
+        viewModel currentStateShouldBe expectedState
     }
 
-    Given("A note for updating") {
-        val title = "Lorem Ipsum"
-        val note = "Updated body of a note"
+    @Test
+    fun `UI state should have validation details when note contents are invalid`() {
+        val title = "hi"
+        val noteContent = ""
 
         viewModel.setTitle(title)
-        viewModel.setNote(note)
+        viewModel.setNote(noteContent)
 
-        And("Note is not yet synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns
-                Either.success(
-                    data = "TMP_$noteId",
-                )
-
-            When("Note is saved") {
-                viewModel.save()
-
-                Then("Note should be get updated") {
-                    coVerify { repository.updateNote(noteId, title, note) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState {
-                        isLoading shouldBe false
-                        finished shouldBe true
-                    }
-                }
-
-                Then("Note creation should be get scheduled") {
-                    scheduledTasks.last().let {
-                        it.noteId shouldBe "TMP_$noteId"
-                        it.action shouldBe NotyTaskAction.CREATE
-                    }
-                }
-            }
-        }
-
-        And("Note is synced") {
-            coEvery { repository.updateNote(noteId, title, note) } returns
-                Either.success(
-                    data = noteId,
-                )
-
-            When("Note is updated") {
-                viewModel.save()
-
-                Then("Note should be get updated") {
-                    coVerify { repository.updateNote(noteId, title, note) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState {
-                        isLoading shouldBe false
-                        finished shouldBe true
-                    }
-                }
-
-                Then("Note update should be get scheduled") {
-                    scheduledTasks.last().let {
-                        it.noteId shouldBe noteId
-                        it.action shouldBe NotyTaskAction.UPDATE
-                    }
-                }
-            }
-        }
-
-        And("Error occurs") {
-            coEvery { repository.updateNote(noteId, title, note) } returns
-                Either.error(
-                    message = "Error occurred",
-                )
-
-            When("Note is updated") {
-                viewModel.save()
-
-                Then("Note should be get updated") {
-                    coVerify { repository.updateNote(noteId, title, note) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { error shouldBe "Error occurred" }
-                }
-            }
+        viewModel.withState {
+            assertEquals(title, this.title)
+            assertEquals(noteContent, this.note)
+            assertFalse(showSave)
         }
     }
 
-    Given("A note for deletion") {
-        And("Note is not yet synced") {
-            coEvery { repository.deleteNote(noteId) } returns Either.success("TMP_$noteId")
+    @Test
+    fun `UI state should have validation details when note contents are valid`() {
+        val title = "Hey there"
+        val noteContent = "This is body"
 
-            When("Note is deleted") {
-                viewModel.delete()
+        viewModel.setTitle(title)
+        viewModel.setNote(noteContent)
 
-                Then("Note should be get deleted") {
-                    coVerify { repository.deleteNote(noteId) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { finished shouldBe true }
-                }
-
-                Then("Note deletion should NOT be get scheduled") {
-                    scheduledTasks.find {
-                        it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.DELETE
-                    } shouldBe null
-                }
-            }
-        }
-
-        And("Note is synced") {
-            coEvery { repository.deleteNote(noteId) } returns Either.success(noteId)
-
-            When("Note is deleted") {
-                viewModel.delete()
-
-                Then("Note should be get deleted") {
-                    coVerify { repository.deleteNote(noteId) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { finished shouldBe true }
-                }
-
-                Then("Note deletion should be get scheduled") {
-                    scheduledTasks.last().let {
-                        it.noteId shouldBe noteId
-                        it.action shouldBe NotyTaskAction.DELETE
-                    }
-                }
-            }
-        }
-
-        And("Error occurs") {
-            coEvery { repository.deleteNote(noteId) } returns Either.error("Error occurred")
-
-            When("Note is deleted") {
-                viewModel.delete()
-
-                Then("Note should be get deleted") {
-                    coVerify { repository.deleteNote(noteId) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { error shouldBe "Error occurred" }
-                }
-            }
+        viewModel.withState {
+            assertEquals(title, this.title)
+            assertEquals(noteContent, this.note)
+            assertTrue(showSave)
         }
     }
 
-    Given("A note is either pinned or unpinned") {
-        And("Note is not yet synced") {
-            val wasPinned = viewModel.currentState.isPinned
-            coEvery { repository.pinNote(noteId, any()) } returns Either.success("TMP_$noteId")
+    @Test
+    fun `UI state should have validation details when note contents are same as existing`() {
+        val title = note.title
+        val noteContent = note.note
 
-            When("Note pin is toggled") {
-                viewModel.togglePin()
+        viewModel.setTitle(title)
+        viewModel.setNote(noteContent)
 
-                Then("Note should be get pinned") {
-                    coVerify { repository.pinNote(noteId, !wasPinned) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { isPinned shouldBe !wasPinned }
-                }
-
-                Then("Note pin should NOT be get scheduled") {
-                    scheduledTasks.find {
-                        it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.PIN
-                    } shouldBe null
-                }
-            }
-        }
-
-        And("Note is synced") {
-            val wasPinned = viewModel.currentState.isPinned
-            coEvery { repository.pinNote(noteId, any()) } returns Either.success(noteId)
-
-            When("Note pin is toggled") {
-                viewModel.togglePin()
-
-                Then("Note should get pinned") {
-                    coVerify { repository.pinNote(noteId, !wasPinned) }
-                }
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { isPinned shouldBe !wasPinned }
-                }
-
-                Then("Note pin should be get scheduled") {
-                    scheduledTasks.last().let {
-                        it.noteId shouldBe noteId
-                        it.action shouldBe NotyTaskAction.PIN
-                    }
-                }
-            }
-        }
-
-        And("Error occurs") {
-            coEvery { repository.pinNote(noteId, any()) } returns Either.error("Error occurred")
-
-            When("Note pin is toggled") {
-                viewModel.togglePin()
-
-                Then("Valid UI states should be get updated") {
-                    viewModel.withState { error shouldBe "Error occurred" }
-                }
-            }
+        viewModel.withState {
+            assertEquals(title, this.title)
+            assertEquals(noteContent, this.note)
+            assertFalse(showSave)
         }
     }
-})
+
+    @Test
+    fun `note should be updated and task scheduled when note is not yet synced`() {
+        val title = "Lorem Ipsum"
+        val noteContent = "Updated body of a note"
+        viewModel.setTitle(title)
+        viewModel.setNote(noteContent)
+
+        coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.success("TMP_$noteId")
+
+        viewModel.save()
+
+        coVerify { repository.updateNote(noteId, title, noteContent) }
+        viewModel.withState {
+            assertFalse(isLoading)
+            assertTrue(finished)
+        }
+        scheduledTasks.last().let {
+            assertEquals("TMP_$noteId", it.noteId)
+            assertEquals(NotyTaskAction.CREATE, it.action)
+        }
+    }
+
+    @Test
+    fun `note should be updated and task scheduled when note is synced`() {
+        val title = "Lorem Ipsum"
+        val noteContent = "Updated body of a note"
+        viewModel.setTitle(title)
+        viewModel.setNote(noteContent)
+
+        coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.success(noteId)
+
+        viewModel.save()
+
+        coVerify { repository.updateNote(noteId, title, noteContent) }
+        viewModel.withState {
+            assertFalse(isLoading)
+            assertTrue(finished)
+        }
+        scheduledTasks.last().let {
+            assertEquals(noteId, it.noteId)
+            assertEquals(NotyTaskAction.UPDATE, it.action)
+        }
+    }
+
+    @Test
+    fun `state should contain error when updating note fails`() {
+        val title = "Lorem Ipsum"
+        val noteContent = "Updated body of a note"
+        viewModel.setTitle(title)
+        viewModel.setNote(noteContent)
+
+        coEvery { repository.updateNote(noteId, title, noteContent) } returns Either.error("Error occurred")
+
+        viewModel.save()
+
+        coVerify { repository.updateNote(noteId, title, noteContent) }
+        viewModel.withState { assertEquals("Error occurred", error) }
+    }
+
+    @Test
+    fun `note should be deleted and task not scheduled when note is not yet synced`() {
+        coEvery { repository.deleteNote(noteId) } returns Either.success("TMP_$noteId")
+
+        viewModel.delete()
+
+        coVerify { repository.deleteNote(noteId) }
+        viewModel.withState { assertTrue(finished) }
+        assertTrue(scheduledTasks.none { it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.DELETE })
+    }
+
+    @Test
+    fun `note should be deleted and task scheduled when note is synced`() {
+        coEvery { repository.deleteNote(noteId) } returns Either.success(noteId)
+
+        viewModel.delete()
+
+        coVerify { repository.deleteNote(noteId) }
+        viewModel.withState { assertTrue(finished) }
+        scheduledTasks.last().let {
+            assertEquals(noteId, it.noteId)
+            assertEquals(NotyTaskAction.DELETE, it.action)
+        }
+    }
+
+    @Test
+    fun `state should contain error when deleting note fails`() {
+        coEvery { repository.deleteNote(noteId) } returns Either.error("Error occurred")
+
+        viewModel.delete()
+
+        coVerify { repository.deleteNote(noteId) }
+        viewModel.withState { assertEquals("Error occurred", error) }
+    }
+
+    @Test
+    fun `note pin should be toggled and task not scheduled when note is not yet synced`() {
+        val wasPinned = viewModel.currentState.isPinned
+        coEvery { repository.pinNote(noteId, !wasPinned) } returns Either.success("TMP_$noteId")
+
+        viewModel.togglePin()
+
+        coVerify { repository.pinNote(noteId, !wasPinned) }
+        viewModel.withState { assertEquals(!wasPinned, isPinned) }
+        assertTrue(scheduledTasks.none { it.noteId == "TMP_$noteId" && it.action == NotyTaskAction.PIN })
+    }
+
+    @Test
+    fun `note pin should be toggled and task scheduled when note is synced`() {
+        val wasPinned = viewModel.currentState.isPinned
+        coEvery { repository.pinNote(noteId, !wasPinned) } returns Either.success(noteId)
+
+        viewModel.togglePin()
+
+        coVerify { repository.pinNote(noteId, !wasPinned) }
+        viewModel.withState { assertEquals(!wasPinned, isPinned) }
+        scheduledTasks.last().let {
+            assertEquals(noteId, it.noteId)
+            assertEquals(NotyTaskAction.PIN, it.action)
+        }
+    }
+
+    @Test
+    fun `state should contain error when toggling pin fails`() {
+        val wasPinned = viewModel.currentState.isPinned
+        coEvery { repository.pinNote(noteId, !wasPinned) } returns Either.error("Error occurred")
+
+        viewModel.togglePin()
+
+        viewModel.withState { assertEquals("Error occurred", error) }
+    }
+}

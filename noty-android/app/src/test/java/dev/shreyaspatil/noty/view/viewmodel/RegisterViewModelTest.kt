@@ -1,19 +1,3 @@
-/*
- * Copyright 2020 Shreyas Patil
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package dev.shreyaspatil.noty.view.viewmodel
 
 import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
@@ -24,152 +8,123 @@ import dev.shreyaspatil.noty.core.session.SessionManager
 import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
 import dev.shreyaspatil.noty.testUtils.withState
 import dev.shreyaspatil.noty.view.state.RegisterState
-import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class RegisterViewModelTest : ViewModelBehaviorSpec({
-    val repository: NotyUserRepository = mockk()
-    val sessionManager: SessionManager = mockk(relaxUnitFun = true)
+@OptIn(ExperimentalCoroutinesApi::class)
+class RegisterViewModelTest : ViewModelBehaviorSpec() {
 
-    val viewModel = RegisterViewModel(repository, sessionManager)
+    private lateinit var repository: NotyUserRepository
+    private lateinit var sessionManager: SessionManager
+    private lateinit var viewModel: RegisterViewModel
 
-    Given("The ViewModel") {
-        When("Initialized") {
-            val expectedState =
-                RegisterState(
-                    isLoading = false,
-                    isLoggedIn = false,
-                    error = null,
-                    username = "",
-                    password = "",
-                    confirmPassword = "",
-                    isValidUsername = null,
-                    isValidPassword = null,
-                    isValidConfirmPassword = null,
-                )
-            Then("Initial state should be valid") {
-                viewModel currentStateShouldBe expectedState
-            }
-        }
+    @BeforeEach
+    override fun setUp() {
+        super.setUp()
+        repository = mockk()
+        sessionManager = mockk(relaxUnitFun = true)
+        viewModel = RegisterViewModel(repository, sessionManager)
     }
 
-    Given("A username, password and confirm password") {
+    @Test
+    fun `initial state should be valid`() {
+        val expectedState = RegisterState(
+            isLoading = false,
+            isLoggedIn = false,
+            error = null,
+            username = "",
+            password = "",
+            confirmPassword = "",
+            isValidUsername = null,
+            isValidPassword = null,
+            isValidConfirmPassword = null,
+        )
+        viewModel currentStateShouldBe expectedState
+    }
+
+    @Test
+    fun `username should be updated in the current state`() {
         val username = "johndoe"
+        viewModel.setUsername(username)
+        viewModel.withState { assertEquals(username, this.username) }
+    }
+
+    @Test
+    fun `password should be updated in the current state`() {
         val password = "eodnhoj"
+        viewModel.setPassword(password)
+        viewModel.withState { assertEquals(password, this.password) }
+    }
+
+    @Test
+    fun `confirm password should be updated in the current state`() {
         val confirmPassword = "eodnhojabcd"
+        viewModel.setConfirmPassword(confirmPassword)
+        viewModel.withState { assertEquals(confirmPassword, this.confirmPassword) }
+    }
 
-        When("Username is set") {
-            viewModel.setUsername(username)
+    @Test
+    fun `user should not be created and state should include invalid credentials when user provides incomplete credentials`() {
+        val username = "joh"
+        val password = "doe"
+        val confirmPassword = ""
 
-            Then("Username should be updated in the current state") {
-                viewModel.withState { this.username shouldBe username }
-            }
-        }
+        viewModel.setUsername(username)
+        viewModel.setPassword(password)
+        viewModel.setConfirmPassword(confirmPassword)
+        viewModel.register()
 
-        When("Password is set") {
-            viewModel.setPassword(password)
-
-            Then("Password should be updated in the current state") {
-                viewModel.withState { this.password shouldBe password }
-            }
-        }
-
-        When("Confirm Password is set") {
-            viewModel.setConfirmPassword(confirmPassword)
-
-            Then("Confirm Password should be updated in the current state") {
-                viewModel.withState { this.confirmPassword shouldBe confirmPassword }
-            }
+        coVerify(exactly = 0) { repository.addUser(username, password) }
+        viewModel.withState {
+            assertFalse(isValidUsername!!)
+            assertFalse(isValidPassword!!)
+            assertFalse(isValidConfirmPassword!!)
         }
     }
 
-    Given("A user for registration") {
-        And("User provides incomplete credentials") {
-            val username = "joh"
-            val password = "doe"
-            val confirmPassword = ""
+    @Test
+    fun `user should be created and UI state should include error message when repository fails`() {
+        val username = "john"
+        val password = "doe12345"
 
-            viewModel.setUsername(username)
-            viewModel.setPassword(password)
-            viewModel.setConfirmPassword(confirmPassword)
+        viewModel.setUsername(username)
+        viewModel.setPassword(password)
+        viewModel.setConfirmPassword(password)
+        coEvery { repository.addUser(username, password) } returns Either.error("Invalid credentials")
 
-            When("User registers") {
-                viewModel.register()
+        viewModel.register()
 
-                Then("User should NOT be get created") {
-                    coVerify(exactly = 0) { repository.addUser(username, password) }
-                }
+        coVerify { repository.addUser(username, password) }
+        viewModel.withState { assertEquals("Invalid credentials", error) }
+    }
 
-                Then("State should include invalid credentials") {
-                    viewModel.withState {
-                        isValidUsername shouldBe false
-                        isValidPassword shouldBe false
-                        isValidConfirmPassword shouldBe false
-                    }
-                }
-            }
-        }
+    @Test
+    fun `user should be created, token saved and UI state updated when credentials are valid`() {
+        val username = "johndoe"
+        val password = "eodnhoj1234"
+        val token = "Bearer TOKEN_ABC"
 
-        And("Repository fails to fulfil the request") {
-            val username = "john"
-            val password = "doe12345"
+        viewModel.setUsername(username)
+        viewModel.setPassword(password)
+        viewModel.setConfirmPassword(password)
+        coEvery { repository.addUser(username, password) } returns Either.success(AuthCredential(token))
 
-            viewModel.setUsername(username)
-            viewModel.setPassword(password)
-            viewModel.setConfirmPassword(password)
+        viewModel.register()
 
-            coEvery { repository.addUser(username, password) }
-                .returns(Either.error("Invalid credentials"))
-
-            When("User logs in") {
-                viewModel.register()
-
-                Then("User should be get created") {
-                    coVerify { repository.addUser(username, password) }
-                }
-
-                Then("UI state should include the error message") {
-                    viewModel.withState {
-                        error shouldBe "Invalid credentials"
-                    }
-                }
-            }
-        }
-
-        And("Credentials are valid") {
-            val username = "johndoe"
-            val password = "eodnhoj1234"
-
-            viewModel.setUsername(username)
-            viewModel.setPassword(password)
-            viewModel.setConfirmPassword(password)
-
-            val token = "Bearer TOKEN_ABC"
-
-            coEvery { repository.addUser(username, password) }
-                .returns(Either.success(AuthCredential(token)))
-
-            When("User logs in") {
-                viewModel.register()
-
-                Then("User should be get created") {
-                    coVerify { repository.addUser(username, password) }
-                }
-
-                Then("Authentication token should be get saved") {
-                    verify { sessionManager.saveToken(eq(token)) }
-                }
-
-                Then("UI state should have user logged in status") {
-                    viewModel.withState {
-                        isLoggedIn shouldBe true
-                        error shouldBe null
-                    }
-                }
-            }
+        coVerify { repository.addUser(username, password) }
+        verify { sessionManager.saveToken(eq(token)) }
+        viewModel.withState {
+            assertTrue(isLoggedIn)
+            assertNull(error)
         }
     }
-})
+}
