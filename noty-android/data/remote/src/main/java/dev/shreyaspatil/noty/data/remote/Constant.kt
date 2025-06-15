@@ -17,5 +17,5 @@
 package dev.shreyaspatil.noty.data.remote
 
 object Constant {
-    const val API_BASE_URL = "https://notykt-production.up.railway.app"
+    const val API_BASE_URL = "https://notykt-api.shreyaspatil.dev/"
 }
