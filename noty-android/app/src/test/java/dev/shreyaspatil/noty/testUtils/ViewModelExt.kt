@@ -31,5 +31,4 @@ infix fun <S : State, VM : BaseViewModel<S>> VM.currentStateShouldBe(expected: S
  * Utility on ViewModel for getting current state in the [block] lambda.
  * Useful in verifying each contents of the state
  */
-infix fun <S : State, VM : BaseViewModel<S>> VM.withState(block: S.() -> Unit) =
-    currentState.run(block)
+infix fun <S : State, VM : BaseViewModel<S>> VM.withState(block: S.() -> Unit) = currentState.run(block)

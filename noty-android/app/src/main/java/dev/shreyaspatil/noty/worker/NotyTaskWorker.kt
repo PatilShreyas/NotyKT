@@ -66,8 +66,7 @@ class NotyTaskWorker
             return if (response is Either.Success) Result.success() else Result.retry()
         }
 
-        private suspend fun fetchLocalNote(noteId: String): Note =
-            localNoteRepository.getNoteById(noteId).first()
+        private suspend fun fetchLocalNote(noteId: String): Note = localNoteRepository.getNoteById(noteId).first()
 
         private fun getNoteId(): String =
             inputData.getString(KEY_NOTE_ID)

@@ -53,8 +53,7 @@ fun <E> Iterable<E>.toComposeImmutableList(): ComposeImmutableList<E> {
 /**
  * Creates a new [ComposeImmutableList] from [items]
  */
-fun <E> composeImmutableListOf(vararg items: E): ComposeImmutableList<E> =
-    items.toList().toComposeImmutableList()
+fun <E> composeImmutableListOf(vararg items: E): ComposeImmutableList<E> = items.toList().toComposeImmutableList()
 
 /**
  * Derives a state of [ComposeImmutableList] from [baseList] computation.

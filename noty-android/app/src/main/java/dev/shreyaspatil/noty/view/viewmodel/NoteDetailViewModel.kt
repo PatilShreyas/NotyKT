@@ -179,17 +179,13 @@ class NoteDetailViewModel
             }
         }
 
-        private fun scheduleNoteCreate(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.create(noteId))
+        private fun scheduleNoteCreate(noteId: String) = notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
-        private fun scheduleNoteUpdate(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.update(noteId))
+        private fun scheduleNoteUpdate(noteId: String) = notyTaskManager.scheduleTask(NotyTask.update(noteId))
 
-        private fun scheduleNoteDelete(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.delete(noteId))
+        private fun scheduleNoteDelete(noteId: String) = notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-        private fun scheduleNoteUpdatePin(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.pin(noteId))
+        private fun scheduleNoteUpdatePin(noteId: String) = notyTaskManager.scheduleTask(NotyTask.pin(noteId))
 
         private fun setState(update: MutableNoteDetailState.() -> Unit) =
             stateStore.setState(

@@ -21,5 +21,4 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.ViewModel
 import dev.shreyaspatil.noty.simpleapp.R
 
-inline fun <reified T : ViewModel> Fragment.hiltNotyMainNavGraphViewModels() =
-    hiltNavGraphViewModels<T>(R.id.nav_graph)
+inline fun <reified T : ViewModel> Fragment.hiltNotyMainNavGraphViewModels() = hiltNavGraphViewModels<T>(R.id.nav_graph)
