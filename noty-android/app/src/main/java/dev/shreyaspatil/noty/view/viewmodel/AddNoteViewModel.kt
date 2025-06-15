@@ -82,8 +82,7 @@ class AddNoteViewModel
                 }
         }
 
-        private fun scheduleNoteCreate(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.create(noteId))
+        private fun scheduleNoteCreate(noteId: String) = notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
         private fun validateNote() {
             val isValid = NoteValidator.isValidNote(currentState.title, currentState.note)

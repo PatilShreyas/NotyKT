@@ -17,6 +17,5 @@ ij_wrap_on_typing = false
 ij_properties_align_group_field_declarations = false
 
 [{*.kt,*.kts}]
-ktlint_code_style = android_studio
-ktlint_import-ordering = disabled
+ktlint_code_style = ktlint_official
 ktlint_function_naming_ignore_when_annotated_with=Composable
