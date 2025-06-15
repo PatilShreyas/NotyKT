@@ -43,21 +43,27 @@ class NotesListAdapter(
         holder: NoteViewHolder,
         position: Int,
     ) {
-        holder.bind(getItem(position), onNoteClick)
+        holder.bind(getItem(position))
     }
 
     inner class NoteViewHolder(
         private val binding: ItemNoteBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(
-            note: Note,
-            onNoteClick: (Note) -> Unit,
-        ) {
+        
+        init {
+            binding.root.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onNoteClick(getItem(position))
+                }
+            }
+        }
+        
+        fun bind(note: Note) {
             with(binding) {
                 textTitle.text = note.title
                 textNote.text = note.note
                 pinnedIcon.isVisible = note.isPinned
-                root.setOnClickListener { onNoteClick(note) }
             }
         }
     }
