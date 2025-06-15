@@ -28,6 +28,7 @@ android {
     defaultConfig {
         applicationId = "dev.shreyaspatil.noty.simpleapp"
         minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
 
         versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.versionName.get()
