@@ -46,6 +46,7 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.ConfirmationDialog
 import dev.shreyaspatil.noty.composeapp.component.note.NotesList
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
+import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
 import dev.shreyaspatil.noty.composeapp.utils.collection.rememberComposeImmutableList
@@ -62,7 +63,7 @@ fun NotesScreen(
 ) {
     val state by viewModel.collectState()
 
-    val isInDarkMode = isSystemInDarkTheme()
+    val isInDarkMode = LocalUiInDarkMode.current
 
     var showLogoutConfirmation by remember { mutableStateOf(false) }
 

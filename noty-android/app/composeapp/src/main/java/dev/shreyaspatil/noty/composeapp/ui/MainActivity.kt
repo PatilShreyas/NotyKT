@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.components.ActivityComponent
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
+import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
@@ -66,10 +68,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun NotyMain() {
         val darkMode by rememberUiMode()
-
-        NotyTheme(darkTheme = darkMode) {
-            Surface {
-                NotyNavigation()
+        CompositionLocalProvider(LocalUiInDarkMode provides darkMode) {
+            NotyTheme(darkTheme = LocalUiInDarkMode.current) {
+                Surface {
+                    NotyNavigation()
+                }
             }
         }
     }
