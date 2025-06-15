@@ -276,7 +276,10 @@ class NotesScreenTest : NotyScreenTest() {
         noteRepository.addNotes(notes)
     }
 
-    private suspend fun addNote(title: String, note: String) {
+    private suspend fun addNote(
+        title: String,
+        note: String,
+    ) {
         noteRepository.addNote(title, note)
     }
 

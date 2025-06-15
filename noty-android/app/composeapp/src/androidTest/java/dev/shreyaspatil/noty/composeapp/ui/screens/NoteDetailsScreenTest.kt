@@ -185,9 +185,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
         noteRepository.addNotes(listOf(note))
     }
 
-
     private suspend fun setNoteIsPinned(isPinned: Boolean) {
         noteRepository.pinNote("1", isPinned)
     }
-
 }

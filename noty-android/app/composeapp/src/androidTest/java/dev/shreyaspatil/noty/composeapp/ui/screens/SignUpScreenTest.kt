@@ -110,7 +110,7 @@ class SignUpScreenTest : NotyScreenTest() {
             waitForIdle()
 
             waitUntilExactlyOneExists(hasTestTag("Confirm Password"))
-            
+
             onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
             waitForIdle()
             closeKeyboard.tryEmit(Unit)
@@ -149,7 +149,7 @@ class SignUpScreenTest : NotyScreenTest() {
             waitForIdle()
 
             waitUntilExactlyOneExists(hasTestTag("Confirm Password"))
-            
+
             onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
             waitForIdle()
             closeKeyboard.tryEmit(Unit)

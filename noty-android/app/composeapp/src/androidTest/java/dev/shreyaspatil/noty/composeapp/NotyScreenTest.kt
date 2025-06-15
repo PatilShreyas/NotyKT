@@ -68,19 +68,20 @@ abstract class NotyScreenTest {
         }
 
     protected fun setIdleAfter(block: suspend CoroutineScope.() -> Unit) {
-        val idlingResource = object : IdlingResource {
-            override var isIdleNow: Boolean = false
+        val idlingResource =
+            object : IdlingResource {
+                override var isIdleNow: Boolean = false
 
-            init {
-                composeTestRule.activity.lifecycleScope.launch {
-                    try {
-                        block()
-                    } finally {
-                        isIdleNow = true
+                init {
+                    composeTestRule.activity.lifecycleScope.launch {
+                        try {
+                            block()
+                        } finally {
+                            isIdleNow = true
+                        }
                     }
                 }
             }
-        }
         composeTestRule.registerIdlingResource(idlingResource)
     }
 }
