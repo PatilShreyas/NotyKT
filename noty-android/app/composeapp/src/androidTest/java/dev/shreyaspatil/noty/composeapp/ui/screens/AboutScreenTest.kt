@@ -29,23 +29,22 @@ import org.junit.Test
 @HiltAndroidTest
 class AboutScreenTest : NotyScreenTest() {
     @Test
-    fun testAboutScreen() =
-        runTest {
-            var navigatingUp = false
-            setNotyContent { AboutScreen(onNavigateUp = { navigatingUp = true }) }
+    fun testAboutScreen() = runTest {
+        var navigatingUp = false
+        setNotyContent { AboutScreen(onNavigateUp = { navigatingUp = true }) }
 
-            // Check if version info is displayed
-            val versionInfo = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-            onNodeWithText(versionInfo).assertIsDisplayed()
+        // Check if version info is displayed
+        val versionInfo = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+        onNodeWithText(versionInfo).assertIsDisplayed()
 
-            // Check if repository link is displayed
-            onNodeWithText("https://github.com/PatilShreyas/NotyKT").assertIsDisplayed()
+        // Check if repository link is displayed
+        onNodeWithText("https://github.com/PatilShreyas/NotyKT").assertIsDisplayed()
 
-            // When Back navigation icon is clicked
-            onNodeWithContentDescription("Back").performClick()
-            waitForIdle()
+        // When Back navigation icon is clicked
+        onNodeWithContentDescription("Back").performClick()
+        waitForIdle()
 
-            // Then should be navigated up
-            assertTrue(navigatingUp)
-        }
+        // Then should be navigated up
+        assertTrue(navigatingUp)
+    }
 }

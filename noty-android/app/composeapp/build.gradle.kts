@@ -46,7 +46,7 @@ android {
                     "META-INF/NOTICE.txt",
                     "META-INF/NOTICE",
                     "META-INF/LICENSE",
-                    "META-INF/DEPENDENCIES",
+                    "META-INF/DEPENDENCIES"
                 )
         }
     }
@@ -56,7 +56,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
             enableUnitTestCoverage = false
             enableAndroidTestCoverage = false
@@ -66,7 +66,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -87,6 +87,12 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
     }
 
     lint {
@@ -163,7 +169,11 @@ dependencies {
     implementation(libs.capturable)
 
     // Testing
-    testImplementation(libs.junit)
+    testImplementation(libs.junit5.api)
+    testImplementation(libs.junit5.params)
+    testRuntimeOnly(libs.junit5.engine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Android Testing
     androidTestImplementation(libs.androidx.test.core)

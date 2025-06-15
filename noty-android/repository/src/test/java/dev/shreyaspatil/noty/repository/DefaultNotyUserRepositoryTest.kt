@@ -23,85 +23,78 @@ import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
 import dev.shreyaspatil.noty.data.remote.model.response.AuthResponse
 import dev.shreyaspatil.noty.data.remote.model.response.State
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.coVerify
 import io.mockk.spyk
+import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import retrofit2.Response
 
-class DefaultNotyUserRepositoryTest : BehaviorSpec({
+class DefaultNotyUserRepositoryTest {
+    private lateinit var authService: FakeAuthService
+    private lateinit var repository: DefaultNotyUserRepository
 
-    val authService = spyk(FakeAuthService())
-    val repository = DefaultNotyUserRepository(authService)
-
-    Given("A user") {
-        When("New user is added") {
-            And("Credentials are valid") {
-                val response = repository.addUser(username = "admin", password = "admin")
-
-                Then("User should be get added") {
-                    coVerify { authService.register(AuthRequest("admin", "admin")) }
-                }
-
-                Then("Valid response with token should be returned") {
-                    val credentials = (response as Either.Success).data
-                    credentials.token shouldBe "Bearer ABCD"
-                }
-            }
-
-            And("Credentials are invalid") {
-                val response = repository.addUser(username = "john", password = "doe")
-
-                Then("User should be get added") {
-                    coVerify { authService.register(AuthRequest("john", "doe")) }
-                }
-
-                Then("Valid response with error message should be returned") {
-                    val message = (response as Either.Error).message
-                    message shouldBe "Invalid credentials"
-                }
-            }
-        }
-
-        When("A user is retrieved by credentials") {
-            And("Credentials are valid") {
-                val response =
-                    repository.getUserByUsernameAndPassword(
-                        username = "admin",
-                        password = "admin",
-                    )
-
-                Then("User login should be get requested") {
-                    coVerify { authService.login(AuthRequest("admin", "admin")) }
-                }
-
-                Then("Valid response with token should be returned") {
-                    val credentials = (response as Either.Success).data
-                    credentials.token shouldBe "Bearer ABCD"
-                }
-            }
-
-            And("Credentials are invalid") {
-                val response =
-                    repository.getUserByUsernameAndPassword(
-                        username = "john",
-                        password = "doe",
-                    )
-
-                Then("User login should be get requested") {
-                    coVerify { authService.login(AuthRequest("john", "doe")) }
-                }
-
-                Then("Valid response with error message should be returned") {
-                    val message = (response as Either.Error).message
-                    message shouldBe "Invalid credentials"
-                }
-            }
-        }
+    @BeforeEach
+    fun setup() {
+        authService = spyk(FakeAuthService())
+        repository = DefaultNotyUserRepository(authService)
     }
-})
+
+    @Test
+    fun `addUser should return success with token when credentials are valid`() = runTest {
+        // When
+        val response = repository.addUser(username = "admin", password = "admin")
+
+        // Then
+        coVerify { authService.register(AuthRequest("admin", "admin")) }
+        val credentials = (response as Either.Success).data
+        assertEquals("Bearer ABCD", credentials.token)
+    }
+
+    @Test
+    fun `addUser should return error when credentials are invalid`() = runTest {
+        // When
+        val response = repository.addUser(username = "john", password = "doe")
+
+        // Then
+        coVerify { authService.register(AuthRequest("john", "doe")) }
+        val message = (response as Either.Error).message
+        assertEquals("Invalid credentials", message)
+    }
+
+    @Test
+    fun `getUserByUsernameAndPassword should return success with token when credentials are valid`() = runTest {
+        // When
+        val response =
+            repository.getUserByUsernameAndPassword(
+                username = "admin",
+                password = "admin"
+            )
+
+        // Then
+        coVerify { authService.login(AuthRequest("admin", "admin")) }
+        val credentials = (response as Either.Success).data
+        assertEquals("Bearer ABCD", credentials.token)
+    }
+
+    @Test
+    fun `getUserByUsernameAndPassword should return error when credentials are invalid`() = runTest {
+        // When
+        val response =
+            repository.getUserByUsernameAndPassword(
+                username = "john",
+                password = "doe"
+            )
+
+        // Then
+        coVerify { authService.login(AuthRequest("john", "doe")) }
+        val message = (response as Either.Error).message
+        assertEquals("Invalid credentials", message)
+    }
+}
 
 class FakeAuthService : NotyAuthService {
     override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> {
@@ -121,7 +114,7 @@ class FakeAuthService : NotyAuthService {
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),
-                    moshi.adapter<AuthResponse>().toJson(response),
+                    moshi.adapter<AuthResponse>().toJson(response)
                 )
             Response.error(401, body)
         }

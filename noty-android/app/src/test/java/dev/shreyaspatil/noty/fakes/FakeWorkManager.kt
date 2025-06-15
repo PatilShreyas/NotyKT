@@ -24,9 +24,9 @@ import androidx.work.WorkManager
 import com.google.common.util.concurrent.ListenableFuture
 import io.mockk.every
 import io.mockk.mockk
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.UUID
 
 /**
  * WorkManager's fake implementation
@@ -60,7 +60,7 @@ class FakeWorkManager {
             mockWorkManager.enqueueUniqueWork(
                 any(),
                 any<ExistingWorkPolicy>(),
-                any<OneTimeWorkRequest>(),
+                any<OneTimeWorkRequest>()
             )
         } answers {
             oneTimeWorkRequests.add(arg<OneTimeWorkRequest>(2))

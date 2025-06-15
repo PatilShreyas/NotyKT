@@ -18,10 +18,9 @@ package dev.shreyaspatil.noty.fakes
 
 import dev.shreyaspatil.noty.core.model.Note
 
-fun note(noteId: String) =
-    Note(
-        id = noteId,
-        title = "Lorem Ipsum",
-        note = "Hey there! This is note content",
-        created = 1L,
-    )
+fun note(noteId: String) = Note(
+    id = noteId,
+    title = "Lorem Ipsum",
+    note = "Hey there! This is note content",
+    created = 1L
+)

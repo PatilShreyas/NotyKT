@@ -17,68 +17,70 @@
 package dev.shreyaspatil.noty.data.remote.interceptor
 
 import dev.shreyaspatil.noty.core.session.SessionManager
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import java.util.concurrent.TimeUnit
 import okhttp3.Call
 import okhttp3.Connection
 import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
-import java.util.concurrent.TimeUnit
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@Suppress("BlockingMethodInNonBlockingContext")
-class AuthInterceptorTest : BehaviorSpec({
+class AuthInterceptorTest {
 
-    val sessionManager: SessionManager = mockk()
-    val interceptor = AuthInterceptor(sessionManager)
+    private lateinit var sessionManager: SessionManager
+    private lateinit var interceptor: AuthInterceptor
+    private lateinit var expectedRequest: Request
+    private lateinit var requestBuilder: Request.Builder
+    private lateinit var chain: FakeChain
 
-    // Init mocks
-    val expectedRequest: Request = mockk()
-    val requestBuilder: Request.Builder =
-        mockk {
+    @BeforeEach
+    fun setup() {
+        sessionManager = mockk()
+        interceptor = AuthInterceptor(sessionManager)
+
+        // Init mocks
+        expectedRequest = mockk()
+        requestBuilder = mockk {
             every { header(any(), any()) } returns this
             every { build() } returns expectedRequest
         }
-    val chain = FakeChain(requestBuilder)
-
-    Given("An auth token") {
-        every { sessionManager.getToken() } returns "ABCD1234"
-
-        When("The request goes through interceptor") {
-            interceptor.intercept(chain)
-
-            Then("Auth Bearer Token should get added in the header") {
-                verify { requestBuilder.header("Authorization", "Bearer ABCD1234") }
-            }
-
-            Then("The chain should proceed with the new request") {
-                chain.proceededRequest shouldBe expectedRequest
-            }
-        }
+        chain = FakeChain(requestBuilder)
     }
 
-    Given("No auth token available") {
+    @Test
+    fun `intercept should add auth token to header when token is available`() {
+        // Given
+        every { sessionManager.getToken() } returns "ABCD1234"
+
+        // When
+        interceptor.intercept(chain)
+
+        // Then
+        verify { requestBuilder.header("Authorization", "Bearer ABCD1234") }
+        assertEquals(expectedRequest, chain.proceededRequest)
+    }
+
+    @Test
+    fun `intercept should not add auth token to header when token is not available`() {
+        // Given
         clearAllMocks(answers = false)
         every { sessionManager.getToken() } returns null
 
-        When("The request goes through interceptor") {
-            interceptor.intercept(chain)
+        // When
+        interceptor.intercept(chain)
 
-            Then("Auth Bearer Token should NOT get added in the header") {
-                verify(exactly = 0) { requestBuilder.header("Authorization", any()) }
-            }
-
-            Then("The chain should proceed with the new request") {
-                chain.proceededRequest shouldBe expectedRequest
-            }
-        }
+        // Then
+        verify(exactly = 0) { requestBuilder.header("Authorization", any()) }
+        assertEquals(expectedRequest, chain.proceededRequest)
     }
-})
+}
 
 /**
  * Fake implementation of [Interceptor.Chain]
@@ -122,24 +124,15 @@ class FakeChain(private val requestBuilder: Request.Builder) : Interceptor.Chain
         }
     }
 
-    override fun withConnectTimeout(
-        timeout: Int,
-        unit: TimeUnit,
-    ): Interceptor.Chain {
+    override fun withConnectTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 
-    override fun withReadTimeout(
-        timeout: Int,
-        unit: TimeUnit,
-    ): Interceptor.Chain {
+    override fun withReadTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 
-    override fun withWriteTimeout(
-        timeout: Int,
-        unit: TimeUnit,
-    ): Interceptor.Chain {
+    override fun withWriteTimeout(timeout: Int, unit: TimeUnit): Interceptor.Chain {
         TODO("Not yet implemented")
     }
 

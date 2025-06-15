@@ -16,52 +16,40 @@
 
 package dev.shreyaspatil.noty.utils.validator
 
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldNotContain
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
-class NoteValidatorTest : BehaviorSpec({
-    Given("Note title and note content") {
-        And("They are valid") {
-            val titleAndNote =
-                listOf(
-                    "title" to "content",
-                    "    Hey there    " to "Hey there, this is body of a note",
-                    "1234" to "Hi",
-                )
+class NoteValidatorTest {
+    @Test
+    fun `isValidNote should return true for valid title and content`() {
+        // Given
+        val validTitleAndNotes =
+            listOf(
+                "title" to "content",
+                "    Hey there    " to "Hey there, this is body of a note",
+                "1234" to "Hi"
+            )
 
-            When("Title and note is validated") {
-                val areValid =
-                    titleAndNote.map { (title, note) ->
-                        NoteValidator.isValidNote(title, note)
-                    }
-
-                Then("Note should be valid") {
-                    areValid shouldContain true
-                    areValid shouldNotContain false
-                }
-            }
-        }
-
-        And("They are invalid") {
-            val titleAndNote =
-                listOf(
-                    "hi" to "content",
-                    "    Hey   " to "Hey there, this is body of a note",
-                    "1234" to "",
-                )
-
-            When("Title and note is validated") {
-                val areValid =
-                    titleAndNote.map { (title, note) ->
-                        NoteValidator.isValidNote(title, note)
-                    }
-
-                Then("Note should be valid") {
-                    areValid shouldContain false
-                    areValid shouldNotContain true
-                }
-            }
+        // When & Then
+        validTitleAndNotes.forEach { (title, note) ->
+            assertTrue(NoteValidator.isValidNote(title, note))
         }
     }
-})
+
+    @Test
+    fun `isValidNote should return false for invalid title and content`() {
+        // Given
+        val invalidTitleAndNotes =
+            listOf(
+                "hi" to "content",
+                "    Hey   " to "Hey there, this is body of a note",
+                "1234" to ""
+            )
+
+        // When & Then
+        invalidTitleAndNotes.forEach { (title, note) ->
+            assertFalse(NoteValidator.isValidNote(title, note))
+        }
+    }
+}

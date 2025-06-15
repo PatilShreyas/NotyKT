@@ -50,7 +50,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -66,6 +66,12 @@ android {
 
     kotlin {
         jvmToolchain(libs.versions.javaVersion.get().toInt())
+    }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
     }
 
     lint {
@@ -126,7 +132,11 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     // Testing
-    testImplementation(libs.junit)
+    testImplementation(libs.junit5.api)
+    testImplementation(libs.junit5.params)
+    testRuntimeOnly(libs.junit5.engine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Android Testing
     androidTestImplementation(libs.androidx.test.ext.junit)

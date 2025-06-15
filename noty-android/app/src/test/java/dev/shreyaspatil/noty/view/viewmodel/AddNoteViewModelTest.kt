@@ -16,37 +16,46 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import dev.shreyaspatil.noty.base.ViewModelBehaviorSpec
+import dev.shreyaspatil.noty.base.ViewModelTest
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.core.task.NotyTaskManager
-import dev.shreyaspatil.noty.testUtils.currentStateShouldBe
-import dev.shreyaspatil.noty.testUtils.withState
 import dev.shreyaspatil.noty.view.state.AddNoteState
-import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.UUID
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class AddNoteViewModelTest : ViewModelBehaviorSpec({
+class AddNoteViewModelTest : ViewModelTest() {
+    private lateinit var repository: NotyNoteRepository
+    private lateinit var taskManager: NotyTaskManager
+    private lateinit var viewModel: AddNoteViewModel
 
-    val repository: NotyNoteRepository = mockk(relaxUnitFun = true)
-    val taskManager: NotyTaskManager =
-        mockk(relaxUnitFun = true) {
-            every { scheduleTask(any()) } returns UUID.randomUUID()
-        }
+    @BeforeEach
+    fun setup() {
+        repository = mockk(relaxUnitFun = true)
+        taskManager =
+            mockk(relaxUnitFun = true) {
+                every { scheduleTask(any()) } returns UUID.randomUUID()
+            }
+        viewModel = AddNoteViewModel(repository, taskManager)
+    }
 
-    val viewModel = AddNoteViewModel(repository, taskManager)
-
-    Given("The ViewModel") {
+    @Test
+    fun `initial state should be valid`() {
+        // Given
         val expectedState =
             AddNoteState(
                 title = "",
@@ -54,116 +63,111 @@ class AddNoteViewModelTest : ViewModelBehaviorSpec({
                 showSave = false,
                 isAdding = false,
                 added = false,
-                errorMessage = null,
+                errorMessage = null
             )
 
-        When("Initialized") {
-            Then("Initial state should be valid") {
-                viewModel currentStateShouldBe expectedState
-            }
-        }
-
-        When("The state is reset") {
-            viewModel.resetState()
-
-            Then("State should be valid") {
-                viewModel currentStateShouldBe expectedState
-            }
-        }
+        // Then
+        assertEquals(expectedState, viewModel.currentState)
     }
 
-    Given("Note contents") {
-        And("Note contents are invalid") {
-            val title = "hi"
-            val note = ""
+    @Test
+    fun `resetState should reset state to initial values`() {
+        // Given
+        viewModel.setTitle("Test Title")
+        viewModel.setNote("Test Note")
 
-            When("When note contents are set") {
-                viewModel.setTitle(title)
-                viewModel.setNote(note)
+        // When
+        viewModel.resetState()
 
-                Then("UI state should have validation details") {
-                    viewModel.withState {
-                        this.title shouldBe title
-                        this.note shouldBe note
-                        showSave shouldBe false
-                    }
-                }
-            }
-        }
-
-        And("Note contents are valid") {
-            val title = "Hey there"
-            val note = "This is body"
-
-            When("When note contents are set") {
-                viewModel.setTitle(title)
-                viewModel.setNote(note)
-
-                Then("UI state should have validation details") {
-                    viewModel.withState {
-                        this.title shouldBe title
-                        this.note shouldBe note
-                        showSave shouldBe true
-                    }
-                }
-            }
-        }
+        // Then
+        val expectedState =
+            AddNoteState(
+                title = "",
+                note = "",
+                showSave = false,
+                isAdding = false,
+                added = false,
+                errorMessage = null
+            )
+        assertEquals(expectedState, viewModel.currentState)
     }
 
-    Given("A note for addition") {
+    @Test
+    fun `setTitle and setNote should update state with invalid content`() {
+        // Given
+        val title = "hi"
+        val note = ""
+
+        // When
+        viewModel.setTitle(title)
+        viewModel.setNote(note)
+
+        // Then
+        assertEquals(title, viewModel.currentState.title)
+        assertEquals(note, viewModel.currentState.note)
+        assertFalse(viewModel.currentState.showSave)
+    }
+
+    @Test
+    fun `setTitle and setNote should update state with valid content`() {
+        // Given
+        val title = "Hey there"
+        val note = "This is body"
+
+        // When
+        viewModel.setTitle(title)
+        viewModel.setNote(note)
+
+        // Then
+        assertEquals(title, viewModel.currentState.title)
+        assertEquals(note, viewModel.currentState.note)
+        assertTrue(viewModel.currentState.showSave)
+    }
+
+    @Test
+    fun `add should update state and schedule task when note addition is successful`() = runTest {
+        // Given
         val title = "Lorem Ipsum"
         val note = "Hey there, this is not content"
 
         viewModel.setTitle(title)
         viewModel.setNote(note)
+        coEvery { repository.addNote(title, note) } returns Either.success("note-11")
 
-        And("Note addition is successful") {
-            coEvery { repository.addNote(title, note) } returns Either.success("note-11")
+        // When
+        viewModel.add()
 
-            When("Note is added") {
-                viewModel.add()
+        // Then
+        assertFalse(viewModel.currentState.isAdding)
+        assertTrue(viewModel.currentState.added)
+        assertNull(viewModel.currentState.errorMessage)
 
-                Then("Note states should be valid") {
-                    viewModel.withState {
-                        isAdding shouldBe false
-                        added shouldBe true
-                        errorMessage shouldBe null
-                    }
-                }
+        val actualTask = slot<NotyTask>()
+        verify { taskManager.scheduleTask(capture(actualTask)) }
 
-                Then("Note creation task should be get scheduled") {
-                    val actualTask = slot<NotyTask>()
-                    verify { taskManager.scheduleTask(capture(actualTask)) }
-
-                    actualTask.captured.let {
-                        it.noteId shouldBe "note-11"
-                        it.action shouldBe NotyTaskAction.CREATE
-                    }
-                }
-            }
-        }
-
-        And("Note addition is failed") {
-            clearAllMocks()
-
-            coEvery { repository.addNote(title, note) } returns Either.error("Failed")
-
-            When("Note is added") {
-                viewModel.add()
-
-                Then("Note states should be valid") {
-                    viewModel.withState {
-                        println("ThisStateIs: $this")
-                        isAdding shouldBe false
-                        added shouldBe false
-                        errorMessage shouldBe "Failed"
-                    }
-                }
-
-                Then("Note creation task should NOT be get scheduled") {
-                    verify(exactly = 0) { taskManager.scheduleTask(any()) }
-                }
-            }
-        }
+        assertEquals("note-11", actualTask.captured.noteId)
+        assertEquals(NotyTaskAction.CREATE, actualTask.captured.action)
     }
-})
+
+    @Test
+    fun `add should update state with error when note addition fails`() = runTest {
+        // Given
+        val title = "Lorem Ipsum"
+        val note = "Hey there, this is not content"
+
+        viewModel.setTitle(title)
+        viewModel.setNote(note)
+        clearAllMocks()
+        coEvery { repository.addNote(title, note) } returns Either.error("Failed")
+
+        // When
+        viewModel.add()
+
+        // Then
+        assertFalse(viewModel.currentState.isAdding)
+        assertFalse(viewModel.currentState.added)
+        assertEquals("Failed", viewModel.currentState.errorMessage)
+
+        verify(exactly = 0) { taskManager.scheduleTask(any()) }
+    }
+}

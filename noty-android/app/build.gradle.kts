@@ -108,10 +108,9 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
 
     // Testing
-    testImplementation(libs.junit)
-    testImplementation(libs.kotest.runner.junit5)
-    testImplementation(libs.kotest.assertions.core)
-    testImplementation(libs.kotest.property)
+    testImplementation(libs.junit5.api)
+    testImplementation(libs.junit5.params)
+    testRuntimeOnly(libs.junit5.engine)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 

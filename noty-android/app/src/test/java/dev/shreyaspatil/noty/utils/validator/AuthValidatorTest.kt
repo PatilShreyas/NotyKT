@@ -16,107 +16,93 @@
 
 package dev.shreyaspatil.noty.utils.validator
 
-import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldNotContain
-import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
-class AuthValidatorTest : BehaviorSpec({
-    Given("Usernames") {
-        And("Usernames are valid") {
-            val usernames = listOf("johndoe", "johndoe1234", "njvearjgnuiw5895h89oh")
+class AuthValidatorTest {
+    @Test
+    fun `isValidUsername should return true for valid usernames`() {
+        // Given
+        val validUsernames = listOf("johndoe", "johndoe1234", "njvearjgnuiw5895h89oh")
 
-            When("Usernames are validated") {
-                val areUsernamesValid = usernames.map { AuthValidator.isValidUsername(it) }
-
-                Then("Usernames should be valid") {
-                    areUsernamesValid shouldContain true
-                    areUsernamesValid shouldNotContain false
-                }
-            }
-        }
-
-        And("Usernames are invalid") {
-            val usernames = listOf("123", "joh", "11njvearjgnuiw5895h89oh456tre54y", "    hey    ")
-
-            When("Usernames are validated") {
-                val areUsernamesValid = usernames.map { AuthValidator.isValidUsername(it) }
-
-                Then("Usernames should be invalid") {
-                    areUsernamesValid shouldContain false
-                    areUsernamesValid shouldNotContain true
-                }
-            }
+        // When & Then
+        validUsernames.forEach { username ->
+            assertTrue(AuthValidator.isValidUsername(username))
         }
     }
 
-    Given("Passwords") {
-        And("Passwords are valid") {
-            val passwords = listOf("heythere", "johndoe1234", "njvearjgnuiw5895h89oh")
+    @Test
+    fun `isValidUsername should return false for invalid usernames`() {
+        // Given
+        val invalidUsernames =
+            listOf("123", "joh", "11njvearjgnuiw5895h89oh456tre54y", "    hey    ")
 
-            When("Passwords are validated") {
-                val arePasswordsValid = passwords.map { AuthValidator.isValidPassword(it) }
-
-                Then("Passwords should be valid") {
-                    arePasswordsValid shouldContain true
-                    arePasswordsValid shouldNotContain false
-                }
-            }
-        }
-
-        And("Passwords are invalid") {
-            val passwords =
-                listOf(
-                    "12345",
-                    "johndoe",
-                    "   hey       ",
-                    "123456789012345678901234567890123456789012345678901234567890",
-                )
-
-            When("Passwords are validated") {
-                val arePasswordsValid = passwords.map { AuthValidator.isValidPassword(it) }
-
-                Then("Passwords should be invalid") {
-                    arePasswordsValid shouldContain false
-                    arePasswordsValid shouldNotContain true
-                }
-            }
+        // When & Then
+        invalidUsernames.forEach { username ->
+            assertFalse(AuthValidator.isValidUsername(username))
         }
     }
 
-    Given("Password and confirm password") {
-        And("Both are same") {
-            val password = "password1234"
-            val confirmPassword = "password1234"
+    @Test
+    fun `isValidPassword should return true for valid passwords`() {
+        // Given
+        val validPasswords = listOf("heythere", "johndoe1234", "njvearjgnuiw5895h89oh")
 
-            When("They are checked whether they are same") {
-                val areSame =
-                    AuthValidator.isPasswordAndConfirmPasswordSame(
-                        password = password,
-                        confirmedPassword = confirmPassword,
-                    )
-
-                Then("They should be the same") {
-                    areSame shouldBe true
-                }
-            }
-        }
-
-        And("Both are NOT same") {
-            val password = "password"
-            val confirmPassword = "confirmPassword"
-
-            When("They are checked whether they are same") {
-                val areSame =
-                    AuthValidator.isPasswordAndConfirmPasswordSame(
-                        password = password,
-                        confirmedPassword = confirmPassword,
-                    )
-
-                Then("They should NOT be the same") {
-                    areSame shouldBe false
-                }
-            }
+        // When & Then
+        validPasswords.forEach { password ->
+            assertTrue(AuthValidator.isValidPassword(password))
         }
     }
-})
+
+    @Test
+    fun `isValidPassword should return false for invalid passwords`() {
+        // Given
+        val invalidPasswords =
+            listOf(
+                "12345",
+                "johndoe",
+                "   hey       ",
+                "123456789012345678901234567890123456789012345678901234567890"
+            )
+
+        // When & Then
+        invalidPasswords.forEach { password ->
+            assertFalse(AuthValidator.isValidPassword(password))
+        }
+    }
+
+    @Test
+    fun `isPasswordAndConfirmPasswordSame should return true when passwords match`() {
+        // Given
+        val password = "password1234"
+        val confirmPassword = "password1234"
+
+        // When
+        val areSame =
+            AuthValidator.isPasswordAndConfirmPasswordSame(
+                password = password,
+                confirmedPassword = confirmPassword
+            )
+
+        // Then
+        assertTrue(areSame)
+    }
+
+    @Test
+    fun `isPasswordAndConfirmPasswordSame should return false when passwords don't match`() {
+        // Given
+        val password = "password"
+        val confirmPassword = "confirmPassword"
+
+        // When
+        val areSame =
+            AuthValidator.isPasswordAndConfirmPasswordSame(
+                password = password,
+                confirmedPassword = confirmPassword
+            )
+
+        // Then
+        assertFalse(areSame)
+    }
+}

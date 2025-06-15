@@ -58,7 +58,7 @@ android {
                     "META-INF/NOTICE.txt",
                     "META-INF/NOTICE",
                     "META-INF/LICENSE",
-                    "META-INF/DEPENDENCIES",
+                    "META-INF/DEPENDENCIES"
                 )
         }
     }
@@ -80,11 +80,11 @@ dependencies {
     api(libs.retrofit.converter.moshi)
 
     // Testing
-    testImplementation(libs.junit)
-    testImplementation(libs.kotest.runner.junit5)
-    testImplementation(libs.kotest.assertions.core)
-    testImplementation(libs.kotest.property)
+    testImplementation(libs.junit5.api)
+    testImplementation(libs.junit5.params)
+    testRuntimeOnly(libs.junit5.engine)
     testImplementation(libs.mockk)
     testImplementation(libs.okhttp.mockwebserver)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.mockk.android)
 }
