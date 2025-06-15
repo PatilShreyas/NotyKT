@@ -16,6 +16,7 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
+import dev.shreyaspatil.noty.base.ViewModelTest
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
@@ -39,7 +40,7 @@ import org.junit.jupiter.api.Test
 import java.util.UUID
 
 class NoteDetailViewModelTest : ViewModelTest() {
-    private lateinit var note: dev.shreyaspatil.noty.core.model.Note
+    private lateinit var note: Note
     private lateinit var repository: NotyNoteRepository
     private lateinit var taskManager: NotyTaskManager
     private lateinit var viewModel: NoteDetailViewModel
