@@ -16,7 +16,7 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import dev.shreyaspatil.noty.base.ViewModelTest
+import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.model.NotyTaskAction
 import dev.shreyaspatil.noty.core.repository.Either

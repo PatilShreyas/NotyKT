@@ -38,7 +38,6 @@ import dev.shreyaspatil.noty.composeapp.ui.screens.LoginScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen
-import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 
 const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
@@ -101,9 +100,9 @@ fun NotyNavigation() {
             val noteId = requireNotNull(it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID))
             NoteDetailsScreen(
                 viewModel =
-                    assistedViewModel {
-                        NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
-                    },
+                    hiltViewModel(
+                        creationCallback = { factory: NoteDetailViewModel.Factory -> factory.create(noteId) },
+                    ),
                 onNavigateUp = { navController.navigateUp() },
             )
         }
