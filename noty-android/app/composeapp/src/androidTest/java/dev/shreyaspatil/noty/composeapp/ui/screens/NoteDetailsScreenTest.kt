@@ -38,6 +38,7 @@ import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.UUID
 import javax.inject.Inject
 
 @OptIn(ExperimentalTestApi::class)
@@ -47,10 +48,12 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Inject
     lateinit var noteRepository: NotyNoteRepository
 
+    private lateinit var noteId: String
+
     @Before
     fun setUp() {
         inject()
-        setIdleAfter { prepopulateNote() }
+        noteId = "test-note-${System.currentTimeMillis()}-${UUID.randomUUID()}"
     }
 
     @Test
@@ -67,6 +70,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun hideSaveButton_onInvalidNoteContentInput() =
         runTest {
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen() }
             waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
@@ -84,6 +88,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun hideSaveButton_whenEditedContentIsSameAsPreviouslySavedContent() =
         runTest {
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen() }
             waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
@@ -102,6 +107,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun showSaveButton_whenEditedContentIsNotSameAsPreviouslySavedContent() =
         runTest {
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen() }
             waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
@@ -123,6 +129,8 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     fun navigateUp_whenNoteIsUpdatedSuccessfully() =
         runTest {
             var navigatingUp = false
+
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen(onNavigateUp = { navigatingUp = true }) }
             waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
@@ -141,7 +149,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun showActionToUnpinNote_whenNoteIsAlreadyPinned() =
         runTest {
-            setIdleAfter { setNoteIsPinned(true) }
+            setIdleAfter { prepopulateNote(isPinned = true) }
 
             setNotyContent { NoteDetailScreen() }
             waitUntilAtLeastOneExists(hasText("Lorem Ipsum"))
@@ -154,6 +162,8 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun showActionToPinNote_whenNoteIsNotPinned() =
         runTest {
+            setIdleAfter { prepopulateNote(isPinned = false) }
+
             setNotyContent { NoteDetailScreen() }
             waitUntilAtLeastOneExists(hasText("Lorem Ipsum"))
             waitUntil(5000) { onNodeWithContentDescription("Not Pinned").isDisplayed() }
@@ -167,25 +177,22 @@ class NoteDetailsScreenTest : NotyScreenTest() {
         NoteDetailsScreen(
             viewModel =
                 hiltViewModel(creationCallback = { factory: NoteDetailViewModel.Factory ->
-                    factory.create(noteId = "1")
+                    factory.create(noteId = noteId)
                 }),
             onNavigateUp = onNavigateUp,
         )
     }
 
-    private suspend fun prepopulateNote() {
+    private suspend fun prepopulateNote(isPinned: Boolean = false) {
         val note =
             Note(
-                id = "1",
+                id = noteId,
                 title = "Lorem Ipsum",
                 note = "Hey there",
                 created = System.currentTimeMillis(),
+                isPinned = isPinned,
             )
 
         noteRepository.addNotes(listOf(note))
-    }
-
-    private suspend fun setNoteIsPinned(isPinned: Boolean) {
-        noteRepository.pinNote("1", isPinned)
     }
 }
