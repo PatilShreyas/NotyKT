@@ -54,8 +54,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         setTheme(R.style.AppTheme)
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             NotyMain()
