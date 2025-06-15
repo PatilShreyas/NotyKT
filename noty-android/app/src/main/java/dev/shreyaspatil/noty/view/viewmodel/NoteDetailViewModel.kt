@@ -16,15 +16,11 @@
 
 package dev.shreyaspatil.noty.view.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import dagger.Module
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.model.NotyTask
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
@@ -40,6 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
+@HiltViewModel(assistedFactory = NoteDetailViewModel.Factory::class)
 class NoteDetailViewModel
     @AssistedInject
     constructor(
@@ -179,42 +176,20 @@ class NoteDetailViewModel
             }
         }
 
-        private fun scheduleNoteCreate(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.create(noteId))
+        private fun scheduleNoteCreate(noteId: String) = notyTaskManager.scheduleTask(NotyTask.create(noteId))
 
-        private fun scheduleNoteUpdate(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.update(noteId))
+        private fun scheduleNoteUpdate(noteId: String) = notyTaskManager.scheduleTask(NotyTask.update(noteId))
 
-        private fun scheduleNoteDelete(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.delete(noteId))
+        private fun scheduleNoteDelete(noteId: String) = notyTaskManager.scheduleTask(NotyTask.delete(noteId))
 
-        private fun scheduleNoteUpdatePin(noteId: String) =
-            notyTaskManager.scheduleTask(NotyTask.pin(noteId))
+        private fun scheduleNoteUpdatePin(noteId: String) = notyTaskManager.scheduleTask(NotyTask.pin(noteId))
 
-        private fun setState(update: MutableNoteDetailState.() -> Unit) =
-            stateStore.setState(
-                update,
-            )
+        private fun setState(update: MutableNoteDetailState.() -> Unit) {
+            stateStore.setState(update)
+        }
 
         @AssistedFactory
         interface Factory {
             fun create(noteId: String): NoteDetailViewModel
         }
-
-        @Suppress("UNCHECKED_CAST")
-        companion object {
-            fun provideFactory(
-                assistedFactory: Factory,
-                noteId: String,
-            ): ViewModelProvider.Factory =
-                object : ViewModelProvider.Factory {
-                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                        return assistedFactory.create(noteId) as T
-                    }
-                }
-        }
     }
-
-@Module
-@InstallIn(ActivityRetainedComponent::class)
-interface AssistedInjectModule

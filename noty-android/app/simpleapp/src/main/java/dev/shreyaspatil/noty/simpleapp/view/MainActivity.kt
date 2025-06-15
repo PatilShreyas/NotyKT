@@ -18,6 +18,7 @@ package dev.shreyaspatil.noty.simpleapp.view
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.asLiveData
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme) // Set AppTheme before setting content view.
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         val binding = MainActivityBinding.inflate(layoutInflater)
 

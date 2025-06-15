@@ -26,9 +26,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
+import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.testing.HiltAndroidTest
 import dev.shreyaspatil.noty.composeapp.NotyScreenTest
-import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.di.LocalRepository
@@ -164,9 +164,9 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     private fun NoteDetailScreen(onNavigateUp: () -> Unit = {}) {
         NoteDetailsScreen(
             viewModel =
-                assistedViewModel {
-                    NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), "1")
-                },
+                hiltViewModel(creationCallback = { factory: NoteDetailViewModel.Factory ->
+                    factory.create(noteId = "1")
+                }),
             onNavigateUp = onNavigateUp,
         )
     }

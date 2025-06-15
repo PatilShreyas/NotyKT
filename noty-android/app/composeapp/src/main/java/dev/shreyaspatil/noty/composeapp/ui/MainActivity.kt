@@ -19,24 +19,24 @@ package dev.shreyaspatil.noty.composeapp.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.components.ActivityComponent
 import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
+import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
-import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -46,14 +46,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var preferenceManager: PreferenceManager
 
-    @EntryPoint
-    @InstallIn(ActivityComponent::class)
-    interface ViewModelFactoryProvider {
-        fun noteDetailViewModelFactory(): NoteDetailViewModel.Factory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
             NotyMain()
@@ -64,10 +59,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun NotyMain() {
         val darkMode by rememberUiMode()
-
-        NotyTheme(darkTheme = darkMode) {
-            Surface {
-                NotyNavigation()
+        CompositionLocalProvider(LocalUiInDarkMode provides darkMode) {
+            NotyTheme(darkTheme = LocalUiInDarkMode.current) {
+                Surface {
+                    NotyNavigation()
+                }
             }
         }
     }
@@ -90,6 +86,11 @@ class MainActivity : ComponentActivity() {
                         false -> AppCompatDelegate.MODE_NIGHT_NO
                     }
                 AppCompatDelegate.setDefaultNightMode(mode)
+
+                WindowInsetsControllerCompat(window, window.decorView).apply {
+                    isAppearanceLightStatusBars = !isDarkMode
+                    isAppearanceLightNavigationBars = !isDarkMode
+                }
             }.launchIn(lifecycleScope)
     }
 }

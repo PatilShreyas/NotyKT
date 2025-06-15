@@ -16,7 +16,14 @@
 
 package dev.shreyaspatil.noty.composeapp.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.displayCutoutPadding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -31,7 +38,6 @@ import dev.shreyaspatil.noty.composeapp.ui.screens.LoginScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.NoteDetailsScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.NotesScreen
 import dev.shreyaspatil.noty.composeapp.ui.screens.SignUpScreen
-import dev.shreyaspatil.noty.composeapp.utils.assistedViewModel
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 
 const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
@@ -40,7 +46,21 @@ const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 fun NotyNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = Screen.Notes.route, route = NOTY_NAV_HOST_ROUTE) {
+    NavHost(
+        navController,
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .displayCutoutPadding(),
+        startDestination = Screen.Notes.route,
+        route = NOTY_NAV_HOST_ROUTE,
+        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(700)) },
+        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(700)) },
+        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(700)) },
+        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(700)) },
+    ) {
         composable(Screen.SignUp.route) {
             SignUpScreen(
                 viewModel = hiltViewModel(),
@@ -80,9 +100,9 @@ fun NotyNavigation() {
             val noteId = requireNotNull(it.arguments?.getString(Screen.NotesDetail.ARG_NOTE_ID))
             NoteDetailsScreen(
                 viewModel =
-                    assistedViewModel {
-                        NoteDetailViewModel.provideFactory(noteDetailViewModelFactory(), noteId)
-                    },
+                    hiltViewModel(
+                        creationCallback = { factory: NoteDetailViewModel.Factory -> factory.create(noteId) },
+                    ),
                 onNavigateUp = { navController.navigateUp() },
             )
         }

@@ -51,12 +51,10 @@ abstract class NotyScreenTest {
 
     fun inject() = hiltRule.inject()
 
-    inline fun <reified T : BaseViewModel<out State>> viewModel() =
-        composeTestRule.activity.viewModels<T>().value
+    inline fun <reified T : BaseViewModel<out State>> viewModel() = composeTestRule.activity.viewModels<T>().value
 
-    fun runTest(
-        body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit,
-    ) = composeTestRule.run(body)
+    fun runTest(body: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>.() -> Unit) =
+        composeTestRule.run(body)
 
     fun setNotyContent(content: @Composable () -> Unit) =
         composeTestRule.activity.setContent {

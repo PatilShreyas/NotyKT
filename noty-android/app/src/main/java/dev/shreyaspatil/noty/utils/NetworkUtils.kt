@@ -35,9 +35,12 @@ val Context.connectivityManager get(): ConnectivityManager {
  */
 fun ConnectivityManager.observeConnectivityAsFlow() =
     callbackFlow {
-        trySend(currentConnectivityState)
+        trySend(currentConnectivityState.also { println("Initial state = $it") })
 
-        val callback = NetworkCallback { connectionState -> trySend(connectionState) }
+        val callback =
+            NetworkCallback {
+                trySend(evaluateNetworkState(this@observeConnectivityAsFlow, activeNetwork))
+            }
 
         val networkRequest =
             NetworkRequest.Builder()
@@ -55,30 +58,50 @@ fun ConnectivityManager.observeConnectivityAsFlow() =
  * Network utility to get current state of internet connection
  */
 val ConnectivityManager.currentConnectivityState: ConnectionState
-    get() {
-        val connected =
-            allNetworks.any { network ->
-                getNetworkCapabilities(network)
-                    ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                    ?: false
-            }
+    get() = evaluateNetworkState(this, activeNetwork)
 
-        return if (connected) ConnectionState.Available else ConnectionState.Unavailable
+/**
+ * Helper function to evaluate network connectivity state
+ */
+private fun evaluateNetworkState(
+    connectivityManager: ConnectivityManager,
+    network: Network?,
+): ConnectionState {
+    if (network == null) {
+        return ConnectionState.Unavailable
     }
 
+    val capabilities = connectivityManager.getNetworkCapabilities(network)
+    val hasInternetCapability = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+    val isValidated = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) == true
+
+    return if (hasInternetCapability && isValidated) {
+        ConnectionState.Available
+    } else {
+        ConnectionState.Unavailable
+    }
+}
+
 @Suppress("FunctionName")
-fun NetworkCallback(callback: (ConnectionState) -> Unit): ConnectivityManager.NetworkCallback {
+fun NetworkCallback(callback: () -> Unit): ConnectivityManager.NetworkCallback {
     return object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            callback(ConnectionState.Available)
+            callback()
+        }
+
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities,
+        ) {
+            callback()
         }
 
         override fun onLost(network: Network) {
-            callback(ConnectionState.Unavailable)
+            callback()
         }
 
         override fun onUnavailable() {
-            callback(ConnectionState.Unavailable)
+            callback()
         }
     }
 }

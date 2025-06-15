@@ -20,6 +20,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
@@ -172,6 +173,7 @@ fun NoteDetailContent(
                     icon = { Icon(Icons.Filled.Done, "Save", tint = Color.White) },
                     onClick = onSaveClick,
                     backgroundColor = MaterialTheme.colors.primary,
+                    modifier = Modifier.imePadding(),
                 )
             }
         },
