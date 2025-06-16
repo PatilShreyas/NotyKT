@@ -18,7 +18,7 @@ postgres = "42.7.6"
 hikari = "6.3.0"
 
 # Logging
-logback = "1.5.11"
+logback = "1.5.18"
 
 # Dependency Injection
 dagger = "2.56.2" # Keeping Dagger at 2.51. If you update Kotlin to 2.1.x, you might need Dagger 2.55+ for full KSP2 compatibility.
