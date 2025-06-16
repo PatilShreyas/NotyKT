@@ -24,7 +24,7 @@ logback = "1.5.11"
 dagger = "2.56.2" # Keeping Dagger at 2.51. If you update Kotlin to 2.1.x, you might need Dagger 2.55+ for full KSP2 compatibility.
 
 # Testing
-testcontainers = "1.21.0"
+testcontainers = "1.21.1"
 kotest = "6.0.0.M4"
 
 [libraries]
