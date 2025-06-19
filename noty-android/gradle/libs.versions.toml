@@ -27,7 +27,7 @@ navigation = "2.9.0"
 workmanager = "2.10.2"
 dataStore = "1.1.7"
 securityCrypto = "1.1.0-beta01"
-room = "2.7.1"
+room = "2.7.2"
 
 # Compose
 composeBom = "2025.06.01"
