@@ -30,7 +30,7 @@ securityCrypto = "1.1.0-beta01"
 room = "2.7.1"
 
 # Compose
-composeBom = "2025.06.00"
+composeBom = "2025.06.01"
 composeConstraintLayout = "1.1.1"
 composeNav = "2.9.0"
 hiltComposeNav = "1.2.0"
