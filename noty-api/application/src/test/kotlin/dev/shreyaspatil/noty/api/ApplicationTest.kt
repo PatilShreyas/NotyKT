@@ -19,14 +19,12 @@ package dev.shreyaspatil.noty.api
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
-import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.model.response.FailureResponse
 import dev.shreyaspatil.noty.api.model.response.NoteTaskResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.api.testutils.delete
 import dev.shreyaspatil.noty.api.testutils.get
-import dev.shreyaspatil.noty.api.testutils.patch
 import dev.shreyaspatil.noty.api.testutils.post
 import dev.shreyaspatil.noty.api.testutils.put
 import dev.shreyaspatil.noty.api.testutils.toJson
@@ -448,18 +446,23 @@ class ApplicationTest : AnnotationSpec() {
     }
 
     /**
-     * Pins or unpins a note.
+     * Pins a note
      */
     private suspend fun ApplicationTestBuilder.pinNote(token: String, noteId: String, isPinned: Boolean) {
-        val pinRequest = PinRequest(isPinned).toJson()
-        patch(
-            "/notes/$noteId",
-            pinRequest,
-            "Bearer $token",
-        ).let { response ->
-            response.status shouldBe HttpStatusCode.OK
-            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
+        val response = if (isPinned) {
+            put(
+                "/notes/$noteId/pin",
+                body = null,
+                token = "Bearer $token",
+            )
+        } else {
+            delete(
+                "/notes/$noteId/pin",
+                token = "Bearer $token",
+            )
         }
+        response.status shouldBe HttpStatusCode.OK
+        response.toModel<NoteTaskResponse>().noteId shouldNotBe null
     }
 
     /**
