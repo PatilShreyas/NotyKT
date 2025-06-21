@@ -24,7 +24,6 @@ import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.exception.ResourceNotFoundException
 import dev.shreyaspatil.noty.api.exception.UnauthorizedAccessException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
-import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.plugin.controllers
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.principal
@@ -34,7 +33,6 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
-import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
@@ -64,7 +62,6 @@ fun Route.notes(notesController: Lazy<NotesController> = controllers.notesContro
                     val principal = userPrincipal()
 
                     val noteResponse = notesController.get().updateNote(principal.userId, noteId, noteRequest)
-
                     call.respond(noteResponse)
                 }
 
@@ -73,21 +70,16 @@ fun Route.notes(notesController: Lazy<NotesController> = controllers.notesContro
                     val principal = userPrincipal()
 
                     val noteResponse = notesController.get().deleteNote(principal.userId, noteId)
-
                     call.respond(noteResponse)
                 }
 
-                patch {
-                    val noteId = noteId()
-                    val pinRequest = runCatching { call.receive<PinRequest>() }.getOrElse {
-                        throw BadRequestException(FailureMessages.MESSAGE_MISSING_PIN_DETAILS)
+                route("/pin") {
+                    put {
+                        call.respond(notesController.get().pinNote(userPrincipal().userId, noteId()))
                     }
-
-                    val principal = userPrincipal()
-
-                    val noteResponse = notesController.get().updateNotePin(principal.userId, noteId, pinRequest)
-
-                    call.respond(noteResponse)
+                    delete {
+                        call.respond(notesController.get().unpinNote(userPrincipal().userId, noteId()))
+                    }
                 }
             }
         }
