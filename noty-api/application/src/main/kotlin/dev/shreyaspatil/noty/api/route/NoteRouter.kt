@@ -21,16 +21,16 @@ import dev.shreyaspatil.noty.api.auth.principal.UserPrincipal
 import dev.shreyaspatil.noty.api.controller.NotesController
 import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
-import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
+import dev.shreyaspatil.noty.api.exception.UnauthorizedAccessException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
 import dev.shreyaspatil.noty.api.model.request.PinRequest
-import dev.shreyaspatil.noty.api.model.response.generateHttpResponse
 import dev.shreyaspatil.noty.api.plugin.controllers
 import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.patch
@@ -41,13 +41,11 @@ import io.ktor.server.routing.route
 fun Route.notes(notesController: Lazy<NotesController> = controllers.notesController()) {
     authenticate {
         get("/notes") {
-            val principal = call.principal<UserPrincipal>()
-                ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+            val principal = userPrincipal()
 
             val notesResponse = notesController.get().getNotesByUser(principal.user)
-            val response = generateHttpResponse(notesResponse)
 
-            call.respond(response.code, response.body)
+            call.respond(notesResponse)
         }
 
         route("/note/") {
@@ -56,13 +54,11 @@ fun Route.notes(notesController: Lazy<NotesController> = controllers.notesContro
                     throw BadRequestException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
                 }
 
-                val principal = call.principal<UserPrincipal>()
-                    ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+                val principal = userPrincipal()
 
                 val noteResponse = notesController.get().addNote(principal.user, noteRequest)
-                val response = generateHttpResponse(noteResponse)
 
-                call.respond(response.code, response.body)
+                call.respond(noteResponse)
             }
 
             put("/{id}") {
@@ -71,24 +67,20 @@ fun Route.notes(notesController: Lazy<NotesController> = controllers.notesContro
                     throw BadRequestException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
                 }
 
-                val principal = call.principal<UserPrincipal>()
-                    ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+                val principal = userPrincipal()
 
                 val noteResponse = notesController.get().updateNote(principal.user, noteId, noteRequest)
-                val response = generateHttpResponse(noteResponse)
 
-                call.respond(response.code, response.body)
+                call.respond(noteResponse)
             }
 
             delete("/{id}") {
                 val noteId = call.parameters["id"] ?: return@delete
-                val principal = call.principal<UserPrincipal>()
-                    ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+                val principal = userPrincipal()
 
                 val noteResponse = notesController.get().deleteNote(principal.user, noteId)
-                val response = generateHttpResponse(noteResponse)
 
-                call.respond(response.code, response.body)
+                call.respond(noteResponse)
             }
 
             patch("/{id}/pin") {
@@ -97,14 +89,17 @@ fun Route.notes(notesController: Lazy<NotesController> = controllers.notesContro
                     throw BadRequestException(FailureMessages.MESSAGE_MISSING_PIN_DETAILS)
                 }
 
-                val principal = call.principal<UserPrincipal>()
-                    ?: throw UnauthorizedActivityException(FailureMessages.MESSAGE_ACCESS_DENIED)
+                val principal = userPrincipal()
 
                 val noteResponse = notesController.get().updateNotePin(principal.user, noteId, pinRequest)
-                val response = generateHttpResponse(noteResponse)
 
-                call.respond(response.code, response.body)
+                call.respond(noteResponse)
             }
         }
     }
 }
+
+private fun RoutingContext.userPrincipal(): UserPrincipal = (
+    call.principal<UserPrincipal>()
+        ?: throw UnauthorizedAccessException(FailureMessages.MESSAGE_ACCESS_DENIED)
+    )

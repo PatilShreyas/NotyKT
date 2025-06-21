@@ -18,8 +18,9 @@ package dev.shreyaspatil.noty.api.plugin
 
 import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
+import dev.shreyaspatil.noty.api.exception.ResourceNotFoundException
+import dev.shreyaspatil.noty.api.exception.UnauthorizedAccessException
 import dev.shreyaspatil.noty.api.model.response.FailureResponse
-import dev.shreyaspatil.noty.api.model.response.State
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -31,21 +32,33 @@ fun Application.configureStatusPages() {
         exception<BadRequestException> { call, cause ->
             call.respond(
                 HttpStatusCode.BadRequest,
-                FailureResponse(State.FAILED, cause.message ?: "Bad Request"),
+                FailureResponse(cause.message),
+            )
+        }
+        exception<UnauthorizedAccessException> { call, cause ->
+            call.respond(
+                HttpStatusCode.Unauthorized,
+                FailureResponse(cause.message),
+            )
+        }
+        exception<ResourceNotFoundException> { call, cause ->
+            call.respond(
+                HttpStatusCode.NotFound,
+                FailureResponse(cause.message),
             )
         }
 
         status(HttpStatusCode.InternalServerError) { call, _ ->
             call.respond(
                 HttpStatusCode.InternalServerError,
-                FailureResponse(State.FAILED, FailureMessages.MESSAGE_FAILED),
+                FailureResponse(FailureMessages.MESSAGE_FAILED),
             )
         }
 
         status(HttpStatusCode.Unauthorized) { call, _ ->
             call.respond(
                 HttpStatusCode.Unauthorized,
-                FailureResponse(State.UNAUTHORIZED, FailureMessages.MESSAGE_ACCESS_DENIED),
+                FailureResponse(FailureMessages.MESSAGE_ACCESS_DENIED),
             )
         }
     }

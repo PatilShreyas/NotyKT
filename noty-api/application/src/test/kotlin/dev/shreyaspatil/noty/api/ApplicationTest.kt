@@ -22,9 +22,8 @@ import dev.shreyaspatil.noty.api.model.request.NoteRequest
 import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.model.response.FailureResponse
-import dev.shreyaspatil.noty.api.model.response.NoteResponse
+import dev.shreyaspatil.noty.api.model.response.NoteTaskResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
-import dev.shreyaspatil.noty.api.model.response.State
 import dev.shreyaspatil.noty.api.testutils.delete
 import dev.shreyaspatil.noty.api.testutils.get
 import dev.shreyaspatil.noty.api.testutils.patch
@@ -36,8 +35,7 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldInclude
-import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.config.MapApplicationConfig
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
@@ -59,7 +57,7 @@ class ApplicationTest : AnnotationSpec() {
         post("/auth/register", AuthRequest("test", "test").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
 
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.token shouldBe null
         }
     }
@@ -69,7 +67,7 @@ class ApplicationTest : AnnotationSpec() {
         post("/auth/register", AuthRequest("test", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
 
-            body.status shouldBe State.SUCCESS
+            response.status shouldBe HttpStatusCode.OK
             body.message shouldBe "Registration successful"
             body.token shouldNotBe null
         }
@@ -77,7 +75,7 @@ class ApplicationTest : AnnotationSpec() {
         post("/auth/login", AuthRequest("test", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
 
-            body.status shouldBe State.SUCCESS
+            response.status shouldBe HttpStatusCode.OK
             body.message shouldBe "Login successful"
             body.token shouldNotBe null
         }
@@ -89,10 +87,11 @@ class ApplicationTest : AnnotationSpec() {
         post("/auth/register", authRequest)
 
         // Try to create again. It should show username not available message.
-        post("/auth/register", authRequest).toModel<AuthResponse>().let { response ->
-            response.status shouldBe State.FAILED
-            response.token shouldBe null
-            response.message shouldBe "Username is not available"
+        post("/auth/register", authRequest).let { response ->
+            val body: AuthResponse = response.toModel()
+            response.status shouldBe HttpStatusCode.BadRequest
+            body.token shouldBe null
+            body.message shouldBe "Username is not available"
         }
     }
 
@@ -100,42 +99,42 @@ class ApplicationTest : AnnotationSpec() {
     fun whenCredentialsAreIllegal_shouldRespondFailedStateWithMessage() = testApp {
         post("/auth/register", AuthRequest("test#", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "No special characters allowed in username"
             body.token shouldBe null
         }
 
         post("/auth/register", AuthRequest("hi", "hi@12341").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Username should be of min 4 and max 30 character in length"
             body.token shouldBe null
         }
 
         post("/auth/register", AuthRequest("test", "test").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Password should be of min 8 and max 50 character in length"
             body.token shouldBe null
         }
 
         post("/auth/login", AuthRequest("test#", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "No special characters allowed in username"
             body.token shouldBe null
         }
 
         post("/auth/login", AuthRequest("hi", "hi@12341").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Username should be of min 4 and max 30 character in length"
             body.token shouldBe null
         }
 
         post("/auth/login", AuthRequest("test", "test").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Password should be of min 8 and max 50 character in length"
             body.token shouldBe null
         }
@@ -146,31 +145,37 @@ class ApplicationTest : AnnotationSpec() {
         post(
             "/auth/login",
             AuthRequest("usernotexists", "test1234").toJson(),
-        ).toModel<AuthResponse>().let {
-            it.status shouldBe State.FAILED
-            it.message shouldBe "Invalid credentials"
-            it.token shouldBe null
+        ).let {
+            val body = it.toModel<AuthResponse>()
+            it.status shouldBe HttpStatusCode.BadRequest
+            body.message shouldBe "Invalid credentials"
+            body.token shouldBe null
         }
     }
 
     @Test
     fun authorizationKeyIsNotProvided_whenNotesAreRetrieved_shouldGetUnauthResponse() = testApp {
-        get("/notes").bodyAsText() shouldInclude "UNAUTHORIZED"
+        get("/notes")
+            .let { response ->
+                response.status shouldBe HttpStatusCode.Unauthorized
+                response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
+            }
     }
 
     @Test
     fun whenProvidedInvalidAuthBody_shouldThrowException() = testApp {
-        val response = post("/auth/register", null).toModel<FailureResponse>()
-
-        response.status shouldBe State.FAILED
-        response.message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
+        post("/auth/register", null).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
+        }
     }
 
     @Test
     fun whenProvidedInvalidAuthBodyForLogin_shouldThrowException() = testApp {
-        val response = post("/auth/login", null).toModel<FailureResponse>()
-        response.status shouldBe State.FAILED
-        response.message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
+        post("/auth/login", null).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
+        }
     }
 
     @Test
@@ -180,14 +185,14 @@ class ApplicationTest : AnnotationSpec() {
             AuthRequest("newnoteuser", "newnoteuser1234").toJson(),
         ).toModel<AuthResponse>().token
 
-        post("note/new", null, "Bearer $token").toModel<FailureResponse>().let {
-            it.status shouldBe State.FAILED
-            it.message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
+        post("note/new", null, "Bearer $token").let {
+            it.status shouldBe HttpStatusCode.BadRequest
+            it.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
         }
 
-        put("note/testnote", null, "Bearer $token").toModel<FailureResponse>().let {
-            it.status shouldBe State.FAILED
-            it.message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
+        put("note/testnote", null, "Bearer $token").let {
+            it.status shouldBe HttpStatusCode.BadRequest
+            it.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
         }
     }
 
@@ -202,21 +207,21 @@ class ApplicationTest : AnnotationSpec() {
         // Create note
         val newNoteJson = NoteRequest("Hey test", "This is note text").toJson()
 
-        val newNoteResponse = post(
+        val newNoteTaskHttpResponse = post(
             "/note/new",
             newNoteJson,
             "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>()
-
-        newNoteResponse.status shouldBe State.SUCCESS
-        newNoteResponse.noteId shouldNotBe null
+        )
+        val newNoteTaskResponse = newNoteTaskHttpResponse.toModel<NoteTaskResponse>()
+        newNoteTaskHttpResponse.status shouldBe HttpStatusCode.OK
+        newNoteTaskResponse.noteId shouldNotBe null
 
         // Get Notes
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 1
-            response.notes[0].let {
-                it.id shouldBe newNoteResponse.noteId
+        get("/notes", "Bearer ${authResponse.token}").let { response ->
+            val body = response.toModel<NotesResponse>()
+            response.status shouldBe HttpStatusCode.OK
+            body.notes[0].let {
+                it.id shouldBe newNoteTaskResponse.noteId
                 it.title shouldBe "Hey test"
                 it.note shouldBe "This is note text"
                 it.created shouldNotBe null
@@ -227,30 +232,31 @@ class ApplicationTest : AnnotationSpec() {
         // Update note
         val updateRequest = NoteRequest("Hey update", "This is updated body").toJson()
         put(
-            "/note/${newNoteResponse.noteId}",
+            "/note/${newNoteTaskResponse.noteId}",
             updateRequest,
             "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
         }
 
         // pin note
         val pinRequest = PinRequest(isPinned = true).toJson()
         patch(
-            "/note/${newNoteResponse.noteId}/pin",
+            "/note/${newNoteTaskResponse.noteId}/pin",
             pinRequest,
             "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
         }
 
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 1
-            response.notes[0].let {
-                it.id shouldBe newNoteResponse.noteId
+        get("/notes", "Bearer ${authResponse.token}").let { response ->
+            val body = response.toModel<NotesResponse>()
+            response.status shouldBe HttpStatusCode.OK
+            body.notes shouldHaveSize 1
+            body.notes[0].let {
+                it.id shouldBe newNoteTaskResponse.noteId
                 it.title shouldBe "Hey update"
                 it.note shouldBe "This is updated body"
                 it.created shouldNotBe null
@@ -260,19 +266,20 @@ class ApplicationTest : AnnotationSpec() {
 
         val unpinRequest = PinRequest(isPinned = false).toJson()
         patch(
-            "/note/${newNoteResponse.noteId}/pin",
+            "/note/${newNoteTaskResponse.noteId}/pin",
             unpinRequest,
             "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
         }
 
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 1
-            response.notes[0].let {
-                it.id shouldBe newNoteResponse.noteId
+        get("/notes", "Bearer ${authResponse.token}").let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            val body = response.toModel<NotesResponse>()
+            body.notes shouldHaveSize 1
+            body.notes[0].let {
+                it.id shouldBe newNoteTaskResponse.noteId
                 it.title shouldBe "Hey update"
                 it.note shouldBe "This is updated body"
                 it.created shouldNotBe null
@@ -282,17 +289,17 @@ class ApplicationTest : AnnotationSpec() {
 
         // Delete note
         delete(
-            "/note/${newNoteResponse.noteId}",
+            "/note/${newNoteTaskResponse.noteId}",
             "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
         }
 
         // Get empty notes
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 0
+        get("/notes", "Bearer ${authResponse.token}").let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NotesResponse>().notes shouldHaveSize 0
         }
     }
 
@@ -316,17 +323,16 @@ class ApplicationTest : AnnotationSpec() {
             "/note/new",
             noteRequest,
             "Bearer $userTokenA",
-        ).toModel<NoteResponse>().noteId
+        ).toModel<NoteTaskResponse>().noteId
 
         // User B tries to delete note created by user A
         // Should show access denied (Unauthorized access) message.
         delete(
             "/note/$noteId",
             "Bearer $userTokenB",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.UNAUTHORIZED
-            response.message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
-            response.noteId shouldBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.Unauthorized
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
         }
     }
 
@@ -344,10 +350,11 @@ class ApplicationTest : AnnotationSpec() {
             "/note/new",
             noteRequest1,
             "Bearer $token",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.FAILED
-            response.noteId shouldBe null
-            response.message shouldBe "Title should be of min 4 and max 30 character in length"
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            val body = response.toModel<NoteTaskResponse>()
+            body.noteId shouldBe null
+            body.message shouldBe "Title should be of min 4 and max 30 character in length"
         }
 
         // Create note with invalid note text (Whitespaces)
@@ -356,10 +363,11 @@ class ApplicationTest : AnnotationSpec() {
             "/note/new",
             noteRequest2,
             "Bearer $token",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.FAILED
-            response.noteId shouldBe null
-            response.message shouldBe "Title and Note should not be blank"
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            val body = response.toModel<NoteTaskResponse>()
+            body.noteId shouldBe null
+            body.message shouldBe "Title and Note should not be blank"
         }
     }
 
@@ -373,21 +381,26 @@ class ApplicationTest : AnnotationSpec() {
         val noteId = UUID.randomUUID().toString()
         put(
             "note/$noteId",
-            NoteRequest("Title", "Body").toJson(),
+            NoteRequest("Lorem ipsum", "This is body of the note").toJson(),
             "Bearer $token",
-        ).toModel<NoteResponse>().let {
-            it.status shouldBe State.NOT_FOUND
-            it.message shouldBe "Note not exist with ID '$noteId'"
-            it.noteId shouldBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.NotFound
+
+            response.toModel<NoteTaskResponse>().let { response ->
+                response.message shouldBe "Note not exist with ID '$noteId'"
+                response.noteId shouldBe null
+            }
         }
 
         delete(
             "note/$noteId",
             "Bearer $token",
-        ).toModel<NoteResponse>().let {
-            it.status shouldBe State.NOT_FOUND
-            it.message shouldBe "Note not exist with ID '$noteId'"
-            it.noteId shouldBe null
+        ).let {
+            it.status shouldBe HttpStatusCode.NotFound
+
+            val body = it.toModel<NoteTaskResponse>()
+            body.message shouldBe "Note not exist with ID '$noteId'"
+            body.noteId shouldBe null
         }
     }
 

@@ -28,24 +28,8 @@ data class Note(val id: String, val title: String, val note: String, val created
  * Response model used for exposing list of notes in API.
  */
 @Serializable
-data class NotesResponse(
-    override val status: State,
-    override val message: String,
-    val notes: List<Note> = emptyList(),
-
-) : Response {
-    companion object {
-        fun unauthorized(message: String) = NotesResponse(
-            State.UNAUTHORIZED,
-            message,
-        )
-
-        fun success(notes: List<Note>) = NotesResponse(
-            State.SUCCESS,
-            "Task successful",
-            notes,
-        )
-    }
+data class NotesResponse(val notes: List<Note>) : Response {
+    override val message: String = "Notes fetched successfully"
 }
 
 /**
@@ -53,31 +37,8 @@ data class NotesResponse(
  * For e.g. Creating new note, deleting or updating note.
  */
 @Serializable
-data class NoteResponse(
-    override val status: State,
-    override val message: String,
+data class NoteTaskResponse(
     val noteId: String? = null,
 ) : Response {
-    companion object {
-        fun unauthorized(message: String) = NoteResponse(
-            State.UNAUTHORIZED,
-            message,
-        )
-
-        fun failed(message: String) = NoteResponse(
-            State.FAILED,
-            message,
-        )
-
-        fun notFound(message: String) = NoteResponse(
-            State.NOT_FOUND,
-            message,
-        )
-
-        fun success(id: String) = NoteResponse(
-            State.SUCCESS,
-            "Task successful",
-            id,
-        )
-    }
+    override val message: String = "Successfully performed operation on note"
 }
