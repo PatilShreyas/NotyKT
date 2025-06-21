@@ -108,11 +108,7 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         return updateNotePin(userId, noteId, false)
     }
 
-    private fun updateNotePin(
-        userId: String,
-        noteId: String,
-        isPinned: Boolean
-    ): NoteTaskResponse {
+    private fun updateNotePin(userId: String, noteId: String, isPinned: Boolean): NoteTaskResponse {
         return withExistingNote(noteId) {
             return@withExistingNote withAuthorizedUser(userId, noteId) {
                 val id = noteDao.updateNotePinById(id = noteId, isPinned = isPinned)

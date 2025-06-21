@@ -30,7 +30,7 @@ data class Note(val id: String, val title: String, val note: String, val created
 @Serializable
 data class NotesResponse(
     val notes: List<Note>,
-    override val message: String = "Notes fetched successfully"
+    override val message: String = "Notes fetched successfully",
 ) : Response
 
 /**
