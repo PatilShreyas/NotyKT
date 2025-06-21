@@ -26,7 +26,6 @@ import dev.shreyaspatil.noty.api.model.response.Note
 import dev.shreyaspatil.noty.api.model.response.NoteTaskResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.dao.NoteDao
-import dev.shreyaspatil.noty.data.model.User
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,8 +35,11 @@ import javax.inject.Singleton
 @Singleton
 class NotesController @Inject constructor(private val noteDao: NoteDao) {
 
-    fun getNotesByUser(user: User): NotesResponse {
-        val notes = noteDao.getAllByUser(user.id)
+    /**
+     * Get all notes for a specific user
+     */
+    fun getNotesByUser(userId: String): NotesResponse {
+        val notes = noteDao.getAllByUser(userId)
 
         return NotesResponse(
             notes.map {
@@ -52,58 +54,93 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
         )
     }
 
-    fun addNote(user: User, note: NoteRequest): NoteTaskResponse {
+    /**
+     * Add a new note
+     */
+    fun addNote(userId: String, note: NoteRequest): NoteTaskResponse {
         val noteTitle = note.title.trim()
         val noteText = note.note.trim()
 
-        validateNoteOrThrowException(noteTitle, noteText)
-
-        val noteId = noteDao.add(userId = user.id, title = noteTitle, note = noteText)
-        return NoteTaskResponse(noteId)
-    }
-
-    fun updateNote(user: User, noteId: String, note: NoteRequest): NoteTaskResponse {
-        val noteTitle = note.title.trim()
-        val noteText = note.note.trim()
-
-        validateNoteOrThrowException(noteTitle, noteText)
-        checkNoteExistsOrThrowException(noteId)
-        checkOwnerOrThrowException(user.id, noteId)
-
-        val id = noteDao.update(noteId, noteTitle, noteText)
-        return NoteTaskResponse(id)
-    }
-
-    fun deleteNote(user: User, noteId: String): NoteTaskResponse {
-        checkNoteExistsOrThrowException(noteId)
-        checkOwnerOrThrowException(user.id, noteId)
-
-        if (!noteDao.deleteById(noteId)) {
-            error("Error occurred while deleting a note")
+        return withValidatedNote(noteTitle, noteText) {
+            val noteId = noteDao.add(userId = userId, title = noteTitle, note = noteText)
+            NoteTaskResponse(noteId)
         }
-
-        return NoteTaskResponse(noteId)
     }
 
-    fun updateNotePin(user: User, noteId: String, pinRequest: PinRequest): NoteTaskResponse {
-        checkNoteExistsOrThrowException(noteId)
-        checkOwnerOrThrowException(user.id, noteId)
-        val id = noteDao.updateNotePinById(noteId, pinRequest.isPinned)
-        return NoteTaskResponse(id)
+    /**
+     * Update an existing note
+     */
+    fun updateNote(userId: String, noteId: String, note: NoteRequest): NoteTaskResponse {
+        val noteTitle = note.title.trim()
+        val noteText = note.note.trim()
+
+        return withValidatedNote(noteTitle, noteText) {
+            withExistingNote(noteId) {
+                withAuthorizedUser(userId, noteId) {
+                    val id = noteDao.update(noteId, noteTitle, noteText)
+                    NoteTaskResponse(id)
+                }
+            }
+        }
     }
 
-    private fun checkNoteExistsOrThrowException(noteId: String) {
+    /**
+     * Delete a note
+     */
+    fun deleteNote(userId: String, noteId: String): NoteTaskResponse {
+        return withExistingNote(noteId) {
+            withAuthorizedUser(userId, noteId) {
+                if (!noteDao.deleteById(noteId)) {
+                    error("Error occurred while deleting a note")
+                }
+                NoteTaskResponse(noteId)
+            }
+        }
+    }
+
+    /**
+     * Update pin status of a note
+     */
+    fun updateNotePin(userId: String, noteId: String, pinRequest: PinRequest): NoteTaskResponse {
+        return withExistingNote(noteId) {
+            withAuthorizedUser(userId, noteId) {
+                val id = noteDao.updateNotePinById(noteId, pinRequest.isPinned)
+                NoteTaskResponse(id)
+            }
+        }
+    }
+
+    /**
+     * Higher-order function to validate note content
+     */
+    private fun <T> withValidatedNote(title: String, note: String, block: () -> T): T {
+        validateNoteOrThrowException(title, note)
+        return block()
+    }
+
+    /**
+     * Higher-order function to check if note exists
+     */
+    private fun <T> withExistingNote(noteId: String, block: () -> T): T {
         if (!noteDao.exists(noteId)) {
             throw ResourceNotFoundException("Note not exist with ID '$noteId'")
         }
+        return block()
     }
 
-    private fun checkOwnerOrThrowException(userId: String, noteId: String) {
+    /**
+     * Higher-order function to check if user is authorized to access the note
+     */
+    private fun <T> withAuthorizedUser(userId: String, noteId: String, block: () -> T): T {
         if (!noteDao.isNoteOwnedByUser(noteId, userId)) {
             throw UnauthorizedAccessException(FailureMessages.MESSAGE_ACCESS_DENIED)
         }
+        return block()
     }
 
+    /**
+     * Validate note content or throw exception
+     */
     private fun validateNoteOrThrowException(title: String, note: String) {
         val message = when {
             (title.isBlank() or note.isBlank()) -> "Title and Note should not be blank"
