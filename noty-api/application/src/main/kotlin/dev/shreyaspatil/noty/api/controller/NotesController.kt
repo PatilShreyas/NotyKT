@@ -21,7 +21,6 @@ import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.exception.ResourceNotFoundException
 import dev.shreyaspatil.noty.api.exception.UnauthorizedAccessException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
-import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.Note
 import dev.shreyaspatil.noty.api.model.response.NoteTaskResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
@@ -101,11 +100,23 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
     /**
      * Update pin status of a note
      */
-    fun updateNotePin(userId: String, noteId: String, pinRequest: PinRequest): NoteTaskResponse {
+    fun pinNote(userId: String, noteId: String): NoteTaskResponse {
+        return updateNotePin(userId, noteId, true)
+    }
+
+    fun unpinNote(userId: String, noteId: String): NoteTaskResponse {
+        return updateNotePin(userId, noteId, false)
+    }
+
+    private fun updateNotePin(
+        userId: String,
+        noteId: String,
+        isPinned: Boolean
+    ): NoteTaskResponse {
         return withExistingNote(noteId) {
-            withAuthorizedUser(userId, noteId) {
-                val id = noteDao.updateNotePinById(noteId, pinRequest.isPinned)
-                NoteTaskResponse(id)
+            return@withExistingNote withAuthorizedUser(userId, noteId) {
+                val id = noteDao.updateNotePinById(id = noteId, isPinned = isPinned)
+                return@withAuthorizedUser NoteTaskResponse(id)
             }
         }
     }
@@ -122,7 +133,8 @@ class NotesController @Inject constructor(private val noteDao: NoteDao) {
      * Higher-order function to check if note exists
      */
     private fun <T> withExistingNote(noteId: String, block: () -> T): T {
-        if (!noteDao.exists(noteId)) {
+        val exists = runCatching { noteDao.exists(noteId) }.getOrDefault(false)
+        if (!exists) {
             throw ResourceNotFoundException("Note not exist with ID '$noteId'")
         }
         return block()
