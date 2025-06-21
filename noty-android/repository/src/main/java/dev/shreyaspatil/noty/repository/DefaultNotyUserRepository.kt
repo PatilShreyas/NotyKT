@@ -21,8 +21,7 @@ import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.repository.NotyUserRepository
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
-import dev.shreyaspatil.noty.data.remote.model.response.State
-import dev.shreyaspatil.noty.data.remote.util.getResponse
+import dev.shreyaspatil.noty.data.remote.util.either
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,30 +38,17 @@ class DefaultNotyUserRepository
             username: String,
             password: String,
         ): Either<AuthCredential> {
-            return runCatching {
-                val authResponse =
-                    authService.register(
-                        AuthRequest(username, password),
-                    ).getResponse()
-
-                when (authResponse.status) {
-                    State.SUCCESS -> Either.success(AuthCredential(authResponse.token!!))
-                    else -> Either.error(authResponse.message)
-                }
-            }.getOrDefault(Either.error("Something went wrong!"))
+            return authService
+                .register(AuthRequest(username, password))
+                .either { AuthCredential(it.token!!) }
         }
 
         override suspend fun getUserByUsernameAndPassword(
             username: String,
             password: String,
         ): Either<AuthCredential> {
-            return runCatching {
-                val authResponse = authService.login(AuthRequest(username, password)).getResponse()
-
-                when (authResponse.status) {
-                    State.SUCCESS -> Either.success(AuthCredential(authResponse.token!!))
-                    else -> Either.error(authResponse.message)
-                }
-            }.getOrDefault(Either.error("Something went wrong!"))
+            return authService
+                .login(AuthRequest(username, password))
+                .either { AuthCredential(it.token!!) }
         }
     }

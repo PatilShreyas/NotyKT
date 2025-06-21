@@ -21,9 +21,7 @@ import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
-import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
-import dev.shreyaspatil.noty.data.remote.model.response.State
-import dev.shreyaspatil.noty.data.remote.util.getResponse
+import dev.shreyaspatil.noty.data.remote.util.either
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
@@ -42,32 +40,14 @@ class NotyRemoteNoteRepository
     ) : NotyNoteRepository {
         override fun getAllNotes(): Flow<Either<List<Note>>> =
             flow {
-                val notesResponse = notyService.getAllNotes().getResponse()
-
-                val state =
-                    when (notesResponse.status) {
-                        State.SUCCESS -> Either.success(notesResponse.notes)
-                        else -> Either.error(notesResponse.message)
-                    }
-
-                emit(state)
+                emit(notyService.getAllNotes().either { it.notes })
             }.catch { emit(Either.error("Can't sync latest notes")) }
 
         override suspend fun addNote(
             title: String,
             note: String,
         ): Either<String> {
-            return runCatching {
-                val notesResponse = notyService.addNote(NoteRequest(title, note)).getResponse()
-
-                when (notesResponse.status) {
-                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                    else -> Either.error(notesResponse.message)
-                }
-            }.getOrElse {
-                it.printStackTrace()
-                (Either.error("Something went wrong!"))
-            }
+            return notyService.addNote(NoteRequest(title, note)).either { it.noteId!! }
         }
 
         override suspend fun updateNote(
@@ -75,44 +55,22 @@ class NotyRemoteNoteRepository
             title: String,
             note: String,
         ): Either<String> {
-            return runCatching {
-                val notesResponse =
-                    notyService.updateNote(
-                        noteId,
-                        NoteRequest(title, note),
-                    ).getResponse()
-
-                when (notesResponse.status) {
-                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                    else -> Either.error(notesResponse.message)
-                }
-            }.getOrDefault(Either.error("Something went wrong!"))
+            return notyService.updateNote(noteId, NoteRequest(title, note)).either { it.noteId!! }
         }
 
         override suspend fun deleteNote(noteId: String): Either<String> {
-            return runCatching {
-                val notesResponse = notyService.deleteNote(noteId).getResponse()
-
-                when (notesResponse.status) {
-                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                    else -> Either.error(notesResponse.message)
-                }
-            }.getOrDefault(Either.error("Something went wrong!"))
+            return notyService.deleteNote(noteId).either { it.noteId!! }
         }
 
         override suspend fun pinNote(
             noteId: String,
             isPinned: Boolean,
         ): Either<String> {
-            return runCatching {
-                val notesResponse =
-                    notyService.updateNotePin(noteId, NoteUpdatePinRequest(isPinned)).getResponse()
-
-                when (notesResponse.status) {
-                    State.SUCCESS -> Either.success(notesResponse.noteId!!)
-                    else -> Either.error(notesResponse.message)
+            val response =
+                with(notyService) {
+                    if (isPinned) pinNote(noteId) else unpinNote(noteId)
                 }
-            }.getOrDefault(Either.error("Something went wrong!"))
+            return response.either { it.noteId!! }
         }
 
         /** Not needed (NO-OP) **/
@@ -128,5 +86,6 @@ class NotyRemoteNoteRepository
         override suspend fun updateNoteId(
             oldNoteId: String,
             newNoteId: String,
-        ) {}
+        ) {
+        }
     }
