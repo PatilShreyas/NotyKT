@@ -95,10 +95,10 @@ fun Route.notes(notesController: Lazy<NotesController> = controllers.notesContro
 }
 
 private fun RoutingContext.noteId(): String =
-    call.parameters["id"] ?: throw ResourceNotFoundException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
+    call.parameters["id"] ?: throw ResourceNotFoundException(FailureMessages.MESSAGE_INVALID_PATH)
 
 private suspend fun RoutingContext.noteRequest(): NoteRequest = runCatching { call.receive<NoteRequest>() }.getOrElse {
-    throw BadRequestException(FailureMessages.MESSAGE_INVALID_PATH)
+    throw BadRequestException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
 }
 
 private fun RoutingContext.userPrincipal(): UserPrincipal =
