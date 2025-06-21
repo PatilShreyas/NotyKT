@@ -17,15 +17,14 @@
 package dev.shreyaspatil.noty.api.controller
 
 import dev.shreyaspatil.noty.api.exception.BadRequestException
-import dev.shreyaspatil.noty.api.exception.NoteNotFoundException
-import dev.shreyaspatil.noty.api.exception.UnauthorizedActivityException
+import dev.shreyaspatil.noty.api.exception.FailureMessages
+import dev.shreyaspatil.noty.api.exception.ResourceNotFoundException
+import dev.shreyaspatil.noty.api.exception.UnauthorizedAccessException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
-import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.Note
-import dev.shreyaspatil.noty.api.model.response.NoteResponse
+import dev.shreyaspatil.noty.api.model.response.NoteTaskResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
 import dev.shreyaspatil.noty.data.dao.NoteDao
-import dev.shreyaspatil.noty.data.model.User
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,96 +34,121 @@ import javax.inject.Singleton
 @Singleton
 class NotesController @Inject constructor(private val noteDao: NoteDao) {
 
-    fun getNotesByUser(user: User): NotesResponse {
-        return try {
-            val notes = noteDao.getAllByUser(user.id)
+    /**
+     * Get all notes for a specific user
+     */
+    fun getNotesByUser(userId: String): NotesResponse {
+        val notes = noteDao.getAllByUser(userId)
 
-            NotesResponse.success(notes.map { Note(it.id, it.title, it.note, it.created, it.isPinned) })
-        } catch (uae: UnauthorizedActivityException) {
-            NotesResponse.unauthorized(uae.message)
+        return NotesResponse(
+            notes.map {
+                Note(
+                    id = it.id,
+                    title = it.title,
+                    note = it.note,
+                    created = it.created,
+                    isPinned = it.isPinned,
+                )
+            },
+        )
+    }
+
+    /**
+     * Add a new note
+     */
+    fun addNote(userId: String, note: NoteRequest): NoteTaskResponse {
+        val noteTitle = note.title.trim()
+        val noteText = note.note.trim()
+
+        return withValidatedNote(noteTitle, noteText) {
+            val noteId = noteDao.add(userId = userId, title = noteTitle, note = noteText)
+            NoteTaskResponse(noteId)
         }
     }
 
-    fun addNote(user: User, note: NoteRequest): NoteResponse {
-        return try {
-            val noteTitle = note.title.trim()
-            val noteText = note.note.trim()
+    /**
+     * Update an existing note
+     */
+    fun updateNote(userId: String, noteId: String, note: NoteRequest): NoteTaskResponse {
+        val noteTitle = note.title.trim()
+        val noteText = note.note.trim()
 
-            validateNoteOrThrowException(noteTitle, noteText)
-
-            val noteId = noteDao.add(user.id, noteTitle, noteText)
-            NoteResponse.success(noteId)
-        } catch (bre: BadRequestException) {
-            NoteResponse.failed(bre.message)
-        }
-    }
-
-    fun updateNote(user: User, noteId: String, note: NoteRequest): NoteResponse {
-        return try {
-            val noteTitle = note.title.trim()
-            val noteText = note.note.trim()
-
-            validateNoteOrThrowException(noteTitle, noteText)
-            checkNoteExistsOrThrowException(noteId)
-            checkOwnerOrThrowException(user.id, noteId)
-
-            val id = noteDao.update(noteId, noteTitle, noteText)
-            NoteResponse.success(id)
-        } catch (uae: UnauthorizedActivityException) {
-            NoteResponse.unauthorized(uae.message)
-        } catch (bre: BadRequestException) {
-            NoteResponse.failed(bre.message)
-        } catch (nfe: NoteNotFoundException) {
-            NoteResponse.notFound(nfe.message)
-        }
-    }
-
-    fun deleteNote(user: User, noteId: String): NoteResponse {
-        return try {
-            checkNoteExistsOrThrowException(noteId)
-            checkOwnerOrThrowException(user.id, noteId)
-
-            if (noteDao.deleteById(noteId)) {
-                NoteResponse.success(noteId)
-            } else {
-                NoteResponse.failed("Error Occurred")
+        return withValidatedNote(noteTitle, noteText) {
+            withExistingNote(noteId) {
+                withAuthorizedUser(userId, noteId) {
+                    val id = noteDao.update(noteId, noteTitle, noteText)
+                    NoteTaskResponse(id)
+                }
             }
-        } catch (uae: UnauthorizedActivityException) {
-            NoteResponse.unauthorized(uae.message)
-        } catch (bre: BadRequestException) {
-            NoteResponse.failed(bre.message)
-        } catch (nfe: NoteNotFoundException) {
-            NoteResponse.notFound(nfe.message)
         }
     }
 
-    fun updateNotePin(user: User, noteId: String, pinRequest: PinRequest): NoteResponse {
-        return try {
-            checkNoteExistsOrThrowException(noteId)
-            checkOwnerOrThrowException(user.id, noteId)
-            val id = noteDao.updateNotePinById(noteId, pinRequest.isPinned)
-            NoteResponse.success(id)
-        } catch (uae: UnauthorizedActivityException) {
-            NoteResponse.unauthorized(uae.message)
-        } catch (bre: BadRequestException) {
-            NoteResponse.failed(bre.message)
-        } catch (nfe: NoteNotFoundException) {
-            NoteResponse.notFound(nfe.message)
+    /**
+     * Delete a note
+     */
+    fun deleteNote(userId: String, noteId: String): NoteTaskResponse {
+        return withExistingNote(noteId) {
+            withAuthorizedUser(userId, noteId) {
+                if (!noteDao.deleteById(noteId)) {
+                    error("Error occurred while deleting a note")
+                }
+                NoteTaskResponse(noteId)
+            }
         }
     }
 
-    private fun checkNoteExistsOrThrowException(noteId: String) {
-        if (!noteDao.exists(noteId)) {
-            throw NoteNotFoundException("Note not exist with ID '$noteId'")
+    /**
+     * Update pin status of a note
+     */
+    fun pinNote(userId: String, noteId: String): NoteTaskResponse {
+        return updateNotePin(userId, noteId, true)
+    }
+
+    fun unpinNote(userId: String, noteId: String): NoteTaskResponse {
+        return updateNotePin(userId, noteId, false)
+    }
+
+    private fun updateNotePin(userId: String, noteId: String, isPinned: Boolean): NoteTaskResponse {
+        return withExistingNote(noteId) {
+            return@withExistingNote withAuthorizedUser(userId, noteId) {
+                val id = noteDao.updateNotePinById(id = noteId, isPinned = isPinned)
+                return@withAuthorizedUser NoteTaskResponse(id)
+            }
         }
     }
 
-    private fun checkOwnerOrThrowException(userId: String, noteId: String) {
+    /**
+     * Higher-order function to validate note content
+     */
+    private fun <T> withValidatedNote(title: String, note: String, block: () -> T): T {
+        validateNoteOrThrowException(title, note)
+        return block()
+    }
+
+    /**
+     * Higher-order function to check if note exists
+     */
+    private fun <T> withExistingNote(noteId: String, block: () -> T): T {
+        val exists = runCatching { noteDao.exists(noteId) }.getOrDefault(false)
+        if (!exists) {
+            throw ResourceNotFoundException("Note not exist with ID '$noteId'")
+        }
+        return block()
+    }
+
+    /**
+     * Higher-order function to check if user is authorized to access the note
+     */
+    private fun <T> withAuthorizedUser(userId: String, noteId: String, block: () -> T): T {
         if (!noteDao.isNoteOwnedByUser(noteId, userId)) {
-            throw UnauthorizedActivityException("Access denied")
+            throw UnauthorizedAccessException(FailureMessages.MESSAGE_ACCESS_DENIED)
         }
+        return block()
     }
 
+    /**
+     * Validate note content or throw exception
+     */
     private fun validateNoteOrThrowException(title: String, note: String) {
         val message = when {
             (title.isBlank() or note.isBlank()) -> "Title and Note should not be blank"

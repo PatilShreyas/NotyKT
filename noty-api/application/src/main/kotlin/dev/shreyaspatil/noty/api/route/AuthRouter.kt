@@ -21,36 +21,40 @@ import dev.shreyaspatil.noty.api.controller.AuthController
 import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
-import dev.shreyaspatil.noty.api.model.response.generateHttpResponse
 import dev.shreyaspatil.noty.api.plugin.controllers
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 
 fun Route.userAuthentication(authController: Lazy<AuthController> = controllers.authController()) {
     route("/auth") {
         post("/register") {
-            val authRequest = runCatching { call.receive<AuthRequest>() }.getOrElse {
-                throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
-            }
+            val authRequest = authRequest()
 
-            val authResponse = authController.get().register(authRequest.username, authRequest.password)
-            val response = generateHttpResponse(authResponse)
+            val authResponse = authController.get().register(
+                username = authRequest.username,
+                password = authRequest.password,
+            )
 
-            call.respond(response.code, response.body)
+            call.respond(authResponse)
         }
 
         post("/login") {
-            val authRequest = runCatching { call.receive<AuthRequest>() }.getOrElse {
-                throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
-            }
+            val authRequest = authRequest()
 
-            val authResponse = authController.get().login(authRequest.username, authRequest.password)
-            val response = generateHttpResponse(authResponse)
+            val authResponse = authController.get().login(
+                username = authRequest.username,
+                password = authRequest.password,
+            )
 
-            call.respond(response.code, response.body)
+            call.respond(authResponse)
         }
     }
+}
+
+private suspend fun RoutingContext.authRequest(): AuthRequest = runCatching { call.receive<AuthRequest>() }.getOrElse {
+    throw BadRequestException(FailureMessages.MESSAGE_MISSING_CREDENTIALS)
 }
