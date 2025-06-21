@@ -103,4 +103,3 @@ private suspend fun RoutingContext.noteRequest(): NoteRequest = runCatching { ca
 
 private fun RoutingContext.userPrincipal(): UserPrincipal =
     call.principal<UserPrincipal>() ?: throw UnauthorizedAccessException(FailureMessages.MESSAGE_ACCESS_DENIED)
-
