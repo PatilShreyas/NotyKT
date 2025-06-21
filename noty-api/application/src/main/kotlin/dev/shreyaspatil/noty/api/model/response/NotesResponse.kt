@@ -28,9 +28,10 @@ data class Note(val id: String, val title: String, val note: String, val created
  * Response model used for exposing list of notes in API.
  */
 @Serializable
-data class NotesResponse(val notes: List<Note>) : Response {
+data class NotesResponse(
+    val notes: List<Note>,
     override val message: String = "Notes fetched successfully"
-}
+) : Response
 
 /**
  * Response model used for exposing operation status performed on notes via API.
@@ -39,6 +40,5 @@ data class NotesResponse(val notes: List<Note>) : Response {
 @Serializable
 data class NoteTaskResponse(
     val noteId: String? = null,
-) : Response {
-    override val message: String = "Successfully performed operation on note"
-}
+    override val message: String = "Successfully performed operation on note",
+) : Response
