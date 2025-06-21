@@ -206,7 +206,7 @@ class ApplicationTest : AnnotationSpec() {
 
     @Test
     fun `when authorization token is missing, notes endpoint should return unauthorized`() = testApp {
-        get("/notes").let { response ->
+        get("/notes/").let { response ->
             response.status shouldBe HttpStatusCode.Unauthorized
             response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
         }
@@ -221,13 +221,13 @@ class ApplicationTest : AnnotationSpec() {
         val token = registerUser("newnoteuser", "newnoteuser1234")
 
         // Create note with missing body
-        post("note/new", null, "Bearer $token").let { response ->
+        post("notes/", null, "Bearer $token").let { response ->
             response.status shouldBe HttpStatusCode.BadRequest
             response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
         }
 
         // Update note with missing body
-        put("note/testnote", null, "Bearer $token").let { response ->
+        put("notes/testnote", null, "Bearer $token").let { response ->
             response.status shouldBe HttpStatusCode.BadRequest
             response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
         }
@@ -246,7 +246,7 @@ class ApplicationTest : AnnotationSpec() {
         )
 
         // Verify note was created
-        get("/notes", "Bearer $token").let { response ->
+        get("/notes/", "Bearer $token").let { response ->
             val body = response.toModel<NotesResponse>()
 
             response.status shouldBe HttpStatusCode.OK
@@ -271,7 +271,7 @@ class ApplicationTest : AnnotationSpec() {
         pinNote(token, noteId, true)
 
         // Verify note was updated and pinned
-        get("/notes", "Bearer $token").let { response ->
+        get("/notes/", "Bearer $token").let { response ->
             val body = response.toModel<NotesResponse>()
 
             response.status shouldBe HttpStatusCode.OK
@@ -289,7 +289,7 @@ class ApplicationTest : AnnotationSpec() {
         pinNote(token, noteId, false)
 
         // Verify note was unpinned
-        get("/notes", "Bearer $token").let { response ->
+        get("/notes/", "Bearer $token").let { response ->
             response.status shouldBe HttpStatusCode.OK
             val body = response.toModel<NotesResponse>()
 
@@ -307,7 +307,7 @@ class ApplicationTest : AnnotationSpec() {
         deleteNote(token, noteId)
 
         // Verify note was deleted
-        get("/notes", "Bearer $token").let { response ->
+        get("/notes/", "Bearer $token").let { response ->
             response.status shouldBe HttpStatusCode.OK
             response.toModel<NotesResponse>().notes shouldHaveSize 0
         }
@@ -328,7 +328,7 @@ class ApplicationTest : AnnotationSpec() {
 
         // User B tries to delete User A's note
         delete(
-            "/note/$noteId",
+            "/notes/$noteId",
             "Bearer $userTokenB",
         ).let { response ->
             response.status shouldBe HttpStatusCode.Unauthorized
@@ -343,7 +343,7 @@ class ApplicationTest : AnnotationSpec() {
         // Test invalid title (whitespace padding)
         val noteRequest1 = NoteRequest("      Hi       ", "This is note text").toJson()
         post(
-            "/note/new",
+            "/notes/",
             noteRequest1,
             "Bearer $token",
         ).let { response ->
@@ -356,7 +356,7 @@ class ApplicationTest : AnnotationSpec() {
         // Test invalid note content (whitespace only)
         val noteRequest2 = NoteRequest("Hi there!", "            ").toJson()
         post(
-            "/note/new",
+            "/notes/",
             noteRequest2,
             "Bearer $token",
         ).let { response ->
@@ -374,7 +374,7 @@ class ApplicationTest : AnnotationSpec() {
 
         // Try to update non-existent note
         put(
-            "note/$nonExistentNoteId",
+            "notes/$nonExistentNoteId",
             NoteRequest("Lorem ipsum", "This is body of the note").toJson(),
             "Bearer $token",
         ).let { response ->
@@ -388,7 +388,7 @@ class ApplicationTest : AnnotationSpec() {
 
         // Try to delete non-existent note
         delete(
-            "note/$nonExistentNoteId",
+            "notes/$nonExistentNoteId",
             "Bearer $token",
         ).let { response ->
             response.status shouldBe HttpStatusCode.NotFound
@@ -419,7 +419,7 @@ class ApplicationTest : AnnotationSpec() {
     private suspend fun ApplicationTestBuilder.createNote(token: String, title: String, content: String): String {
         val newNoteJson = NoteRequest(title, content).toJson()
         val response = post(
-            "/note/new",
+            "/notes/",
             newNoteJson,
             "Bearer $token",
         )
@@ -438,7 +438,7 @@ class ApplicationTest : AnnotationSpec() {
     ) {
         val updateRequest = NoteRequest(title, content).toJson()
         put(
-            "/note/$noteId",
+            "/notes/$noteId",
             updateRequest,
             "Bearer $token",
         ).let { response ->
@@ -453,7 +453,7 @@ class ApplicationTest : AnnotationSpec() {
     private suspend fun ApplicationTestBuilder.pinNote(token: String, noteId: String, isPinned: Boolean) {
         val pinRequest = PinRequest(isPinned).toJson()
         patch(
-            "/note/$noteId/pin",
+            "/notes/$noteId",
             pinRequest,
             "Bearer $token",
         ).let { response ->
@@ -467,7 +467,7 @@ class ApplicationTest : AnnotationSpec() {
      */
     private suspend fun ApplicationTestBuilder.deleteNote(token: String, noteId: String) {
         delete(
-            "/note/$noteId",
+            "/notes/$noteId",
             "Bearer $token",
         ).let { response ->
             response.status shouldBe HttpStatusCode.OK

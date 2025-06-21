@@ -41,15 +41,15 @@ import io.ktor.server.routing.route
 
 fun Route.notes(notesController: Lazy<NotesController> = controllers.notesController()) {
     authenticate {
-        route("/notes") {
-            get("/") {
+        route("/notes/") {
+            get {
                 val principal = userPrincipal()
 
                 val notesResponse = notesController.get().getNotesByUser(principal.userId)
                 call.respond(notesResponse)
             }
 
-            post("/") {
+            post {
                 val noteRequest = noteRequest()
                 val principal = userPrincipal()
 
