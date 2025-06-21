@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.api.exception
 object FailureMessages {
     const val MESSAGE_MISSING_CREDENTIALS = "Required 'username' or 'password' missing."
     const val MESSAGE_MISSING_NOTE_DETAILS = "Required 'title' or 'note' missing."
+    const val MESSAGE_INVALID_PATH = "Valid Note ID is missing in the path."
 
     const val MESSAGE_ACCESS_DENIED = "Access Denied! You're not authorized to perform this action."
     const val MESSAGE_FAILED = "Something went wrong!"

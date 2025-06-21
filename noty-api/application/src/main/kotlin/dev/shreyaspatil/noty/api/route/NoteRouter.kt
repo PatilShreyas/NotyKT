@@ -21,6 +21,7 @@ import dev.shreyaspatil.noty.api.auth.principal.UserPrincipal
 import dev.shreyaspatil.noty.api.controller.NotesController
 import dev.shreyaspatil.noty.api.exception.BadRequestException
 import dev.shreyaspatil.noty.api.exception.FailureMessages
+import dev.shreyaspatil.noty.api.exception.ResourceNotFoundException
 import dev.shreyaspatil.noty.api.exception.UnauthorizedAccessException
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
 import dev.shreyaspatil.noty.api.model.request.PinRequest
@@ -40,66 +41,66 @@ import io.ktor.server.routing.route
 
 fun Route.notes(notesController: Lazy<NotesController> = controllers.notesController()) {
     authenticate {
-        get("/notes") {
-            val principal = userPrincipal()
-
-            val notesResponse = notesController.get().getNotesByUser(principal.user)
-
-            call.respond(notesResponse)
-        }
-
-        route("/note/") {
-            post("/new") {
-                val noteRequest = runCatching { call.receive<NoteRequest>() }.getOrElse {
-                    throw BadRequestException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
-                }
-
+        route("/notes") {
+            get("/") {
                 val principal = userPrincipal()
 
-                val noteResponse = notesController.get().addNote(principal.user, noteRequest)
+                val notesResponse = notesController.get().getNotesByUser(principal.userId)
+                call.respond(notesResponse)
+            }
 
+            post("/") {
+                val noteRequest = noteRequest()
+                val principal = userPrincipal()
+
+                val noteResponse = notesController.get().addNote(principal.userId, noteRequest)
                 call.respond(noteResponse)
             }
 
-            put("/{id}") {
-                val noteId = call.parameters["id"] ?: return@put
-                val noteRequest = runCatching { call.receive<NoteRequest>() }.getOrElse {
-                    throw BadRequestException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
+            route("/{id}") {
+                put {
+                    val noteId = noteId()
+                    val noteRequest = noteRequest()
+                    val principal = userPrincipal()
+
+                    val noteResponse = notesController.get().updateNote(principal.userId, noteId, noteRequest)
+
+                    call.respond(noteResponse)
                 }
 
-                val principal = userPrincipal()
+                delete {
+                    val noteId = noteId()
+                    val principal = userPrincipal()
 
-                val noteResponse = notesController.get().updateNote(principal.user, noteId, noteRequest)
+                    val noteResponse = notesController.get().deleteNote(principal.userId, noteId)
 
-                call.respond(noteResponse)
-            }
-
-            delete("/{id}") {
-                val noteId = call.parameters["id"] ?: return@delete
-                val principal = userPrincipal()
-
-                val noteResponse = notesController.get().deleteNote(principal.user, noteId)
-
-                call.respond(noteResponse)
-            }
-
-            patch("/{id}/pin") {
-                val noteId = call.parameters["id"] ?: return@patch
-                val pinRequest = runCatching { call.receive<PinRequest>() }.getOrElse {
-                    throw BadRequestException(FailureMessages.MESSAGE_MISSING_PIN_DETAILS)
+                    call.respond(noteResponse)
                 }
 
-                val principal = userPrincipal()
+                patch {
+                    val noteId = noteId()
+                    val pinRequest = runCatching { call.receive<PinRequest>() }.getOrElse {
+                        throw BadRequestException(FailureMessages.MESSAGE_MISSING_PIN_DETAILS)
+                    }
 
-                val noteResponse = notesController.get().updateNotePin(principal.user, noteId, pinRequest)
+                    val principal = userPrincipal()
 
-                call.respond(noteResponse)
+                    val noteResponse = notesController.get().updateNotePin(principal.userId, noteId, pinRequest)
+
+                    call.respond(noteResponse)
+                }
             }
         }
     }
 }
 
-private fun RoutingContext.userPrincipal(): UserPrincipal = (
-    call.principal<UserPrincipal>()
-        ?: throw UnauthorizedAccessException(FailureMessages.MESSAGE_ACCESS_DENIED)
-    )
+private fun RoutingContext.noteId(): String =
+    call.parameters["id"] ?: throw ResourceNotFoundException(FailureMessages.MESSAGE_MISSING_NOTE_DETAILS)
+
+private suspend fun RoutingContext.noteRequest(): NoteRequest = runCatching { call.receive<NoteRequest>() }.getOrElse {
+    throw BadRequestException(FailureMessages.MESSAGE_INVALID_PATH)
+}
+
+private fun RoutingContext.userPrincipal(): UserPrincipal =
+    call.principal<UserPrincipal>() ?: throw UnauthorizedAccessException(FailureMessages.MESSAGE_ACCESS_DENIED)
+
