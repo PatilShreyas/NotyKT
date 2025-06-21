@@ -16,6 +16,4 @@
 
 package dev.shreyaspatil.noty.api.auth.principal
 
-import dev.shreyaspatil.noty.data.model.User
-
-class UserPrincipal(val user: User)
+class UserPrincipal(val userId: String)
