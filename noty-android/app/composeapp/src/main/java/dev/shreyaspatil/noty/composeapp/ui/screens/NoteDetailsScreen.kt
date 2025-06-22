@@ -115,6 +115,7 @@ fun NoteDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NoteDetailContent(
     title: String,
@@ -162,8 +163,10 @@ fun NoteDetailContent(
         },
         content = {
             NoteDetailBody(
-                modifier = Modifier.padding(it),
-                captureController = captureController,
+                modifier = Modifier
+                    .padding(it)
+                    .capturable(captureController)
+                    .background(MaterialTheme.colorScheme.background),
                 title = title,
                 onTitleChange = onTitleChange,
                 note = note,
@@ -218,11 +221,9 @@ private fun NoteDetailActions(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun NoteDetailBody(
     modifier: Modifier,
-    captureController: CaptureController,
     title: String,
     onTitleChange: (String) -> Unit,
     note: String,
@@ -231,8 +232,7 @@ private fun NoteDetailBody(
     Column(
         modifier
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-            .capturable(captureController),
+            .padding(16.dp),
     ) {
         NoteTitleField(
             modifier =
@@ -248,8 +248,7 @@ private fun NoteDetailBody(
                 Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = 32.dp)
-                    .background(MaterialTheme.colorScheme.background),
+                    .padding(top = 32.dp),
             value = note,
             onTextChange = onNoteChange,
         )
