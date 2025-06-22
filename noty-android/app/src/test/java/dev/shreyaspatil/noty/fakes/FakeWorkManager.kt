@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.fakes
 
-import androidx.lifecycle.asLiveData
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -50,7 +49,7 @@ class FakeWorkManager {
     val fakeWorkStates = mutableMapOf<UUID, WorkInfo.State>()
 
     /**
-     * For observing work info LiveData
+     * For observing work info
      */
     lateinit var fakeWorkStatesForObserve: Flow<WorkInfo.State>
 
@@ -86,13 +85,12 @@ class FakeWorkManager {
             mockk()
         }
 
-        // Set up the mock to handle getWorkInfoByIdLiveData
-        every { mockWorkManager.getWorkInfoByIdLiveData(any()) } answers {
+        every { mockWorkManager.getWorkInfoByIdFlow(any()) } answers {
             fakeWorkStatesForObserve.map { state ->
                 mockk<WorkInfo> {
                     every { this@mockk.state } returns state
                 }
-            }.asLiveData()
+            }
         }
     }
 }

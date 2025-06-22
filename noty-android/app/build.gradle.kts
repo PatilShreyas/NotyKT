@@ -77,7 +77,6 @@ dependencies {
 
     // Lifecycle
     api(libs.androidx.lifecycle.viewmodel.ktx)
-    api(libs.androidx.lifecycle.livedata.ktx)
     api(libs.androidx.lifecycle.runtime.ktx)
 
     // WorkManager
