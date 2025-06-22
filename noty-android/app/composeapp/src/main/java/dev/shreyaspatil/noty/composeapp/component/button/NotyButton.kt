@@ -18,13 +18,12 @@ package dev.shreyaspatil.noty.composeapp.component.button
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 
 @Composable
 fun NotyFullWidthButton(
@@ -36,6 +35,6 @@ fun NotyFullWidthButton(
         onClick = onClick,
         modifier = modifier.fillMaxWidth().height(60.dp),
     ) {
-        Text(style = typography.subtitle1, color = Color.White, text = text)
+        Text(style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onPrimary, text = text)
     }
 }

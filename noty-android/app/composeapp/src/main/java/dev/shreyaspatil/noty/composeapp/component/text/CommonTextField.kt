@@ -16,17 +16,16 @@
 
 package dev.shreyaspatil.noty.composeapp.component.text
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +46,7 @@ fun NotyTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 16.sp,
-    color: Color = MaterialTheme.colors.onPrimary,
+    color: Color = MaterialTheme.colorScheme.onSurface,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     helperText: String = "",
@@ -70,7 +69,7 @@ fun NotyTextField(
             )
             if (helperText.isNotEmpty()) {
                 Spacer(modifier = Modifier.padding(2.dp))
-                Text(text = helperText, style = MaterialTheme.typography.caption)
+                Text(text = helperText, style = MaterialTheme.typography.labelSmall)
             }
         }
     }
@@ -89,11 +88,11 @@ fun BasicNotyTextField(
         modifier = modifier,
         value = value,
         onValueChange = onTextChange,
-        textStyle = textStyle.copy(color = MaterialTheme.colors.onPrimary),
+        textStyle = textStyle.copy(color = MaterialTheme.colorScheme.onSurface),
         maxLines = maxLines,
-        cursorBrush = SolidColor(MaterialTheme.colors.primary),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         decorationBox = { inlineTextField ->
-            AnimatedVisibility(visible = value.isBlank()) {
+            if (value.isBlank()) {
                 Text(
                     text = label,
                     color = getTextFieldHintColor(),

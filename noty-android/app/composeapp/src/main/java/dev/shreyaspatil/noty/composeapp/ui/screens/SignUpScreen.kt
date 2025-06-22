@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,15 +27,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,6 @@ import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
-import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.RegisterViewModel
@@ -108,12 +108,13 @@ fun SignUpContent(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colorScheme.surface)
                 .verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Create\naccount",
-            style = typography.h4,
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 60.dp, bottom = 16.dp),
         )
 
@@ -160,7 +161,7 @@ private fun SignUpForm(
                 Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colorScheme.background),
             value = username,
             onValueChange = onUsernameChange,
             isError = !isValidUsername,
@@ -171,7 +172,7 @@ private fun SignUpForm(
                 Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colorScheme.background),
             value = password,
             onValueChange = onPasswordChange,
             isError = !isValidPassword,
@@ -182,7 +183,7 @@ private fun SignUpForm(
                 Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colorScheme.background),
             value = confirmPassword,
             label = "Confirm Password",
             onValueChange = onConfirmPasswordChanged,
@@ -197,7 +198,11 @@ private fun SignUpForm(
                     .fillMaxWidth()
                     .height(60.dp),
         ) {
-            Text(style = typography.subtitle1, color = Color.White, text = "Create account")
+            Text(
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimary,
+                text = "Create account",
+            )
         }
     }
 }
@@ -211,9 +216,10 @@ private fun LoginLink(
         text =
             buildAnnotatedString {
                 append("Already have an account? Login")
-                addStyle(SpanStyle(color = MaterialTheme.colors.primary), 24, this.length)
+                addStyle(SpanStyle(color = MaterialTheme.colorScheme.primary), 24, this.length)
             },
-        style = typography.subtitle1,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier =
             modifier
                 .padding(vertical = 24.dp, horizontal = 16.dp)
@@ -221,7 +227,8 @@ private fun LoginLink(
     )
 }
 
-@Preview
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO)
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewSignupContent() =
     NotyPreview {

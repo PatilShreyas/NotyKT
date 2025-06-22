@@ -16,7 +16,7 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,62 +36,92 @@ private val universalStd =
         Font(R.font.universal_std),
     )
 
+// Material 3 Typography
 val typography =
     Typography(
-        h4 =
+        displayLarge =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W600,
                 fontSize = 30.sp,
             ),
-        h5 =
+        displayMedium =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W600,
                 fontSize = 24.sp,
             ),
-        h6 =
+        displaySmall =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W600,
                 fontSize = 20.sp,
             ),
-        subtitle1 =
+        headlineLarge =
+            TextStyle(
+                fontFamily = gilroy,
+                fontWeight = FontWeight.W600,
+                fontSize = 20.sp,
+            ),
+        headlineMedium =
+            TextStyle(
+                fontFamily = gilroy,
+                fontWeight = FontWeight.W600,
+                fontSize = 18.sp,
+            ),
+        headlineSmall =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W600,
                 fontSize = 16.sp,
             ),
-        subtitle2 =
+        titleLarge =
+            TextStyle(
+                fontFamily = gilroy,
+                fontWeight = FontWeight.W600,
+                fontSize = 16.sp,
+            ),
+        titleMedium =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W500,
                 fontSize = 14.sp,
             ),
-        body1 =
+        titleSmall =
+            TextStyle(
+                fontFamily = gilroy,
+                fontWeight = FontWeight.W500,
+                fontSize = 14.sp,
+            ),
+        bodyLarge =
             TextStyle(
                 fontFamily = universalStd,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
             ),
-        body2 =
+        bodyMedium =
             TextStyle(
                 fontFamily = universalStd,
                 fontSize = 14.sp,
             ),
-        button =
+        bodySmall =
+            TextStyle(
+                fontFamily = universalStd,
+                fontSize = 12.sp,
+            ),
+        labelLarge =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W500,
                 fontSize = 14.sp,
             ),
-        caption =
+        labelMedium =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.Normal,
                 fontSize = 12.sp,
             ),
-        overline =
+        labelSmall =
             TextStyle(
                 fontFamily = gilroy,
                 fontWeight = FontWeight.W500,
