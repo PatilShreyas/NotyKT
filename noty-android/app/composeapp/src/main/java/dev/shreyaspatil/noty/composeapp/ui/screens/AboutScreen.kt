@@ -77,7 +77,7 @@ fun AboutContent(modifier: Modifier) {
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "Noty",
+            text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.displayMedium,
         )
 
