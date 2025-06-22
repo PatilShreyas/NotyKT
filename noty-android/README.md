@@ -25,8 +25,8 @@ The codebase focuses on following key things:
 - [x] Offline Capability - Notes ✈️
 - [x] Clean and Simple Material UI (Material 3 with Dynamic UI) 🎨
 - [x] Dark mode 🌗
-- [x] Jetpack Compose UI
-- [x] Tests
+- [x] Jetpack Compose UI with Material 3
+- [x] Comprehensive Test Coverage (Unit, UI)
 
 ## About this project 💡
 
@@ -39,7 +39,9 @@ In Android Studio, just run the application as you want with any one of the modu
 
 ## Development Setup 🖥
 
-You will need Android Studio Hedgehog (2023.1.1) or newer to build the app. Download the latest version from [here](https://developer.android.com/studio).
+You will need Android Studio Iguana (2023.2.1) or newer to build the app. Download the latest version from [here](https://developer.android.com/studio).
+
+The project uses Gradle Version Catalog for dependency management and Java 17 for compilation.
 
 ## Design / Wireframes ✨
 
@@ -65,7 +67,7 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
   - [ViewBinding](https://developer.android.com/topic/libraries/view-binding) - Generates a binding class for each XML layout file present in that module and allows you to more easily write code that interacts with views.
   - [Room](https://developer.android.com/topic/libraries/architecture/room) - SQLite object mapping library.
   - [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) - WorkManager is an API that makes it easy to schedule deferrable, asynchronous tasks that are expected to run even if the app exits or the device restarts.
-- [Navigation Component](https://developer.android.com/guide/navigation/navigation-getting-started) Navigation refers to the interactions that allow users to navigate across, into, and back out from the different pieces of content within your app.
+- [Navigation Component](https://developer.android.com/guide/navigation/navigation-getting-started) - Navigation refers to the interactions that allow users to navigate across, into, and back out from the different pieces of content within your app.
     - [Safe args](https://developer.android.com/guide/navigation/navigation-pass-data#Safe-args) - Gradle plugin that provides type safety when navigating and passing data between destinations. 
 - [Jetpack Security](https://developer.android.com/topic/security/)
     - [Encrypted SharedPreference](https://developer.android.com/topic/security/data) - Used to store key-value data using encryption.
@@ -74,18 +76,26 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
   - [Hilt-Dagger](https://dagger.dev/hilt/) - Standard library to incorporate Dagger dependency injection into an Android application.
   - [Hilt-ViewModel](https://developer.android.com/training/dependency-injection/hilt-jetpack) - DI for injecting `ViewModel`.
   - [Hilt-WorkManager](https://developer.android.com/training/dependency-injection/hilt-jetpack) - DI for injecting `WorkManager`.
-  - [Assisted Inject with Dagger](https://github.com/square/AssistedInject) - Manually injected dependencies for your JSR 330 configuration.
+  - [Hilt-Navigation-Compose](https://developer.android.com/jetpack/compose/libraries#hilt-navigation) - DI for Compose Navigation.
 - [Retrofit](https://square.github.io/retrofit/) - A type-safe HTTP client for Android and Java.
 - [Moshi](https://github.com/square/moshi) - A modern JSON library for Kotlin and Java.
 - [Moshi Converter](https://github.com/square/retrofit/tree/master/retrofit-converters/moshi) - A Converter which uses Moshi for serialization to and from JSON.
 - [Material Components for Android](https://github.com/material-components/material-components-android) - Modular and customizable Material Design UI components for Android.
+- [Material 3](https://m3.material.io/) - Latest version of Google's open-source design system.
 - [Jetpack Compose UI Toolkit](https://developer.android.com/jetpack/compose) - Modern UI development toolkit.
-- [Accompanist](https://google.github.io/accompanist/) - Accompanist is a group of libraries that aim to supplement Jetpack Compose with features that are commonly required by developers but not yet available.
-- [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android
+  - [Compose Material 3](https://developer.android.com/jetpack/compose/designsystems/material3) - Material 3 implementation for Compose.
+  - [Compose Navigation](https://developer.android.com/jetpack/compose/navigation) - Navigation component for Compose.
+  - [Compose Constraint Layout](https://developer.android.com/jetpack/compose/layouts/constraintlayout) - Constraint-based layout system for Compose.
+- [MuteKt](https://github.com/PatilShreyas/mutekt) - Immutable state management library for Kotlin.
+- [Capturable](https://github.com/PatilShreyas/capturable) - Library to capture Compose UI as images.
+- [Compose Compiler Report Generator](https://github.com/PatilShreyas/compose-report-to-html) - Tool to generate reports about Compose compiler metrics.
+- [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android.
+- [Lottie for Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md) - Library for rendering After Effects animations in Compose.
 - Testing
-  - [JUnit5](https://junit.org/) - JUnit 5 is the latest version of the popular Java unit testing framework
-  - [Mockk](https://mockk.io/) - Mocking library for Kotlin
-  - [Compose test](https://developer.android.com/develop/ui/compose/testing) - Compose testing for UI and integration testing
+  - [JUnit5](https://junit.org/) - JUnit 5 is the latest version of the popular Java unit testing framework.
+  - [Mockk](https://mockk.io/) - Mocking library for Kotlin.
+  - [Compose Testing](https://developer.android.com/jetpack/compose/testing) - Tools for testing Compose UI.
+  - [Hilt Testing](https://developer.android.com/training/dependency-injection/hilt-testing) - Testing utilities for Hilt.
 
 ## Modules
 
