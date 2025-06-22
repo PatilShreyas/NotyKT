@@ -16,15 +16,14 @@
 
 package dev.shreyaspatil.noty.composeapp.component.action
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
@@ -106,15 +105,12 @@ fun ShareDropdown(
     ) {
         shareActions.forEach { shareAction ->
             DropdownMenuItem(
+                text = { Text(text = shareAction.label) },
                 onClick = {
                     shareAction.onActionClick.invoke()
                     onDismissRequest.invoke()
                 },
-            ) {
-                Row {
-                    Text(text = shareAction.label)
-                }
-            }
+            )
         }
     }
 }

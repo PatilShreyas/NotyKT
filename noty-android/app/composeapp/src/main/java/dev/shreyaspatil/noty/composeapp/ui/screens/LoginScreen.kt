@@ -16,36 +16,39 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import androidx.compose.foundation.Image
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.component.NotyIcon
 import dev.shreyaspatil.noty.composeapp.component.button.NotyFullWidthButton
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
 import dev.shreyaspatil.noty.composeapp.component.text.UsernameTextField
-import dev.shreyaspatil.noty.composeapp.ui.theme.typography
 import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.LoginViewModel
@@ -101,46 +104,45 @@ fun LoginContent(
         FailureDialog(error, onDialogDismiss = onDialogDismiss)
     }
 
-    Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.surface)
-                .verticalScroll(rememberScrollState()),
-    ) {
-        TopGreeting()
+    Scaffold {
+        Column(
+            modifier =
+                Modifier
+                    .consumeWindowInsets(it)
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.ime)
+                    .verticalScroll(rememberScrollState()),
+        ) {
+            TopGreeting()
 
-        LoginForm(
-            username = username,
-            isValidUsername = isValidUsername,
-            onUsernameChange = onUsernameChange,
-            password = password,
-            isValidPassword = isValidPassword,
-            onPasswordChange = onPasswordChange,
-            onLoginClick = onLoginClick,
-        )
+            LoginForm(
+                username = username,
+                isValidUsername = isValidUsername,
+                onUsernameChange = onUsernameChange,
+                password = password,
+                isValidPassword = isValidPassword,
+                onPasswordChange = onPasswordChange,
+                onLoginClick = onLoginClick,
+            )
 
-        SignUpLink(Modifier.align(Alignment.CenterHorizontally), onSignupClick = onSignupClick)
+            SignUpLink(Modifier.align(Alignment.CenterHorizontally), onSignupClick = onSignupClick)
+        }
     }
 }
 
 @Composable
 private fun TopGreeting() {
     Column(Modifier.fillMaxWidth()) {
-        Image(
-            contentDescription = "App Logo",
-            painter = painterResource(id = R.drawable.noty_app_logo),
-            modifier =
-                Modifier
-                    .padding(top = 60.dp)
-                    .requiredSize(92.dp)
-                    .align(Alignment.CenterHorizontally),
-            contentScale = ContentScale.FillBounds,
+        NotyIcon(
+            Modifier
+                .padding(top = 60.dp)
+                .requiredSize(92.dp)
+                .align(Alignment.CenterHorizontally),
         )
 
         Text(
             text = "Welcome\nback",
-            style = typography.h4,
+            style = MaterialTheme.typography.displayLarge,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 30.dp),
         )
     }
@@ -161,7 +163,7 @@ private fun LoginForm(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colorScheme.background),
         value = username,
         onValueChange = onUsernameChange,
         isError = !isValidUsername,
@@ -172,7 +174,7 @@ private fun LoginForm(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colorScheme.background),
         value = password,
         onValueChange = onPasswordChange,
         isError = !isValidPassword,
@@ -194,32 +196,45 @@ private fun SignUpLink(
         text =
             buildAnnotatedString {
                 append("Don't have an account? Signup")
-                addStyle(SpanStyle(color = MaterialTheme.colors.primary), 23, this.length)
+                addStyle(SpanStyle(color = MaterialTheme.colorScheme.primary), 23, this.length)
                 toAnnotatedString()
             },
-        style = typography.subtitle1,
+        style = MaterialTheme.typography.titleMedium,
         modifier =
             modifier
                 .padding(vertical = 24.dp, horizontal = 16.dp)
                 .clickable(onClick = onSignupClick),
+        color = MaterialTheme.colorScheme.onBackground,
     )
 }
 
-@Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun PreviewLoginContent() =
+fun PreviewLoginContentInDark() =
     NotyPreview {
-        LoginContent(
-            isLoading = false,
-            username = "johndoe",
-            onUsernameChange = {},
-            password = "password",
-            onPasswordChange = {},
-            onLoginClick = {},
-            onSignupClick = {},
-            isValidPassword = false,
-            isValidUsername = false,
-            onDialogDismiss = {},
-            error = null,
-        )
+        FakeLoginContent()
     }
+
+@Preview(uiMode = UI_MODE_NIGHT_NO)
+@Composable
+fun PreviewLoginContentInLight() =
+    NotyPreview {
+        FakeLoginContent()
+    }
+
+@Composable
+private fun FakeLoginContent() {
+    LoginContent(
+        isLoading = false,
+        username = "johndoe",
+        onUsernameChange = {},
+        password = "password",
+        onPasswordChange = {},
+        onLoginClick = {},
+        onSignupClick = {},
+        isValidPassword = false,
+        isValidUsername = false,
+        onDialogDismiss = {},
+        error = null,
+    )
+}

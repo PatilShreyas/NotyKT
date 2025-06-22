@@ -16,27 +16,26 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import androidx.compose.foundation.layout.Box
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
@@ -46,11 +45,14 @@ import dev.shreyaspatil.noty.composeapp.component.note.NotesList
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.composeapp.utils.collection.ComposeImmutableList
+import dev.shreyaspatil.noty.composeapp.utils.collection.composeImmutableListOf
 import dev.shreyaspatil.noty.composeapp.utils.collection.rememberComposeImmutableList
 import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.view.viewmodel.NotesViewModel
+import kotlin.random.Random
 
 @Composable
 fun NotesScreen(
@@ -94,7 +96,7 @@ fun NotesScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesContent(
     isLoading: Boolean,
@@ -120,16 +122,13 @@ fun NotesContent(
             )
         },
         content = {
-            val pullRefreshState =
-                rememberPullRefreshState(
-                    refreshing = isLoading,
-                    onRefresh = onRefresh,
-                )
-            Box(
+            PullToRefreshBox(
                 modifier =
                     Modifier
-                        .pullRefresh(pullRefreshState)
+                        .padding(it)
                         .fillMaxSize(),
+                isRefreshing = isLoading,
+                onRefresh = onRefresh,
             ) {
                 Column {
                     if (isConnectivityAvailable != null) {
@@ -137,24 +136,11 @@ fun NotesContent(
                     }
                     NotesList(notes) { note -> onNavigateToNoteDetail(note.id) }
                 }
-
-                PullRefreshIndicator(
-                    refreshing = isLoading,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                )
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddNoteClick,
-                backgroundColor = MaterialTheme.colors.primary,
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    "Add",
-                    tint = Color.White,
-                )
+            FloatingActionButton(onClick = onAddNoteClick, shape = MaterialTheme.shapes.medium) {
+                Icon(Icons.Filled.Add, "Add")
             }
         },
     )
@@ -175,4 +161,32 @@ fun LogoutConfirmation(
             onDismissed = onDismiss,
         )
     }
+}
+
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO)
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewNotesScreen() {
+    NotyPreview {
+        NotesContent(
+            isLoading = false,
+            notes =
+                composeImmutableListOf(
+                    noteFixture(true),
+                    noteFixture(),
+                    noteFixture(),
+                ),
+            isConnectivityAvailable = false,
+            onRefresh = { },
+            onToggleTheme = { },
+            onAboutClick = { },
+            onAddNoteClick = { },
+            onLogoutClick = { },
+            onNavigateToNoteDetail = { },
+        )
+    }
+}
+
+private fun noteFixture(isPinned: Boolean = false): Note {
+    return Note(Random.nextInt().toString(), "Lorem Ipsum", "Hey this is a note body", 1, isPinned)
 }

@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.component
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.expandVertically
@@ -27,8 +29,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,13 +40,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.composeapp.ui.theme.green
-import dev.shreyaspatil.noty.composeapp.ui.theme.red
 import kotlinx.coroutines.delay
 
 @Composable
@@ -70,7 +73,8 @@ fun ConnectivityStatus(isConnected: Boolean) {
 
 @Composable
 fun ConnectivityStatusBox(isConnected: Boolean) {
-    val backgroundColor by animateColorAsState(if (isConnected) green else red)
+    val backgroundColor by animateColorAsState(if (isConnected) green else MaterialTheme.colorScheme.errorContainer)
+    val contentColor = if (isConnected) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error
     val message = if (isConnected) "Back Online!" else "No Internet Connection!"
     val iconResource =
         if (isConnected) {
@@ -88,9 +92,41 @@ fun ConnectivityStatusBox(isConnected: Boolean) {
         contentAlignment = Alignment.Center,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(painterResource(id = iconResource), "Connectivity Icon", tint = Color.White)
+            Icon(painterResource(id = iconResource), "Connectivity Icon", tint = contentColor)
             Spacer(modifier = Modifier.size(8.dp))
-            Text(message, color = Color.White, fontSize = 15.sp)
+            Text(message, color = contentColor, fontSize = 15.sp)
         }
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewStatusConnectedInDark() {
+    NotyTheme {
+        ConnectivityStatusBox(true)
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewStatusNotConnectedInDark() {
+    NotyTheme {
+        ConnectivityStatusBox(false)
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_NO)
+@Composable
+fun PreviewStatusConnectedInLight() {
+    NotyTheme {
+        ConnectivityStatusBox(true)
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_NO)
+@Composable
+fun PreviewStatusNotConnectedInLight() {
+    NotyTheme {
+        ConnectivityStatusBox(false)
     }
 }

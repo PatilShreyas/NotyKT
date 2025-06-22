@@ -16,6 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
@@ -25,12 +27,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,13 +44,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.capturable.capturable
-import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.PinAction
@@ -60,6 +61,7 @@ import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.composeapp.utils.collection.composeImmutableListOf
 import dev.shreyaspatil.noty.utils.saveBitmap
@@ -112,6 +114,7 @@ fun NoteDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NoteDetailContent(
     title: String,
@@ -159,7 +162,11 @@ fun NoteDetailContent(
         },
         content = {
             NoteDetailBody(
-                captureController = captureController,
+                modifier =
+                    Modifier
+                        .padding(it)
+                        .capturable(captureController)
+                        .background(MaterialTheme.colorScheme.background),
                 title = title,
                 onTitleChange = onTitleChange,
                 note = note,
@@ -169,10 +176,11 @@ fun NoteDetailContent(
         floatingActionButton = {
             if (showSaveButton) {
                 ExtendedFloatingActionButton(
-                    text = { Text("Save", color = Color.White) },
-                    icon = { Icon(Icons.Filled.Done, "Save", tint = Color.White) },
+                    text = { Text("Save") },
+                    icon = { Icon(Icons.Filled.Done, "Save") },
                     onClick = onSaveClick,
-                    backgroundColor = MaterialTheme.colors.primary,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.imePadding(),
                 )
             }
@@ -213,26 +221,24 @@ private fun NoteDetailActions(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun NoteDetailBody(
-    captureController: CaptureController,
+    modifier: Modifier,
     title: String,
     onTitleChange: (String) -> Unit,
     note: String,
     onNoteChange: (String) -> Unit,
 ) {
     Column(
-        Modifier
+        modifier
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
-            .capturable(captureController),
+            .padding(16.dp),
     ) {
         NoteTitleField(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.background),
+                    .background(MaterialTheme.colorScheme.background),
             value = title,
             onTextChange = onTitleChange,
         )
@@ -242,8 +248,7 @@ private fun NoteDetailBody(
                 Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(top = 32.dp)
-                    .background(MaterialTheme.colors.background),
+                    .padding(top = 32.dp),
             value = note,
             onTextChange = onNoteChange,
         )
@@ -263,6 +268,29 @@ fun DeleteNoteConfirmation(
             onConfirmedYes = onConfirm,
             onConfirmedNo = onDismiss,
             onDismissed = onDismiss,
+        )
+    }
+}
+
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO)
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewNoteDetailScreen() {
+    NotyPreview {
+        NoteDetailContent(
+            title = "Existing note title",
+            note = "Existing note body",
+            error = null,
+            isPinned = false,
+            showSaveButton = true,
+            onTitleChange = {},
+            onNoteChange = {},
+            onPinClick = {},
+            onSaveClick = {},
+            onNavigateUp = {},
+            onDeleteClick = {},
+            onShareNoteAsImage = {},
+            onShareNoteAsText = {},
         )
     }
 }

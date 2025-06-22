@@ -16,7 +16,8 @@
 
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
-import androidx.compose.foundation.background
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,22 +25,23 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
 import dev.shreyaspatil.noty.composeapp.component.text.NoteTitleField
+import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.view.viewmodel.AddNoteViewModel
 
@@ -88,14 +90,12 @@ fun AddNotesContent(
         content = {
             Column(
                 Modifier
+                    .padding(it)
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp),
             ) {
                 NoteTitleField(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colors.background),
+                    modifier = Modifier.fillMaxWidth(),
                     value = title,
                     onTextChange = onTitleChange,
                 )
@@ -105,8 +105,7 @@ fun AddNotesContent(
                         Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
-                            .padding(top = 32.dp)
-                            .background(MaterialTheme.colors.background),
+                            .padding(top = 32.dp),
                     value = note,
                     onTextChange = onNoteChange,
                 )
@@ -115,19 +114,38 @@ fun AddNotesContent(
         floatingActionButton = {
             if (showSaveFab) {
                 ExtendedFloatingActionButton(
-                    text = { Text("Save", color = Color.White) },
+                    text = { Text("Save") },
                     icon = {
                         Icon(
                             Icons.Filled.Done,
                             "Save",
-                            tint = Color.White,
                         )
                     },
                     onClick = onClickAddNote,
-                    backgroundColor = MaterialTheme.colors.primary,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.imePadding(),
                 )
             }
         },
     )
+}
+
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_NO)
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewAddNoteScreen() {
+    NotyPreview {
+        AddNotesContent(
+            isLoading = false,
+            title = "Existing note title",
+            note = "Existing note body",
+            error = null,
+            showSaveFab = true,
+            onTitleChange = {},
+            onNoteChange = {},
+            onNavigateUp = {},
+            onClickAddNote = {},
+        )
+    }
 }
