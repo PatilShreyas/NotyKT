@@ -99,7 +99,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             waitForIdle()
 
             onNodeWithText("Title").performTextInput("Lorem Ipsum")
-            onNodeWithText("Write note here").performTextInput("Hey there")
+            onNodeWithText("Write note here...").performTextInput("Hey there")
 
             onNodeWithText("Save", useUnmergedTree = true).assertDoesNotExist()
         }
@@ -118,7 +118,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             waitForIdle()
 
             onNodeWithText("Title").performTextInput("Lorem Ipsum Edited")
-            onNodeWithText("Write note here").performTextInput("Hey there, this is edited")
+            onNodeWithText("Write note here...").performTextInput("Hey there, this is edited")
 
             waitForIdle()
 

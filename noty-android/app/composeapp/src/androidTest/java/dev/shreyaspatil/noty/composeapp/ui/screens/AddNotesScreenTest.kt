@@ -61,7 +61,7 @@ class AddNotesScreenTest : NotyScreenTest() {
             setNotyContent { AddNoteScreen() }
 
             onNodeWithTag("Title").performTextInput("Hi there")
-            onNodeWithTag("Write note here…").performTextInput("Hi there, this is a note")
+            onNodeWithTag("Write note here...").performTextInput("Hi there, this is a note")
             waitForIdle()
 
             onNodeWithText("Save", useUnmergedTree = true).assertIsDisplayed()
@@ -74,7 +74,7 @@ class AddNotesScreenTest : NotyScreenTest() {
             setNotyContent { AddNoteScreen(onNavigateUp = { navigatingUp = true }) }
 
             onNodeWithTag("Title").performTextInput("Hi there")
-            onNodeWithTag("Write note here…").performTextInput("Hi there, this is a note")
+            onNodeWithTag("Write note here...").performTextInput("Hi there, this is a note")
 
             waitForIdle()
             onNodeWithText("Save", useUnmergedTree = true).performClick()
