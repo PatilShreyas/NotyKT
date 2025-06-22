@@ -21,7 +21,8 @@ import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -35,6 +36,8 @@ import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.MainActivityBinding
 import dev.shreyaspatil.noty.utils.ext.hide
 import dev.shreyaspatil.noty.utils.ext.show
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,15 +71,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeUiModePreferences() {
-        preferenceManager.uiModeFlow.asLiveData().observe(this) {
+        preferenceManager.uiModeFlow.onEach {
             val uiMode =
                 when (it) {
                     true -> AppCompatDelegate.MODE_NIGHT_YES
                     false -> AppCompatDelegate.MODE_NIGHT_NO
                 }
-
             AppCompatDelegate.setDefaultNightMode(uiMode)
-        }
+        }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =

@@ -53,15 +53,12 @@ class NotyTaskManagerImplTest {
 
     @BeforeEach
     fun setup() {
-        setupAsyncTaskExecutor()
 
         fakeWorkManager = FakeWorkManager()
         workManager = fakeWorkManager.mockWorkManager
         workRequests = fakeWorkManager.oneTimeWorkRequests
         manager = NotyTaskManagerImpl(workManager)
 
-        // Setup test data
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         workStates =
             listOf(
                 UUID.randomUUID() to WorkInfo.State.ENQUEUED,
@@ -74,25 +71,11 @@ class NotyTaskManagerImplTest {
 
         workStates.forEach { (id, state) -> fakeWorkManager.fakeWorkStates[id] = state }
 
-        // To test observing work status flow
-        // Here delay is added because LiveData conflates the emitted result if emissions
-        // are too fast and that's the reason we have used Unconfined dispatcher here so that
-        // it can respect the delay.
-        fakeWorkManager.fakeWorkStatesForObserve =
-            flow {
-                emit(WorkInfo.State.ENQUEUED)
-                delay(100)
-                emit(WorkInfo.State.RUNNING)
-                delay(100)
-                emit(WorkInfo.State.FAILED)
-                delay(100)
-            }
-    }
-
-    @AfterEach
-    fun tearDown() {
-        Dispatchers.resetMain()
-        cleanupAsyncTaskExecutor()
+        fakeWorkManager.fakeWorkStatesForObserve = flow {
+            emit(WorkInfo.State.ENQUEUED)
+            emit(WorkInfo.State.RUNNING)
+            emit(WorkInfo.State.FAILED)
+        }
     }
 
     @Test
@@ -178,27 +161,5 @@ class NotyTaskManagerImplTest {
 
         // Then
         verify(exactly = 1) { workManager.cancelAllWork() }
-    }
-
-    private fun setupAsyncTaskExecutor() {
-        ArchTaskExecutor.getInstance().setDelegate(
-            object : TaskExecutor() {
-                override fun executeOnDiskIO(runnable: Runnable) {
-                    runnable.run()
-                }
-
-                override fun postToMainThread(runnable: Runnable) {
-                    runnable.run()
-                }
-
-                override fun isMainThread(): Boolean {
-                    return true
-                }
-            },
-        )
-    }
-
-    private fun cleanupAsyncTaskExecutor() {
-        ArchTaskExecutor.getInstance().setDelegate(null)
     }
 }
