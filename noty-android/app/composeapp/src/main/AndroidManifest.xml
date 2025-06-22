@@ -33,7 +33,6 @@
             android:name=".ui.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|navigation|screenSize|screenLayout"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
