@@ -19,6 +19,7 @@ package dev.shreyaspatil.noty.composeapp.ui.screens
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -49,7 +50,7 @@ class AddNotesScreenTest : NotyScreenTest() {
             setNotyContent { AddNoteScreen() }
 
             // We only show save button when title as at least has 4 characters
-            onNodeWithText("Title").performTextInput("Hi")
+            onNodeWithTag("Title").performTextInput("Hi")
 
             onNodeWithText("Save").assertDoesNotExist()
         }
@@ -59,8 +60,8 @@ class AddNotesScreenTest : NotyScreenTest() {
         runTest {
             setNotyContent { AddNoteScreen() }
 
-            onNodeWithText("Title").performTextInput("Hi there")
-            onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
+            onNodeWithTag("Title").performTextInput("Hi there")
+            onNodeWithTag("Write note here…").performTextInput("Hi there, this is a note")
             waitForIdle()
 
             onNodeWithText("Save", useUnmergedTree = true).assertIsDisplayed()
@@ -72,8 +73,8 @@ class AddNotesScreenTest : NotyScreenTest() {
             var navigatingUp = false
             setNotyContent { AddNoteScreen(onNavigateUp = { navigatingUp = true }) }
 
-            onNodeWithText("Title").performTextInput("Hi there")
-            onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
+            onNodeWithTag("Title").performTextInput("Hi there")
+            onNodeWithTag("Write note here…").performTextInput("Hi there, this is a note")
 
             waitForIdle()
             onNodeWithText("Save", useUnmergedTree = true).performClick()
