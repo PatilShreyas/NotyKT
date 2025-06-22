@@ -35,7 +35,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.ConnectivityStatus
 import dev.shreyaspatil.noty.composeapp.component.action.AboutAction
 import dev.shreyaspatil.noty.composeapp.component.action.LogoutAction
@@ -140,7 +142,7 @@ fun NotesContent(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddNoteClick, shape = MaterialTheme.shapes.medium) {
-                Icon(Icons.Filled.Add, "Add")
+                Icon(Icons.Filled.Add, stringResource(R.string.content_description_add))
             }
         },
     )
@@ -154,8 +156,8 @@ fun LogoutConfirmation(
 ) {
     if (show) {
         ConfirmationDialog(
-            title = "Logout?",
-            message = "Sure want to logout?",
+            title = stringResource(R.string.menu_logout),
+            message = stringResource(R.string.dialog_message_logout_confirmation),
             onConfirmedYes = onConfirm,
             onConfirmedNo = onDismiss,
             onDismissed = onDismiss,

@@ -39,10 +39,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.NotyIcon
 import dev.shreyaspatil.noty.composeapp.component.button.NotyFullWidthButton
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
@@ -141,7 +143,7 @@ private fun TopGreeting() {
         )
 
         Text(
-            text = "Welcome\nback",
+            text = stringResource(R.string.text_welcome_back),
             style = MaterialTheme.typography.displayLarge,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 30.dp),
         )
@@ -181,7 +183,7 @@ private fun LoginForm(
     )
 
     NotyFullWidthButton(
-        text = "Login",
+        text = stringResource(R.string.text_login),
         onClick = onLoginClick,
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp),
     )
@@ -195,7 +197,7 @@ private fun SignUpLink(
     Text(
         text =
             buildAnnotatedString {
-                append("Don't have an account? Signup")
+                append(stringResource(R.string.text_create_account))
                 addStyle(SpanStyle(color = MaterialTheme.colorScheme.primary), 23, this.length)
                 toAnnotatedString()
             },

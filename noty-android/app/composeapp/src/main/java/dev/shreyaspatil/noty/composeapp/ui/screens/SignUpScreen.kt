@@ -35,10 +35,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.dialog.FailureDialog
 import dev.shreyaspatil.noty.composeapp.component.dialog.LoaderDialog
 import dev.shreyaspatil.noty.composeapp.component.text.PasswordTextField
@@ -112,7 +114,7 @@ fun SignUpContent(
                 .verticalScroll(rememberScrollState()),
     ) {
         Text(
-            text = "Create\naccount",
+            text = stringResource(R.string.text_registration),
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 60.dp, bottom = 16.dp),
@@ -185,7 +187,7 @@ private fun SignUpForm(
                     .padding(vertical = 8.dp)
                     .background(MaterialTheme.colorScheme.background),
             value = confirmPassword,
-            label = "Confirm Password",
+            label = stringResource(R.string.hint_confirm_password),
             onValueChange = onConfirmPasswordChanged,
             isError = !isValidConfirmPassword,
         )
@@ -201,7 +203,7 @@ private fun SignUpForm(
             Text(
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
-                text = "Create account",
+                text = stringResource(R.string.text_registration),
             )
         }
     }
@@ -215,7 +217,8 @@ private fun LoginLink(
     Text(
         text =
             buildAnnotatedString {
-                append("Already have an account? Login")
+                val loginAccountText = stringResource(R.string.text_login_account)
+                append(loginAccountText)
                 addStyle(SpanStyle(color = MaterialTheme.colorScheme.primary), 24, this.length)
             },
         style = MaterialTheme.typography.titleMedium,
