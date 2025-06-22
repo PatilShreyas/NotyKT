@@ -23,7 +23,7 @@ The codebase focuses on following key things:
 
 - [x] Single Activity Design
 - [x] Offline Capability - Notes ✈️
-- [x] Clean and Simple Material UI 🎨
+- [x] Clean and Simple Material UI (Material 3 with Dynamic UI) 🎨
 - [x] Dark mode 🌗
 - [x] Jetpack Compose UI
 - [x] Tests
@@ -61,7 +61,6 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 - [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - For asynchronous and more..
 - [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/) - A cold asynchronous data stream that sequentially emits values and completes normally or with an exception.
 - [Android Architecture Components](https://developer.android.com/topic/libraries/architecture) - Collection of libraries that help you design robust, testable, and maintainable apps.
-  - [LiveData](https://developer.android.com/topic/libraries/architecture/livedata) - Data objects that notify views when the underlying database changes.
   - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) - Stores UI-related data that isn't destroyed on UI changes. 
   - [ViewBinding](https://developer.android.com/topic/libraries/view-binding) - Generates a binding class for each XML layout file present in that module and allows you to more easily write code that interacts with views.
   - [Room](https://developer.android.com/topic/libraries/architecture/room) - SQLite object mapping library.
@@ -83,8 +82,10 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 - [Jetpack Compose UI Toolkit](https://developer.android.com/jetpack/compose) - Modern UI development toolkit.
 - [Accompanist](https://google.github.io/accompanist/) - Accompanist is a group of libraries that aim to supplement Jetpack Compose with features that are commonly required by developers but not yet available.
 - [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android
-- [Kotest](https://kotest.io/) - Kotest is a flexible and elegant multi-platform test framework for Kotlin with extensive assertions and integrated property testing
-- [Mockk](https://mockk.io/) - Mocking library for Kotlin
+- Testing
+  - [JUnit5](https://junit.org/) - JUnit 5 is the latest version of the popular Java unit testing framework
+  - [Mockk](https://mockk.io/) - Mocking library for Kotlin
+  - [Compose test](https://developer.android.com/develop/ui/compose/testing) - Compose testing for UI and integration testing
 
 ## Modules
 
