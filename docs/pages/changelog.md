@@ -4,6 +4,40 @@ You can see [GitHub releases](https://github.com/PatilShreyas/NotyKT/releases) w
 
 ---
 
+## _v3.0.0_ (2025-22-06)
+
+This release includes major changes, fixes and codebase improvements in the application.
+
+_**In the backend API, Migrated hosting of backend API service from Railway.app to Koyeb.app**_
+
+### 🔮 What's New?
+
+- Targets to Android 16
+- **Material 3 Integration**: Migrated the app to use Material 3 components for a modern look and feel
+- **Dynamic Colors**: Added support for Material You dynamic colors on Android 12+ devices
+- **Improved Layouts**: Enhanced various screens for a better user experience
+- Added handling for Window Insets to ensure proper layout on conditions and orientations.
+
+### 🐛 Fixes
+
+- Fix issues while switching theme in compose app.
+- Fix the UI component's visibility when the keyboard is open.
+
+### 🎯Codebase Improvements
+
+- Fixed flaky UI tests.
+- Added support to run UI tests on CI.
+- Updated to the latest Gradle, Kotlin and Compose versions.
+- Replaced hardcoded strings with string resources for better localization support.
+- Revised implementation of a network client in android app for better readability and maintainability.
+- Migrated API service to latest Ktor version 3.1.2
+- Completely removed LiveData usages from the app.
+- Migrated from Kotest to JUnit 5 for testing (to write sequential and synchronized testing rather than nesting).
+- Migrated API deployment from railway.app to Koyeb.
+- Added docker support for API service to run locally.
+
+---
+
 ## _v2.2.0_ (2023-03-05)
 
 This release includes minor fixes and codebase improvements in the application.
