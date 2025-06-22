@@ -1,4 +1,4 @@
-POST http://localhost:8080/note/new
+POST http://localhost:8080/notes/
 Content-Type: application/json
 Authorization: Bearer YOUR_AUTH_TOKEN
 

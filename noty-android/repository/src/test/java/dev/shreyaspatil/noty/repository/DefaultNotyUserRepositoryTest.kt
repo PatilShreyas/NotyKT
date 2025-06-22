@@ -22,7 +22,6 @@ import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
 import dev.shreyaspatil.noty.data.remote.model.response.AuthResponse
-import dev.shreyaspatil.noty.data.remote.model.response.State
 import io.mockk.coVerify
 import io.mockk.spyk
 import kotlinx.coroutines.test.runTest
@@ -112,9 +111,9 @@ class FakeAuthService : NotyAuthService {
     @OptIn(ExperimentalStdlibApi::class)
     private fun fakeAuthResponse(authRequest: AuthRequest): Response<AuthResponse> {
         return if (authRequest.username == "admin" && authRequest.password == "admin") {
-            Response.success(AuthResponse(State.SUCCESS, "Success", "Bearer ABCD"))
+            Response.success(AuthResponse(message = "Success", token = "Bearer ABCD"))
         } else {
-            val response = AuthResponse(State.UNAUTHORIZED, "Invalid credentials", null)
+            val response = AuthResponse(message = "Invalid credentials", token = null)
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),

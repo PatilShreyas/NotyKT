@@ -1,4 +1,4 @@
-PUT http://localhost:8080/note/NOTE_ID_HERE
+PUT http://localhost:8080/notes/NOTE_ID_HERE
 Content-Type: application/json
 Authorization: Bearer YOUR_AUTH_TOKEN
 

@@ -40,7 +40,7 @@ fun Application.configureAuthentication(
 
                 // Return Principle if user exists otherwise null
                 val user = userDao.get().findByUUID(UUID.fromString(userId))
-                if (user != null) UserPrincipal(user) else null
+                if (user != null) UserPrincipal(user.id) else null
             }
         }
     }

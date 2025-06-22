@@ -22,7 +22,6 @@ import dev.shreyaspatil.noty.core.model.AuthCredential
 import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.model.request.AuthRequest
 import dev.shreyaspatil.noty.data.remote.model.response.AuthResponse
-import dev.shreyaspatil.noty.data.remote.model.response.State
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -52,7 +51,7 @@ class FakeNotyAuthService
         override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> {
             val (username, password) = authRequest
             if (users.any { it.username == username }) {
-                return errorResponse(400, AuthResponse(State.FAILED, "User already exist", null))
+                return errorResponse(400, AuthResponse(message = "User already exist", token = null))
             }
             val credential = AuthCredential("$username-$password")
             users.add(
@@ -62,16 +61,16 @@ class FakeNotyAuthService
                     token = credential.token,
                 ),
             )
-            return successResponse(AuthResponse(State.SUCCESS, "", credential.token))
+            return successResponse(AuthResponse(message = "", token = credential.token))
         }
 
         override suspend fun login(authRequest: AuthRequest): Response<AuthResponse> {
             val (username, password) = authRequest
             return users.find { it.username == username && it.password == password }.let {
                 if (it != null) {
-                    successResponse(AuthResponse(State.SUCCESS, "", it.token))
+                    successResponse(AuthResponse(message = "", token = it.token))
                 } else {
-                    errorResponse(401, AuthResponse(State.UNAUTHORIZED, "User not exist", null))
+                    errorResponse(401, AuthResponse(message = "User not exist", token = null))
                 }
             }
         }

@@ -36,31 +36,23 @@ class AuthController @Inject constructor(
 ) {
 
     fun register(username: String, password: String): AuthResponse {
-        return try {
-            validateCredentialsOrThrowException(username, password)
+        validateCredentialsOrThrowException(username, password)
 
-            if (!userDao.isUsernameAvailable(username)) {
-                throw BadRequestException("Username is not available")
-            }
-
-            val user = userDao.addUser(username, encryptor.encrypt(password))
-            AuthResponse.success(jwt.sign(user.id), "Registration successful")
-        } catch (bre: BadRequestException) {
-            AuthResponse.failed(bre.message)
+        if (!userDao.isUsernameAvailable(username)) {
+            throw BadRequestException("Username is not available")
         }
+
+        val user = userDao.addUser(username, encryptor.encrypt(password))
+        return AuthResponse(message = "Registration successful", token = jwt.sign(user.id))
     }
 
     fun login(username: String, password: String): AuthResponse {
-        return try {
-            validateCredentialsOrThrowException(username, password)
+        validateCredentialsOrThrowException(username, password)
 
-            val user = userDao.findByUsernameAndPassword(username, encryptor.encrypt(password))
-                ?: throw BadRequestException("Invalid credentials")
+        val user = userDao.findByUsernameAndPassword(username, encryptor.encrypt(password))
+            ?: throw BadRequestException("Invalid credentials")
 
-            AuthResponse.success(jwt.sign(user.id), "Login successful")
-        } catch (bre: BadRequestException) {
-            AuthResponse.failed(bre.message)
-        }
+        return AuthResponse(message = "Login successful", token = jwt.sign(user.id))
     }
 
     private fun validateCredentialsOrThrowException(username: String, password: String) {

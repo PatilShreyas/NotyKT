@@ -19,15 +19,12 @@ package dev.shreyaspatil.noty.api
 import dev.shreyaspatil.noty.api.exception.FailureMessages
 import dev.shreyaspatil.noty.api.model.request.AuthRequest
 import dev.shreyaspatil.noty.api.model.request.NoteRequest
-import dev.shreyaspatil.noty.api.model.request.PinRequest
 import dev.shreyaspatil.noty.api.model.response.AuthResponse
 import dev.shreyaspatil.noty.api.model.response.FailureResponse
-import dev.shreyaspatil.noty.api.model.response.NoteResponse
+import dev.shreyaspatil.noty.api.model.response.NoteTaskResponse
 import dev.shreyaspatil.noty.api.model.response.NotesResponse
-import dev.shreyaspatil.noty.api.model.response.State
 import dev.shreyaspatil.noty.api.testutils.delete
 import dev.shreyaspatil.noty.api.testutils.get
-import dev.shreyaspatil.noty.api.testutils.patch
 import dev.shreyaspatil.noty.api.testutils.post
 import dev.shreyaspatil.noty.api.testutils.put
 import dev.shreyaspatil.noty.api.testutils.toJson
@@ -36,17 +33,21 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldInclude
-import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.config.MapApplicationConfig
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import org.testcontainers.containers.PostgreSQLContainer
 import java.util.UUID
 
+/**
+ * Integration tests for the Noty API application.
+ * Tests authentication, note creation, retrieval, updates, and deletion.
+ */
 @Suppress("unused")
 class ApplicationTest : AnnotationSpec() {
 
+    // Test database container
     private val sqlContainer = DatabaseContainer()
 
     @BeforeClass
@@ -54,344 +55,433 @@ class ApplicationTest : AnnotationSpec() {
         sqlContainer.start()
     }
 
+    @AfterClass
+    fun cleanup() {
+        sqlContainer.stop()
+    }
+
+    //region Authentication Tests
+
     @Test
-    fun whenPassedInvalidCredentials_responseStateShouldBeFailed() = testApp {
+    fun `when invalid credentials provided, registration should fail`() = testApp {
+        // Invalid credentials (short password)
         post("/auth/register", AuthRequest("test", "test").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
 
-            body.status shouldBe State.FAILED
+            response.status shouldBe HttpStatusCode.BadRequest
             body.token shouldBe null
         }
     }
 
     @Test
-    fun whenRegistrationIsSuccessful_shouldBeAbleToLogin() = testApp {
+    fun `when valid credentials provided, registration and login should succeed`() = testApp {
+        // Register with valid credentials
         post("/auth/register", AuthRequest("test", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
 
-            body.status shouldBe State.SUCCESS
+            response.status shouldBe HttpStatusCode.OK
             body.message shouldBe "Registration successful"
             body.token shouldNotBe null
         }
 
+        // Login with same credentials
         post("/auth/login", AuthRequest("test", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
 
-            body.status shouldBe State.SUCCESS
+            response.status shouldBe HttpStatusCode.OK
             body.message shouldBe "Login successful"
             body.token shouldNotBe null
         }
     }
 
     @Test
-    fun whenRegistrationIsSuccessful_whenTryingToRegisterAgainWithSameUsername_shouldRespondFailedState() = testApp {
+    fun `when username already exists, registration should fail`() = testApp {
         val authRequest = AuthRequest("iuser", "test1234").toJson()
+
+        // First registration should succeed
         post("/auth/register", authRequest)
 
-        // Try to create again. It should show username not available message.
-        post("/auth/register", authRequest).toModel<AuthResponse>().let { response ->
-            response.status shouldBe State.FAILED
-            response.token shouldBe null
-            response.message shouldBe "Username is not available"
+        // Second registration with same username should fail
+        post("/auth/register", authRequest).let { response ->
+            val body: AuthResponse = response.toModel()
+
+            response.status shouldBe HttpStatusCode.BadRequest
+            body.token shouldBe null
+            body.message shouldBe "Username is not available"
         }
     }
 
     @Test
-    fun whenCredentialsAreIllegal_shouldRespondFailedStateWithMessage() = testApp {
+    fun `when credentials are illegal, auth endpoints should respond with appropriate error messages`() = testApp {
+        // Test various invalid credential scenarios
+
+        // Invalid username with special characters
         post("/auth/register", AuthRequest("test#", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "No special characters allowed in username"
             body.token shouldBe null
         }
 
+        // Username too short
         post("/auth/register", AuthRequest("hi", "hi@12341").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Username should be of min 4 and max 30 character in length"
             body.token shouldBe null
         }
 
+        // Password too short
         post("/auth/register", AuthRequest("test", "test").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Password should be of min 8 and max 50 character in length"
             body.token shouldBe null
         }
 
+        // Same validations for login endpoint
         post("/auth/login", AuthRequest("test#", "test1234").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "No special characters allowed in username"
             body.token shouldBe null
         }
 
         post("/auth/login", AuthRequest("hi", "hi@12341").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Username should be of min 4 and max 30 character in length"
             body.token shouldBe null
         }
 
         post("/auth/login", AuthRequest("test", "test").toJson()).let { response ->
             val body: AuthResponse = response.toModel()
-            body.status shouldBe State.FAILED
+
+            response.status shouldBe HttpStatusCode.BadRequest
             body.message shouldBe "Password should be of min 8 and max 50 character in length"
             body.token shouldBe null
         }
     }
 
     @Test
-    fun whenProvidedInvalidCredentials_shouldFailAndShowError() = testApp {
+    fun `when user does not exist, login should fail`() = testApp {
         post(
             "/auth/login",
             AuthRequest("usernotexists", "test1234").toJson(),
-        ).toModel<AuthResponse>().let {
-            it.status shouldBe State.FAILED
-            it.message shouldBe "Invalid credentials"
-            it.token shouldBe null
+        ).let { response ->
+            val body = response.toModel<AuthResponse>()
+
+            response.status shouldBe HttpStatusCode.BadRequest
+            body.message shouldBe "Invalid credentials"
+            body.token shouldBe null
         }
     }
 
     @Test
-    fun authorizationKeyIsNotProvided_whenNotesAreRetrieved_shouldGetUnauthResponse() = testApp {
-        get("/notes").bodyAsText() shouldInclude "UNAUTHORIZED"
-    }
-
-    @Test
-    fun whenProvidedInvalidAuthBody_shouldThrowException() = testApp {
-        val response = post("/auth/register", null).toModel<FailureResponse>()
-
-        response.status shouldBe State.FAILED
-        response.message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
-    }
-
-    @Test
-    fun whenProvidedInvalidAuthBodyForLogin_shouldThrowException() = testApp {
-        val response = post("/auth/login", null).toModel<FailureResponse>()
-        response.status shouldBe State.FAILED
-        response.message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
-    }
-
-    @Test
-    fun whenProvidedInvalidNoteBody_shouldThrowException() = testApp {
-        val token = post(
-            "/auth/register",
-            AuthRequest("newnoteuser", "newnoteuser1234").toJson(),
-        ).toModel<AuthResponse>().token
-
-        post("note/new", null, "Bearer $token").toModel<FailureResponse>().let {
-            it.status shouldBe State.FAILED
-            it.message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
-        }
-
-        put("note/testnote", null, "Bearer $token").toModel<FailureResponse>().let {
-            it.status shouldBe State.FAILED
-            it.message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
+    fun `when auth request body is missing, register should fail with appropriate message`() = testApp {
+        post("/auth/register", null).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
         }
     }
 
     @Test
-    fun whenUserIsAuthenticated_shouldBeAbleToAddUpdateDeleteNotes() = testApp {
-        // Create user
-        val authResponse = post(
-            "/auth/register",
-            AuthRequest("notemaster", "notemaster").toJson(),
-        ).toModel<AuthResponse>()
+    fun `when auth request body is missing, login should fail with appropriate message`() = testApp {
+        post("/auth/login", null).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_CREDENTIALS
+        }
+    }
 
-        // Create note
-        val newNoteJson = NoteRequest("Hey test", "This is note text").toJson()
+    //endregion
 
-        val newNoteResponse = post(
-            "/note/new",
-            newNoteJson,
-            "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>()
+    //region Authorization Tests
 
-        newNoteResponse.status shouldBe State.SUCCESS
-        newNoteResponse.noteId shouldNotBe null
+    @Test
+    fun `when authorization token is missing, notes endpoint should return unauthorized`() = testApp {
+        get("/notes/").let { response ->
+            response.status shouldBe HttpStatusCode.Unauthorized
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
+        }
+    }
 
-        // Get Notes
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 1
-            response.notes[0].let {
-                it.id shouldBe newNoteResponse.noteId
-                it.title shouldBe "Hey test"
-                it.note shouldBe "This is note text"
-                it.created shouldNotBe null
-                it.isPinned shouldBe false
+    //endregion
+
+    //region Note Management Tests
+
+    @Test
+    fun `when note request body is missing, note operations should fail with appropriate message`() = testApp {
+        val token = registerUser("newnoteuser", "newnoteuser1234")
+
+        // Create note with missing body
+        post("notes/", null, "Bearer $token").let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
+        }
+
+        // Update note with missing body
+        put("notes/testnote", null, "Bearer $token").let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_MISSING_NOTE_DETAILS
+        }
+    }
+
+    @Test
+    fun `when authenticated, user should be able to perform all note operations`() = testApp {
+        // Create user and get token
+        val token = registerUser("notemaster", "notemaster")
+
+        // Create a new note
+        val noteId = createNote(
+            token = token,
+            title = "Hey test",
+            content = "This is note text",
+        )
+
+        // Verify note was created
+        get("/notes/", "Bearer $token").let { response ->
+            val body = response.toModel<NotesResponse>()
+
+            response.status shouldBe HttpStatusCode.OK
+            body.notes[0].let { note ->
+                note.id shouldBe noteId
+                note.title shouldBe "Hey test"
+                note.note shouldBe "This is note text"
+                note.created shouldNotBe null
+                note.isPinned shouldBe false
             }
         }
 
-        // Update note
-        val updateRequest = NoteRequest("Hey update", "This is updated body").toJson()
-        put(
-            "/note/${newNoteResponse.noteId}",
-            updateRequest,
-            "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
-        }
+        // Update the note
+        updateNote(
+            token = token,
+            noteId = noteId,
+            title = "Hey update",
+            content = "This is updated body",
+        )
 
-        // pin note
-        val pinRequest = PinRequest(isPinned = true).toJson()
-        patch(
-            "/note/${newNoteResponse.noteId}/pin",
-            pinRequest,
-            "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
-        }
+        // Pin the note
+        pinNote(token, noteId, true)
 
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 1
-            response.notes[0].let {
-                it.id shouldBe newNoteResponse.noteId
-                it.title shouldBe "Hey update"
-                it.note shouldBe "This is updated body"
-                it.created shouldNotBe null
-                it.isPinned shouldBe true
+        // Verify note was updated and pinned
+        get("/notes/", "Bearer $token").let { response ->
+            val body = response.toModel<NotesResponse>()
+
+            response.status shouldBe HttpStatusCode.OK
+            body.notes shouldHaveSize 1
+            body.notes[0].let { note ->
+                note.id shouldBe noteId
+                note.title shouldBe "Hey update"
+                note.note shouldBe "This is updated body"
+                note.created shouldNotBe null
+                note.isPinned shouldBe true
             }
         }
 
-        val unpinRequest = PinRequest(isPinned = false).toJson()
-        patch(
-            "/note/${newNoteResponse.noteId}/pin",
-            unpinRequest,
-            "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
-        }
+        // Unpin the note
+        pinNote(token, noteId, false)
 
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 1
-            response.notes[0].let {
-                it.id shouldBe newNoteResponse.noteId
-                it.title shouldBe "Hey update"
-                it.note shouldBe "This is updated body"
-                it.created shouldNotBe null
-                it.isPinned shouldBe false
+        // Verify note was unpinned
+        get("/notes/", "Bearer $token").let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            val body = response.toModel<NotesResponse>()
+
+            body.notes shouldHaveSize 1
+            body.notes[0].let { note ->
+                note.id shouldBe noteId
+                note.title shouldBe "Hey update"
+                note.note shouldBe "This is updated body"
+                note.created shouldNotBe null
+                note.isPinned shouldBe false
             }
         }
 
-        // Delete note
+        // Delete the note
+        deleteNote(token, noteId)
+
+        // Verify note was deleted
+        get("/notes/", "Bearer $token").let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NotesResponse>().notes shouldHaveSize 0
+        }
+    }
+
+    @Test
+    fun `when note created by one user, it should not be accessible by another user`() = testApp {
+        // Create two users
+        val userTokenA = registerUser("userA", "userA1234")
+        val userTokenB = registerUser("userB", "userB1234")
+
+        // User A creates a note
+        val noteId = createNote(
+            token = userTokenA,
+            title = "Hey test",
+            content = "This is note text",
+        )
+
+        // User B tries to delete User A's note
         delete(
-            "/note/${newNoteResponse.noteId}",
-            "Bearer ${authResponse.token}",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.noteId shouldNotBe null
-        }
-
-        // Get empty notes
-        get("/notes", "Bearer ${authResponse.token}").toModel<NotesResponse>().let { response ->
-            response.status shouldBe State.SUCCESS
-            response.notes shouldHaveSize 0
-        }
-    }
-
-    @Test
-    fun whenNoteIsCreatedByUserA_shouldNotBeAccessibleByUserB() = testApp {
-        // Create User A
-        val userTokenA = post(
-            "/auth/register",
-            AuthRequest("userA", "userA1234").toJson(),
-        ).toModel<AuthResponse>().token
-
-        // Create User B
-        val userTokenB = post(
-            "/auth/register",
-            AuthRequest("userB", "userB1234").toJson(),
-        ).toModel<AuthResponse>().token
-
-        // User A creates note
-        val noteRequest = NoteRequest("Hey test", "This is note text").toJson()
-        val noteId = post(
-            "/note/new",
-            noteRequest,
-            "Bearer $userTokenA",
-        ).toModel<NoteResponse>().noteId
-
-        // User B tries to delete note created by user A
-        // Should show access denied (Unauthorized access) message.
-        delete(
-            "/note/$noteId",
+            "/notes/$noteId",
             "Bearer $userTokenB",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.UNAUTHORIZED
-            response.message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
-            response.noteId shouldBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.Unauthorized
+            response.toModel<FailureResponse>().message shouldBe FailureMessages.MESSAGE_ACCESS_DENIED
         }
     }
 
     @Test
-    fun whenNoteRequestIsInvalid_shouldRespondFailedStateWithMessage() = testApp {
-        val token = post(
-            "/auth/register",
-            AuthRequest("usertest", "userA1234").toJson(),
-        ).toModel<AuthResponse>().token
-        println(token)
+    fun `when note request is invalid, note creation should fail with appropriate message`() = testApp {
+        val token = registerUser("usertest", "userA1234")
 
-        // Create note with invalid title (Whitespaces)
+        // Test invalid title (whitespace padding)
         val noteRequest1 = NoteRequest("      Hi       ", "This is note text").toJson()
         post(
-            "/note/new",
+            "/notes/",
             noteRequest1,
             "Bearer $token",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.FAILED
-            response.noteId shouldBe null
-            response.message shouldBe "Title should be of min 4 and max 30 character in length"
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            val body = response.toModel<NoteTaskResponse>()
+            body.noteId shouldBe null
+            body.message shouldBe "Title should be of min 4 and max 30 character in length"
         }
 
-        // Create note with invalid note text (Whitespaces)
+        // Test invalid note content (whitespace only)
         val noteRequest2 = NoteRequest("Hi there!", "            ").toJson()
         post(
-            "/note/new",
+            "/notes/",
             noteRequest2,
             "Bearer $token",
-        ).toModel<NoteResponse>().let { response ->
-            response.status shouldBe State.FAILED
-            response.noteId shouldBe null
-            response.message shouldBe "Title and Note should not be blank"
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.BadRequest
+            val body = response.toModel<NoteTaskResponse>()
+            body.noteId shouldBe null
+            body.message shouldBe "Title and Note should not be blank"
         }
     }
 
     @Test
-    fun whenNoteNotExists_requestedUpdateDelete_shouldShowErrorMessage() = testApp {
-        val token = post(
-            "/auth/register",
-            AuthRequest("usernotenotexist", "test1234").toJson(),
-        ).toModel<AuthResponse>().token
+    fun `when note does not exist, update and delete operations should fail with appropriate message`() = testApp {
+        val token = registerUser("usernotenotexist", "test1234")
+        val nonExistentNoteId = UUID.randomUUID().toString()
 
-        val noteId = UUID.randomUUID().toString()
+        // Try to update non-existent note
         put(
-            "note/$noteId",
-            NoteRequest("Title", "Body").toJson(),
+            "notes/$nonExistentNoteId",
+            NoteRequest("Lorem ipsum", "This is body of the note").toJson(),
             "Bearer $token",
-        ).toModel<NoteResponse>().let {
-            it.status shouldBe State.NOT_FOUND
-            it.message shouldBe "Note not exist with ID '$noteId'"
-            it.noteId shouldBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.NotFound
+
+            response.toModel<NoteTaskResponse>().let { responseBody ->
+                responseBody.message shouldBe "Note not exist with ID '$nonExistentNoteId'"
+                responseBody.noteId shouldBe null
+            }
         }
 
+        // Try to delete non-existent note
         delete(
-            "note/$noteId",
+            "notes/$nonExistentNoteId",
             "Bearer $token",
-        ).toModel<NoteResponse>().let {
-            it.status shouldBe State.NOT_FOUND
-            it.message shouldBe "Note not exist with ID '$noteId'"
-            it.noteId shouldBe null
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.NotFound
+
+            val body = response.toModel<NoteTaskResponse>()
+            body.message shouldBe "Note not exist with ID '$nonExistentNoteId'"
+            body.noteId shouldBe null
         }
     }
 
-    fun testApp(test: suspend ApplicationTestBuilder.() -> Unit) {
+    //endregion
+
+    //region Helper Methods
+
+    /**
+     * Registers a new user and returns the authentication token.
+     */
+    private suspend fun ApplicationTestBuilder.registerUser(username: String, password: String): String {
+        return post(
+            "/auth/register",
+            AuthRequest(username, password).toJson(),
+        ).toModel<AuthResponse>().token!!
+    }
+
+    /**
+     * Creates a new note and returns the note ID.
+     */
+    private suspend fun ApplicationTestBuilder.createNote(token: String, title: String, content: String): String {
+        val newNoteJson = NoteRequest(title, content).toJson()
+        val response = post(
+            "/notes/",
+            newNoteJson,
+            "Bearer $token",
+        )
+        response.status shouldBe HttpStatusCode.OK
+        return response.toModel<NoteTaskResponse>().noteId!!
+    }
+
+    /**
+     * Updates an existing note.
+     */
+    private suspend fun ApplicationTestBuilder.updateNote(
+        token: String,
+        noteId: String,
+        title: String,
+        content: String,
+    ) {
+        val updateRequest = NoteRequest(title, content).toJson()
+        put(
+            "/notes/$noteId",
+            updateRequest,
+            "Bearer $token",
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
+        }
+    }
+
+    /**
+     * Pins a note
+     */
+    private suspend fun ApplicationTestBuilder.pinNote(token: String, noteId: String, isPinned: Boolean) {
+        val response = if (isPinned) {
+            put(
+                "/notes/$noteId/pin",
+                body = null,
+                token = "Bearer $token",
+            )
+        } else {
+            delete(
+                "/notes/$noteId/pin",
+                token = "Bearer $token",
+            )
+        }
+        response.status shouldBe HttpStatusCode.OK
+        response.toModel<NoteTaskResponse>().noteId shouldNotBe null
+    }
+
+    /**
+     * Deletes a note.
+     */
+    private suspend fun ApplicationTestBuilder.deleteNote(token: String, noteId: String) {
+        delete(
+            "/notes/$noteId",
+            "Bearer $token",
+        ).let { response ->
+            response.status shouldBe HttpStatusCode.OK
+            response.toModel<NoteTaskResponse>().noteId shouldNotBe null
+        }
+    }
+
+    /**
+     * Sets up and runs a test application with the configured database.
+     */
+    private fun testApp(test: suspend ApplicationTestBuilder.() -> Unit) {
         testApplication {
             environment {
                 config = MapApplicationConfig(
@@ -412,10 +502,10 @@ class ApplicationTest : AnnotationSpec() {
         }
     }
 
-    @AfterClass
-    fun cleanup() {
-        sqlContainer.stop()
-    }
-
+    /**
+     * PostgreSQL container for integration tests.
+     */
     inner class DatabaseContainer : PostgreSQLContainer<DatabaseContainer>("postgres")
+
+    //endregion
 }

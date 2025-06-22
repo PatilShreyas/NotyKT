@@ -24,13 +24,13 @@ activity = "1.10.1"
 fragment = "1.8.8"
 lifecycle = "2.9.1"
 navigation = "2.9.0"
-workmanager = "2.10.1"
+workmanager = "2.10.2"
 dataStore = "1.1.7"
 securityCrypto = "1.1.0-beta01"
-room = "2.7.1"
+room = "2.7.2"
 
 # Compose
-composeBom = "2025.06.00"
+composeBom = "2025.06.01"
 composeConstraintLayout = "1.1.1"
 composeNav = "2.9.0"
 hiltComposeNav = "1.2.0"
@@ -53,11 +53,11 @@ androidTestRunner = "1.6.2"
 junit5 = "5.10.2"
 mockk = "1.14.2"
 jacoco = "0.8.13"
-robolectric = "4.11.1"
+robolectric = "4.15"
 
 # Other
 materialDesign = "1.12.0"
-lottie = "6.6.6"
+lottie = "6.6.7"
 javaxInject = "1"
 ktlint = "12.3.0"
 mutekt = "1.0.1"
@@ -124,6 +124,7 @@ androidx-hilt-navigation-fragment = { group = "androidx.hilt", name = "hilt-navi
 # Retrofit and OkHttp
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+okhttp-loggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp" }
 okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okHttp" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
