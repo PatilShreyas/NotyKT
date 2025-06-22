@@ -55,14 +55,15 @@ class AddNotesScreenTest : NotyScreenTest() {
         }
 
     @Test
-    fun showAddButton_onValidNoteContentInput() =
+    fun showSaveButton_onValidNoteContentInput() =
         runTest {
             setNotyContent { AddNoteScreen() }
 
             onNodeWithText("Title").performTextInput("Hi there")
             onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
+            waitForIdle()
 
-            onNodeWithText("Save").assertIsDisplayed()
+            onNodeWithText("Save", useUnmergedTree = true).assertIsDisplayed()
         }
 
     @Test
@@ -75,7 +76,7 @@ class AddNotesScreenTest : NotyScreenTest() {
             onNodeWithText("Write note here").performTextInput("Hi there, this is a note")
 
             waitForIdle()
-            onNodeWithText("Save").performClick()
+            onNodeWithText("Save", useUnmergedTree = true).performClick()
             waitForIdle()
 
             assertTrue(navigatingUp)
