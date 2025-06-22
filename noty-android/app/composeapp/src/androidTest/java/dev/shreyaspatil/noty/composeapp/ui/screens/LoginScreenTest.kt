@@ -45,7 +45,7 @@ class LoginScreenTest : NotyScreenTest() {
                 LoginScreen(onNavigateToSignup = { navigatingToSignup = true })
             }
 
-            onNodeWithText("Don't have an account? Signup").performClick()
+            onNodeWithText("Don't have an account?", substring = true).performClick()
             waitForIdle()
 
             assertTrue(navigatingToSignup)
