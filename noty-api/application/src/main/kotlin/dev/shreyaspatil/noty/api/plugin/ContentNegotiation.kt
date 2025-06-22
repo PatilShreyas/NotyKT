@@ -28,6 +28,7 @@ fun Application.configureContentNegotiation() {
         json(
             json = Json {
                 prettyPrint = true
+                encodeDefaults = true
             },
             contentType = ContentType.Application.Json,
         )
