@@ -85,7 +85,7 @@ fun BasicNotyTextField(
     maxLines: Int = Int.MAX_VALUE,
 ) {
     BasicTextField(
-        modifier = modifier,
+        modifier = modifier.testTag(label),
         value = value,
         onValueChange = onTextChange,
         textStyle = textStyle.copy(color = MaterialTheme.colorScheme.onSurface),
