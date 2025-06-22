@@ -192,8 +192,8 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
 
     private fun confirmLogout() {
         showDialog(
-            title = "Logout?",
-            message = "Sure want to logout?",
+            title = getString(R.string.menu_logout),
+            message = getString(R.string.dialog_message_logout_confirmation),
             positiveActionText = "Yes",
             positiveAction = { _, _ -> viewModel.logout() },
             negativeActionText = "No",

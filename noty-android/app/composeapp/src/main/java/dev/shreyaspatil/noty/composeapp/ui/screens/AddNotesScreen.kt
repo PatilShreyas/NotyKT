@@ -35,8 +35,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyScaffold
 import dev.shreyaspatil.noty.composeapp.component.scaffold.NotyTopAppBar
 import dev.shreyaspatil.noty.composeapp.component.text.NoteField
@@ -86,7 +88,12 @@ fun AddNotesContent(
     NotyScaffold(
         isLoading = isLoading,
         error = error,
-        notyTopAppBar = { NotyTopAppBar(title = "Add Note", onNavigateUp = onNavigateUp) },
+        notyTopAppBar = {
+            NotyTopAppBar(
+                title = stringResource(R.string.hint_field_title),
+                onNavigateUp = onNavigateUp,
+            )
+        },
         content = {
             Column(
                 Modifier
@@ -114,11 +121,11 @@ fun AddNotesContent(
         floatingActionButton = {
             if (showSaveFab) {
                 ExtendedFloatingActionButton(
-                    text = { Text("Save") },
+                    text = { Text(stringResource(R.string.text_save)) },
                     icon = {
                         Icon(
                             Icons.Filled.Done,
-                            "Save",
+                            stringResource(R.string.text_save),
                         )
                     },
                     onClick = onClickAddNote,

@@ -37,7 +37,7 @@ import dev.shreyaspatil.noty.composeapp.R
 @Composable
 fun PasswordTextField(
     modifier: Modifier = Modifier,
-    label: String = "Password",
+    label: String = stringResource(R.string.hint_password),
     value: String = "",
     isError: Boolean = false,
     onValueChange: (String) -> Unit,

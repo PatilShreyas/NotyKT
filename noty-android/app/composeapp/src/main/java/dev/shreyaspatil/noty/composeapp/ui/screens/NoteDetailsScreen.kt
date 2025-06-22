@@ -47,10 +47,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.PinAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
@@ -176,8 +178,8 @@ fun NoteDetailContent(
         floatingActionButton = {
             if (showSaveButton) {
                 ExtendedFloatingActionButton(
-                    text = { Text("Save") },
-                    icon = { Icon(Icons.Filled.Done, "Save") },
+                    text = { Text(stringResource(R.string.text_save)) },
+                    icon = { Icon(Icons.Filled.Done, stringResource(R.string.text_save)) },
                     onClick = onSaveClick,
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -196,24 +198,28 @@ private fun NoteDetailActions(
     onShareNoteAsTextClick: () -> Unit,
     onShareNoteAsImageClick: () -> Unit,
 ) {
+    PinAction(isPinned, onClick = onPinClick)
+    DeleteAction(onClick = onDeleteClick)
+
     var dropdownExpanded by remember { mutableStateOf(false) }
+    ShareAction(onClick = { dropdownExpanded = true })
+
+    val shareTextLabel = stringResource(R.string.menu_share_text)
+    val shareImageLabel = stringResource(R.string.menu_share_image)
     val shareActions =
-        remember {
+        remember(onShareNoteAsTextClick, onShareNoteAsImageClick) {
             composeImmutableListOf(
                 ShareActionItem(
-                    label = "Text",
+                    label = shareTextLabel,
                     onActionClick = onShareNoteAsTextClick,
                 ),
                 ShareActionItem(
-                    label = "Image",
+                    label = shareImageLabel,
                     onActionClick = onShareNoteAsImageClick,
                 ),
             )
         }
 
-    PinAction(isPinned, onClick = onPinClick)
-    DeleteAction(onClick = onDeleteClick)
-    ShareAction(onClick = { dropdownExpanded = true })
     ShareDropdown(
         expanded = dropdownExpanded,
         onDismissRequest = { dropdownExpanded = false },
@@ -263,8 +269,8 @@ fun DeleteNoteConfirmation(
 ) {
     if (show) {
         ConfirmationDialog(
-            title = "Delete?",
-            message = "Sure want to delete this note?",
+            title = stringResource(R.string.menu_delete),
+            message = stringResource(R.string.dialog_message_delete_confirmation),
             onConfirmedYes = onConfirm,
             onConfirmedNo = onDismiss,
             onDismissed = onDismiss,

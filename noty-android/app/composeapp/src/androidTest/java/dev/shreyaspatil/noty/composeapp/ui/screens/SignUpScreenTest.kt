@@ -22,7 +22,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -47,7 +46,7 @@ class SignUpScreenTest : NotyScreenTest() {
                 SignUpScreen(onNavigateUp = { navigatingUp = true })
             }
 
-            onNodeWithText("Already have an account? Login").performClick()
+            onNodeWithText("Already have an account?", substring = true).performClick()
             waitForIdle()
 
             assertTrue(navigatingUp)
@@ -80,7 +79,7 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            onNodeWithText("Create account").performClick()
+            onNodeWithTag("createAccountButton").performClick()
             waitForIdle()
 
             assertFalse(navigatedToNotes)
@@ -116,8 +115,7 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            waitUntilExactlyOneExists(hasText("Create account"))
-            onNodeWithText("Create account").performClick()
+            onNodeWithTag("createAccountButton").performClick()
             waitForIdle()
 
             assertFalse(navigatedToNotes)
@@ -155,8 +153,7 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            waitUntilExactlyOneExists(hasText("Create account"))
-            onNodeWithText("Create account").performClick()
+            onNodeWithTag("createAccountButton").performClick()
             waitForIdle()
 
             assertTrue(navigatedToNotes)

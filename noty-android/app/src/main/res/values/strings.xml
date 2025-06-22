@@ -55,7 +55,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_field_title">Title</string>
-    <string name="hint_field_note">Write note here…</string>
+    <string name="hint_field_note">Write note here...</string>
 
     <!-- Messages -->
     <string name="message_field_blank">Should not blank</string>
@@ -68,8 +68,13 @@
     <string name="dialog_title_signup_failed">Sign up Failed!</string>
     <string name="dialog_title_failed_image_share">Failed to share image!</string>
     <string name="dialog_message_failed_image_share">Unable to share image because Permission denied. To be able to share image, please allow storage access.</string>
+    <string name="dialog_message_logout_confirmation">Sure want to logout?</string>
+    <string name="dialog_message_delete_confirmation">Sure want to delete this note?</string>
 
+    <string name="text_back">Back</string>
     <string name="content_description_connectivity_icon">Connectivity status Icon</string>
+    <string name="content_description_pinned_note">Pinned note</string>
+    <string name="content_description_add">Add</string>
 
 
 </resources>

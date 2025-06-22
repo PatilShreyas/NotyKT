@@ -33,10 +33,10 @@ fun UsernameTextField(
 ) {
     NotyTextField(
         value = value,
-        label = "Username",
+        label = stringResource(R.string.hint_username),
         onValueChange = onValueChange,
         modifier = modifier,
-        leadingIcon = { Icon(Icons.Outlined.Person, "User") },
+        leadingIcon = { Icon(Icons.Outlined.Person, stringResource(R.string.hint_username)) },
         isError = isError,
         helperText = stringResource(R.string.message_field_username_invalid),
     )

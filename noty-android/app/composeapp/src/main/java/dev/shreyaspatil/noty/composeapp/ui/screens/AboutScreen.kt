@@ -54,7 +54,11 @@ import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 fun AboutScreen(onNavigateUp: () -> Unit) {
     NotyScaffold(
         notyTopAppBar = {
-            NotyTopAppBar(onNavigateUp = onNavigateUp, title = "About", showNotyIcon = false)
+            NotyTopAppBar(
+                onNavigateUp = onNavigateUp,
+                title = stringResource(R.string.menu_about),
+                showNotyIcon = false,
+            )
         },
         content = {
             AboutContent(Modifier.padding(it))
@@ -84,7 +88,7 @@ fun AboutContent(modifier: Modifier) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+            text = stringResource(R.string.text_app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
             style = MaterialTheme.typography.titleSmall,
         )
 

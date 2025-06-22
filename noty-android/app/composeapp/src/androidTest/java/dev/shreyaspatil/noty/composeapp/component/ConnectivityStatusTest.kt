@@ -32,7 +32,7 @@ class ConnectivityStatusTest : NotyComposableTest() {
                 ConnectivityStatus(isConnected = false)
             }
 
-            onNodeWithText("No Internet Connection!").assertIsDisplayed()
+            onNodeWithText("No Internet!").assertIsDisplayed()
         }
 
     @Test
@@ -44,17 +44,17 @@ class ConnectivityStatusTest : NotyComposableTest() {
             }
 
             // First, no connectivity should be displayed
-            onNodeWithText("No Internet Connection!").assertIsDisplayed()
+            onNodeWithText("No Internet!").assertIsDisplayed()
 
             // Bring connectivity back
             isConnected = true
-            onNodeWithText("No Internet Connection!").assertDoesNotExist()
-            onNodeWithText("Back Online!").assertIsDisplayed()
+            onNodeWithText("No Internet!").assertDoesNotExist()
+            onNodeWithText("Online back").assertIsDisplayed()
 
             // Wait for 2 seconds
             mainClock.advanceTimeBy(2000)
 
             // Status should be vanished
-            onNodeWithText("Back Online!").assertDoesNotExist()
+            onNodeWithText("Online back").assertDoesNotExist()
         }
 }

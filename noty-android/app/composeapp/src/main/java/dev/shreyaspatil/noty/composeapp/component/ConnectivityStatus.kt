@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,7 +76,12 @@ fun ConnectivityStatus(isConnected: Boolean) {
 fun ConnectivityStatusBox(isConnected: Boolean) {
     val backgroundColor by animateColorAsState(if (isConnected) green else MaterialTheme.colorScheme.errorContainer)
     val contentColor = if (isConnected) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error
-    val message = if (isConnected) "Back Online!" else "No Internet Connection!"
+    val message =
+        if (isConnected) {
+            stringResource(R.string.text_connectivity)
+        } else {
+            stringResource(R.string.text_no_connectivity)
+        }
     val iconResource =
         if (isConnected) {
             R.drawable.ic_connectivity_available

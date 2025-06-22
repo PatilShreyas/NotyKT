@@ -19,6 +19,8 @@ package dev.shreyaspatil.noty.composeapp.component.text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import dev.shreyaspatil.noty.composeapp.R
 
 @Composable
 fun NoteTitleField(
@@ -29,7 +31,7 @@ fun NoteTitleField(
     BasicNotyTextField(
         modifier,
         value = value,
-        label = "Title",
+        label = stringResource(R.string.hint_field_title),
         onTextChange = onTextChange,
         textStyle = MaterialTheme.typography.headlineLarge,
         maxLines = 2,
@@ -45,7 +47,7 @@ fun NoteField(
     BasicNotyTextField(
         modifier,
         value = value,
-        label = "Write note here",
+        label = stringResource(R.string.hint_field_note),
         onTextChange = onTextChange,
         textStyle = MaterialTheme.typography.bodyLarge,
     )
