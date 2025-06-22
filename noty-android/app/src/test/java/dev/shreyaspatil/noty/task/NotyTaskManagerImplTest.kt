@@ -16,8 +16,6 @@
 
 package dev.shreyaspatil.noty.task
 
-import androidx.arch.core.executor.ArchTaskExecutor
-import androidx.arch.core.executor.TaskExecutor
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
@@ -29,15 +27,9 @@ import dev.shreyaspatil.noty.fakes.FakeWorkManager
 import dev.shreyaspatil.noty.utils.ext.getEnum
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,7 +45,6 @@ class NotyTaskManagerImplTest {
 
     @BeforeEach
     fun setup() {
-
         fakeWorkManager = FakeWorkManager()
         workManager = fakeWorkManager.mockWorkManager
         workRequests = fakeWorkManager.oneTimeWorkRequests
@@ -71,11 +62,12 @@ class NotyTaskManagerImplTest {
 
         workStates.forEach { (id, state) -> fakeWorkManager.fakeWorkStates[id] = state }
 
-        fakeWorkManager.fakeWorkStatesForObserve = flow {
-            emit(WorkInfo.State.ENQUEUED)
-            emit(WorkInfo.State.RUNNING)
-            emit(WorkInfo.State.FAILED)
-        }
+        fakeWorkManager.fakeWorkStatesForObserve =
+            flow {
+                emit(WorkInfo.State.ENQUEUED)
+                emit(WorkInfo.State.RUNNING)
+                emit(WorkInfo.State.FAILED)
+            }
     }
 
     @Test

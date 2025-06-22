@@ -76,11 +76,12 @@ fun ConnectivityStatus(isConnected: Boolean) {
 fun ConnectivityStatusBox(isConnected: Boolean) {
     val backgroundColor by animateColorAsState(if (isConnected) green else MaterialTheme.colorScheme.errorContainer)
     val contentColor = if (isConnected) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.error
-    val message = if (isConnected) {
-        stringResource(R.string.text_connectivity)
-    } else {
-        stringResource(R.string.text_no_connectivity)
-    }
+    val message =
+        if (isConnected) {
+            stringResource(R.string.text_connectivity)
+        } else {
+            stringResource(R.string.text_no_connectivity)
+        }
     val iconResource =
         if (isConnected) {
             R.drawable.ic_connectivity_available

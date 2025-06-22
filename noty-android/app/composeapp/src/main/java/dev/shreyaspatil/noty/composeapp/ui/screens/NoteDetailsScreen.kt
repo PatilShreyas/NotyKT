@@ -50,9 +50,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
+import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.PinAction
 import dev.shreyaspatil.noty.composeapp.component.action.ShareAction
@@ -198,7 +198,6 @@ private fun NoteDetailActions(
     onShareNoteAsTextClick: () -> Unit,
     onShareNoteAsImageClick: () -> Unit,
 ) {
-
     PinAction(isPinned, onClick = onPinClick)
     DeleteAction(onClick = onDeleteClick)
 
@@ -207,18 +206,19 @@ private fun NoteDetailActions(
 
     val shareTextLabel = stringResource(R.string.menu_share_text)
     val shareImageLabel = stringResource(R.string.menu_share_image)
-    val shareActions = remember(onShareNoteAsTextClick, onShareNoteAsImageClick) {
-        composeImmutableListOf(
-            ShareActionItem(
-                label = shareTextLabel,
-                onActionClick = onShareNoteAsTextClick,
-            ),
-            ShareActionItem(
-                label = shareImageLabel,
-                onActionClick = onShareNoteAsImageClick,
-            ),
-        )
-    }
+    val shareActions =
+        remember(onShareNoteAsTextClick, onShareNoteAsImageClick) {
+            composeImmutableListOf(
+                ShareActionItem(
+                    label = shareTextLabel,
+                    onActionClick = onShareNoteAsTextClick,
+                ),
+                ShareActionItem(
+                    label = shareImageLabel,
+                    onActionClick = onShareNoteAsImageClick,
+                ),
+            )
+        }
 
     ShareDropdown(
         expanded = dropdownExpanded,
