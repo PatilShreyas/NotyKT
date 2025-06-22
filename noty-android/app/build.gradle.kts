@@ -102,6 +102,9 @@ dependencies {
     implementation(libs.mutekt.core)
     ksp(libs.mutekt.codegen)
 
+    // OkHttp
+    implementation(libs.okhttp.loggingInterceptor)
+
     // Compose runtime - For @Immutable annotation
     implementation(platform(libs.androidx.compose.bom))
     testImplementation(platform(libs.androidx.compose.bom))
