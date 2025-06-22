@@ -16,7 +16,6 @@
 
 package dev.shreyaspatil.noty.task
 
-import androidx.lifecycle.asFlow
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -83,11 +82,9 @@ class NotyTaskManagerImpl
             }.getOrNull()
 
         override fun observeTask(taskId: UUID): Flow<TaskState> {
-            return workManager.getWorkInfoByIdLiveData(taskId)
-                .asFlow()
+            return workManager.getWorkInfoByIdFlow(taskId)
                 .map {
-                    it?.let {
-                            workInfo ->
+                    it?.let { workInfo ->
                         mapWorkInfoStateToTaskState(workInfo.state)
                     } ?: TaskState.FAILED
                 }

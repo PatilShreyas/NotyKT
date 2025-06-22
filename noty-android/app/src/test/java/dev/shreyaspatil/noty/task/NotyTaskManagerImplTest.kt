@@ -16,8 +16,6 @@
 
 package dev.shreyaspatil.noty.task
 
-import androidx.arch.core.executor.ArchTaskExecutor
-import androidx.arch.core.executor.TaskExecutor
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
@@ -29,15 +27,9 @@ import dev.shreyaspatil.noty.fakes.FakeWorkManager
 import dev.shreyaspatil.noty.utils.ext.getEnum
 import dev.shreyaspatil.noty.worker.NotyTaskWorker
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,15 +45,11 @@ class NotyTaskManagerImplTest {
 
     @BeforeEach
     fun setup() {
-        setupAsyncTaskExecutor()
-
         fakeWorkManager = FakeWorkManager()
         workManager = fakeWorkManager.mockWorkManager
         workRequests = fakeWorkManager.oneTimeWorkRequests
         manager = NotyTaskManagerImpl(workManager)
 
-        // Setup test data
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         workStates =
             listOf(
                 UUID.randomUUID() to WorkInfo.State.ENQUEUED,
@@ -74,25 +62,12 @@ class NotyTaskManagerImplTest {
 
         workStates.forEach { (id, state) -> fakeWorkManager.fakeWorkStates[id] = state }
 
-        // To test observing work status flow
-        // Here delay is added because LiveData conflates the emitted result if emissions
-        // are too fast and that's the reason we have used Unconfined dispatcher here so that
-        // it can respect the delay.
         fakeWorkManager.fakeWorkStatesForObserve =
             flow {
                 emit(WorkInfo.State.ENQUEUED)
-                delay(100)
                 emit(WorkInfo.State.RUNNING)
-                delay(100)
                 emit(WorkInfo.State.FAILED)
-                delay(100)
             }
-    }
-
-    @AfterEach
-    fun tearDown() {
-        Dispatchers.resetMain()
-        cleanupAsyncTaskExecutor()
     }
 
     @Test
@@ -178,27 +153,5 @@ class NotyTaskManagerImplTest {
 
         // Then
         verify(exactly = 1) { workManager.cancelAllWork() }
-    }
-
-    private fun setupAsyncTaskExecutor() {
-        ArchTaskExecutor.getInstance().setDelegate(
-            object : TaskExecutor() {
-                override fun executeOnDiskIO(runnable: Runnable) {
-                    runnable.run()
-                }
-
-                override fun postToMainThread(runnable: Runnable) {
-                    runnable.run()
-                }
-
-                override fun isMainThread(): Boolean {
-                    return true
-                }
-            },
-        )
-    }
-
-    private fun cleanupAsyncTaskExecutor() {
-        ArchTaskExecutor.getInstance().setDelegate(null)
     }
 }
