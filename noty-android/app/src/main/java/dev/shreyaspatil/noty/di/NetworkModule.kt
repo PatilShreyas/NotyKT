@@ -36,12 +36,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-
     @Singleton
     @Provides
-    fun retrofitClient(
-        authInterceptor: AuthInterceptor
-    ): Retrofit {
+    fun retrofitClient(authInterceptor: AuthInterceptor): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constant.API_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -51,7 +48,7 @@ class NetworkModule {
                     .writeTimeout(1, TimeUnit.MINUTES)
                     .addInterceptor(authInterceptor)
                     .addInterceptor(HttpLoggingInterceptor().apply { level = BODY })
-                    .build()
+                    .build(),
             ).build()
     }
 
