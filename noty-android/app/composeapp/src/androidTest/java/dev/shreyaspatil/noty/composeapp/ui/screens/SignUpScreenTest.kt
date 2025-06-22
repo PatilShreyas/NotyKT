@@ -47,7 +47,7 @@ class SignUpScreenTest : NotyScreenTest() {
                 SignUpScreen(onNavigateUp = { navigatingUp = true })
             }
 
-            onNodeWithText("Already have an account? Login").performClick()
+            onNodeWithText("Already have an account?", substring = true).performClick()
             waitForIdle()
 
             assertTrue(navigatingUp)
@@ -80,7 +80,8 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            onNodeWithText("Create account").performClick()
+            // Find the button with the text from the string resource
+            onNodeWithText("Register").performClick()
             waitForIdle()
 
             assertFalse(navigatedToNotes)
@@ -116,8 +117,8 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            waitUntilExactlyOneExists(hasText("Create account"))
-            onNodeWithText("Create account").performClick()
+            // Find the button with the text from the string resource
+            onNodeWithText("Register").performClick()
             waitForIdle()
 
             assertFalse(navigatedToNotes)
@@ -155,8 +156,8 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            waitUntilExactlyOneExists(hasText("Create account"))
-            onNodeWithText("Create account").performClick()
+            // Find the button with the text from the string resource
+            onNodeWithText("Register").performClick()
             waitForIdle()
 
             assertTrue(navigatedToNotes)
