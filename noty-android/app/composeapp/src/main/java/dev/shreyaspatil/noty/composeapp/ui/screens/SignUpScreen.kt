@@ -35,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -198,7 +199,8 @@ private fun SignUpForm(
                 Modifier
                     .padding(vertical = 16.dp)
                     .fillMaxWidth()
-                    .height(60.dp),
+                    .height(60.dp)
+                    .testTag("createAccountButton"),
         ) {
             Text(
                 style = MaterialTheme.typography.titleLarge,

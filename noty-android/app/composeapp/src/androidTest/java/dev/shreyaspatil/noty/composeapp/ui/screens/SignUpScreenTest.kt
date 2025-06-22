@@ -80,8 +80,7 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            // Find the button with the text from the string resource
-            onNodeWithText("Register").performClick()
+            onNodeWithTag("createAccountButton").performClick()
             waitForIdle()
 
             assertFalse(navigatedToNotes)
@@ -117,8 +116,7 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            // Find the button with the text from the string resource
-            onNodeWithText("Register").performClick()
+            onNodeWithTag("createAccountButton").performClick()
             waitForIdle()
 
             assertFalse(navigatedToNotes)
@@ -156,8 +154,7 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            // Find the button with the text from the string resource
-            onNodeWithText("Register").performClick()
+            onNodeWithTag("createAccountButton").performClick()
             waitForIdle()
 
             assertTrue(navigatedToNotes)
