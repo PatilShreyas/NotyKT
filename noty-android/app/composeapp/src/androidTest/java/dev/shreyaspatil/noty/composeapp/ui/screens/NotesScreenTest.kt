@@ -119,7 +119,7 @@ class NotesScreenTest : NotyScreenTest() {
             logoutNode.performClick()
 
             // Should show confirmation dialog
-            onNodeWithText("Logout?").assertIsDisplayed()
+            onNodeWithText("Logout").assertIsDisplayed()
             onNodeWithText("Sure want to logout?").assertIsDisplayed()
 
             // Confirm logout
@@ -140,7 +140,7 @@ class NotesScreenTest : NotyScreenTest() {
             logoutNode.performClick()
 
             // Should show confirmation dialog
-            onNodeWithText("Logout?").assertIsDisplayed()
+            onNodeWithText("Logout").assertIsDisplayed()
             onNodeWithText("Sure want to logout?").assertIsDisplayed()
 
             // Confirm logout
