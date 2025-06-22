@@ -20,22 +20,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import dagger.hilt.android.testing.HiltAndroidTest
 import dev.shreyaspatil.noty.composeapp.NotyScreenTest
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalTestApi::class)
 @HiltAndroidTest
 class SignUpScreenTest : NotyScreenTest() {
     @Test
@@ -108,16 +109,14 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            runBlocking { delay(500) }
+            waitUntilExactlyOneExists(hasTestTag("Confirm Password"))
 
-            // I don't know why I can't type on this field without adding delay
             onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
             waitForIdle()
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            runBlocking { delay(500) }
-            // I don't know why I can't click this button without adding delay
+            waitUntilExactlyOneExists(hasText("Create account"))
             onNodeWithText("Create account").performClick()
             waitForIdle()
 
@@ -149,16 +148,14 @@ class SignUpScreenTest : NotyScreenTest() {
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            runBlocking { delay(500) }
+            waitUntilExactlyOneExists(hasTestTag("Confirm Password"))
 
-            // I don't know why I can't type on this field without adding delay
             onNodeWithTag("Confirm Password").performTextInput("johndoe1234")
             waitForIdle()
             closeKeyboard.tryEmit(Unit)
             waitForIdle()
 
-            runBlocking { delay(500) }
-            // I don't know why I can't click this button without adding delay
+            waitUntilExactlyOneExists(hasText("Create account"))
             onNodeWithText("Create account").performClick()
             waitForIdle()
 
@@ -168,19 +165,19 @@ class SignUpScreenTest : NotyScreenTest() {
     @Composable
     private fun SignUpScreen(
         closeKeyboard: Flow<Unit> = emptyFlow(),
-        onNavigateToNotes: () -> Unit = {},
         onNavigateUp: () -> Unit = {},
+        onNavigateToNotes: () -> Unit = {},
     ) {
         val keyboardController = LocalSoftwareKeyboardController.current
-
-        SignUpScreen(
-            viewModel = viewModel(),
-            onNavigateToNotes = onNavigateToNotes,
-            onNavigateUp = onNavigateUp,
-        )
 
         LaunchedEffect(Unit) {
             closeKeyboard.collect { keyboardController?.hide() }
         }
+
+        SignUpScreen(
+            viewModel = viewModel(),
+            onNavigateUp = onNavigateUp,
+            onNavigateToNotes = onNavigateToNotes,
+        )
     }
 }

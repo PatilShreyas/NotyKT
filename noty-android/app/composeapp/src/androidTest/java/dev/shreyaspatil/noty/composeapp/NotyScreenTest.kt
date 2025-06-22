@@ -19,8 +19,10 @@ package dev.shreyaspatil.noty.composeapp
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.test.IdlingResource
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.lifecycle.lifecycleScope
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dev.shreyaspatil.noty.composeapp.rule.WorkManagerRule
@@ -28,6 +30,8 @@ import dev.shreyaspatil.noty.composeapp.ui.MainActivity
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
 import dev.shreyaspatil.noty.view.state.State
 import dev.shreyaspatil.noty.view.viewmodel.BaseViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.junit.Rule
 
 /**
@@ -62,4 +66,22 @@ abstract class NotyScreenTest {
                 content()
             }
         }
+
+    protected fun setIdleAfter(block: suspend CoroutineScope.() -> Unit) {
+        val idlingResource =
+            object : IdlingResource {
+                override var isIdleNow: Boolean = false
+
+                init {
+                    composeTestRule.activity.lifecycleScope.launch {
+                        try {
+                            block()
+                        } finally {
+                            isIdleNow = true
+                        }
+                    }
+                }
+            }
+        composeTestRule.registerIdlingResource(idlingResource)
+    }
 }

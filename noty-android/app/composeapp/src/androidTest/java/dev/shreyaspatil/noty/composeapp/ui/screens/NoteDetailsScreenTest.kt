@@ -17,9 +17,11 @@
 package dev.shreyaspatil.noty.composeapp.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.test.IdlingResource
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -33,24 +35,25 @@ import dev.shreyaspatil.noty.core.model.Note
 import dev.shreyaspatil.noty.core.repository.NotyNoteRepository
 import dev.shreyaspatil.noty.di.LocalRepository
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.UUID
 import javax.inject.Inject
 
+@OptIn(ExperimentalTestApi::class)
 @HiltAndroidTest
 class NoteDetailsScreenTest : NotyScreenTest() {
     @LocalRepository
     @Inject
     lateinit var noteRepository: NotyNoteRepository
 
+    private lateinit var noteId: String
+
     @Before
     fun setUp() {
         inject()
-        composeTestRule.registerIdlingResource(prepopulateNote())
+        noteId = "test-note-${System.currentTimeMillis()}-${UUID.randomUUID()}"
     }
 
     @Test
@@ -67,8 +70,9 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun hideSaveButton_onInvalidNoteContentInput() =
         runTest {
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen() }
-            waitForIdle()
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
             // We only show save button when title as at least has 4 characters
             onNodeWithText("Lorem Ipsum").performTextClearance()
@@ -84,8 +88,9 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun hideSaveButton_whenEditedContentIsSameAsPreviouslySavedContent() =
         runTest {
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen() }
-            waitForIdle()
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
             onNodeWithText("Lorem Ipsum").performTextClearance()
             waitForIdle()
@@ -102,8 +107,9 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun showSaveButton_whenEditedContentIsNotSameAsPreviouslySavedContent() =
         runTest {
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen() }
-            waitForIdle()
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
             onNodeWithText("Lorem Ipsum").performTextClearance()
             waitForIdle()
@@ -123,8 +129,10 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     fun navigateUp_whenNoteIsUpdatedSuccessfully() =
         runTest {
             var navigatingUp = false
+
+            setIdleAfter { prepopulateNote() }
             setNotyContent { NoteDetailScreen(onNavigateUp = { navigatingUp = true }) }
-            waitForIdle()
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum"), timeoutMillis = 5000)
 
             onNodeWithText("Lorem Ipsum").performTextInput("Hey there")
             waitForIdle()
@@ -141,9 +149,11 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun showActionToUnpinNote_whenNoteIsAlreadyPinned() =
         runTest {
-            registerIdlingResource(setNoteIsPinned(true))
+            setIdleAfter { prepopulateNote(isPinned = true) }
+
             setNotyContent { NoteDetailScreen() }
-            waitForIdle()
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum"))
+            waitUntil(5000) { onNodeWithContentDescription("Pinned").isDisplayed() }
 
             onNodeWithTag("actionTogglePin", useUnmergedTree = true)
                 .assertContentDescriptionEquals("Pinned")
@@ -152,9 +162,11 @@ class NoteDetailsScreenTest : NotyScreenTest() {
     @Test
     fun showActionToPinNote_whenNoteIsNotPinned() =
         runTest {
-            registerIdlingResource(setNoteIsPinned(false))
+            setIdleAfter { prepopulateNote(isPinned = false) }
+
             setNotyContent { NoteDetailScreen() }
-            waitForIdle()
+            waitUntilAtLeastOneExists(hasText("Lorem Ipsum"))
+            waitUntil(5000) { onNodeWithContentDescription("Not Pinned").isDisplayed() }
 
             onNodeWithTag("actionTogglePin", useUnmergedTree = true)
                 .assertContentDescriptionEquals("Not Pinned")
@@ -165,42 +177,22 @@ class NoteDetailsScreenTest : NotyScreenTest() {
         NoteDetailsScreen(
             viewModel =
                 hiltViewModel(creationCallback = { factory: NoteDetailViewModel.Factory ->
-                    factory.create(noteId = "1")
+                    factory.create(noteId = noteId)
                 }),
             onNavigateUp = onNavigateUp,
         )
     }
 
-    private fun prepopulateNote() =
-        object : IdlingResource {
-            override var isIdleNow: Boolean = false
+    private suspend fun prepopulateNote(isPinned: Boolean = false) {
+        val note =
+            Note(
+                id = noteId,
+                title = "Lorem Ipsum",
+                note = "Hey there",
+                created = System.currentTimeMillis(),
+                isPinned = isPinned,
+            )
 
-            init {
-                val note =
-                    Note(
-                        id = "1",
-                        title = "Lorem Ipsum",
-                        note = "Hey there",
-                        created = System.currentTimeMillis(),
-                    )
-                GlobalScope.launch {
-                    noteRepository.addNotes(listOf(note))
-                    delay(1000)
-                    isIdleNow = true
-                }
-            }
-        }
-
-    private fun setNoteIsPinned(isPinned: Boolean) =
-        object : IdlingResource {
-            override var isIdleNow: Boolean = false
-
-            init {
-                GlobalScope.launch {
-                    noteRepository.pinNote("1", isPinned)
-                    delay(1000)
-                    isIdleNow = true
-                }
-            }
-        }
+        noteRepository.addNotes(listOf(note))
+    }
 }
