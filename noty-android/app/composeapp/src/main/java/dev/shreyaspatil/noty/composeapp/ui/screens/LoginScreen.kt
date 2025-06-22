@@ -111,7 +111,7 @@ fun LoginContent(
                     .consumeWindowInsets(it)
                     .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.ime)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState()),
         ) {
             TopGreeting()
 

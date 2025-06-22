@@ -50,7 +50,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shreyaspatil.capturable.capturable
-import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import dev.shreyaspatil.noty.composeapp.component.action.DeleteAction
 import dev.shreyaspatil.noty.composeapp.component.action.PinAction
@@ -163,10 +162,11 @@ fun NoteDetailContent(
         },
         content = {
             NoteDetailBody(
-                modifier = Modifier
-                    .padding(it)
-                    .capturable(captureController)
-                    .background(MaterialTheme.colorScheme.background),
+                modifier =
+                    Modifier
+                        .padding(it)
+                        .capturable(captureController)
+                        .background(MaterialTheme.colorScheme.background),
                 title = title,
                 onTitleChange = onTitleChange,
                 note = note,

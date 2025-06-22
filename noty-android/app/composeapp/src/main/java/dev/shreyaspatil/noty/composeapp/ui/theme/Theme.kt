@@ -57,12 +57,13 @@ fun NotyTheme(
 ) {
     val context = LocalContext.current
     val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    val colorScheme = when {
-        dynamicColor && !darkTheme -> dynamicLightColorScheme(context)
-        dynamicColor && darkTheme -> dynamicDarkColorScheme(context)
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme =
+        when {
+            dynamicColor && !darkTheme -> dynamicLightColorScheme(context)
+            dynamicColor && darkTheme -> dynamicDarkColorScheme(context)
+            darkTheme -> DarkColorScheme
+            else -> LightColorScheme
+        }
 
     MaterialTheme(
         colorScheme = colorScheme,
