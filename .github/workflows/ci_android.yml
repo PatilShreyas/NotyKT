@@ -2,8 +2,8 @@ name: Build & Test (Android)
 on:
   push: 
     branches: [master]
-#    paths:
-#      - 'noty-android/**'
+    paths:
+      - 'noty-android/**'
   pull_request:
     branches: [master]
     paths:
