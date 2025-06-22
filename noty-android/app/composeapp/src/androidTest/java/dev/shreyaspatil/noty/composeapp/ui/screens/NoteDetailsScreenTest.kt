@@ -82,7 +82,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             waitForIdle()
             onNodeWithText("Hey there").performTextClearance()
 
-            onNodeWithText("Save").assertDoesNotExist()
+            onNodeWithText("Save", useUnmergedTree = true).assertDoesNotExist()
         }
 
     @Test
@@ -101,7 +101,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             onNodeWithText("Title").performTextInput("Lorem Ipsum")
             onNodeWithText("Write note here").performTextInput("Hey there")
 
-            onNodeWithText("Save").assertDoesNotExist()
+            onNodeWithText("Save", useUnmergedTree = true).assertDoesNotExist()
         }
 
     @Test
@@ -122,7 +122,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
 
             waitForIdle()
 
-            onNodeWithText("Save").assertIsDisplayed()
+            onNodeWithText("Save", useUnmergedTree = true).assertIsDisplayed()
         }
 
     @Test
@@ -140,7 +140,7 @@ class NoteDetailsScreenTest : NotyScreenTest() {
             onNodeWithText("Hey there").performTextInput("Lorem Ipsum")
             waitForIdle()
 
-            onNodeWithText("Save").performClick()
+            onNodeWithText("Save", useUnmergedTree = true).performClick()
             waitForIdle()
 
             assertTrue(navigatingUp)
