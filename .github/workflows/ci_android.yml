@@ -1,7 +1,7 @@
-name: Build (Android)
+name: Build & Test (Android)
 on:
   push: 
-    branches: [master, ui-tests-ci]
+    branches: [master]
 #    paths:
 #      - 'noty-android/**'
   pull_request:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Build Android
+    name: Build & Test Android
     runs-on: ubuntu-latest
 
     steps:
