@@ -88,7 +88,12 @@ fun AddNotesContent(
     NotyScaffold(
         isLoading = isLoading,
         error = error,
-        notyTopAppBar = { NotyTopAppBar(title = stringResource(R.string.hint_field_title), onNavigateUp = onNavigateUp) },
+        notyTopAppBar = {
+            NotyTopAppBar(
+                title = stringResource(R.string.hint_field_title),
+                onNavigateUp = onNavigateUp,
+            )
+        },
         content = {
             Column(
                 Modifier

@@ -54,7 +54,11 @@ import dev.shreyaspatil.noty.composeapp.utils.NotyPreview
 fun AboutScreen(onNavigateUp: () -> Unit) {
     NotyScaffold(
         notyTopAppBar = {
-            NotyTopAppBar(onNavigateUp = onNavigateUp, title = stringResource(R.string.menu_about), showNotyIcon = false)
+            NotyTopAppBar(
+                onNavigateUp = onNavigateUp,
+                title = stringResource(R.string.menu_about),
+                showNotyIcon = false,
+            )
         },
         content = {
             AboutContent(Modifier.padding(it))
