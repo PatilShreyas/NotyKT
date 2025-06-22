@@ -19,10 +19,8 @@ package dev.shreyaspatil.noty.composeapp.fake.service
 import dev.shreyaspatil.noty.composeapp.testUtil.successResponse
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
-import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
-import dev.shreyaspatil.noty.data.remote.model.response.State
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Path
@@ -35,14 +33,14 @@ class FakeNotyService
     @Inject
     constructor() : NotyService {
         override suspend fun getAllNotes(): Response<NotesResponse> {
-            return successResponse(NotesResponse(State.SUCCESS, "", emptyList()))
+            return successResponse(NotesResponse(message = "", notes = emptyList()))
         }
 
         override suspend fun addNote(
             @Body noteRequest: NoteRequest,
         ): Response<NoteResponse> {
             // Do nothing, just return success
-            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+            return successNoteResponse()
         }
 
         override suspend fun updateNote(
@@ -50,18 +48,23 @@ class FakeNotyService
             @Body noteRequest: NoteRequest,
         ): Response<NoteResponse> {
             // Do nothing, just return success
-            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+            return successNoteResponse()
         }
 
         override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
             // Do nothing, just return success
-            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+            return successNoteResponse()
         }
 
-        override suspend fun updateNotePin(
-            noteId: String,
-            noteRequest: NoteUpdatePinRequest,
-        ): Response<NoteResponse> {
-            return successResponse(NoteResponse(State.SUCCESS, "", ""))
+        override suspend fun pinNote(noteId: String): Response<NoteResponse> {
+            // Do nothing, just return success
+            return successNoteResponse()
         }
+
+        override suspend fun unpinNote(noteId: String): Response<NoteResponse> {
+            // Do nothing, just return success
+            return successNoteResponse()
+        }
+
+        private fun successNoteResponse() = successResponse(NoteResponse(message = "", noteId = ""))
     }

@@ -16,18 +16,23 @@
 
 package dev.shreyaspatil.noty.data.remote.util
 
+import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.utils.fromJson
+import dev.shreyaspatil.noty.data.remote.model.response.BaseResponse
 import retrofit2.Response
 
-/**
- * Retrofit only gives generic response body when status is Successful.
- * This extension will also parse error body and will give generic response.
- */
-inline fun <reified T> Response<T>.getResponse(): T {
-    val responseBody = body()
-    return if (this.isSuccessful && responseBody != null) {
-        responseBody
-    } else {
-        fromJson<T>(errorBody()!!.string())!!
+inline fun <reified T : BaseResponse, R> Response<T>.either(
+    errorMessage: (T) -> String = { it.message },
+    map: (T) -> R,
+): Either<R> {
+    return try {
+        val responseBody = body()
+        return if (this.isSuccessful && responseBody != null) {
+            Either.success(map(responseBody))
+        } else {
+            Either.error(errorMessage(fromJson<T>(errorBody()!!.string())!!))
+        }
+    } catch (error: Throwable) {
+        Either.error("Error occurred while performing this operation. Try again.")
     }
 }

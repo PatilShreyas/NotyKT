@@ -26,36 +26,39 @@ import dev.shreyaspatil.noty.data.remote.api.NotyAuthService
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-    private val baseRetrofitBuilder: Retrofit.Builder =
-        Retrofit.Builder()
+    @Singleton
+    @Provides
+    fun retrofitClient(authInterceptor: AuthInterceptor): Retrofit {
+        return Retrofit.Builder()
             .baseUrl(Constant.API_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-
-    private val okHttpClientBuilder: OkHttpClient.Builder =
-        OkHttpClient.Builder()
-            .readTimeout(1, TimeUnit.MINUTES)
-            .writeTimeout(1, TimeUnit.MINUTES)
-
-    @Provides
-    fun provideNotyService(authInterceptor: AuthInterceptor): NotyService {
-        return baseRetrofitBuilder
-            .client(okHttpClientBuilder.addInterceptor(authInterceptor).build())
-            .build()
-            .create(NotyService::class.java)
+            .client(
+                OkHttpClient.Builder()
+                    .readTimeout(1, TimeUnit.MINUTES)
+                    .writeTimeout(1, TimeUnit.MINUTES)
+                    .addInterceptor(authInterceptor)
+                    .addInterceptor(HttpLoggingInterceptor().apply { level = BODY })
+                    .build(),
+            ).build()
     }
 
     @Provides
-    fun provideNotyAuthService(): NotyAuthService {
-        return baseRetrofitBuilder
-            .client(okHttpClientBuilder.build())
-            .build()
-            .create(NotyAuthService::class.java)
+    fun provideNotyService(retrofit: Retrofit): NotyService {
+        return retrofit.create(NotyService::class.java)
+    }
+
+    @Provides
+    fun provideNotyAuthService(retrofit: Retrofit): NotyAuthService {
+        return retrofit.create(NotyAuthService::class.java)
     }
 }

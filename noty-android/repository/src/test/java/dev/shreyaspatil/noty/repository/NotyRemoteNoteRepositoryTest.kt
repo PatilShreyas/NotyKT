@@ -22,10 +22,8 @@ import dev.shreyaspatil.noty.core.repository.Either
 import dev.shreyaspatil.noty.core.utils.moshi
 import dev.shreyaspatil.noty.data.remote.api.NotyService
 import dev.shreyaspatil.noty.data.remote.model.request.NoteRequest
-import dev.shreyaspatil.noty.data.remote.model.request.NoteUpdatePinRequest
 import dev.shreyaspatil.noty.data.remote.model.response.NoteResponse
 import dev.shreyaspatil.noty.data.remote.model.response.NotesResponse
-import dev.shreyaspatil.noty.data.remote.model.response.State
 import io.mockk.coVerify
 import io.mockk.spyk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -179,12 +177,7 @@ class NotyRemoteNoteRepositoryTest {
             val response = repository.pinNote(noteId = "1111", isPinned = true)
 
             // Then
-            coVerify {
-                service.updateNotePin(
-                    noteId = "1111",
-                    NoteUpdatePinRequest(isPinned = true),
-                )
-            }
+            coVerify { service.pinNote(noteId = "1111") }
             val id = (response as Either.Success).data
             assertEquals("1111", id)
         }
@@ -196,12 +189,7 @@ class NotyRemoteNoteRepositoryTest {
             val response = repository.pinNote(noteId = "2222", isPinned = true)
 
             // Then
-            coVerify {
-                service.updateNotePin(
-                    noteId = "2222",
-                    NoteUpdatePinRequest(isPinned = true),
-                )
-            }
+            coVerify { service.pinNote(noteId = "2222") }
             val message = (response as Either.Error).message
             assertEquals("Failed to perform operation", message)
         }
@@ -213,12 +201,7 @@ class NotyRemoteNoteRepositoryTest {
             val response = repository.pinNote(noteId = "1111", isPinned = false)
 
             // Then
-            coVerify {
-                service.updateNotePin(
-                    noteId = "1111",
-                    NoteUpdatePinRequest(isPinned = false),
-                )
-            }
+            coVerify { service.unpinNote(noteId = "1111") }
             val id = (response as Either.Success).data
             assertEquals("1111", id)
         }
@@ -230,12 +213,7 @@ class NotyRemoteNoteRepositoryTest {
             val response = repository.pinNote(noteId = "2222", isPinned = false)
 
             // Then
-            coVerify {
-                service.updateNotePin(
-                    noteId = "2222",
-                    NoteUpdatePinRequest(isPinned = false),
-                )
-            }
+            coVerify { service.unpinNote(noteId = "2222") }
             val message = (response as Either.Error).message
             assertEquals("Failed to perform operation", message)
         }
@@ -275,10 +253,15 @@ class FakeNotyService : NotyService {
         }
     }
 
-    override suspend fun updateNotePin(
-        noteId: String,
-        noteRequest: NoteUpdatePinRequest,
-    ): Response<NoteResponse> {
+    override suspend fun pinNote(noteId: String): Response<NoteResponse> {
+        return if (noteId == "1111") {
+            fakeNoteResponse(true)
+        } else {
+            fakeNoteResponse(false)
+        }
+    }
+
+    override suspend fun unpinNote(noteId: String): Response<NoteResponse> {
         return if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
@@ -289,9 +272,9 @@ class FakeNotyService : NotyService {
     @OptIn(ExperimentalStdlibApi::class)
     private fun fakeNoteResponse(success: Boolean): Response<NoteResponse> {
         return if (success) {
-            Response.success(NoteResponse(State.SUCCESS, "Success", "1111"))
+            Response.success(NoteResponse(message = "Success", noteId = "1111"))
         } else {
-            val response = NoteResponse(State.FAILED, "Failed to perform operation", null)
+            val response = NoteResponse(message = "Failed to perform operation", noteId = null)
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),
@@ -306,13 +289,12 @@ class FakeNotyService : NotyService {
         return if (returnSuccessOnGetAllNotes) {
             Response.success(
                 NotesResponse(
-                    status = State.SUCCESS,
                     message = "Success",
                     notes = listOf(Note("1111", "Lorem Ipsum", "Hey there", 0)),
                 ),
             )
         } else {
-            val response = NotesResponse(State.FAILED, "Failed to perform operation", emptyList())
+            val response = NotesResponse(message = "Failed to perform operation", notes = emptyList())
             val body =
                 ResponseBody.create(
                     "application/json".toMediaTypeOrNull(),
