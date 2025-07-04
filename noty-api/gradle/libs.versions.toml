@@ -10,7 +10,7 @@ ktlint = "12.3.0"
 kover = "0.9.1"
 
 # Ktor
-ktor = "3.2.0"
+ktor = "3.2.1"
 
 # Database
 exposed = "0.61.0"
