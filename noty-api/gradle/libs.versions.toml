@@ -3,7 +3,7 @@ java = "17"
 
 # Kotlin
 kotlin = "2.2.0"
-ksp = "2.1.21-2.0.2"
+ksp = "2.2.0-2.0.2"
 kotlinSerialization = "1.9.0"
 coroutines = "1.10.2"
 ktlint = "12.3.0"
