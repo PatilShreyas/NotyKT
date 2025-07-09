@@ -25,7 +25,7 @@ dagger = "2.56.2" # Keeping Dagger at 2.51. If you update Kotlin to 2.1.x, you m
 
 # Testing
 testcontainers = "1.21.3"
-kotest = "6.0.0.M4"
+kotest = "6.0.0.M5"
 
 [libraries]
 # Kotlin
