@@ -28,6 +28,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -36,7 +37,9 @@ import dev.shreyaspatil.noty.composeapp.R
 import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
 import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme
+import dev.shreyaspatil.noty.composeapp.utils.collectState
 import dev.shreyaspatil.noty.core.preference.PreferenceManager
+import dev.shreyaspatil.noty.view.viewmodel.HomeViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -59,10 +62,14 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun NotyMain() {
         val darkMode by rememberUiMode()
+
+        val homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+        val state by homeViewModel.collectState()
+
         CompositionLocalProvider(LocalUiInDarkMode provides darkMode) {
             NotyTheme(darkTheme = LocalUiInDarkMode.current) {
                 Surface {
-                    NotyNavigation()
+                    NotyNavigation(state.isLoggedIn == true)
                 }
             }
         }
