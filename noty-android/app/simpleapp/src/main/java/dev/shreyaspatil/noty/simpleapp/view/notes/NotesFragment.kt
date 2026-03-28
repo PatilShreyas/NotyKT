@@ -34,7 +34,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shreyaspatil.noty.core.model.Note
-import dev.shreyaspatil.noty.simpleapp.R
+import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NotesFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
@@ -67,7 +67,7 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
         binding.run {
             notesRecyclerView.adapter = notesListAdapter
             fabNew.setOnClickListener {
-                findNavController().navigate(R.id.action_notesFragment_to_addNoteFragment)
+                findNavController().navigate(dev.shreyaspatil.noty.simpleapp.R.id.action_notesFragment_to_addNoteFragment)
             }
             swipeRefreshNotes.apply {
                 setColorSchemeColors(
@@ -225,10 +225,10 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     viewLifecycleOwner.lifecycleScope.launch {
                         when (viewModel.isDarkModeEnabled()) {
                             true -> {
-                                menu.findItem(R.id.action_dark_mode).isVisible = false
+                                menu.findItem(dev.shreyaspatil.noty.simpleapp.R.id.action_dark_mode).isVisible = false
                             }
                             false -> {
-                                menu.findItem(R.id.action_light_mode).isVisible = false
+                                menu.findItem(dev.shreyaspatil.noty.simpleapp.R.id.action_light_mode).isVisible = false
                             }
                         }
                         super.onPrepareMenu(menu)
@@ -239,16 +239,16 @@ class NotesFragment : BaseFragment<NotesFragmentBinding, NotesState, NotesViewMo
                     menu: Menu,
                     menuInflater: MenuInflater,
                 ) {
-                    menuInflater.inflate(R.menu.main_menu, menu)
+                    menuInflater.inflate(dev.shreyaspatil.noty.simpleapp.R.menu.main_menu, menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     when (menuItem.itemId) {
-                        R.id.action_light_mode -> viewModel.setDarkMode(false)
-                        R.id.action_dark_mode -> viewModel.setDarkMode(true)
-                        R.id.action_about ->
-                            findNavController().navigate(R.id.action_notesFragment_to_aboutFragment)
-                        R.id.action_logout -> confirmLogout()
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_light_mode -> viewModel.setDarkMode(false)
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_dark_mode -> viewModel.setDarkMode(true)
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_about ->
+                            findNavController().navigate(dev.shreyaspatil.noty.simpleapp.R.id.action_notesFragment_to_aboutFragment)
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_logout -> confirmLogout()
                     }
                     return false
                 }

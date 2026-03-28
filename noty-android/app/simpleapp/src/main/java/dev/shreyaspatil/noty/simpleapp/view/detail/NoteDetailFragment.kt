@@ -37,7 +37,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
+import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.simpleapp.databinding.NoteDetailFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.utils.ext.hideKeyboard
@@ -67,7 +67,7 @@ class NoteDetailFragment :
     private var pinMenuItem: MenuItem? = null
 
     override val viewModel: NoteDetailViewModel by hiltNavGraphViewModels(
-        R.id.nav_graph,
+        dev.shreyaspatil.noty.simpleapp.R.id.nav_graph,
     ) { factory: NoteDetailViewModel.Factory ->
         factory.create(args.noteId ?: error("'noteId' shouldn't be null"))
     }
@@ -136,7 +136,7 @@ class NoteDetailFragment :
         menuHost.addMenuProvider(
             object : MenuProvider {
                 override fun onPrepareMenu(menu: Menu) {
-                    pinMenuItem = menu.findItem(R.id.action_pin)
+                    pinMenuItem = menu.findItem(dev.shreyaspatil.noty.simpleapp.R.id.action_pin)
 
                     super.onPrepareMenu(menu)
                 }
@@ -145,15 +145,15 @@ class NoteDetailFragment :
                     menu: Menu,
                     menuInflater: MenuInflater,
                 ) {
-                    menuInflater.inflate(R.menu.note_menu, menu)
+                    menuInflater.inflate(dev.shreyaspatil.noty.simpleapp.R.menu.note_menu, menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     when (menuItem.itemId) {
-                        R.id.action_delete -> confirmNoteDeletion()
-                        R.id.action_pin -> viewModel.togglePin()
-                        R.id.action_share_text -> shareText()
-                        R.id.action_share_image -> shareImage()
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_delete -> confirmNoteDeletion()
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_pin -> viewModel.togglePin()
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_share_text -> shareText()
+                        dev.shreyaspatil.noty.simpleapp.R.id.action_share_image -> shareImage()
                     }
                     return false
                 }

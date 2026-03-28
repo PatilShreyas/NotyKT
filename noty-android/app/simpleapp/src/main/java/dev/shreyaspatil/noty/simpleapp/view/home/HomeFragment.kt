@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
 import dev.shreyaspatil.noty.simpleapp.databinding.HomeFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
@@ -41,9 +40,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding, HomeState, HomeViewModel>
 
         val destination =
             if (isLoggedIn) {
-                R.id.action_homeFragment_to_loginFragment
+                dev.shreyaspatil.noty.simpleapp.R.id.action_homeFragment_to_loginFragment
             } else {
-                R.id.action_homeFragment_to_notesFragment
+                dev.shreyaspatil.noty.simpleapp.R.id.action_homeFragment_to_notesFragment
             }
         findNavController().navigate(destination)
     }

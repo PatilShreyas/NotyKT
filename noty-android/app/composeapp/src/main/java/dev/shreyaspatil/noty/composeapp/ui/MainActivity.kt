@@ -32,7 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.composeapp.navigation.NotyNavigation
 import dev.shreyaspatil.noty.composeapp.ui.theme.LocalUiInDarkMode
 import dev.shreyaspatil.noty.composeapp.ui.theme.NotyTheme

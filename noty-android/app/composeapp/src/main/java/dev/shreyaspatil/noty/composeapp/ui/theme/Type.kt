@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.R
 
 private val gilroy =
     FontFamily(
