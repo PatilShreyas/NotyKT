@@ -1,8 +1,8 @@
 [versions]
 # Gradle and Kotlin
-androidGradlePlugin = "8.10.1"
-kotlin = "2.2.0"
-ksp = "2.3.0"
+androidGradlePlugin = "9.1.0"
+kotlin = "2.3.20"
+ksp = "2.3.6"
 coroutines = "1.10.2"
 
 # Android
@@ -23,7 +23,7 @@ constraintlayout = "2.2.1"
 activity = "1.10.1"
 fragment = "1.8.8"
 lifecycle = "2.9.1"
-navigation = "2.9.0"
+navigation = "2.9.6"
 workmanager = "2.10.2"
 dataStore = "1.1.7"
 securityCrypto = "1.1.0-beta01"
@@ -33,11 +33,11 @@ room = "2.7.2"
 composeBom = "2025.06.01"
 composeConstraintLayout = "1.1.1"
 composeNav = "2.9.0"
-hiltComposeNav = "1.2.0"
+hiltComposeNav = "1.3.0"
 
 # Dagger Hilt
-daggerHilt = "2.56.2"
-jetpackHilt = "1.2.0"
+daggerHilt = "2.59.2"
+jetpackHilt = "1.3.0"
 
 # Retrofit and OkHttp
 retrofit = "3.0.0"
@@ -156,7 +156,6 @@ leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", v
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
