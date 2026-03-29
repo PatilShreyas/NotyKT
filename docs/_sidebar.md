@@ -18,6 +18,7 @@
     - [App Architecture](/pages/noty-android/app-architecture.md)
     - [Architecture Revamp v2.0.0](/pages/noty-android/architecture-revamp-v2.0.0.md)
     - [Compose Compiler Metrics and Report](/pages/noty-android/compose-compiler-metrics-and-report)
+    - [AppFunctions (_Experimental_)](pages/noty-android/app-functions.md)
 - [End notes](/pages/finish)
 - [Changelog](/pages/changelog)
 - **Links**
