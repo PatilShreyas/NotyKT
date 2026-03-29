@@ -18,7 +18,9 @@ COPY . .
 # Build the application
 RUN ./gradlew installDist --no-daemon
 
-FROM openjdk:17-slim
+# Using Eclipse Temurin (the official, maintained OpenJDK build)
+# The 'jammy' tag ensures your groupadd/useradd commands work perfectly.
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
