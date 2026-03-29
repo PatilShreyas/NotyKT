@@ -24,13 +24,16 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class NotyApp : Application(), Configuration.Provider {
+class NotyApp :
+    Application(),
+    Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
     override val workManagerConfiguration: Configuration
         get() =
-            Configuration.Builder()
+            Configuration
+                .Builder()
                 .setWorkerFactory(workerFactory)
                 .setMinimumLoggingLevel(Log.DEBUG)
                 .build()

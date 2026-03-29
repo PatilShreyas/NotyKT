@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import dev.shreyaspatil.noty.composeapp.R
+import dev.shreyaspatil.noty.R
 
 @Composable
 fun PasswordTextField(

@@ -1,8 +1,8 @@
 [versions]
 # Gradle and Kotlin
-androidGradlePlugin = "8.10.1"
-kotlin = "2.2.0"
-ksp = "2.3.0"
+androidGradlePlugin = "9.1.0"
+kotlin = "2.3.20"
+ksp = "2.3.6"
 coroutines = "1.10.2"
 
 # Android
@@ -16,53 +16,53 @@ versionName = "3.0.0"
 javaVersion = "17"
 
 # AndroidX
-coreKtx = "1.16.0"
+coreKtx = "1.18.0"
 appcompat = "1.7.1"
 legacySupport = "1.0.0"
 constraintlayout = "2.2.1"
-activity = "1.10.1"
-fragment = "1.8.8"
-lifecycle = "2.9.1"
-navigation = "2.9.0"
-workmanager = "2.10.2"
-dataStore = "1.1.7"
-securityCrypto = "1.1.0-beta01"
-room = "2.7.2"
+activity = "1.13.0"
+fragment = "1.8.9"
+lifecycle = "2.10.0"
+navigation = "2.9.7"
+workmanager = "2.11.2"
+dataStore = "1.2.1"
+securityCrypto = "1.1.0"
+room = "2.8.4"
 
 # Compose
-composeBom = "2025.06.01"
+composeBom = "2026.03.01"
 composeConstraintLayout = "1.1.1"
-composeNav = "2.9.0"
-hiltComposeNav = "1.2.0"
+composeNav = "2.9.7"
+hiltComposeNav = "1.3.0"
 
 # Dagger Hilt
-daggerHilt = "2.56.2"
-jetpackHilt = "1.2.0"
+daggerHilt = "2.59.2"
+jetpackHilt = "1.3.0"
 
 # Retrofit and OkHttp
 retrofit = "3.0.0"
-okHttp = "4.12.0"
+okHttp = "5.3.2"
 moshi = "1.15.2"
 
 # Testing
 jUnit = "4.13.2"
-androidJUnit = "1.2.1"
-espresso = "3.6.1"
-androidTestCore = "1.6.1"
-androidTestRunner = "1.6.2"
-junit5 = "5.10.2"
-mockk = "1.14.2"
-jacoco = "0.8.13"
-robolectric = "4.15.1"
+androidJUnit = "1.3.0"
+espresso = "3.7.0"
+androidTestCore = "1.7.0"
+androidTestRunner = "1.7.0"
+junit5 = "6.0.3"
+mockk = "1.14.9"
+jacoco = "0.8.14"
+robolectric = "4.16.1"
 
 # Other
-materialDesign = "1.12.0"
-lottie = "6.6.7"
+materialDesign = "1.13.0"
+lottie = "6.7.1"
 javaxInject = "1"
-ktlint = "12.3.0"
+ktlint = "14.2.0"
 mutekt = "1.0.1"
 capturable = "3.0.1"
-composeCompilerReportGen = "1.4.2"
+composeCompilerReportGen = "1.5.0"
 leakCanary = "2.14"
 
 [libraries]
@@ -130,6 +130,7 @@ moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", versio
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "jUnit" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit5" }
 junit5-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
 junit5-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
 junit5-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
@@ -156,7 +157,6 @@ leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", v
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }

@@ -36,11 +36,9 @@ fun Fragment.showDialog(
             .setMessage(message)
             .setPositiveButton(positiveActionText) { dialogInterface, i ->
                 positiveAction(dialogInterface, i)
-            }
-            .setNegativeButton(negativeActionText) { dialogInterface, i ->
+            }.setNegativeButton(negativeActionText) { dialogInterface, i ->
                 negativeAction(dialogInterface, i)
-            }
-            .setCancelable(isCancelable)
+            }.setCancelable(isCancelable)
             .create()
     dialog.show()
 }

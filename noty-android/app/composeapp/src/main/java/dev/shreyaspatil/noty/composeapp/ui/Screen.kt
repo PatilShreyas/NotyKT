@@ -16,7 +16,10 @@
 
 package dev.shreyaspatil.noty.composeapp.ui
 
-sealed class Screen(val route: String, val name: String) {
+sealed class Screen(
+    val route: String,
+    val name: String,
+) {
     object SignUp : Screen("signup", "Sign Up")
 
     object Login : Screen("login", "Login")

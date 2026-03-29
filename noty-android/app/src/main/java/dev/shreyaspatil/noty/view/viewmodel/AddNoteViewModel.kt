@@ -66,19 +66,20 @@ class AddNoteViewModel
 
                     val result = noteRepository.addNote(title, note)
 
-                    result.onSuccess { noteId ->
-                        scheduleNoteCreate(noteId)
-                        setState {
-                            isAdding = false
-                            added = true
+                    result
+                        .onSuccess { noteId ->
+                            scheduleNoteCreate(noteId)
+                            setState {
+                                isAdding = false
+                                added = true
+                            }
+                        }.onFailure { message ->
+                            setState {
+                                isAdding = false
+                                added = false
+                                errorMessage = message
+                            }
                         }
-                    }.onFailure { message ->
-                        setState {
-                            isAdding = false
-                            added = false
-                            errorMessage = message
-                        }
-                    }
                 }
         }
 

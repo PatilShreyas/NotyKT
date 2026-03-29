@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.R
+import dev.shreyaspatil.noty.R
 import dev.shreyaspatil.noty.simpleapp.databinding.RegisterFragmentBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels
@@ -81,7 +81,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding, RegisterState, Re
     }
 
     private fun navigateToNotesScreen() {
-        findNavController().navigate(R.id.action_registerFragment_to_notesFragment)
+        findNavController().navigate(dev.shreyaspatil.noty.simpleapp.R.id.action_registerFragment_to_notesFragment)
     }
 
     private fun navigateUp() = findNavController().navigateUp()

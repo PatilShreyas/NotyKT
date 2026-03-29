@@ -18,7 +18,6 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.dagger.hilt) apply false
@@ -32,7 +31,6 @@ subprojects {
     apply(plugin = "jacoco")
 
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        debug.set(false)
         android.set(true)
         outputToConsole.set(true)
         outputColorName.set("RED")
@@ -41,6 +39,12 @@ subprojects {
     configure<JacocoPluginExtension> {
         toolVersion = "0.8.13"
         reportsDirectory.set(layout.buildDirectory.dir("jacocoReports"))
+    }
+    
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains.kotlin:kotlin-metadata-jvm:2.3.20")
+        }
     }
 }
 

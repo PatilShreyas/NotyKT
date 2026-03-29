@@ -37,8 +37,7 @@ import kotlinx.coroutines.flow.onEach
 /**
  * Base for all fragments in the project
  */
-abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<STATE>> :
-    Fragment() {
+abstract class BaseFragment<VB : ViewBinding, STATE : State, VM : BaseViewModel<STATE>> : Fragment() {
     private var _binding: VB by autoCleaned()
     val binding: VB get() = _binding
 

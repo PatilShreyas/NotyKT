@@ -116,20 +116,22 @@ class NotesViewModel
         }
 
         private fun observeNotes() {
-            notyNoteRepository.getAllNotes()
+            notyNoteRepository
+                .getAllNotes()
                 .distinctUntilChanged()
                 .onEach { response ->
-                    response.onSuccess { notes ->
-                        setState {
-                            this.isLoading = false
-                            this.notes = notes
+                    response
+                        .onSuccess { notes ->
+                            setState {
+                                this.isLoading = false
+                                this.notes = notes
+                            }
+                        }.onFailure { message ->
+                            setState {
+                                isLoading = false
+                                error = message
+                            }
                         }
-                    }.onFailure { message ->
-                        setState {
-                            isLoading = false
-                            error = message
-                        }
-                    }
                 }.onStart { setState { isLoading = true } }
                 .launchIn(viewModelScope)
         }
@@ -140,8 +142,7 @@ class NotesViewModel
                 .map { it === Available }
                 .onEach {
                     setState { isConnectivityAvailable = it }
-                }
-                .launchIn(viewModelScope)
+                }.launchIn(viewModelScope)
         }
 
         private fun setState(update: MutableNotesState.() -> Unit) = stateStore.setState(update)

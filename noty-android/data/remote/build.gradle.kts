@@ -16,15 +16,20 @@
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
 
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -34,12 +39,12 @@ android {
         targetCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
     }
 
-    kotlinOptions {
-        jvmTarget = libs.versions.javaVersion.get()
-    }
-
     kotlin {
-        jvmToolchain(libs.versions.javaVersion.get().toInt())
+        jvmToolchain(
+            libs.versions.javaVersion
+                .get()
+                .toInt(),
+        )
     }
 
     testOptions {
@@ -83,6 +88,7 @@ dependencies {
     testImplementation(libs.junit5.api)
     testImplementation(libs.junit5.params)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.mockk)
     testImplementation(libs.okhttp.mockwebserver)
     testImplementation(libs.kotlinx.coroutines.test)

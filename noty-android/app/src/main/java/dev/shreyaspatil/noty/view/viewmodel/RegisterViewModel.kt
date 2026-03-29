@@ -63,20 +63,21 @@ class RegisterViewModel
 
                 val response = notyUserRepository.addUser(username, password)
 
-                response.onSuccess { authCredential ->
-                    sessionManager.saveToken(authCredential.token)
-                    setState {
-                        isLoading = false
-                        isLoggedIn = true
-                        error = null
+                response
+                    .onSuccess { authCredential ->
+                        sessionManager.saveToken(authCredential.token)
+                        setState {
+                            isLoading = false
+                            isLoggedIn = true
+                            error = null
+                        }
+                    }.onFailure { message ->
+                        setState {
+                            isLoading = false
+                            error = message
+                            isLoggedIn = false
+                        }
                     }
-                }.onFailure { message ->
-                    setState {
-                        isLoading = false
-                        error = message
-                        isLoggedIn = false
-                    }
-                }
             }
         }
 

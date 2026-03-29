@@ -25,7 +25,11 @@ import dev.shreyaspatil.noty.data.remote.model.response.AuthResponse
 import retrofit2.Response
 import javax.inject.Inject
 
-data class UserCredentials(val username: String, val password: String, val token: String)
+data class UserCredentials(
+    val username: String,
+    val password: String,
+    val token: String,
+)
 
 /**
  * Fake implementation for user service

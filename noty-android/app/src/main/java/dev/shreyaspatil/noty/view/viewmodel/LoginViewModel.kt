@@ -59,20 +59,21 @@ class LoginViewModel
 
                 val response = notyUserRepository.getUserByUsernameAndPassword(username, password)
 
-                response.onSuccess { authCredential ->
-                    sessionManager.saveToken(authCredential.token)
-                    setState {
-                        isLoading = false
-                        isLoggedIn = true
-                        error = null
+                response
+                    .onSuccess { authCredential ->
+                        sessionManager.saveToken(authCredential.token)
+                        setState {
+                            isLoading = false
+                            isLoggedIn = true
+                            error = null
+                        }
+                    }.onFailure { message ->
+                        setState {
+                            isLoading = false
+                            isLoggedIn = false
+                            error = message
+                        }
                     }
-                }.onFailure { message ->
-                    setState {
-                        isLoading = false
-                        isLoggedIn = false
-                        error = message
-                    }
-                }
             }
         }
 

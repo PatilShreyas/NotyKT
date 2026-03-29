@@ -37,17 +37,17 @@ class NotyLocalNoteRepository
         private val notesDao: NotesDao,
     ) : NotyNoteRepository {
         override fun getNoteById(noteId: String): Flow<Note> =
-            notesDao.getNoteById(noteId)
+            notesDao
+                .getNoteById(noteId)
                 .filterNotNull()
                 .map { Note(it.noteId, it.title, it.note, it.created, it.isPinned) }
 
         override fun getAllNotes(): Flow<Either<List<Note>>> =
-            notesDao.getAllNotes()
-                .map {
-                        notes ->
+            notesDao
+                .getAllNotes()
+                .map { notes ->
                     notes.map { Note(it.noteId, it.title, it.note, it.created, it.isPinned) }
-                }
-                .transform { notes -> emit(Either.success(notes)) }
+                }.transform { notes -> emit(Either.success(notes)) }
                 .catch { emit(Either.success(emptyList())) }
 
         override suspend fun addNote(
@@ -69,11 +69,12 @@ class NotyLocalNoteRepository
             }.getOrDefault(Either.error("Unable to create a new note"))
 
         override suspend fun addNotes(notes: List<Note>) =
-            notes.map {
-                NoteEntity(it.id, it.title, it.note, it.created, it.isPinned)
-            }.let {
-                notesDao.addNotes(it)
-            }
+            notes
+                .map {
+                    NoteEntity(it.id, it.title, it.note, it.created, it.isPinned)
+                }.let {
+                    notesDao.addNotes(it)
+                }
 
         override suspend fun updateNote(
             noteId: String,

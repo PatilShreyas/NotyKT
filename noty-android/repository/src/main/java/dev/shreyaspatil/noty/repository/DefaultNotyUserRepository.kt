@@ -37,18 +37,16 @@ class DefaultNotyUserRepository
         override suspend fun addUser(
             username: String,
             password: String,
-        ): Either<AuthCredential> {
-            return authService
+        ): Either<AuthCredential> =
+            authService
                 .register(AuthRequest(username, password))
                 .either { AuthCredential(it.token!!) }
-        }
 
         override suspend fun getUserByUsernameAndPassword(
             username: String,
             password: String,
-        ): Either<AuthCredential> {
-            return authService
+        ): Either<AuthCredential> =
+            authService
                 .login(AuthRequest(username, password))
                 .either { AuthCredential(it.token!!) }
-        }
     }

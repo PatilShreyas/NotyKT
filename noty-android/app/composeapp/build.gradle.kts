@@ -16,7 +16,6 @@
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.compose.compiler.report)
@@ -24,13 +23,25 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
     defaultConfig {
         applicationId = "dev.shreyaspatil.noty.composeapp"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
 
-        versionCode = libs.versions.versionCode.get().toInt()
+        versionCode =
+            libs.versions.versionCode
+                .get()
+                .toInt()
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "dev.shreyaspatil.noty.composeapp.HiltComposeApplicationRunner"
@@ -76,12 +87,12 @@ android {
         targetCompatibility = JavaVersion.toVersion(libs.versions.javaVersion.get())
     }
 
-    kotlinOptions {
-        jvmTarget = libs.versions.javaVersion.get()
-    }
-
     kotlin {
-        jvmToolchain(libs.versions.javaVersion.get().toInt())
+        jvmToolchain(
+            libs.versions.javaVersion
+                .get()
+                .toInt(),
+        )
     }
 
     buildFeatures {
@@ -172,6 +183,7 @@ dependencies {
     testImplementation(libs.junit5.api)
     testImplementation(libs.junit5.params)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 

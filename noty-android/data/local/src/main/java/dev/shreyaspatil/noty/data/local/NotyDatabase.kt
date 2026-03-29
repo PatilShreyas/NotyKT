@@ -45,11 +45,13 @@ abstract class NotyDatabase : RoomDatabase() {
 
             synchronized(this) {
                 val instance =
-                    Room.databaseBuilder(
-                        context.applicationContext,
-                        NotyDatabase::class.java,
-                        DB_NAME,
-                    ).addMigrations(*DatabaseMigrations.MIGRATIONS).build()
+                    Room
+                        .databaseBuilder(
+                            context.applicationContext,
+                            NotyDatabase::class.java,
+                            DB_NAME,
+                        ).addMigrations(*DatabaseMigrations.MIGRATIONS)
+                        .build()
 
                 INSTANCE = instance
                 return instance

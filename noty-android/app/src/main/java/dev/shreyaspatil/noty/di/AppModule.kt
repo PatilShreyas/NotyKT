@@ -38,25 +38,20 @@ import javax.inject.Singleton
 class AppModule {
     @Singleton
     @Provides
-    fun providePreferenceManager(application: Application): PreferenceManager {
-        return PreferenceManagerImpl(application.uiModePrefDataStore)
-    }
+    fun providePreferenceManager(application: Application): PreferenceManager =
+        PreferenceManagerImpl(application.uiModePrefDataStore)
 
     @Singleton
     @Provides
-    fun provideSessionManager(application: Application): SessionManager {
-        return SessionManagerImpl(NotySharedPreferencesFactory.sessionPreferences(application))
-    }
+    fun provideSessionManager(application: Application): SessionManager =
+        SessionManagerImpl(NotySharedPreferencesFactory.sessionPreferences(application))
 
     @Singleton
     @Provides
-    fun provideConnectivityObserver(application: Application): ConnectivityObserver {
-        return ConnectivityObserverImpl(application.connectivityManager)
-    }
+    fun provideConnectivityObserver(application: Application): ConnectivityObserver =
+        ConnectivityObserverImpl(application.connectivityManager)
 
     @Singleton
     @Provides
-    fun provideWorkManager(application: Application): WorkManager {
-        return WorkManager.getInstance(application)
-    }
+    fun provideWorkManager(application: Application): WorkManager = WorkManager.getInstance(application)
 }

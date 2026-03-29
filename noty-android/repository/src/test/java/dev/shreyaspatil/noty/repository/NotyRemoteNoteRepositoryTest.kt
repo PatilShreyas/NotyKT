@@ -222,56 +222,49 @@ class NotyRemoteNoteRepositoryTest {
 class FakeNotyService : NotyService {
     var returnSuccessOnGetAllNotes: Boolean = true
 
-    override suspend fun getAllNotes(): Response<NotesResponse> {
-        return fakeNotesResponse()
-    }
+    override suspend fun getAllNotes(): Response<NotesResponse> = fakeNotesResponse()
 
-    override suspend fun addNote(noteRequest: NoteRequest): Response<NoteResponse> {
-        return if (noteRequest.title == "Lorem Ipsum") {
+    override suspend fun addNote(noteRequest: NoteRequest): Response<NoteResponse> =
+        if (noteRequest.title == "Lorem Ipsum") {
             fakeNoteResponse(true)
         } else {
             fakeNoteResponse(false)
         }
-    }
 
     override suspend fun updateNote(
         noteId: String,
         noteRequest: NoteRequest,
-    ): Response<NoteResponse> {
-        return if (noteId == "1111") {
+    ): Response<NoteResponse> =
+        if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
             fakeNoteResponse(false)
         }
-    }
 
-    override suspend fun deleteNote(noteId: String): Response<NoteResponse> {
-        return if (noteId == "1111") {
+    override suspend fun deleteNote(noteId: String): Response<NoteResponse> =
+        if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
             fakeNoteResponse(false)
         }
-    }
 
-    override suspend fun pinNote(noteId: String): Response<NoteResponse> {
-        return if (noteId == "1111") {
+    override suspend fun pinNote(noteId: String): Response<NoteResponse> =
+        if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
             fakeNoteResponse(false)
         }
-    }
 
-    override suspend fun unpinNote(noteId: String): Response<NoteResponse> {
-        return if (noteId == "1111") {
+    override suspend fun unpinNote(noteId: String): Response<NoteResponse> =
+        if (noteId == "1111") {
             fakeNoteResponse(true)
         } else {
             fakeNoteResponse(false)
         }
-    }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun fakeNoteResponse(success: Boolean): Response<NoteResponse> {
-        return if (success) {
+    private fun fakeNoteResponse(success: Boolean): Response<NoteResponse> =
+        if (success) {
             Response.success(NoteResponse(message = "Success", noteId = "1111"))
         } else {
             val response = NoteResponse(message = "Failed to perform operation", noteId = null)
@@ -282,11 +275,10 @@ class FakeNotyService : NotyService {
                 )
             Response.error(400, body)
         }
-    }
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun fakeNotesResponse(): Response<NotesResponse> {
-        return if (returnSuccessOnGetAllNotes) {
+    private fun fakeNotesResponse(): Response<NotesResponse> =
+        if (returnSuccessOnGetAllNotes) {
             Response.success(
                 NotesResponse(
                     message = "Success",
@@ -302,5 +294,4 @@ class FakeNotyService : NotyService {
                 )
             Response.error(400, body)
         }
-    }
 }

@@ -85,7 +85,9 @@ class AuthInterceptorTest {
 /**
  * Fake implementation of [Interceptor.Chain]
  */
-class FakeChain(private val requestBuilder: Request.Builder) : Interceptor.Chain {
+class FakeChain(
+    private val requestBuilder: Request.Builder,
+) : Interceptor.Chain {
     var proceededRequest: Request? = null
         private set
 
@@ -103,7 +105,8 @@ class FakeChain(private val requestBuilder: Request.Builder) : Interceptor.Chain
 
     override fun proceed(request: Request): Response {
         proceededRequest = request
-        return Response.Builder()
+        return Response
+            .Builder()
             .request(request)
             .protocol(Protocol.HTTP_2)
             .message("")
@@ -115,14 +118,13 @@ class FakeChain(private val requestBuilder: Request.Builder) : Interceptor.Chain
         TODO("Not yet implemented")
     }
 
-    override fun request(): Request {
-        return mockk {
+    override fun request(): Request =
+        mockk {
             every { newBuilder() } returns
                 mockk {
                     every { newBuilder() } returns requestBuilder
                 }
         }
-    }
 
     override fun withConnectTimeout(
         timeout: Int,
