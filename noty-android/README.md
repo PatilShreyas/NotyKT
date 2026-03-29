@@ -91,6 +91,7 @@ Design of this awesome application is implemented by [Sanju S](https://github.co
 - [Compose Compiler Report Generator](https://github.com/PatilShreyas/compose-report-to-html) - Tool to generate reports about Compose compiler metrics.
 - [LeakCanary](https://square.github.io/leakcanary/) - Memory leak detection library for Android.
 - [Lottie for Compose](https://github.com/airbnb/lottie/blob/master/android-compose.md) - Library for rendering After Effects animations in Compose.
+- [Android AppFunctions](https://developer.android.com/ai/appfunctions): Exposes AppFunctions for note operations ([Read more](https://patilshreyas.github.io/NotyKT/#/pages/noty-android/app-functions)).
 - Testing
   - [JUnit5](https://junit.org/) - JUnit 5 is the latest version of the popular Java unit testing framework.
   - [Mockk](https://mockk.io/) - Mocking library for Kotlin.
