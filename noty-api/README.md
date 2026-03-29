@@ -41,7 +41,7 @@ PGDATABASE=notykt_dev_db
 PGUSER=postgres
 PGPASSWORD=postgres
 
-DATABASE_DRIVER=org.postgresql.ds.PGSimpleDataSource
+DATABASE_DRIVER=org.postgresql.Driver
 DATABASE_MAX_POOL_SIZE=10
 ```
 
