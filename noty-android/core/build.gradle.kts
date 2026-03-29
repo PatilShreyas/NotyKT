@@ -45,5 +45,9 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.javaVersion.get().toInt())
+    jvmToolchain(
+        libs.versions.javaVersion
+            .get()
+            .toInt(),
+    )
 }

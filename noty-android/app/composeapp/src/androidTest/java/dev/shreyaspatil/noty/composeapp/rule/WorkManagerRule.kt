@@ -29,12 +29,13 @@ class WorkManagerRule : TestRule {
     override fun apply(
         base: Statement?,
         description: Description?,
-    ): Statement {
-        return object : Statement() {
+    ): Statement =
+        object : Statement() {
             override fun evaluate() {
                 val context = InstrumentationRegistry.getInstrumentation().targetContext
                 val config =
-                    Configuration.Builder()
+                    Configuration
+                        .Builder()
                         .setMinimumLoggingLevel(Log.DEBUG)
                         .setExecutor(SynchronousExecutor())
                         .build()
@@ -46,5 +47,4 @@ class WorkManagerRule : TestRule {
                 }
             }
         }
-    }
 }

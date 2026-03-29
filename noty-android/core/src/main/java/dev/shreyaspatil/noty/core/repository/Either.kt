@@ -20,9 +20,13 @@ package dev.shreyaspatil.noty.core.repository
  * Result wrapper class which can have only two possible states i.e. Either success or failure
  */
 sealed class Either<T> {
-    data class Success<T>(val data: T) : Either<T>()
+    data class Success<T>(
+        val data: T,
+    ) : Either<T>()
 
-    data class Error<T>(val message: String) : Either<T>()
+    data class Error<T>(
+        val message: String,
+    ) : Either<T>()
 
     companion object {
         fun <T> success(data: T) = Success(data)

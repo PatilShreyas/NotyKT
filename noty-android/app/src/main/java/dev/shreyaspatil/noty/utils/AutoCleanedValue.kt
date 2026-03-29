@@ -33,7 +33,7 @@ class AutoCleanedValue<T : Any>(
     private val initializer: (() -> T)?,
     beforeCleaning: (T?) -> Unit,
 ) : ReadWriteProperty<Fragment, T> {
-    @Suppress("ktlint:standard:property-naming")
+    @Suppress("ktlint:standard:property-naming", "ktlint:standard:backing-property-naming")
     private var _value: T? = null
 
     init {
@@ -96,6 +96,4 @@ class AutoCleanedValue<T : Any>(
 fun <T : Any> Fragment.autoCleaned(
     initializer: (() -> T)? = null,
     beforeCleaning: (T?) -> Unit = {},
-): AutoCleanedValue<T> {
-    return AutoCleanedValue(this, initializer, beforeCleaning)
-}
+): AutoCleanedValue<T> = AutoCleanedValue(this, initializer, beforeCleaning)

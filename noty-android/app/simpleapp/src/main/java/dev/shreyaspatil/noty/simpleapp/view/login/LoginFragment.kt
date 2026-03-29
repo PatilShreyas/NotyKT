@@ -38,7 +38,9 @@ class LoginFragment : BaseFragment<LoginFragmentBinding, LoginState, LoginViewMo
         with(binding) {
             buttonLogin.setOnClickListener { viewModel.login() }
             textSignUpButton.setOnClickListener {
-                findNavController().navigate(dev.shreyaspatil.noty.simpleapp.R.id.action_loginFragment_to_registerFragment)
+                findNavController().navigate(
+                    dev.shreyaspatil.noty.simpleapp.R.id.action_loginFragment_to_registerFragment,
+                )
             }
             textFieldUsername.editText?.addTextChangedListener {
                 viewModel.setUsername(it.toStringOrEmpty())

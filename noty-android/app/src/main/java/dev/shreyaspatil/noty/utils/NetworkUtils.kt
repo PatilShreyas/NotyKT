@@ -43,7 +43,8 @@ fun ConnectivityManager.observeConnectivityAsFlow() =
             }
 
         val networkRequest =
-            NetworkRequest.Builder()
+            NetworkRequest
+                .Builder()
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .build()
 
@@ -83,8 +84,8 @@ private fun evaluateNetworkState(
 }
 
 @Suppress("FunctionName")
-fun NetworkCallback(callback: () -> Unit): ConnectivityManager.NetworkCallback {
-    return object : ConnectivityManager.NetworkCallback() {
+fun NetworkCallback(callback: () -> Unit): ConnectivityManager.NetworkCallback =
+    object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             callback()
         }
@@ -104,4 +105,3 @@ fun NetworkCallback(callback: () -> Unit): ConnectivityManager.NetworkCallback {
             callback()
         }
     }
-}

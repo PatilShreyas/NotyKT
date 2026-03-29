@@ -38,27 +38,24 @@ import javax.inject.Singleton
 class NetworkModule {
     @Singleton
     @Provides
-    fun retrofitClient(authInterceptor: AuthInterceptor): Retrofit {
-        return Retrofit.Builder()
+    fun retrofitClient(authInterceptor: AuthInterceptor): Retrofit =
+        Retrofit
+            .Builder()
             .baseUrl(Constant.API_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(
-                OkHttpClient.Builder()
+                OkHttpClient
+                    .Builder()
                     .readTimeout(1, TimeUnit.MINUTES)
                     .writeTimeout(1, TimeUnit.MINUTES)
                     .addInterceptor(authInterceptor)
                     .addInterceptor(HttpLoggingInterceptor().apply { level = BODY })
                     .build(),
             ).build()
-    }
 
     @Provides
-    fun provideNotyService(retrofit: Retrofit): NotyService {
-        return retrofit.create(NotyService::class.java)
-    }
+    fun provideNotyService(retrofit: Retrofit): NotyService = retrofit.create(NotyService::class.java)
 
     @Provides
-    fun provideNotyAuthService(retrofit: Retrofit): NotyAuthService {
-        return retrofit.create(NotyAuthService::class.java)
-    }
+    fun provideNotyAuthService(retrofit: Retrofit): NotyAuthService = retrofit.create(NotyAuthService::class.java)
 }

@@ -21,8 +21,8 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.simpleapp.BuildConfig
 import dev.shreyaspatil.noty.R
+import dev.shreyaspatil.noty.simpleapp.BuildConfig
 import dev.shreyaspatil.noty.simpleapp.databinding.FragmentAboutBinding
 import dev.shreyaspatil.noty.simpleapp.view.base.BaseFragment
 import dev.shreyaspatil.noty.simpleapp.view.hiltNotyMainNavGraphViewModels

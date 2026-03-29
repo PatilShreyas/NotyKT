@@ -50,8 +50,7 @@ import dev.shreyaspatil.noty.view.state.NoteDetailState
 import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 
 @AndroidEntryPoint
-class NoteDetailFragment :
-    BaseFragment<NoteDetailFragmentBinding, NoteDetailState, NoteDetailViewModel>() {
+class NoteDetailFragment : BaseFragment<NoteDetailFragmentBinding, NoteDetailState, NoteDetailViewModel>() {
     private val args: NoteDetailFragmentArgs by navArgs()
 
     /**
@@ -171,8 +170,12 @@ class NoteDetailFragment :
     }
 
     private fun shareText() {
-        val title = binding.noteLayout.fieldTitle.text.toString()
-        val note = binding.noteLayout.fieldNote.text.toString()
+        val title =
+            binding.noteLayout.fieldTitle.text
+                .toString()
+        val note =
+            binding.noteLayout.fieldNote.text
+                .toString()
 
         requireContext().shareNoteText(title, note)
     }

@@ -31,8 +31,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.R
+import dev.shreyaspatil.noty.core.preference.PreferenceManager
 import dev.shreyaspatil.noty.simpleapp.databinding.MainActivityBinding
 import dev.shreyaspatil.noty.utils.ext.hide
 import dev.shreyaspatil.noty.utils.ext.show
@@ -71,20 +71,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeUiModePreferences() {
-        preferenceManager.uiModeFlow.onEach {
-            val uiMode =
-                when (it) {
-                    true -> AppCompatDelegate.MODE_NIGHT_YES
-                    false -> AppCompatDelegate.MODE_NIGHT_NO
-                }
-            AppCompatDelegate.setDefaultNightMode(uiMode)
-        }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
+        preferenceManager.uiModeFlow
+            .onEach {
+                val uiMode =
+                    when (it) {
+                        true -> AppCompatDelegate.MODE_NIGHT_YES
+                        false -> AppCompatDelegate.MODE_NIGHT_NO
+                    }
+                AppCompatDelegate.setDefaultNightMode(uiMode)
+            }.flowWithLifecycle(lifecycle)
+            .launchIn(lifecycleScope)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) =
         item.onNavDestinationSelected(
             findNavController(dev.shreyaspatil.noty.simpleapp.R.id.nav_host_fragment),
-        ) || super.onOptionsItemSelected(item)
+        ) ||
+            super.onOptionsItemSelected(item)
 
     override fun onSupportNavigateUp() =
         findNavController(dev.shreyaspatil.noty.simpleapp.R.id.nav_host_fragment)

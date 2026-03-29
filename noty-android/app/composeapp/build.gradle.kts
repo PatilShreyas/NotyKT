@@ -23,13 +23,25 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
     defaultConfig {
         applicationId = "dev.shreyaspatil.noty.composeapp"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.targetSdk
+                .get()
+                .toInt()
 
-        versionCode = libs.versions.versionCode.get().toInt()
+        versionCode =
+            libs.versions.versionCode
+                .get()
+                .toInt()
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "dev.shreyaspatil.noty.composeapp.HiltComposeApplicationRunner"
@@ -76,7 +88,11 @@ android {
     }
 
     kotlin {
-        jvmToolchain(libs.versions.javaVersion.get().toInt())
+        jvmToolchain(
+            libs.versions.javaVersion
+                .get()
+                .toInt(),
+        )
     }
 
     buildFeatures {

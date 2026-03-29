@@ -189,6 +189,5 @@ fun PreviewNotesScreen() {
     }
 }
 
-private fun noteFixture(isPinned: Boolean = false): Note {
-    return Note(Random.nextInt().toString(), "Lorem Ipsum", "Hey this is a note body", 1, isPinned)
-}
+private fun noteFixture(isPinned: Boolean = false): Note =
+    Note(Random.nextInt().toString(), "Lorem Ipsum", "Hey this is a note body", 1, isPinned)

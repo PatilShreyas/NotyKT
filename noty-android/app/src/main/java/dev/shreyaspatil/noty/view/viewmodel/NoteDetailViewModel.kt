@@ -99,16 +99,17 @@ class NoteDetailViewModel
 
                     setState { isLoading = false }
 
-                    response.onSuccess { noteId ->
-                        if (NotyNoteRepository.isTemporaryNote(noteId)) {
-                            scheduleNoteCreate(noteId)
-                        } else {
-                            scheduleNoteUpdate(noteId)
+                    response
+                        .onSuccess { noteId ->
+                            if (NotyNoteRepository.isTemporaryNote(noteId)) {
+                                scheduleNoteCreate(noteId)
+                            } else {
+                                scheduleNoteUpdate(noteId)
+                            }
+                            setState { finished = true }
+                        }.onFailure { message ->
+                            setState { error = message }
                         }
-                        setState { finished = true }
-                    }.onFailure { message ->
-                        setState { error = message }
-                    }
                 }
         }
 
@@ -122,14 +123,15 @@ class NoteDetailViewModel
 
                     setState { isLoading = false }
 
-                    response.onSuccess { noteId ->
-                        if (!NotyNoteRepository.isTemporaryNote(noteId)) {
-                            scheduleNoteDelete(noteId)
+                    response
+                        .onSuccess { noteId ->
+                            if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                                scheduleNoteDelete(noteId)
+                            }
+                            setState { finished = true }
+                        }.onFailure { message ->
+                            setState { error = message }
                         }
-                        setState { finished = true }
-                    }.onFailure { message ->
-                        setState { error = message }
-                    }
                 }
         }
 
@@ -146,13 +148,14 @@ class NoteDetailViewModel
                         isPinned = !currentState.isPinned
                     }
 
-                    response.onSuccess { noteId ->
-                        if (!NotyNoteRepository.isTemporaryNote(noteId)) {
-                            scheduleNoteUpdatePin(noteId)
+                    response
+                        .onSuccess { noteId ->
+                            if (!NotyNoteRepository.isTemporaryNote(noteId)) {
+                                scheduleNoteUpdatePin(noteId)
+                            }
+                        }.onFailure { message ->
+                            setState { error = message }
                         }
-                    }.onFailure { message ->
-                        setState { error = message }
-                    }
                 }
         }
 

@@ -29,7 +29,8 @@ fun Context.shareNoteText(
     val shareMsg = getString(R.string.text_message_share, title, note)
 
     val intent =
-        ShareCompat.IntentBuilder(this)
+        ShareCompat
+            .IntentBuilder(this)
             .setType("text/plain")
             .setText(shareMsg)
             .intent
@@ -39,7 +40,8 @@ fun Context.shareNoteText(
 
 fun Context.shareImage(imageUri: Uri) {
     val intent =
-        ShareCompat.IntentBuilder(this)
+        ShareCompat
+            .IntentBuilder(this)
             .setType("image/jpeg")
             .setStream(imageUri)
             .intent

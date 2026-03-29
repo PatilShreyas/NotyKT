@@ -32,9 +32,8 @@ import javax.inject.Inject
 class FakeNotyService
     @Inject
     constructor() : NotyService {
-        override suspend fun getAllNotes(): Response<NotesResponse> {
-            return successResponse(NotesResponse(message = "", notes = emptyList()))
-        }
+        override suspend fun getAllNotes(): Response<NotesResponse> =
+            successResponse(NotesResponse(message = "", notes = emptyList()))
 
         override suspend fun addNote(
             @Body noteRequest: NoteRequest,

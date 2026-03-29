@@ -76,25 +76,25 @@ class NotyTaskManagerImpl
 
         override fun getTaskState(taskId: UUID): TaskState? =
             runCatching {
-                workManager.getWorkInfoById(taskId)
+                workManager
+                    .getWorkInfoById(taskId)
                     .get()
                     ?.let { mapWorkInfoStateToTaskState(it.state) }
             }.getOrNull()
 
-        override fun observeTask(taskId: UUID): Flow<TaskState> {
-            return workManager.getWorkInfoByIdFlow(taskId)
+        override fun observeTask(taskId: UUID): Flow<TaskState> =
+            workManager
+                .getWorkInfoByIdFlow(taskId)
                 .map {
                     it?.let { workInfo ->
                         mapWorkInfoStateToTaskState(workInfo.state)
                     } ?: TaskState.FAILED
-                }
-                .transformWhile { taskState ->
+                }.transformWhile { taskState ->
                     emit(taskState)
 
                     // This is to terminate this flow when terminal state is arrived
                     !taskState.isTerminalState
                 }.distinctUntilChanged()
-        }
 
         override fun abortAllTasks() {
             workManager.cancelAllWork()
@@ -109,13 +109,15 @@ class NotyTaskManagerImpl
             }
 
         private fun generateData(notyTask: NotyTask) =
-            Data.Builder()
+            Data
+                .Builder()
                 .putString(NotyTaskWorker.KEY_NOTE_ID, notyTask.noteId)
                 .putEnum(NotyTaskWorker.KEY_TASK_TYPE, notyTask.action)
                 .build()
 
         private fun getRequiredConstraints(): Constraints =
-            Constraints.Builder()
+            Constraints
+                .Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 

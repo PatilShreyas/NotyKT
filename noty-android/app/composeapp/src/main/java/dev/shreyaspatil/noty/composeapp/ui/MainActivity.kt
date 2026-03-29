@@ -69,11 +69,10 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun rememberUiMode(): State<Boolean> {
-        return preferenceManager.uiModeFlow.collectAsStateWithLifecycle(
+    fun rememberUiMode(): State<Boolean> =
+        preferenceManager.uiModeFlow.collectAsStateWithLifecycle(
             initialValue = isSystemInDarkTheme(),
         )
-    }
 
     private fun observeUiTheme() {
         preferenceManager

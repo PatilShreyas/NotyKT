@@ -20,10 +20,16 @@ plugins {
 }
 
 android {
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+        minSdk =
+            libs.versions.minSdk
+                .get()
+                .toInt()
 
         consumerProguardFiles("consumer-rules.pro")
         ksp {
@@ -39,7 +45,11 @@ android {
     }
 
     kotlin {
-        jvmToolchain(libs.versions.javaVersion.get().toInt())
+        jvmToolchain(
+            libs.versions.javaVersion
+                .get()
+                .toInt(),
+        )
     }
 
     testOptions {

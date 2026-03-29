@@ -36,9 +36,8 @@ data class ComposeImmutableList<E> private constructor(
         /**
          * Creates [ComposeImmutableList] from [baseList].
          */
-        fun <E> from(baseList: List<E>): ComposeImmutableList<E> {
-            return ComposeImmutableList(Collections.unmodifiableList(ArrayList(baseList)))
-        }
+        fun <E> from(baseList: List<E>): ComposeImmutableList<E> =
+            ComposeImmutableList(Collections.unmodifiableList(ArrayList(baseList)))
     }
 }
 
@@ -61,6 +60,4 @@ fun <E> composeImmutableListOf(vararg items: E): ComposeImmutableList<E> = items
 @Composable
 inline fun <E> rememberComposeImmutableList(
     crossinline baseList: @DisallowComposableCalls () -> Iterable<E>,
-): State<ComposeImmutableList<E>> {
-    return remember { derivedStateOf { baseList().toComposeImmutableList() } }
-}
+): State<ComposeImmutableList<E>> = remember { derivedStateOf { baseList().toComposeImmutableList() } }

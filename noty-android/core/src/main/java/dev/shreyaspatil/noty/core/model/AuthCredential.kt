@@ -16,4 +16,6 @@
 
 package dev.shreyaspatil.noty.core.model
 
-data class AuthCredential(val token: String)
+data class AuthCredential(
+    val token: String,
+)

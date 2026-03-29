@@ -46,21 +46,16 @@ class NotyRemoteNoteRepository
         override suspend fun addNote(
             title: String,
             note: String,
-        ): Either<String> {
-            return notyService.addNote(NoteRequest(title, note)).either { it.noteId!! }
-        }
+        ): Either<String> = notyService.addNote(NoteRequest(title, note)).either { it.noteId!! }
 
         override suspend fun updateNote(
             noteId: String,
             title: String,
             note: String,
-        ): Either<String> {
-            return notyService.updateNote(noteId, NoteRequest(title, note)).either { it.noteId!! }
-        }
+        ): Either<String> = notyService.updateNote(noteId, NoteRequest(title, note)).either { it.noteId!! }
 
-        override suspend fun deleteNote(noteId: String): Either<String> {
-            return notyService.deleteNote(noteId).either { it.noteId!! }
-        }
+        override suspend fun deleteNote(noteId: String): Either<String> =
+            notyService.deleteNote(noteId).either { it.noteId!! }
 
         override suspend fun pinNote(
             noteId: String,

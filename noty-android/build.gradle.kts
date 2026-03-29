@@ -31,7 +31,6 @@ subprojects {
     apply(plugin = "jacoco")
 
     configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        debug.set(false)
         android.set(true)
         outputToConsole.set(true)
         outputColorName.set("RED")

@@ -42,12 +42,10 @@ class NotySyncWorker
         @LocalRepository private val localNoteRepository: NotyNoteRepository,
         private val notyTaskManager: NotyTaskManager,
     ) : CoroutineWorker(appContext, workerParams) {
-        override suspend fun doWork(): Result {
-            return syncNotes()
-        }
+        override suspend fun doWork(): Result = syncNotes()
 
-        private suspend fun syncNotes(): Result {
-            return try {
+        private suspend fun syncNotes(): Result =
+            try {
                 // Fetches all notes from remote.
                 // If task of any note is still pending, skip it.
                 val notes = fetchRemoteNotes().filter { note -> shouldReplaceNote(note.id) }
@@ -60,14 +58,12 @@ class NotySyncWorker
                 e.printStackTrace()
                 Result.failure()
             }
-        }
 
-        private suspend fun fetchRemoteNotes(): List<Note> {
-            return when (val response = remoteNoteRepository.getAllNotes().first()) {
+        private suspend fun fetchRemoteNotes(): List<Note> =
+            when (val response = remoteNoteRepository.getAllNotes().first()) {
                 is Either.Success -> response.data
                 is Either.Error -> throw Exception(response.message)
             }
-        }
 
         private fun shouldReplaceNote(noteId: String): Boolean {
             val taskId = notyTaskManager.getTaskIdFromNoteId(noteId).toUUID()

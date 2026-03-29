@@ -100,17 +100,13 @@ class DefaultNotyUserRepositoryTest {
 }
 
 class FakeAuthService : NotyAuthService {
-    override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> {
-        return fakeAuthResponse(authRequest)
-    }
+    override suspend fun register(authRequest: AuthRequest): Response<AuthResponse> = fakeAuthResponse(authRequest)
 
-    override suspend fun login(authRequest: AuthRequest): Response<AuthResponse> {
-        return fakeAuthResponse(authRequest)
-    }
+    override suspend fun login(authRequest: AuthRequest): Response<AuthResponse> = fakeAuthResponse(authRequest)
 
     @OptIn(ExperimentalStdlibApi::class)
-    private fun fakeAuthResponse(authRequest: AuthRequest): Response<AuthResponse> {
-        return if (authRequest.username == "admin" && authRequest.password == "admin") {
+    private fun fakeAuthResponse(authRequest: AuthRequest): Response<AuthResponse> =
+        if (authRequest.username == "admin" && authRequest.password == "admin") {
             Response.success(AuthResponse(message = "Success", token = "Bearer ABCD"))
         } else {
             val response = AuthResponse(message = "Invalid credentials", token = null)
@@ -121,5 +117,4 @@ class FakeAuthService : NotyAuthService {
                 )
             Response.error(401, body)
         }
-    }
 }
