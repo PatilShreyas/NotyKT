@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
@@ -114,6 +115,11 @@ dependencies {
     testImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.runtime)
 
+    // AppFunctions for Android 16
+    implementation(libs.androidx.appfunctions)
+    implementation(libs.androidx.appfunctions.service)
+    ksp(libs.androidx.appfunctions.compiler)
+
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.junit5.api)
@@ -126,4 +132,10 @@ dependencies {
     testImplementation(libs.robolectric)
 
     debugImplementation(libs.leakcanary)
+}
+
+ksp {
+    arg("appfunctions:aggregateAppFunctions", "true")
+    // Change this to false unless you have @AppFunctionSchemaDefinition interfaces
+    arg("appfunctions:generateMetadataFromSchema", "false")
 }
