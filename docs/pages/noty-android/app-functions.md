@@ -121,3 +121,7 @@ could be able to invoke the app functions declared by the application.
 
 The [sample agent app is created here](https://github.com/PatilShreyas/appfunctions-notyagent-app) just to experience the agentic functionality. Follow the steps
 described there to run and execute the app.
+
+Sample agent looks like this:
+
+![](https://github.com/PatilShreyas/appfunctions-notyagent-app/raw/refs/heads/main/demo.gif)
