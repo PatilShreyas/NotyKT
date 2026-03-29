@@ -119,6 +119,7 @@ dependencies {
 
     // Dagger + Hilt
     implementation(libs.dagger.hilt.android)
+    implementation(libs.androidx.appfunctions.service)
     ksp(libs.dagger.hilt.compiler)
 
     // Hilt + Jetpack

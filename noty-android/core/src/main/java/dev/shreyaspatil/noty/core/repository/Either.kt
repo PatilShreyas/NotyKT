@@ -34,6 +34,8 @@ sealed class Either<T> {
         fun <T> error(message: String) = Error<T>(message)
     }
 
+    fun getOrNull() = (this as? Success)?.data
+
     inline fun onSuccess(block: (T) -> Unit): Either<T> =
         apply {
             if (this is Success) {

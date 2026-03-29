@@ -137,6 +137,7 @@ dependencies {
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.appfunctions.service)
     testImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

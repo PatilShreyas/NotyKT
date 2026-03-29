@@ -18,18 +18,24 @@ package dev.shreyaspatil.noty.simpleapp
 
 import android.app.Application
 import android.util.Log
+import androidx.appfunctions.service.AppFunctionConfiguration
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
+import dev.shreyaspatil.noty.appfunctions.NotyAppFunctions
 import javax.inject.Inject
+import javax.inject.Provider
 
 @HiltAndroidApp
 class NotyApp :
     Application(),
-    Configuration.Provider {
+    Configuration.Provider,
+    AppFunctionConfiguration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    @Inject lateinit var appFunctions: Provider<NotyAppFunctions>
 
     override val workManagerConfiguration: Configuration
         get() =
@@ -43,4 +49,11 @@ class NotyApp :
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
     }
+
+    override val appFunctionConfiguration: AppFunctionConfiguration
+        get() =
+            AppFunctionConfiguration
+                .Builder()
+                .addEnclosingClassFactory(NotyAppFunctions::class.java) { appFunctions.get() }
+                .build()
 }
