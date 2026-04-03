@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,8 +44,10 @@ import dev.shreyaspatil.noty.view.viewmodel.NoteDetailViewModel
 const val NOTY_NAV_HOST_ROUTE = "noty-main-route"
 
 @Composable
-fun NotyNavigation() {
-    val navController = rememberNavController()
+fun NotyNavigation(
+    isLoggedIn: Boolean,
+    navController: NavHostController = rememberNavController(),
+) {
 
     NavHost(
         navController,
@@ -54,7 +57,7 @@ fun NotyNavigation() {
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .displayCutoutPadding(),
-        startDestination = Screen.Notes.route,
+        startDestination = if (isLoggedIn) Screen.Notes.route else Screen.Login.route,
         route = NOTY_NAV_HOST_ROUTE,
         enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(700)) },
         exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(700)) },

@@ -203,6 +203,9 @@ dependencies {
     // WorkManager for testing
     androidTestImplementation(libs.androidx.work.testing)
 
+    // Navigation for testing
+    androidTestImplementation(libs.androidx.navigation.testing)
+
     // Leak Canary
     // Uncomment this when have to check for leaks
     // debugImplementation(libs.leakcanary)
