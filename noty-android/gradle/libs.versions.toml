@@ -1,6 +1,6 @@
 [versions]
 # Gradle and Kotlin
-androidGradlePlugin = "9.1.0"
+androidGradlePlugin = "9.2.0"
 kotlin = "2.3.20"
 ksp = "2.3.6"
 coroutines = "1.10.2"
