@@ -31,7 +31,7 @@ room = "2.8.4"
 appfunctions = "1.0.0-alpha08"
 
 # Compose
-composeBom = "2026.03.01"
+composeBom = "2026.04.01"
 composeConstraintLayout = "1.1.1"
 composeNav = "2.9.7"
 hiltComposeNav = "1.3.0"
